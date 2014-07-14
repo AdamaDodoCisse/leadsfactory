@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Front End</title>
+
+
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" /><!-- Bootstrap -->
+<link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.css" type="text/css" /><!-- Font Awesome -->
+
+<link rel="stylesheet" href="css/front-end.css" type="text/css" /><!-- Style -->	
+<link rel="stylesheet" href="css/responsive.css" type="text/css" /><!-- Responsive -->	
+<link href="css/owl.carousal.css" rel="stylesheet">
+
+
+ 
+<!-- Script -->
+<script src="js/jquery-1.10.2.js"></script><!-- Jquery -->
+<script src="js/bootstrap.min.js"></script><!-- Bootstrap -->
+<script src="js/front-end.js"></script><!-- Script -->
+<script src="js/carousal-plugins.js"></script><!-- Carousal Plugin -->
+<script src="js/html5lightbox.js" type="text/javascript"></script><!-- HTML5 Lightbox -->
+<script src="js/owl.carousel.min.js" type="text/javascript"></script>
+
+
+	<script type="text/javascript">
+	jQuery(document).ready(function(){
+	jQuery('#viewport').carousel('#simplePrevious', '#simpleNext');  
+	});
+	</script>
+
+		<script>
+	$(function() {
+	  $('a[href*=#]:not([href=#])').click(function() {
+	    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+
+	      var target = $(this.hash);
+	      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+	      if (target.length) {
+	        $('html,body').animate({
+	          scrollTop: target.offset().top
+	        }, 1000);
+	        return false;
+	      }
+	    }
+	  });
+	});
+	</script>
+	
+</head>
+<body>
+
+<nav class="fixed-menu">
+	<ul>
+		<li><a href="#home" class="smooth" title="" >HOME <i class="fa fa-laptop"></i></a></li>
+		<li><a href="#service" class="smooth" title="">SERVICES <i class="fa fa-cog"></i></a></li>
+		<li><a href="#testimonials" class="smooth" title="">TESTIMONIALS <i class="fa fa-pencil"></i></a></li>
+		<li><a href="#aboutus" class="smooth" title="">ABOUT  <i class="fa fa-leaf"></i></a></li>
+		<li><a href="#features" class="smooth" title="">FEATURES <i class="fa fa-map-marker"></i></a></li>
+		<li><a href="#portfolio" class="smooth" title="">PORTFOLIO <i class="fa fa-rocket"></i></a></li>
+		<li><a href="#clients" class="smooth" title="">CLIENTS <i class="fa fa-picture-o"></i></a></li>
+		<li><a href="#contact" class="smooth" title="">CONTACT <i class="fa fa-globe"></i></a></li>				
+	</ul>
+</nav>				
+	<div class="header-sec" id="home">
+		<div class="light-blue">
+			<div class="fixed-img sec-bg1"></div>			
+				<header id="home">
+					<div class="logo">
+						<img src="images/logo2.png" alt="" />
+					</div>
+		
+					<form>
+						<input type="text" placeholder="SEARCH HERE" />
+						<a href="" title=""><i class="fa fa-search"></i></a>
+					</form>
+					<ul>
+						<li><a href="#" title=""><i class="fa fa-facebook"></i></a></li>
+						<li><a href="#" title=""><i class="fa fa-twitter"></i></a></li>
+						<li><a href="#" title=""><i class="fa fa-google-plus"></i></a></li>
+						<li><a href="#" title=""><i class="fa fa-linkedin"></i></a></li>
+					</ul>
+					
+					<h1><i>Awesome</i> template for any purpose</h1>
+					<h3><i>HiFy</i> is a beautiful responsive template with a focus on readability</h3>
+					
+				</header>
+						<div class="header-mock-up">
+							<img src="images/mock-up1.png" alt="" />
+							<ul>
+								<li><a href="#" title="" class="download-btn">Download Now</a></li>
+								<li><a href="#" title="" class="preview-btn">Live Preview</a></li>
+							
+							</ul>
+							
+						</div>
+
+		</div>
+	</div><!--  Header Sec -->
+
+<div class="headline">
+	<h2>Create the <i>impossible</i>, We’ve designed everything beyond...</h2>
+</div>
+
+<div class="container">
+	<div class="row block" id="service">
+	
+		<div class="col-md-4">
+			<div class="our-services">
+				<span><i class="fa fa-cog"></i></span>
+				<h3>Web Application</h3>
+				<p>
+				Many mobile app widgets and components, it's fully responsive, it can run on all the size of the screens. Start work on your great idea today!
+				</p>
+			</div>
+		</div>
+		
+		<div class="col-md-4">
+			<div class="our-services">
+				<span><i class="fa fa-leaf"></i></span>
+				<h3>Featured Frontend</h3>
+				<p>
+				It also can be used as admin dashboard, it has tables, charts and other useful components for system management, graph data shows and analysis.
+				</p>
+			</div>
+		</div>
+		
+		<div class="col-md-4">
+			<div class="our-services">
+				<span><i class="fa fa-heart"></i></span>
+				<h3>App Landing</h3>
+				<p>
+				This template also have a front end site that for your application landing, It have the features introduction, blog section, and a price table included.
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<section id="testimonials">
+	<div class="block">
+		<div class="black">
+			<div class="fixed-img sec-bg2"></div>
+				<div class="container">
+					<div class="row">
+						<div class="testimonial-heading">
+							<h4>What <i>people</i> say about us</h4>
+						</div>
+						<div class="col-md-6">
+							<div class="testimonial-sec">
+								<div class="testimonial-thumb">
+									<img src="images/testimonial1.jpg" alt="" />
+									<span>
+										JUNE
+									<i>24</i>
+									</span>
+								</div>
+								<div class="testimonial-des">
+									<h3>Richard Jones</h3>
+									<p>We design beautiful responsive websites and iOS apps focusing on to design, content and a great user experience.</p>
+								</div>
+							</div>
+							
+							<div class="testimonial-sec">
+								<div class="testimonial-thumb">
+									<img src="images/testimonial2.jpg" alt="" />
+									<span>
+										JUNE
+									<i>24</i>
+									</span>
+								</div>
+								<div class="testimonial-des">
+									<h3>Eddard Stark</h3>
+									<p>We design beautiful responsive websites and iOS apps focusing on to design, content and a great user experience.</p>
+								</div>
+							</div>
+							
+							
+						</div>
+						
+						<div class="col-md-6">
+							
+							<div class="testimonial-sec">
+								<div class="testimonial-thumb">
+									<img src="images/testimonial3.jpg" alt="" />
+									<span>
+										JUNE
+									<i>24</i>
+									</span>
+								</div>
+								
+								<div class="testimonial-des">
+									<h3>John Snow</h3>
+									<p>We design beautiful responsive websites and iOS apps focusing on to design, content and a great user experience.</p>
+								</div>
+								
+							</div>
+							
+							
+							<div class="testimonial-sec">
+								<div class="testimonial-thumb">
+									<img src="images/testimonial4.jpg" alt="" />
+									<span>
+										JUNE
+									<i>24</i>
+									</span>
+								</div>
+								<div class="testimonial-des">
+									<h3>Charlie Kelly</h3>
+									<p>We design beautiful responsive websites and iOS apps focusing on to design, content and a great user experience.</p>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+		</div>
+	</div>
+</section>
+
+
+
+<section>
+	<div class="block" id="aboutus">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="about-mock-up">
+						<img src="images/mock-up2.png" alt="" />
+					</div>
+				</div>
+				
+				<div class="col-md-6">
+					<div class="about-us">
+						<h3>A fantastic theme to showcase your new application and send 
+your customers reeling with awe.</h3>
+
+					<p>This is Multipurpose theme can be used in any kind of projects like - Custom APPS, CMS, CRM, cPanel, Dashboard, Backend, Web Application. </p>
+
+					<p>It is built on top of the popular <i>Bootstrap 3 Framework</i> and features a clean, fresh and colorful flat user interface.</p>
+					
+					<a href="#" title=""><img src="images/google-play.png" alt="" /></a>
+					<a href="#" title=""><img src="images/iphone.png" alt="" /></a>
+					
+					</div>
+				</div>
+			</div>			
+		</div>				
+	</div>
+</section>
+
+
+
+<section>
+	<div class="block" id="features">
+				<div class="container">
+					<div class="row">
+						<div class="features">
+							<div class="slidewrap" data-autorotate="5000">
+								<ul class="slidecontrols">
+								<li><a href="#sliderName" class="prev">Prev</a></li>
+									<li><a href="#sliderName" class="next">Next</a></li>
+									
+								</ul>
+								<ul class="slider" id="sliderName">
+									<li class="slide">
+									<div class="col-md-6">
+										<div class="features-desc">
+											<h2>Discover now</h2>
+											<h4>Super-sweet animations.</h4>
+											<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+											</p>
+											
+											<div class="features-thumb">
+												<img src="images/featues1.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues2.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues3.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues4.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="feature-big">
+											<img src="images/feature-image.png" alt="" />
+										</div>
+									</div>
+									</li>
+									<li class="slide">
+									<div class="col-md-6">
+										<div class="features-desc">
+											<h2>Discover now</h2>
+											<h4>Super-sweet animations.</h4>
+											<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+											</p>
+											
+											<div class="features-thumb">
+												<img src="images/featues1.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues2.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues3.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues4.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="feature-big">
+											<img src="images/feature-image.png" alt="" />
+										</div>
+									</div>
+									</li>
+									<li class="slide">
+									<div class="col-md-6">
+										<div class="features-desc">
+											<h2>Discover now</h2>
+											<h4>Super-sweet animations.</h4>
+											<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+											</p>
+											
+											<div class="features-thumb">
+												<img src="images/featues1.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues2.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues3.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues4.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="feature-big">
+											<img src="images/feature-image.png" alt="" />
+										</div>
+									</div>
+									</li>
+									<li class="slide">
+									<div class="col-md-6">
+										<div class="features-desc">
+											<h2>Discover now</h2>
+											<h4>Super-sweet animations.</h4>
+											<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+											</p>
+											
+											<div class="features-thumb">
+												<img src="images/featues1.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues2.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues3.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues4.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="feature-big">
+											<img src="images/feature-image.png" alt="" />
+										</div>
+									</div>
+									</li>
+									<li class="slide">
+									<div class="col-md-6">
+										<div class="features-desc">
+											<h2>Discover now</h2>
+											<h4>Super-sweet animations.</h4>
+											<p>Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.
+											</p>
+											
+											<div class="features-thumb">
+												<img src="images/featues1.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues2.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues3.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+											
+											<div class="features-thumb">
+												<img src="images/featues4.jpg" alt="" />
+												<a class="html5lightbox" href="images/gallery3.jpg" title="Feature Example Ligthbox" ><i class="fa fa-search"></i></a>
+											</div>
+
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="feature-big">
+											<img src="images/feature-image.png" alt="" />
+										</div>
+									</div>
+									</li>
+								</ul>
+							</div>						
+						</div>
+					</div>
+				</div>
+	</div>
+</section>
+
+<section>
+	<div class="block" id="portfolio">
+		<div class="container">
+			<div class="row">
+				<div class="portfolio-head">
+					<h2 class="fancy-heading"><i>OUR</i> PORTFOLIO</h2>
+					<p>A fine selection of some projects we worked on.</p>
+				</div>
+				
+				<div class="portfolio">
+				
+			<!-- tabs -->
+			<div class="sky-tabs sky-tabs-pos-top-left sky-tabs-anim-flip sky-tabs-response-to-icons portfolio-btn">
+
+				<input type="radio" name="sky-tabs" checked id="sky-tab1" class="sky-tab-content-1" />
+				<label for="sky-tab1"><span><span>ALL</span></span></label>
+				
+				<input type="radio" name="sky-tabs" id="sky-tab2" class="sky-tab-content-2" />
+				<label for="sky-tab2"><span><span>WEB DESIGNING</span></span></label>
+				
+				<input type="radio" name="sky-tabs" id="sky-tab3" class="sky-tab-content-3" />
+				<label for="sky-tab3"><span><span>GRAPHIC DESIGNING</span></span></label>
+				
+				<label class="switcher"><span><span><a href="#"><i class="icon-reorder"></i>Tabs</a></span></span></label>
+			
+				<ul>
+					<li class="sky-tab-content-1">					
+						<ul>
+							<li>
+							<Div class="row">
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio1.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio2.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio3.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio4.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio5.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio6.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+							</div>
+							
+							</li>
+						
+						</ul>
+					</li>
+					
+					<li class="sky-tab-content-2">
+							<Div class="row">
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio3.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio4.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio2.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio6.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio1.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio5.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+							</div>
+					</li>
+					
+					<li class="sky-tab-content-3">
+							<Div class="row">
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio2.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio4.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+								<div class="col-md-4">
+									<div class="our-portfolio">
+										<img src="images/our-portfolio6.jpg" alt="" />
+										<span>HTML</span>
+										<p><i>WELCARE</i> HTML TEMPLATE</p>
+										<a href="#" title="">DEMO</a>
+									</div>
+								</div>
+								
+							</div>
+					</li>
+				
+				</ul>
+			</div>	
+			
+				</div>
+			</div>			
+		</div>				
+	</div>
+</section>
+
+
+
+<section id="newsletter">
+	<div class="block">
+		<div class="black">
+			<div class="fixed-img sec-bg3"></div>
+				<div class="container">
+					<div class="row">
+						<div class="newsletter">
+							<h3><i>SIGN UP</i> FOR  NEWSLETTER</h3>
+							<p>Do not want to miss anything? Subscribe to our newsletter box</p>
+							<form>
+								<input type="text" placeholder="YOUR EMAIL" />
+								<a href="#" title="" >SUBSCRIBE</a>
+							</form>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+</section>
+
+
+<section>
+	<div class="block" id="clients">
+		<div class="container">
+			<div class="portfolio-head">
+				<h2 class="fancy-heading"><i>CLIENTS</i> THAT TRUST US</h2>
+				<p>Want to join the round?</p>
+			</div>
+			<div class="row">
+				<div class="clients owl-carousel" id="owl-demo">
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+					<A href="#" title=""><img src="images/client1.png" alt="" /></a>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="contact-sec" id="contact">
+		<iframe src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=London,+United+Kingdom&amp;aq=0&amp;oq=London+&amp;sll=51.511214,-0.119824&amp;sspn=0.481182,1.352692&amp;ie=UTF8&amp;hq=&amp;hnear=London,+United+Kingdom&amp;ll=51.511214,-0.119824&amp;spn=0.003759,0.010568&amp;t=m&amp;z=14&amp;output=embed"></iframe>
+	<div class="contact-details">
+		<span><i class="fa fa-globe"></i>MAIN STREET</span>
+		
+		<p>000 Street </p>
+		<p>City, Country 0000 </p>
+		<p>0-000-000000  </p>
+		<p>(0-000-000-0000)</p>
+		<p>000 Street </p>
+		<p>Headquarters Staff Directory </p>
+	</div>
+	
+	</div>
+	
+</section>
+
+<section id="contact">
+	<div class="block">
+		<div class="container">
+			<div class="contact-head">
+				<h2 class="fancy-heading"> <i>CONTACT US </i>FOR SUPPORT</h2>
+				<p>Working AJAX contact form. Give it a try..</p>
+			</div>
+		
+			<div class="col-md-6">
+				<div class="contact-form">
+					<form><input type="text" placeholder="YOUR NAME" /><i class="fa fa-asterisk"></i></form>
+					<form><input type="password" placeholder="YOUR PASSWORD" /><i class="fa fa-asterisk"></i></form>
+					<form><textarea placeholder="YOUR MESSAGE" ></textarea><i class="fa fa-asterisk"></i>
+						<a href="#" title=""><i class="fa fa-plane"></i></a>
+					</form>
+				
+				</div>
+			</div>
+
+
+			<div class="col-md-6">
+				<div class="contact-widget">
+					<h3>ABOUT HYFY PANEL</h3>
+					<p>Aliquam ac sem hendrerit, blandit ante eleifend, aliquam dolor. Sed eu ultricies nisl, eu tincidunt nulla. Sed eu risus et ipsum elementum vehicula.</p>
+
+<p>Nunc iaculis leo augue, a ultricies odio faucibus sed. Cras pulvinar nibh quis purus hendrerit lobortis. Maecenas vitae nulla vitae nisl commodo suscipit.</p>
+					
+					<div class="flickr-widget">
+						<h3>FLICKR PHOTOS</h3>
+						
+						<div class="row">
+							<div class="col-md-2">
+								<a href="#" title=""><img src="images/flickr4.jpg" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="images/flickr2.jpg" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="images/flickr3.jpg" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="images/flickr4.jpg" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="images/flickr5.jpg" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="images/flickr6.jpg" alt="" /></a>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+<div class="bottom-line">
+	<p>© 2013 — WEBINANE PANEL PREMIUM THEME.</p>
+</div>
+</section>
+
+
+</body>
+</html>
