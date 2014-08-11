@@ -2,6 +2,14 @@ parameters:
 #    tellaw_leads_factory.example.class: Tellaw\LeadsFactoryBundle\Example
 
 services:
-#    tellaw_leads_factory.example:
-#        class: %tellaw_leads_factory.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+
+  entity_form:
+    class:        Tellaw\LeadsFactoryBundle\Form\Type\FormType
+
+  emailFieldType:
+    class:        Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType
+
+  form_utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\FormUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]

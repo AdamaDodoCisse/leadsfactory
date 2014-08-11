@@ -2426,6 +2426,13 @@
       <argument type="service" id="security.authentication.trust_resolver" on-invalid="null"/>
       <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
     </service>
+    <service id="entity_form" class="Tellaw\LeadsFactoryBundle\Form\Type\FormType"/>
+    <service id="emailfieldtype" class="Tellaw\LeadsFactoryBundle\Utils\EmailFieldType"/>
+    <service id="form_utils" class="Tellaw\LeadsFactoryBundle\Utils\FormUtils">
+      <call method="setContainer">
+        <argument type="service" id="service_container"/>
+      </call>
+    </service>
     <service id="twig.extension.acme.demo" class="Acme\DemoBundle\Twig\Extension\DemoExtension" public="false">
       <tag name="twig.extension"/>
       <argument type="service" id="twig.loader"/>

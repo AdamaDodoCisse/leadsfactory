@@ -63,6 +63,8 @@ class appDevDebugProjectContainer extends Container
             'doctrine.orm.default_manager_configurator' => 'getDoctrine_Orm_DefaultManagerConfiguratorService',
             'doctrine.orm.validator.unique' => 'getDoctrine_Orm_Validator_UniqueService',
             'doctrine.orm.validator_initializer' => 'getDoctrine_Orm_ValidatorInitializerService',
+            'emailfieldtype' => 'getEmailfieldtypeService',
+            'entity_form' => 'getEntityFormService',
             'file_locator' => 'getFileLocatorService',
             'filesystem' => 'getFilesystemService',
             'form.csrf_provider' => 'getForm_CsrfProviderService',
@@ -108,6 +110,7 @@ class appDevDebugProjectContainer extends Container
             'form.type_extension.submit.validator' => 'getForm_TypeExtension_Submit_ValidatorService',
             'form.type_guesser.doctrine' => 'getForm_TypeGuesser_DoctrineService',
             'form.type_guesser.validator' => 'getForm_TypeGuesser_ValidatorService',
+            'form_utils' => 'getFormUtilsService',
             'fragment.handler' => 'getFragment_HandlerService',
             'fragment.listener' => 'getFragment_ListenerService',
             'fragment.renderer.esi' => 'getFragment_Renderer_EsiService',
@@ -672,6 +675,32 @@ class appDevDebugProjectContainer extends Container
     protected function getDoctrine_Orm_ValidatorInitializerService()
     {
         return $this->services['doctrine.orm.validator_initializer'] = new \Symfony\Bridge\Doctrine\Validator\DoctrineInitializer($this->get('doctrine'));
+    }
+
+    /**
+     * Gets the 'emailfieldtype' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return Tellaw\LeadsFactoryBundle\Utils\EmailFieldType A Tellaw\LeadsFactoryBundle\Utils\EmailFieldType instance.
+     */
+    protected function getEmailfieldtypeService()
+    {
+        return $this->services['emailfieldtype'] = new \Tellaw\LeadsFactoryBundle\Utils\EmailFieldType();
+    }
+
+    /**
+     * Gets the 'entity_form' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return Tellaw\LeadsFactoryBundle\Form\Type\FormType A Tellaw\LeadsFactoryBundle\Form\Type\FormType instance.
+     */
+    protected function getEntityFormService()
+    {
+        return $this->services['entity_form'] = new \Tellaw\LeadsFactoryBundle\Form\Type\FormType();
     }
 
     /**
@@ -1257,6 +1286,23 @@ class appDevDebugProjectContainer extends Container
     protected function getForm_TypeGuesser_ValidatorService()
     {
         return $this->services['form.type_guesser.validator'] = new \Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser($this->get('validator.mapping.class_metadata_factory'));
+    }
+
+    /**
+     * Gets the 'form_utils' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return Tellaw\LeadsFactoryBundle\Utils\FormUtils A Tellaw\LeadsFactoryBundle\Utils\FormUtils instance.
+     */
+    protected function getFormUtilsService()
+    {
+        $this->services['form_utils'] = $instance = new \Tellaw\LeadsFactoryBundle\Utils\FormUtils();
+
+        $instance->setContainer($this);
+
+        return $instance;
     }
 
     /**

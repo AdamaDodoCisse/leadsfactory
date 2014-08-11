@@ -135,13 +135,107 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
-        // _index
-        if (rtrim($pathinfo, '/') === '/testing/test') {
-            if (substr($pathinfo, -1) !== '/') {
-                return $this->redirect($pathinfo.'/', '_index');
+        if (0 === strpos($pathinfo, '/entity')) {
+            if (0 === strpos($pathinfo, '/entity/form')) {
+                // _form_list
+                if ($pathinfo === '/entity/form/list') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormController::indexAction',  '_route' => '_form_list',);
+                }
+
+                // _form_new
+                if ($pathinfo === '/entity/form/new') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormController::newAction',  '_route' => '_form_new',);
+                }
+
+                // _form_edit
+                if (0 === strpos($pathinfo, '/entity/form/edit') && preg_match('#^/entity/form/edit/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_form_edit')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormController::editAction',));
+                }
+
+                // _form_delete
+                if (0 === strpos($pathinfo, '/entity/form/delete/id') && preg_match('#^/entity/form/delete/id/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not__form_delete;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_form_delete')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormController::deleteAction',));
+                }
+                not__form_delete:
+
+                if (0 === strpos($pathinfo, '/entity/formType')) {
+                    // _formType_list
+                    if ($pathinfo === '/entity/formType/list') {
+                        return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormTypeController::indexAction',  '_route' => '_formType_list',);
+                    }
+
+                    // _formType_new
+                    if ($pathinfo === '/entity/formType/new') {
+                        return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormTypeController::newAction',  '_route' => '_formType_new',);
+                    }
+
+                    // _formType_edit
+                    if (0 === strpos($pathinfo, '/entity/formType/edit') && preg_match('#^/entity/formType/edit/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                        return $this->mergeDefaults(array_replace($matches, array('_route' => '_formType_edit')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormTypeController::editAction',));
+                    }
+
+                    // _formType_delete
+                    if (0 === strpos($pathinfo, '/entity/formType/delete/id') && preg_match('#^/entity/formType/delete/id/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                        if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                            $allow = array_merge($allow, array('GET', 'HEAD'));
+                            goto not__formType_delete;
+                        }
+
+                        return $this->mergeDefaults(array_replace($matches, array('_route' => '_formType_delete')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityFormTypeController::deleteAction',));
+                    }
+                    not__formType_delete:
+
+                }
+
             }
 
-            return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\DefaultController::testAction',  '_route' => '_index',);
+            if (0 === strpos($pathinfo, '/entity/referenceList')) {
+                // _referenceList_list
+                if ($pathinfo === '/entity/referenceList/list') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::indexAction',  '_route' => '_referenceList_list',);
+                }
+
+                // _referenceList_new
+                if ($pathinfo === '/entity/referenceList/new') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::newAction',  '_route' => '_referenceList_new',);
+                }
+
+                // _referenceList_edit
+                if (0 === strpos($pathinfo, '/entity/referenceList/edit') && preg_match('#^/entity/referenceList/edit/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_referenceList_edit')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::editAction',));
+                }
+
+                // _referenceList_delete
+                if (0 === strpos($pathinfo, '/entity/referenceList/delete/id') && preg_match('#^/entity/referenceList/delete/id/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not__referenceList_delete;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_referenceList_delete')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::deleteAction',));
+                }
+                not__referenceList_delete:
+
+            }
+
+        }
+
+        if (0 === strpos($pathinfo, '/client')) {
+            // _client_get_form
+            if (0 === strpos($pathinfo, '/client/form') && preg_match('#^/client/form/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                return $this->mergeDefaults(array_replace($matches, array('_route' => '_client_get_form')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\FrontController::getFormAction',));
+            }
+
+            // _client_post_form
+            if ($pathinfo === '/client/post') {
+                return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\FrontController::postLeadsAction',  '_route' => '_client_post_form',);
+            }
+
         }
 
         if (0 === strpos($pathinfo, '/log')) {

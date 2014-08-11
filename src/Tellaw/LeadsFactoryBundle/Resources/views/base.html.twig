@@ -1,160 +1,431 @@
 {# app/Resources/views/base.html.twig #}
+
 <!DOCTYPE html>
+<html class="sidebar_default  no-js" lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>{% block title %}Leads Factory{% endblock %}</title>
-
-
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=PT+Sans:700,400' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
-
-
-    <!-- Styles -->
-    <link type="text/css" rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/bootstrap.min.css') }}" type="text/css" /><!-- Bootstrap -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/font-awesome-4.0.3/css/font-awesome.css') }}" type="text/css" /><!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/nv.d3.css') }}" type="text/css" /><!-- VISITOR CHART -->
-    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('bundles/tellawleadsfactory/css/daterangepicker-bs3.css') }}" /><!-- Date Range Picker -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/style.css') }}" type="text/css" /><!-- Style -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/responsive.css') }}" type="text/css" /><!-- Responsive -->
-
-
-
-    <!-- Script -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/jquery-1.10.2.js')  }}"></script><!-- Jquery -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/d3.v2.js')  }}"></script><!-- VISITOR CHART -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/nv.d3.js')  }}"></script><!-- VISITOR CHART -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/live-updating-chart.js')  }}"></script><!-- VISITOR CHART -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/bootstrap.min.js')  }}"></script><!-- Bootstrap -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/script.js')  }}"></script><!-- Script -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/jquery.easypiechart.min.js')  }}"></script> <!-- Easy Pie Chart -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/easy-pie-chart.js')  }}"></script> <!-- Easy Pie Chart -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/skycons.js')  }}"></script> <!-- Skycons -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/enscroll-0.5.2.min.js')  }}"></script> <!-- Custom Scroll bar -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/moment.js')  }}"></script> <!-- Date Range Picker -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/daterangepicker.js')  }}"></script><!-- Date Range Picker -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/ticker.js')  }}"></script><!-- Ticker -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/html5lightbox.js')  }}"></script><!-- Ticker -->
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="css/images/favicon.png">
+    <!-- Le styles -->
+    <link href="{{ asset('bundles/tellawleadsfactory/css/twitter/bootstrap.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/tellawleadsfactory/css/base.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/tellawleadsfactory/css/twitter/responsive.css') }}" rel="stylesheet">
+    <link href="{{ asset('bundles/tellawleadsfactory/css/jquery-ui-1.8.23.custom.css') }}" rel="stylesheet">
+    <script src="{{ asset('bundles/tellawleadsfactory/js/plugins/modernizr.custom.32549.js') }}"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+          <![endif]-->
 </head>
-<body>
-<div class="responsive-menu">
-    <div class="responsive-menu-dropdown blue">
-        <a title="" class="blue">MENU <i class="fa fa-align-justify" ></i></a>
-    </div>
-    <ul>
-        <li id="intro4"><a href="#" title="" ><i class="fa fa-desktop"></i><span><i>4</i></span>Formulaires</a>
-            <ul>
-                <li><a href="dashboard.html" title="">Dashboard 1</a></li>
-                <li><a href="dashboard2.html" title="">Dashboard 2</a></li>
-                <li><a href="dashboard3.html" title="">Dashboard 3</a></li>
-                <li><a href="dashboard4.html" title="">Dashboard 4</a></li>
-                <li><a href="dashboard5.html" title="">Wide Dashboard</a></li>
-            </ul>
-        </li>
-        <li id="intro5"><a href="widget.html" title="" ><i class="fa fa-heart-o"></i><span><i>20+</i></span>Widget</a></li>
-        <li><a href="#" title="" ><i class="fa fa-tint"></i><span><i>12</i></span>Ui Kit</a>
-            <ul>
-                <li><a href="notifications.html" title="">Notifications</a></li>
-                <li><a href="grids.html" title="">Grids</a></li>
-                <li><a href="buttons.html" title="">Buttons</a></li>
-                <li><a href="calendars.html" title="">Calendars</a></li>
-                <li><a href="file-manager.html" title="">File Manager</a></li>
-                <li><a href="timeline.html" title="">Liquid Timeline</a></li>
-                <li><a href="gallery.html" title="">Simple Gallery</a></li>
-                <li><a href="gallery2.html" title="">Gallery Manager</a></li>
-                <li><a href="slider.html" title="">Slider</a></li>
-                <li><a href="page-tour.html" title="">Page Tour</a></li>
-                <li><a href="collapse.html" title="">Collapse</a></li>
-                <li><a href="range-slider.html" title="">Range Slider</a></li>
-                <li><a href="typography.html" title="">Typography</a></li>
-                <li><a href="tables.html" title="">Tables</a></li>
-            </ul>
-        </li>
-        <li><a href="form.html" title="" ><i class="fa fa-paperclip"></i>Form Stuff</a></li>
-        <li><a href="charts.html" title="" ><i class="fa fa-unlink"></i><span><i>5+</i></span>Charts</a></li>
-        <li><a href="#" title="" ><i class="fa fa-rocket"></i><span><i>8+</i></span>Pages</a>
-            <ul>
-                <li><a href="invoice.html" title="">Invoice</a></li>
-                <li><a href="order-recieved.html" title="">Order Recieved</a></li>
-                <li><a href="search-result.html" title="">Search Result</a></li>
-                <li><a href="price-table.html" title="">Price Table</a></li>
-                <li><a href="inbox.html" title="">Inbox</a></li>
-                <li><a href="profile.html" title="">Profile</a></li>
-                <li><a href="contact.html" title="">Contact Us</a></li>
-                <li><a href="css-spinners.html" title="">Css Spinners</a></li>
-            </ul>
-        </li>
-        <li><a href="#" title="" ><i class="fa fa-thumbs-o-up"></i><span><i>6+</i></span>Bonus</a>
-            <ul>
 
-                <li><a href="faq.html" title="">Faq</a></li>
-                <li><a href="index.html" title="">Log in</a></li>
-                <li><a href="blank.html" title="">blank</a></li>
-                <li><a href="cart.html" title="">Cart</a></li>
-                <li><a href="billing.html" title="">Billing</a></li>
-                <li><a href="icons.html" title="">Icons</a></li>
-            </ul>
+<body>
+<div id="loading"><img src="{{ asset('bundles/tellawleadsfactory/img/ajax-loader.gif') }}"></div>
+<div id="responsive_part">
+    <div class="logo"> <a href="index.html"><span>Start</span><span class="icon"></span></a> </div>
+    <ul class="nav responsive">
+        <li>
+            <button class="btn responsive_menu icon_item" data-toggle="collapse" data-target=".overview"> <i class="icon-reorder"></i> </button>
         </li>
     </ul>
 </div>
-<header>
-    <div class="logo">
-        <img src="{{ asset('bundles/tellawleadsfactory/images/logo.png') }}" alt="" />
-    </div>
+<!-- Responsive part -->
 
-</header><!-- Header -->
-
-<div class="menu">
-    <div class="menu-profile" id="intro3">
-        <img src="http://placehold.it/57x57" alt="" />
-        <span><i class="fa fa-plus"></i></span>
-        <div class="menu-profile-hover">
-            <h1><i>Brian</i> Kelly</h1>
-            <p><i class="fa fa-map-marker"></i>LONDON, UNITED KINGDOM</p>
-            <a href="index.html" title=""><i class="fa fa-power-off"></i></a>
-            <div class="menu-profile-btns">
-
-                <h3>
-                    <i class="fa fa-user blue"></i>
-                    <a href="profile.html" title="">PROFILE</a>
-                </h3>
-                <h3>
-                    <i class="fa fa-inbox pink"></i>
-                    <a href="inbox.html" title="">INBOX</a>
-                </h3>
-
-
+<div id="sidebar" class="">
+    <div class="scrollbar">
+        <div class="track">
+            <div class="thumb">
+                <div class="end"></div>
             </div>
         </div>
     </div>
-    <ul>
-        <li><a href="#" title="" ><i class="fa fa-paperclip"></i>Formulaires</a></li>
-        <li><a href="#" title="" ><i class="fa fa-rocket"></i>Exports</a></li>
-        <li><a href="#" title="" ><i class="fa fa-desktop"></i>Monitoring</a></li>
-        <li><a href="#" title="" ><i class="fa fa-random"></i>Requester</a></li>
-        <li><a href="#" title="" ><i class="fa fa-unlink"></i>Paramètres</a></li>
+    <div class="viewport ">
+        <div class="overview collapse">
+            <div class="search row-fluid container">
+                <h2>Search</h2>
+                <form class="form-search">
+                    <div class="input-append">
+                        <input type="text" class=" search-query" placeholder="">
+                        <button class="btn_search color_4">Search</button>
+                    </div>
+                </form>
+            </div>
+            <ul id="sidebar_menu" class="navbar nav nav-list container full">
+                <li class="accordion-group color_4"> <a class="dashboard " href="index.html"><img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/dashboard.png') }}"><span>Dashboard</span></a> </li>
+                <li class="accordion-group active color_25"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse1"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Formulaires</span></a>
+                    <ul id="collapse1" class="accordion-body">
+                        <li class="active"><a href="{{ path ('_form_list') }}">Gestion des formulaires</a></li>
+                        <li class="active"><a href="{{ path ('_formType_list') }}">Gestion des types de formulaires</a></li>
+                        <li class="active"><a href="{{ path ('_referenceList_list') }}">Gestion des listes de références</a></li>
+                    </ul>
+                </li>
+                <li class="accordion-group active color_19"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse2"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Données</span></a>
+                    <ul id="collapse2" class="accordion-body">
+                        <li class="active"><a href="{{ path ('_form_list') }}">Visualisation des leads</a></li>
 
-    </ul>
-</div><!-- Right Menu -->
+                    </ul>
+                </li>
 
-<div class="wrapper">
+            </ul>
+            <div class="menu_states row-fluid container ">
+                <h2 class="pull-left">Menu Settings</h2>
+                <div class="options pull-right">
+                    <button id="menu_state_1" class="color_4" rel="tooltip" data-state ="sidebar_icons" data-placement="top" data-original-title="Icon Menu">1</button>
+                    <button id="menu_state_2" class="color_4 active" rel="tooltip" data-state ="sidebar_default" data-placement="top" data-original-title="Fixed Menu">2</button>
+                    <button id="menu_state_3" class="color_4" rel="tooltip" data-placement="top" data-state ="sidebar_hover" data-original-title="Floating on Hover Menu">3</button>
+                </div>
+            </div>
+            <!-- End sidebar_box -->
 
-    {% block body %}{% endblock %}
+        </div>
+    </div>
+</div>
+<div id="main">
+<div class="container">
 
-</div><!-- Wrapper -->
+<div class="header row-fluid">
+    <div class="logo"> <a href="index.html"><span>Leads FACTORY</span><span class="icon"></span></a> </div>
+    <div class="top_right">
+        <ul class="nav nav_menu">
+            <li class="dropdown"> <a class="dropdown-toggle administrator" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                    <div class="title"><span class="name">George</span><span class="subtitle">Future Buyer</span></div>
+                    <span class="icon"><img src="{{ asset('bundles/tellawleadsfactory/img/thumbnail_george.jpg') }}"></span></a>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                    <li><a href="profile.html"><i class=" icon-user"></i> My Profile</a></li>
+                    <li><a href="forms_general.html"><i class=" icon-cog"></i>Settings</a></li>
+                    <li><a href="index2.html"><i class=" icon-unlock"></i>Log Out</a></li>
+                    <li><a href="search.html"><i class=" icon-flag"></i>Help</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- End top-right -->
+</div>
+<div id="main_container">
 
-<!-- RAIn ANIMATED ICON-->
-<script>
-    var icons = new Skycons();
-    icons.set("rain", Skycons.RAIN);
-    icons.play();
+{% block body %}{% endblock %}
+
+<!-- End #container -->
+</div>
+<div id="footer">
+    <p> &copy; Start - Admin Template 2012 </p>
+    <span class="company_logo"><a href="http://www.pixelgrade.com"></a></span> </div>
+</div>
+<div class="background_changer dropdown">
+    <div class="dropdown" id="colors_pallete"> <a data-toggle="dropdown" data-target="drop4" class="change_color"></a>
+        <ul  class="dropdown-menu pull-left" role="menu" aria-labelledby="drop4">
+            <li><a data-color="color_0" class="color_0" tabindex="-1">1</a></li>
+            <li><a data-color="color_1" class="color_1" tabindex="-1">1</a></li>
+            <li><a data-color="color_2" class="color_2" tabindex="-1">2</a></li>
+            <li><a data-color="color_3" class="color_3" tabindex="-1">3</a></li>
+            <li><a data-color="color_4" class="color_4" tabindex="-1">4</a></li>
+            <li><a data-color="color_5" class="color_5" tabindex="-1">5</a></li>
+            <li><a data-color="color_6" class="color_6" tabindex="-1">6</a></li>
+            <li><a data-color="color_7" class="color_7" tabindex="-1">7</a></li>
+            <li><a data-color="color_8" class="color_8" tabindex="-1">8</a></li>
+            <li><a data-color="color_9" class="color_9" tabindex="-1">9</a></li>
+            <li><a data-color="color_10" class="color_10" tabindex="-1">10</a></li>
+            <li><a data-color="color_11" class="color_11" tabindex="-1">10</a></li>
+            <li><a data-color="color_12" class="color_12" tabindex="-1">12</a></li>
+            <li><a data-color="color_13" class="color_13" tabindex="-1">13</a></li>
+            <li><a data-color="color_14" class="color_14" tabindex="-1">14</a></li>
+            <li><a data-color="color_15" class="color_15" tabindex="-1">15</a></li>
+            <li><a data-color="color_16" class="color_16" tabindex="-1">16</a></li>
+            <li><a data-color="color_17" class="color_17" tabindex="-1">17</a></li>
+            <li><a data-color="color_18" class="color_18" tabindex="-1">18</a></li>
+            <li><a data-color="color_19" class="color_19" tabindex="-1">19</a></li>
+            <li><a data-color="color_20" class="color_20" tabindex="-1">20</a></li>
+            <li><a data-color="color_21" class="color_21" tabindex="-1">21</a></li>
+            <li><a data-color="color_22" class="color_22" tabindex="-1">22</a></li>
+            <li><a data-color="color_23" class="color_23" tabindex="-1">23</a></li>
+            <li><a data-color="color_24" class="color_24" tabindex="-1">24</a></li>
+            <li><a data-color="color_25" class="color_25" tabindex="-1">25</a></li>
+        </ul>
+    </div>
+</div>
+<!-- End .background_changer -->
+</div>
+<!-- /container -->
+
+<!-- Le javascript
+    ================================================== -->
+<!-- General scripts -->
+<script src="{{ asset('bundles/tellawleadsfactory/js/jquery.js') }}" type="text/javascript"> </script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/jquery-ui-1.8.23.custom.min.js') }}" type="text/javascript"></script>
+<!--[if !IE]> -->
+<!--[if !IE]> -->
+<script src="{{ asset('bundles/tellawleadsfactory/js/plugins/enquire.min.js') }}" type="text/javascript"></script>
+<!-- <![endif]-->
+<!-- <![endif]-->
+<!--[if lt IE 7]>
+<script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE7.js') }}"></script>
+<![endif]-->
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/jquery.sparkline.min.js') }}"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/plugins/excanvas.compiled.js') }}"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-transition.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-alert.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-modal.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-dropdown.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-scrollspy.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-tab.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-tooltip.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-popover.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-button.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-collapse.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-carousel.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-typeahead.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/bootstrap-affix.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/fileinput.jquery.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/jquery.touchdown.js') }}" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/jquery.uniform.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/jquery.tinyscrollbar.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/jnavigate.jquery.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/jquery.touchSwipe.min.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/jquery.peity.min.js') }}"></script>
+
+<!-- Flot charts -->
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/flot/jquery.flot.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/flot/jquery.flot.resize.js') }}"></script>
+
+<!-- Data tables -->
+<script type="text/javascript" language="javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/datatables/js/jquery.dataTables.js') }}"></script>
+
+<!-- Task plugin -->
+<script language="javascript" type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/js/plugins/knockout-2.0.0.js') }}"></script>
+
+<!-- Custom made scripts for this template -->
+<script src="{{ asset('bundles/tellawleadsfactory/js/scripts.js') }}" type="text/javascript"></script>
+<script type="text/javascript">
+    /**** Specific JS for this page ****/
+    /* Todo Plugin */
+    var todo_data = [
+        {id: 1, title: "<i class='gicon-gift icon-white'><\/i>Have tea with the Queen", isDone: false},
+        {id: 2, title: "<i class='gicon-briefcase icon-white'><\/i>Steal  James Bond car", isDone: true},
+        {id: 3, title: "<i class='gicon-heart icon-white'><\/i>Confirm that this template is awesome", isDone: false},
+        {id: 4, title: "<i class='gicon-thumbs-up icon-white'><\/i>Nothing", isDone: false},
+        {id: 5, title: "<i class='gicon-fire icon-white'><\/i>Play solitaire", isDone: false}
+    ];
+
+
+    function Task(data) {
+        this.title = ko.observable(data.title);
+        this.isDone = ko.observable(data.isDone);
+        this.isEditing = ko.observable(data.isEditing);
+
+        this.startEdit = function (event) {
+            console.log("editing");
+            this.isEditing(true);
+        }
+
+        this.updateTask = function (task) {
+            this.isEditing(false);
+        }
+    }
+
+    function TaskListViewModel() {
+        // Data
+        var self = this;
+        self.tasks = ko.observableArray([]);
+        self.newTaskText = ko.observable();
+        self.incompleteTasks = ko.computed(function() {
+            return ko.utils.arrayFilter(self.tasks(),
+                    function(task) {
+                        return !task.isDone() && !task._destroy;
+                    });
+        });
+
+        self.completeTasks = ko.computed(function(){
+            return ko.utils.arrayFilter(self.tasks(),
+                    function(task) {
+                        return task.isDone() && !task._destroy;
+                    });
+        });
+
+        // Operations
+        self.addTask = function() {
+            self.tasks.push(new Task({ title: this.newTaskText(), isEditing: false }));
+
+            self.newTaskText("");
+
+        };
+        self.removeTask = function(task) { self.tasks.destroy(task) };
+
+        self.removeCompleted = function(){
+            self.tasks.destroyAll(self.completeTasks());
+        };
+
+        /* Load the data */
+        var mappedTasks = $.map(todo_data, function(item){
+            return new Task(item);
+        });
+
+        self.tasks(mappedTasks);
+    }
+
+    ko.applyBindings(new TaskListViewModel());
+    //End Todo Plugin
+
+</script><script type="text/javascript">
+
+    //Chart - Campaigns
+    $(function () {
+        var data_campaigns = [[1,10], [2,9], [3,8], [4,6], [5,5], [6,3], [7,9], [8,10],[9,12],[10,14],[11,15],[12,13],[13,11],[14,10],[15,9],[16,8],[17,12],[18,14],[19,16],[20,19],[21,20],[22,20],[23,19],[24,17],[25,15],[25,14],[26,12],[27,10],[28,8],[29,10],[30,12],[31,10], [32,9], [33,8], [34,6], [35,5], [36,3], [37,9], [38,10],[39,12],[40,14],[41,15],[42,13],[43,11],[44,10],[45,9],[46,8],[47,12],[48,14],[49,16],[50,12],[51,10], [52,9], [53,8], [54,6], [55,5], [56,3], [57,9], [58,10],[59,12],[60,14],[61,15],[62,13],[63,11],[64,10],[65,9],[66,8],[67,12],[68,14],[69,16]];
+        var data_campaigns2 = [[1,12], [2,10], [3,9], [4,8], [5,8], [6,8], [7,8], [8,8],[9,9],[10,9],[11,10],[12,11],[13,12],[14,11],[15,10],[16,10],[17,9],[18,10],[19,11],[20,11],[21,12],[22,13],[23,14],[24,13],[25,12],[25,12],[26,11],[27,10],[28,9],[29,8],[30,7],[31,7], [32,8], [33,8], [34,7], [35,6], [36,6], [37,7], [38,8],[39,8],[40,9],[41,10],[42,11],[43,11],[44,12],[45,12],[46,11],[47,10],[48,9],[49,8],[50,8],[51,9], [52,10], [53,11], [54,12], [55,12], [56,12], [57,13], [58,13],[59,12],[60,11],[61,10],[62,9],[63,8],[64,7],[65,7],[66,6],[67,5],[68,4],[69,3]];
+
+        var plot = $.plot($("#placeholder"),
+                [ { data: data_campaigns, color:"rgba(0,0,0,0.2)", shadowSize:0,
+                    bars: {
+                        show: true,
+                        lineWidth: 0,
+                        fill: true,
+
+                        fillColor: { colors: [ { opacity: 1 }, { opacity: 1 } ] }
+                    }
+                } ,
+                    { data: data_campaigns2,
+
+                        color:"rgba(255,255,255, 0.4)",
+                        shadowSize:0,
+                        lines: {show:true, fill:false}, points: {show:false},
+                        bars: {show:false}
+                    }
+                ],
+                {
+                    series: {
+                        bars: {show:true, barWidth: 0.6}
+                    },
+                    grid: { show:false, hoverable: true, clickable: false, autoHighlight: true, borderWidth:0   },
+                    yaxis: { min: 0, max: 20 }
+
+                });
+
+        function showTooltip(x, y, contents) {
+            $('<div id="tooltip"><div class="date">12 Nov 2012<\/div><div class="title text_color_3">'+x/10+'%<\/div> <div class="description text_color_3">CTR<\/div><div class="title ">'+x*12+'<\/div><div class="description">Impressions<\/div><\/div>').css( {
+                position: 'absolute',
+                display: 'none',
+                top: y - 125,
+                left: x - 40,
+                border: '0px solid #ccc',
+                padding: '2px 6px',
+                'background-color': '#fff',
+                opacity: 10
+            }).appendTo("body").fadeIn(200);
+        }
+
+        var previousPoint = null;
+        $("#placeholder").bind("plothover", function (event, pos, item) {
+            $("#x").text(pos.x.toFixed(2));
+            $("#y").text(pos.y.toFixed(2));
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0].toFixed(2),
+                            y = item.datapoint[1].toFixed(2);
+                    showTooltip(item.pageX, item.pageY,
+                            x);
+                }
+            }
+        });
+
+        //Fundraisers chart
+        var data_fund = [[1,10], [2,9], [3,8], [4,6], [5,5], [6,3], [7,9], [8,10],[9,12],[10,14],[11,15],[12,13],[13,11],[14,10],[15,9],[16,8],[17,12],[18,14],[19,16],[20,19],[21,20],[22,20],[23,19],[24,17],[25,15],[25,14],[26,12],[27,10],[28,8],[29,10],[30,12],[31,10], [32,9], [33,8], [34,6], [35,5], [36,3], ];
+        $.plot($("#placeholder2"),
+                [ { data: data_fund, color:"#fff", shadowSize:0,
+                    bars: {
+                        show: true,
+                        lineWidth: 0,
+                        fill: true,
+                        highlight: {
+                            opacity: 0.3
+                        },
+                        fillColor: { colors: [ { opacity: 1 }, { opacity: 1 } ] }
+                    }
+                }
+                ],
+                {
+                    series: {
+                        bars: {show:true, barWidth: 0.6}
+                    },
+                    grid: { show:false, hoverable: true, clickable: false, autoHighlight: true, borderWidth:0   },
+                    yaxis: { min: 0, max: 23 }
+
+                });
+
+        function showTooltip2(x, y, contents) {
+            $('<div id="tooltip"><div class="title ">'+x*2+'</div><div class="description">Impressions</div></div>').css( {
+                position: 'absolute',
+                display: 'none',
+                top: y - 58,
+                left: x - 40,
+                border: '0px solid #ccc',
+                padding: '2px 6px',
+                'background-color': '#fff',
+                opacity: 10
+            }).appendTo("body").fadeIn(200);
+        }
+
+        var previousPoint = null;
+        $("#placeholder2").bind("plothover", function (event, pos, item) {
+            $("#x").text(pos.x.toFixed(2));
+            $("#y").text(pos.y.toFixed(2));
+            if (item) {
+                if (previousPoint != item.dataIndex) {
+                    previousPoint = item.dataIndex;
+                    $("#tooltip").remove();
+                    var x = item.datapoint[0].toFixed(2),
+                            y = item.datapoint[1].toFixed(2);
+                    showTooltip2(item.pageX, item.pageY,
+                            x);
+                }
+            }
+        });
+        //Envato chart
+        $.plot($("#placeholder3"),
+                [ { data: data_fund, color:"rgba(0,0,0,0.2)", shadowSize:0,
+                    bars: {
+                        lineWidth: 0,
+                        fill: true,
+                        fillColor: { colors: [ { opacity: 1 }, { opacity: 1 } ] }
+                    },
+                    lines: {show:false, fill:true}, points: {show:false} }
+                ],
+                {
+                    series: {
+                        bars: {show:true, barWidth: 0.6}
+                    },
+                    grid: { show:false, hoverable: true, clickable: false, autoHighlight: true, borderWidth:0   },
+                    yaxis: { min: 0, max: 23 }
+
+                });
+        //Facebook chart
+        $.plot($("#placeholder4"),
+                [ { data: data_fund, color:"rgba(0,0,0,0.2)", shadowSize:0,
+                    bars: {
+
+                        lineWidth: 0,
+                        fill: true,
+
+                        fillColor: { colors: [ { opacity: 1 }, { opacity: 1 } ] }
+                    },
+                    lines: {show:false, fill:true}, points: {show:false}
+                }
+                ],
+                {
+                    series: {
+                        bars: {show:true, barWidth: 0.6}
+                    },
+                    grid: { show:false, hoverable: true, clickable: false, autoHighlight: true, borderWidth:0   },
+                    yaxis: { min: 0, max: 23 }
+                });
+        // End Fundraiser chart
+    });
+
+
+
+
 </script>
-
-
 </body>
 </html>
