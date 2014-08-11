@@ -32,7 +32,47 @@ class Form {
      * @ORM\Column (name="description", type="text", nullable=true)
      */
     protected $description;
+
+
+    /**
+     * @var longtext $source
+     * @ORM\Column (name="source", type="text", nullable=true)
+     */
     protected $source;
+
+    /**
+     * @var longtext $script
+     * @ORM\Column (name="script", type="text", nullable=true)
+     */
+    protected $script;
+
+    /**
+     * @var longtext $style
+     * @ORM\Column (name="style", type="text", nullable=true)
+     */
+    protected $style;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="FormType", inversedBy="forms")
+     * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
+     */
+    protected $formType;
+
+    /**
+     * @param mixed $formType
+     */
+    public function setFormType($formType)
+    {
+        $this->formType = $formType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormType()
+    {
+        return $this->formType;
+    }
 
     /**
      * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $description
@@ -129,7 +169,6 @@ class Form {
     {
         return $this->style;
     }
-    protected $script;
-    protected $style;
+
 
 }
