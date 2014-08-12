@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement
  *
- * @ORM\Table()
+ * 
  * @ORM\Entity
  */
 class ReferenceListElement {
@@ -15,7 +15,7 @@ class ReferenceListElement {
 	/**
 	 * @var integer $id
 	 *
-	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Column(type="integer", name="id")
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
@@ -23,18 +23,18 @@ class ReferenceListElement {
 
     /**
      * @var string $name
-     * @ORM\Column(name="name", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="name")
      */
     protected $name;
 
     /**
-     * @var longtext $description
-     * @ORM\Column (name="description", type="text", nullable=true)
+     * @var string $value
+     * @ORM\Column(type="text", nullable=true, name="description")
      */
     protected $value;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ReferenceList", inversedBy="elements")
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceList", inversedBy="elements")
      * @ORM\JoinColumn(name="referencelist_id", referencedColumnName="id")
      */
     protected $referenceList;

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Tellaw\LeadsFactoryBundle\Entity\Leads
  *
- * @ORM\Table()
+ * 
  * @ORM\Entity
  */
 class Leads {
@@ -15,7 +15,7 @@ class Leads {
 	/**
 	 * @var integer $id
 	 *
-	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Column(type="integer", name="id")
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
@@ -23,33 +23,64 @@ class Leads {
 
     /**
      * @var string $firstname
-     * @ORM\Column(name="firstname", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="firstname")
      */
     protected $firstname;
 
     /**
      * @var string $lastname
-     * @ORM\Column(name="lastname", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="lastname")
      */
     protected $lastname;
 
     /**
+     * @ORM\Column(type="text", nullable=true, name="content")
+     */
+    private $data;
+
+    /**
      * @var longtext $content
-     * @ORM\Column (name="content", type="text", nullable=true)
+     * 
      */
     protected $content;
 
     /**
      * @var int $status
-     * @ORM\Column (name="status", type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=true, name="status")
      */
     protected $status;
 
     /**
      * @var datetime $exportdate
-     * @ORM\Column (name="exportdate", type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true, name="exportdate")
      */
     protected $exportdate;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $log;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\FormType", inversedBy="leads")
+     * @ORM\JoinColumn(name="form_type_id", referencedColumnName="id")
+     */
+    private $formType;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $utmcampaign;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $telephone;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $createdAt;
 
     /**
      * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $content
@@ -147,5 +178,84 @@ class Leads {
         return $this->status;
     }
 
+    /**
+     * @param mixed $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param mixed $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * @param mixed $log
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param mixed $telephone
+     */
+    public function setTelephone($telephone)
+    {
+        $this->telephone = $telephone;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTelephone()
+    {
+        return $this->telephone;
+    }
+
+    /**
+     * @param mixed $utmcampaign
+     */
+    public function setUtmcampaign($utmcampaign)
+    {
+        $this->utmcampaign = $utmcampaign;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUtmcampaign()
+    {
+        return $this->utmcampaign;
+    }
 
 }

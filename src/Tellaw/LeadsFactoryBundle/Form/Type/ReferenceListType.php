@@ -33,6 +33,8 @@ class ReferenceListType extends AbstractType
         $builder->add('name');
         $builder->add('description');
 
+        $builder->add('json', "textarea", array('mapped' => false));
+
         $builder->add('save', 'submit');
 
     }

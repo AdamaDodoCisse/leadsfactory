@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Tellaw\LeadsFactoryBundle\Entity\Form
  *
- * @ORM\Table()
+ * 
  * @ORM\Entity
  */
 class Form {
@@ -15,7 +15,7 @@ class Form {
 	/**
 	 * @var integer $id
 	 *
-	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Column(type="integer", name="id")
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
@@ -23,37 +23,37 @@ class Form {
 
     /**
      * @var string $name
-     * @ORM\Column(name="name", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="name")
      */
     protected $name;
 
     /**
      * @var longtext $description
-     * @ORM\Column (name="description", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, name="description")
      */
     protected $description;
 
 
     /**
      * @var longtext $source
-     * @ORM\Column (name="source", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, name="source")
      */
     protected $source;
 
     /**
      * @var longtext $script
-     * @ORM\Column (name="script", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, name="script")
      */
     protected $script;
 
     /**
      * @var longtext $style
-     * @ORM\Column (name="style", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, name="style")
      */
     protected $style;
 
     /**
-     * @ORM\ManyToOne(targetEntity="FormType", inversedBy="forms")
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\FormType")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      */
     protected $formType;

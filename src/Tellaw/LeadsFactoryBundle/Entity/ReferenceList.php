@@ -9,25 +9,25 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceList
  *
- * @ORM\Table()
+ * 
  * @ORM\Entity
  */
 class ReferenceList {
 
     /**
-     * @ORM\OneToMany(targetEntity="ReferenceListElement", mappedBy="referenceList")
+     * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", mappedBy="referenceList")
      */
     protected $elements;
 
     public function __construct()
     {
-        $this->forms = new ArrayCollection();
+        $this->elements = new ArrayCollection();
     }
 
 	/**
 	 * @var integer $id
 	 *
-	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Column(type="integer", name="id")
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
@@ -35,19 +35,19 @@ class ReferenceList {
 
     /**
      * @var string $code
-     * @ORM\Column(name="code", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="code")
      */
     protected $code;
 
     /**
      * @var string $name
-     * @ORM\Column(name="name", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="name")
      */
     protected $name;
 
     /**
      * @var longtext $description
-     * @ORM\Column (name="description", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, name="description")
      */
     protected $description;
 

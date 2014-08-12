@@ -7,25 +7,26 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * Tellaw\LeadsFactoryBundle\Entity\FormType
  *
- * @ORM\Table()
+ * 
  * @ORM\Entity
  */
 class FormType {
 
     /**
-     * @ORM\OneToMany(targetEntity="Form", mappedBy="forms")
+     * 
      */
     protected $forms;
 
     public function __construct()
     {
         $this->forms = new ArrayCollection();
+        $this->leads = new ArrayCollection();
     }
 
 	/**
 	 * @var integer $id
 	 *
-	 * @ORM\Column(name="id", type="integer")
+	 * @ORM\Column(type="integer", name="id")
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
@@ -33,15 +34,37 @@ class FormType {
 
     /**
      * @var string $name
-     * @ORM\Column(name="name", type="string", nullable=true)
+     * @ORM\Column(type="string", nullable=true, name="name")
      */
     protected $name;
 
     /**
      * @var longtext $description
-     * @ORM\Column (name="description", type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true, name="description")
      */
     protected $description;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Leads", mappedBy="formType")
+     */
+    private $leads;
+
+    /**
+     * @param mixed $leads
+     */
+    public function setLeads($leads)
+    {
+        $this->leads = $leads;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLeads()
+    {
+        return $this->leads;
+    }
 
     /**
      * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $description
