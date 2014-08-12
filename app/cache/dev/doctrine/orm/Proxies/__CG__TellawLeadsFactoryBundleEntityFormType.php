@@ -64,10 +64,10 @@ class FormType extends \Tellaw\LeadsFactoryBundle\Entity\FormType implements \Do
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return array('__isInitialized__', 'forms', 'id', 'name', 'description');
+            return array('__isInitialized__', 'forms', 'id', 'name', 'description', 'leads');
         }
 
-        return array('__isInitialized__', 'forms', 'id', 'name', 'description');
+        return array('__isInitialized__', 'forms', 'id', 'name', 'description', 'leads');
     }
 
     /**
@@ -173,6 +173,28 @@ class FormType extends \Tellaw\LeadsFactoryBundle\Entity\FormType implements \Do
     }
 
     
+    /**
+     * {@inheritDoc}
+     */
+    public function setLeads($leads)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLeads', array($leads));
+
+        return parent::setLeads($leads);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLeads()
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLeads', array());
+
+        return parent::getLeads();
+    }
+
     /**
      * {@inheritDoc}
      */

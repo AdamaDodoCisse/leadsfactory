@@ -1,24 +1,51 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Utils;
+namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 abstract class AbstractFieldType {
 
-    // Generic list of attributes to ignore for tags
+    /**
+     * Generic list of attributes to ignore for tags
+     * @var array $attributesToIgnore Defines attributes which should not be copied to html output for the field
+     */
     private $attributesToIgnore = array ("type", "id", "validator");
 
-    // List to override in implementations
+    /**
+     * List of attributes to ignore specifics to the current tag
+     * @var array $customAttributesToIgnore Defines custom attributes for the current tag to be ignored
+     */
     private $customAttributesToIgnore = array();
 
-    // List of validators usable by the system
+    /**
+     * @var array $validatorList List of default validators that the system can use
+     */
     private $validatorList = array ( "notempty" );
 
-    // List of custom tag validators
+    /**
+     * @var array $customValidatorList Specific validators for the current field
+     */
     private $customValidatorList = array ( "notempty" );
 
     /**
+     * @var Object $_instance Object instance, mustn't be called directly, please use getInstance static method.
+     */
+    private static $_instance = null;
+
+    protected abstract function createInstance();
+
+    public static function getInstance () {
+
+        if(is_null(self::$_instance)) {
+            self::$_instance = createInstance();
+        }
+
+        return self::$_instance;
+
+    }
+
+    /**
      * Method used to render to html a field
-     * @param $tag
-     * @return String $html
+     * @param Object $tag Tag object
+     * @return string Html Content formatted
      */
     public function renderToHtml ( $tag ) {
 
@@ -29,7 +56,7 @@ abstract class AbstractFieldType {
 
     /**
      * Return the list of tags required to be ignored
-     * @return array
+     * @return array merged lists of attributes to ignore
      */
     protected function getAttributesToIgnore () {
         return array_merge( $this->attributesToIgnore, $this->customAttributesToIgnore );
@@ -37,7 +64,7 @@ abstract class AbstractFieldType {
 
     /**
      * Return the list of validators available
-     * @return array
+     * @return array merged list of available validators
      */
     protected function getValidatorsList () {
         return array_merge( $this->validatorList, $this->customValidatorList );
@@ -46,8 +73,8 @@ abstract class AbstractFieldType {
 
     /**
      * Return true if parameter tag has been declared to ignore list
-     * @param $tag
-     * @return bool
+     * @param string $tag Tag string
+     * @return bool true if the tag must be ignored, and false if it should be copied to output
      */
     protected function isAttributeToIgnore ( $tag ) {
 
@@ -60,9 +87,9 @@ abstract class AbstractFieldType {
     }
 
     /**
-     * get Attributes list for current tag and return an HTML view.
-     * @param $tag
-     * @return string
+     * Get the attributes list for current tag and return an HTML view.
+     * @param array $tag content tag
+     * @return string string of attributes to include in the tag
      */
     protected function getAttributes ( $tag ) {
 
@@ -82,7 +109,9 @@ abstract class AbstractFieldType {
 
     /***
      *
-     * Here start validators usable by multiple tags.
+     * Validation method for assert NotEmpty
+     * @param string String to test
+     * @return bool true if not empty.
      *
      */
     protected function isValidFor_not_empty ( $value ) {

@@ -93,6 +93,8 @@ class EntityReferenceListController extends Controller
                                     )
         );
 
+
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -102,11 +104,18 @@ class EntityReferenceListController extends Controller
             $em->persist($form->getData());
             $em->flush();
 
+            // Traitement des éléments de la liste
+            $jsonElements = $form->get('json')->getData();
+
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Edition d'une liste de référence"));
+        $form->get('json')->setData("Test");
+
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig',
+                                array(  'form' => $form->createView(),
+                                        'elements'=> $formData->getElements(),
+                                        'title' => "Edition d'une liste de référence"));
 
     }
 
@@ -129,5 +138,17 @@ class EntityReferenceListController extends Controller
         return $this->redirect($this->generateUrl('_referenceList_list'));
 
     }
+
+    private function saveJsonFeed ( $json ) {
+
+        $elements = json_decode ( $json, true );
+
+        foreach ($elements as $element) {
+
+        }
+
+    }
+
+
 
 }

@@ -1,20 +1,19 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Utils;
+namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\AbstractFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
+/**
+ * Field of type Email will be identified by the type <b>email</b> and will be used to input a content of type email.
+ *
+ * Exemple : &lt;field type="email" id="myemail"/>
+ *
+ * @package Tellaw\LeadsFactoryBundle\Utils\Fields
+ */
 class EmailFieldType extends AbstractFieldType {
 
-    private static $_instance = null;
-
-    public static function getInstance () {
-
-        if(is_null(self::$_instance)) {
-            self::$_instance = new EmailFieldType();
-        }
-
-        return self::$_instance;
-
+    protected function createInstance () {
+        return new EmailFieldType();
     }
 
 }

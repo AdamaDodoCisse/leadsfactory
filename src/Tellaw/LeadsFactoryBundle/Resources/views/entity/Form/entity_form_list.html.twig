@@ -1,7 +1,9 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
-    <div class="container">
+<div class="main_container">
+
+    <div class="row-fluid">
 
         <div class="span8">
             <div class="heading-sec">
@@ -9,10 +11,13 @@
             </div>
         </div>
 
-                <div class="span4">
-                    <button class="btn btn-success btn-large"  onclick="window.location.href='{{ path ('_form_new') }}'">Créer un nouveau formulaire</button>
-                </div>
+        <div class="span4">
+            <button class="btn btn-success btn-large"  onclick="window.location.href='{{ path ('_form_new') }}'">Créer un nouveau formulaire</button>
+        </div>
 
+    </div>
+
+    <div class="row-fluid">
 
         <div class="span12">
             <div class="">
@@ -50,8 +55,8 @@
             </div>
         </div>
 
-
-
     </div>
+
+</div>
 
 {% endblock %}

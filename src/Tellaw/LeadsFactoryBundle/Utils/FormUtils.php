@@ -2,6 +2,9 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 
 class FormUtils {
 
@@ -89,6 +92,12 @@ class FormUtils {
         switch ($type) {
             case "email":
                 $fieldType = EmailFieldType::getInstance();
+                break;
+            case "text":
+                $fieldType = TextFieldType::getInstance();
+                break;
+            case "reference-list":
+                $fieldType = ReferenceListFieldType::getInstance();
                 break;
         }
 
