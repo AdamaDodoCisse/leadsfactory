@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListType;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListElementType;
+use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -45,6 +46,7 @@ class EntityReferenceListController extends Controller
      */
     public function newAction( Request $request )
     {
+
         $type = new ReferenceListType();
 
         $form = $this->createForm(  $type,

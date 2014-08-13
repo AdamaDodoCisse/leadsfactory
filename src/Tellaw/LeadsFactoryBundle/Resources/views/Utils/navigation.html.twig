@@ -1,0 +1,17 @@
+<ul id="sidebar_menu" class="navbar nav nav-list container full">
+    <li class="accordion-group color_4"> <a class="dashboard " href="index.html"><img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/dashboard.png') }}"><span>Dashboard</span></a> </li>
+    <li class="accordion-group {% if sections['formulaires'] == '1' %}active{% endif %} color_25"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse1"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Formulaires</span></a>
+        <ul id="collapse1" class="accordion-body collapse {% if sections['formulaires'] == '1' %}in{% endif %}">
+            <li {% if ( route == '_form_list' or route == '_form_new'  or route == '_form_edit') %}class="active"{% endif %}><a href="{{ path ('_form_list') }}">Gestion des formulaires</a></li>
+            <li {% if ( route == '_formType_list' or route == '_formType_new'  or route == '_formType_edit') %}class="active"{% endif %}><a href="{{ path ('_formType_list') }}">Gestion des types de formulaires</a></li>
+            <li {% if ( route == '_referenceList_list' or route == '_referenceList_new'  or route == '_referenceList_edit') %}class="active"{% endif %}><a href="{{ path ('_referenceList_list') }}">Gestion des listes de références</a></li>
+        </ul>
+    </li>
+    <li class="accordion-group {% if sections['donnees'] == '1' %}active{% endif %} color_19"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse2"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Données</span></a>
+        <ul id="collapse2" class="accordion-body collapse {% if sections['donnees'] == '1' %}in{% endif %}">
+            <li class="active"><a href="{{ path ('_form_list') }}">Visualisation des leads</a></li>
+
+        </ul>
+    </li>
+
+</ul>

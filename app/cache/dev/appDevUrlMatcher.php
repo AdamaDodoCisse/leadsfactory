@@ -267,6 +267,11 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
+        // _utils_navigation
+        if (0 === strpos($pathinfo, '/utils/navigation') && preg_match('#^/utils/navigation/(?P<parentRoute>[^/]++)$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => '_utils_navigation')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\UtilsController::navigationAction',));
+        }
+
         if (0 === strpos($pathinfo, '/log')) {
             // login_check
             if ($pathinfo === '/login_check') {
