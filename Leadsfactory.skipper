@@ -108,10 +108,14 @@
       <field name="telephone" type="string" uuid="c146f7b3-0269-4727-a514-4a3dd3948fc4"/>
       <field name="utmcampaign" type="string" uuid="b476b1bc-4604-4da0-ac57-abd62db96acd"/>
       <field name="log" type="string" uuid="a00c9d16-8012-465e-b669-6b98677542f3"/>
+      <field name="form_type_id" type="integer" uuid="dbfc9b0e-2acb-41a5-b2b3-fe632df1ecc1"/>
       <orm-attributes>
         <attribute name="export-file-name">Leads.php</attribute>
       </orm-attributes>
     </entity>
+    <association from="Leads" to="FormType" caption="FormType Leads" owner-alias="leads" inverse-alias="formType" uuid="c5fb1e8b-80f2-4072-8291-4354c5fe7e7e">
+      <association-field from="form_type_id" to="id"/>
+    </association>
     <entity name="ReferenceList" uuid="822c68a2-bc9d-4eda-8823-37c94d961e41">
       <field name="id" type="integer" required="true" primary="true" uuid="7780c561-53cf-42d0-a32e-52c876c43372">
         <orm-attributes>
@@ -176,14 +180,15 @@
     </orm-attributes>
   </module>
   <visual-data>
-    <project uuid="0045b934-64b6-4e36-aa27-28deec2297ac" size-x="0" size-x2="547" size-y="0" size-y2="430"/>
+    <project uuid="0045b934-64b6-4e36-aa27-28deec2297ac" size-x="0" size-x2="615" size-y="0" size-y2="430"/>
     <entity uuid="33e6c09c-96c7-48ff-b88b-693dde10e40a" bg-color="4294967295" hdr-color="4292006610" position-x="172" position-y="195" size-x="0" size-x2="102" size-y="0" size-y2="73"/>
     <entity uuid="54c2c9b8-1dd7-4b1d-856a-1188bd9675be" bg-color="4294967295" hdr-color="4292006610" position-x="178" position-y="40" size-x="0" size-x2="90" size-y="0" size-y2="59"/>
     <entity uuid="822c68a2-bc9d-4eda-8823-37c94d961e41" bg-color="4294967295" hdr-color="4292006610" position-x="29" position-y="195" size-x="0" size-x2="90" size-y="0" size-y2="73"/>
-    <entity uuid="833dc46e-36c0-4912-a29f-a488a10508b7" bg-color="4294967295" hdr-color="4292006610" position-x="318" position-y="40" size-x="0" size-x2="109" size-y="0" size-y2="101"/>
+    <entity uuid="833dc46e-36c0-4912-a29f-a488a10508b7" bg-color="4294967295" hdr-color="4292006610" position-x="383" position-y="42" size-x="0" size-x2="112" size-y="0" size-y2="171"/>
     <association uuid="85053017-3e4b-48bb-bc1e-ef83eb799b2a" color="4284601169"/>
     <association uuid="9043c4d2-6ff4-48f9-910e-378401295d00" color="4291674923"/>
-    <module uuid="a230e683-a29e-4963-b493-80f7ed6f798e" bg-color="4294831087" position-x="50" position-y="50" size-x="0" size-x2="447" size-y="0" size-y2="330"/>
+    <module uuid="a230e683-a29e-4963-b493-80f7ed6f798e" bg-color="4294831087" position-x="50" position-y="50" size-x="0" size-x2="515" size-y="0" size-y2="330"/>
+    <association uuid="c5fb1e8b-80f2-4072-8291-4354c5fe7e7e" color="4288059030"/>
     <entity uuid="defaf832-7206-4441-9ed4-dbdcfb31fb53" bg-color="4294967295" hdr-color="4292006610" position-x="29" position-y="40" size-x="0" size-x2="90" size-y="0" size-y2="115"/>
   </visual-data>
 </skipper>

@@ -28,17 +28,18 @@ abstract class AbstractFieldType {
     /**
      * @var Object $_instance Object instance, mustn't be called directly, please use getInstance static method.
      */
-    private static $_instance = null;
+    private static $instances = null;
 
-    protected abstract function createInstance();
+    abstract protected function createInstance();
 
-    public static function getInstance () {
+    public static function getInstance (  ) {
 
-        if(is_null(self::$_instance)) {
-            self::$_instance = createInstance();
-        }
+        $class = get_called_class();
 
-        return self::$_instance;
+        if(!isset(self::$instances[$class]))
+            self::$instances[$class] = new $class();
+
+        return self::$instances[$class];
 
     }
 

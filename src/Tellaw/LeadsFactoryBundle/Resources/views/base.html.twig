@@ -43,40 +43,10 @@
     </div>
     <div class="viewport ">
         <div class="overview collapse">
-            <div class="search row-fluid container">
-                <h2>Search</h2>
-                <form class="form-search">
-                    <div class="input-append">
-                        <input type="text" class=" search-query" placeholder="">
-                        <button class="btn_search color_4">Search</button>
-                    </div>
-                </form>
-            </div>
-            <ul id="sidebar_menu" class="navbar nav nav-list container full">
-                <li class="accordion-group color_4"> <a class="dashboard " href="index.html"><img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/dashboard.png') }}"><span>Dashboard</span></a> </li>
-                <li class="accordion-group active color_25"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse1"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Formulaires</span></a>
-                    <ul id="collapse1" class="accordion-body">
-                        <li class="active"><a href="{{ path ('_form_list') }}">Gestion des formulaires</a></li>
-                        <li class="active"><a href="{{ path ('_formType_list') }}">Gestion des types de formulaires</a></li>
-                        <li class="active"><a href="{{ path ('_referenceList_list') }}">Gestion des listes de références</a></li>
-                    </ul>
-                </li>
-                <li class="accordion-group active color_19"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse2"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Données</span></a>
-                    <ul id="collapse2" class="accordion-body">
-                        <li class="active"><a href="{{ path ('_form_list') }}">Visualisation des leads</a></li>
 
-                    </ul>
-                </li>
+            {{ render(controller('TellawLeadsFactoryBundle:Utils:navigation', { "parentRoute" : app.request.attributes.get('_route') } )) }}
 
-            </ul>
-            <div class="menu_states row-fluid container ">
-                <h2 class="pull-left">Menu Settings</h2>
-                <div class="options pull-right">
-                    <button id="menu_state_1" class="color_4" rel="tooltip" data-state ="sidebar_icons" data-placement="top" data-original-title="Icon Menu">1</button>
-                    <button id="menu_state_2" class="color_4 active" rel="tooltip" data-state ="sidebar_default" data-placement="top" data-original-title="Fixed Menu">2</button>
-                    <button id="menu_state_3" class="color_4" rel="tooltip" data-placement="top" data-state ="sidebar_hover" data-original-title="Floating on Hover Menu">3</button>
-                </div>
-            </div>
+
             <!-- End sidebar_box -->
 
         </div>

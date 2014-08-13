@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -43,6 +44,7 @@ class EntityFormController extends Controller
      */
     public function newAction( Request $request )
     {
+
         $type = new FormType();
 
         $form = $this->createForm(  $type,
