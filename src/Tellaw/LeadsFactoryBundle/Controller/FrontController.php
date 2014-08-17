@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Utils\FormUtils;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 
@@ -61,7 +62,24 @@ class FrontController extends Controller
      */
     public function postLeadsAction ( Request $request ) {
 
-        print_r($request->get ("lffield"));
+        $fields = $request->get ("lffield");
+        $json = json_encode( $fields );
+        $redirectUrlSuccess = $fields["successUrl"];
+        $redirectUrlError = $fields["errorUrl"];
+
+        // Create new Leads Entity Objects
+        $leads = new Leads();
+        $leads->setFirstname( $fields["firstname"] );
+        $leads->setLastname( $fields["lastname"] );
+        $leads->setData( $json );
+        $leads->setLog( "leads importée le : ".date('Y-m-d h:s') );
+        $leads->setUtmcampaign( $fields["utmcampaign"] );
+        $leads->setTelephone( $fields["phone"] );
+        $leads->setCreatedAt( new \DateTime() );
+
+        if ( trim ( $redirectUrlSuccess ) != "") {
+            return $this->redirect($redirectUrlSuccess);
+        }
 
         die();
     }

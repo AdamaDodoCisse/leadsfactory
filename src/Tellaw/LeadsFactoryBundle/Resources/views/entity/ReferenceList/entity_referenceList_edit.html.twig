@@ -24,7 +24,20 @@
 
         <div class="span4">
 
-            Test
+            <div class="box paint">
+
+                <div class="title">
+                    <h4> <i class="icon-book"></i><span>Actions</span> </h4>
+                </div>
+
+                <!-- End .title -->
+                <div class="content">
+
+                    <a href="javascript:openDialog();" style="color:#FFF">&raquo; Ajouter une valeur à la liste</a>
+
+                </div>
+                <!-- End .content -->
+                <a class="btn change_color_outside"><i class="paint_bucket"></i></a></div>
 
         </div>
 
@@ -55,8 +68,7 @@
                                 <td>{{ item.value }}</td>
                                 <td style="text-align:center">
                                     <center>
-                                        <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_referenceList_edit', {'id': item.id}) }}'">Edit</button>
-                                        <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_referenceList_delete', {'id': item.id}) }}'">Delete</button>
+                                        <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_referenceList_deleteElement', {'id': item.id , 'referenceListId': referenceListId}) }}'">Delete</button>
                                     </center>
                                 </td>
                             </tr>
@@ -80,5 +92,42 @@
 
 
 </div>
+
+    <div class="avgrund-popup stack modal" id="default-popup" >
+        <div class="modal-header">
+            <h3 id="myModalLabel">Experimental</h3>
+        </div>
+        <div class="modal-body">
+           <form action="{{ path('_referenceList_addElement') }}" id="addElementToListForm" method="POST">
+               <input type="hidden" name="referenceListId" value="{{ referenceListId }}"/>
+               <table>
+                   <tr>
+                        <td>Nom</td>
+                       <td><input type="text" name="name" style="border:1px solid #e0e0e0;width:250px;"/></td>
+                   </tr>
+                   <tr>
+                       <td>Valeur</td>
+                       <td><input type="text" name="value" style="border:1px solid #e0e0e0;width:250px;"/></td>
+                   </tr>
+
+               </table>
+
+           </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary btn-success" onclick="javascript:document.getElementById('addElementToListForm').submit();">Enregistrer</button>&nbsp;
+            <button class="btn btn-primary" onclick="javascript:closeDialog();">Close</button>
+        </div>
+    </div>
+    <div class="avgrund-cover"></div>
+
+    <script>
+        function openDialog() {
+            Avgrund.show( "#default-popup" );
+        }
+        function closeDialog() {
+            Avgrund.hide();
+        }
+    </script>
 
 {% endblock %}
