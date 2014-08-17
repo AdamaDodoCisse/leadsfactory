@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListType;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListElementType;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
@@ -69,7 +70,8 @@ class EntityReferenceListController extends Controller
         }
 
         return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Création d'une liste de référence"));
+                                                                                                    'title' => "Création d'une liste de référence",
+                                                                                                    'refernceListId' => '-1'));
     }
 
     /**
@@ -117,7 +119,8 @@ class EntityReferenceListController extends Controller
         return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig',
                                 array(  'form' => $form->createView(),
                                         'elements'=> $formData->getElements(),
-                                        'title' => "Edition d'une liste de référence"));
+                                        'title' => "Edition d'une liste de référence",
+                                        'referenceListId' => $id));
 
     }
 
@@ -151,6 +154,58 @@ class EntityReferenceListController extends Controller
 
     }
 
+    /**
+     * @Route("/referenceList/deleteElement/id/{id}/{referenceListId}", name="_referenceList_deleteElement")
+     * @Method("GET")
+     * @Template()
+     */
+    public function deleteElementAction ( Request $request, $id, $referenceListId ) {
 
+        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($id);
+
+
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($object);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('_referenceList_edit', array ('id' => $referenceListId)));
+
+    }
+
+    /**
+     * @Route("/referenceList/addElement", name="_referenceList_addElement")
+     * @Template()
+     */
+    public function saveElementAction ( Request $request ) {
+
+        $name = $request->request->get('name');
+        $value = $request->request->get('value');
+
+        $referenceListId = $request->request->get('referenceListId');
+
+        // Valid datas
+        if ( trim ($name) == "" || trim ($value) == "" || trim ($referenceListId) == "" ) {
+            // Error, forward back to form with error message
+        }
+
+        // Add item to reference list elements
+        $referenceList = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find($referenceListId);
+
+        $referenceListElement = new ReferenceListElement();
+        $referenceListElement->setName( $name );
+        $referenceListElement->setValue( $value );
+        $referenceListElement->setReferenceList( $referenceList );
+        $referenceList->getElements()->add ( $referenceListElement );
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($referenceListElement);
+        $em->persist($referenceList);
+        $em->flush();
+
+        // Forward request to list controller
+        return $this->redirect($this->generateUrl('_referenceList_edit', array ('id' => $referenceListId)));
+
+    }
 
 }

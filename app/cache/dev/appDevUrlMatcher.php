@@ -210,16 +210,35 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
                     return $this->mergeDefaults(array_replace($matches, array('_route' => '_referenceList_edit')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::editAction',));
                 }
 
-                // _referenceList_delete
-                if (0 === strpos($pathinfo, '/entity/referenceList/delete/id') && preg_match('#^/entity/referenceList/delete/id/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
-                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
-                        $allow = array_merge($allow, array('GET', 'HEAD'));
-                        goto not__referenceList_delete;
-                    }
+                if (0 === strpos($pathinfo, '/entity/referenceList/delete')) {
+                    // _referenceList_delete
+                    if (0 === strpos($pathinfo, '/entity/referenceList/delete/id') && preg_match('#^/entity/referenceList/delete/id/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                        if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                            $allow = array_merge($allow, array('GET', 'HEAD'));
+                            goto not__referenceList_delete;
+                        }
 
-                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_referenceList_delete')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::deleteAction',));
+                        return $this->mergeDefaults(array_replace($matches, array('_route' => '_referenceList_delete')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::deleteAction',));
+                    }
+                    not__referenceList_delete:
+
+                    // _referenceList_deleteElement
+                    if (0 === strpos($pathinfo, '/entity/referenceList/deleteElement/id') && preg_match('#^/entity/referenceList/deleteElement/id/(?P<id>[^/]++)/(?P<referenceListId>[^/]++)$#s', $pathinfo, $matches)) {
+                        if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                            $allow = array_merge($allow, array('GET', 'HEAD'));
+                            goto not__referenceList_deleteElement;
+                        }
+
+                        return $this->mergeDefaults(array_replace($matches, array('_route' => '_referenceList_deleteElement')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::deleteElementAction',));
+                    }
+                    not__referenceList_deleteElement:
+
                 }
-                not__referenceList_delete:
+
+                // _referenceList_addElement
+                if ($pathinfo === '/entity/referenceList/addElement') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityReferenceListController::saveElementAction',  '_route' => '_referenceList_addElement',);
+                }
 
                 if (0 === strpos($pathinfo, '/entity/referenceListElement')) {
                     // _referenceListElement_list
