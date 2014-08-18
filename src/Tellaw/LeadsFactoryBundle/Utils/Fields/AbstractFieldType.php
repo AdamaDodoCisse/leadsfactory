@@ -51,7 +51,7 @@ abstract class AbstractFieldType {
     public function renderToHtml ( $tag ) {
 
         $id = $tag["attributes"]["id"];
-        return "<input type='text' name='lffield[".$id."]' id='lffield[".$id."]' ".$this->getAttributes( $tag )." />";
+        return "<input type='text' name='lffield[".$id."]' id='lffield[".$id."]' value='' ".$this->getAttributes( $tag )." />";
 
     }
 

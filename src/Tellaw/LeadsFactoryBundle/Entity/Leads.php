@@ -83,6 +83,21 @@ class Leads {
     private $createdAt;
 
     /**
+     * @param mixed $formType
+     */
+    public function setFormType($formType)
+    {
+        $this->formType = $formType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFormType()
+    {
+        return $this->formType;
+    }
+    /**
      * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $content
      */
     public function setContent($content)

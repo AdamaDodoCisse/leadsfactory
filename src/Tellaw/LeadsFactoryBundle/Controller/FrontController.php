@@ -40,7 +40,7 @@ class FrontController extends Controller
 
         //$tags = $formUtils->parseTags( $source );
 
-        $html = $formUtils->buildHtmlForm( $source, $id );
+        $html = $formUtils->buildHtmlForm( $source, $id, $object );
 
         echo ("Success<br/>");
         echo ($html);
@@ -64,23 +64,39 @@ class FrontController extends Controller
 
         $fields = $request->get ("lffield");
         $json = json_encode( $fields );
-        $redirectUrlSuccess = $fields["successUrl"];
-        $redirectUrlError = $fields["errorUrl"];
+        $redirectUrlSuccess = (string)$request->get ("successUrl");
+        $redirectUrlError = (string)$request->get ("errorUrl");
 
-        // Create new Leads Entity Objects
-        $leads = new Leads();
-        $leads->setFirstname( $fields["firstname"] );
-        $leads->setLastname( $fields["lastname"] );
-        $leads->setData( $json );
-        $leads->setLog( "leads importée le : ".date('Y-m-d h:s') );
-        $leads->setUtmcampaign( $fields["utmcampaign"] );
-        $leads->setTelephone( $fields["phone"] );
-        $leads->setCreatedAt( new \DateTime() );
+        try {
 
-        if ( trim ( $redirectUrlSuccess ) != "") {
-            return $this->redirect($redirectUrlSuccess);
+            $formTypeObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find((string)$request->get ("lfFormType"));
+
+            // Create new Leads Entity Objects
+            $leads = new Leads();
+            $leads->setFirstname( @$fields["firstname"] );
+            $leads->setLastname( @$fields["lastname"] );
+            $leads->setData( $json );
+            $leads->setLog( "leads importée le : ".date('Y-m-d h:s') );
+            $leads->setUtmcampaign( @$fields["utmcampaign"] );
+            $leads->setFormType( $formTypeObject );
+            //$leads->setTelephone( @$fields["phone"] );
+            $leads->setCreatedAt( new \DateTime() );
+
+
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($leads);
+            $em->flush();
+
+            if ( trim ( $redirectUrlSuccess ) != "") {
+                return $this->redirect($redirectUrlSuccess);
+            }
+
+        } catch (Exception $e) {
+            return $this->redirect($redirectUrlError);
         }
 
+        echo ("Done");
         die();
     }
 

@@ -23,7 +23,7 @@ class FormUtils {
      * @param $formId Id of the form in LF backend
      * @return String HTML of the generated form.
      */
-    public function buildHtmlForm ( $source, $formId ) {
+    public function buildHtmlForm ( $source, $formId, $formObject ) {
 
         $tags = $this->parseTags( $source );
 
@@ -36,7 +36,7 @@ class FormUtils {
         }
 
         $source = $this->setFormTag ( $source, $formId );
-        $source = $this->setHiddenTags ( $source, $formId );
+        $source = $this->setHiddenTags ( $source, $formId, $formObject );
 
         list ($isValid, $error_msg) = $this->checkFormValidity( $source );
 
@@ -149,11 +149,13 @@ class FormUtils {
      * @param $formId Id of the form in the LF
      * @return String modified form including the form tag
      */
-    private function setHiddenTags ( $source, $formId ) {
+    private function setHiddenTags ( $source, $formId, $formObject ) {
 
         $tags="
             <input type='hidden' name='lfFormId' id='lfFormId' value='".$formId."'/>
-            <input type='hidden' name='lfForward' id='lfForward' />
+            <input type='hidden' name='lfForwardSuccess' id='lfForwardSuccess' value='' />
+            <input type='hidden' name='lfForwardError' id='lfForwardError' value='' />
+            <input type='hidden' name='lfFormType' id='lfFormType' value='".$formObject->getFormType()->getId()."'/>
             <input type='hidden' name='lfFormKey' id='lfFormKey' value=''/>
             </form>
         ";
