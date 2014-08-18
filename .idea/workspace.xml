@@ -2,15 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d1b8fa36-beda-4f78-a204-2ffae7cd655a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityReferenceListController.php" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityReferenceListController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/FrontController.php" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/FrontController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Leads.php" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Leads.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/cache/dev/appDevUrlGenerator.php.meta" afterPath="$PROJECT_DIR$/app/cache/dev/appDevUrlGenerator.php.meta" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/cache/dev/appDevUrlGenerator.php" afterPath="$PROJECT_DIR$/app/cache/dev/appDevUrlGenerator.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/cache/dev/appDevUrlMatcher.php" afterPath="$PROJECT_DIR$/app/cache/dev/appDevUrlMatcher.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/bundles/tellawleadsfactory/css/base.css" afterPath="$PROJECT_DIR$/web/bundles/tellawleadsfactory/css/base.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/base.html.twig" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/base.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/logs/dev.log" afterPath="$PROJECT_DIR$/app/logs/dev.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_edit.html.twig" afterPath="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_edit.html.twig" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/cache/dev/profiler/index.csv" afterPath="$PROJECT_DIR$/app/cache/dev/profiler/index.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -38,34 +35,7 @@
       <file leaf-file-name="AbstractFieldType.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="5" selection-start="1692" selection-end="1692" vertical-scroll-proportion="-33.75" vertical-offset="15" max-vertical-offset="1980">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="entity_form_list.html.twig" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/Form/entity_form_list.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="193" selection-start="1644" selection-end="1661" vertical-scroll-proportion="-11.25" vertical-offset="360" max-vertical-offset="1005">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ReferenceList.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/ReferenceList.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="37" selection-start="122" selection-end="122" vertical-scroll-proportion="-3.125" vertical-offset="0" max-vertical-offset="2130">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ArrayCollection.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/vendor/doctrine/collections/lib/Doctrine/Common/Collections/ArrayCollection.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="32" column="6" selection-start="1392" selection-end="1392" vertical-scroll-proportion="0.0" vertical-offset="3195" max-vertical-offset="5610">
+            <state line="80" column="0" selection-start="2504" selection-end="2504" vertical-scroll-proportion="-18.791666" vertical-offset="749" max-vertical-offset="1980">
               <folding />
             </state>
           </provider>
@@ -74,7 +44,43 @@
       <file leaf-file-name="FrontController.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/FrontController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="14" selection-start="2443" selection-end="2443" vertical-scroll-proportion="1.9917012" vertical-offset="585" max-vertical-offset="1200">
+            <state line="69" column="13" selection-start="1923" selection-end="1923" vertical-scroll-proportion="0.39951575" vertical-offset="525" max-vertical-offset="1440">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FormUtils.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="154" column="39" selection-start="4285" selection-end="4285" vertical-scroll-proportion="-56.291668" vertical-offset="914" max-vertical-offset="2565">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Form.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Form.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="71" column="31" selection-start="1370" selection-end="1381" vertical-scroll-proportion="-25.625" vertical-offset="450" max-vertical-offset="2700">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TextFieldType.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/TextFieldType.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="21" column="1" selection-start="614" selection-end="614" vertical-scroll-proportion="-13.125" vertical-offset="0" max-vertical-offset="405">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EmailFieldType.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/EmailFieldType.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="1" selection-start="492" selection-end="492" vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="360">
               <folding />
             </state>
           </provider>
@@ -83,7 +89,7 @@
       <file leaf-file-name="Leads.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Leads.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="19" selection-start="1436" selection-end="1436" vertical-scroll-proportion="-11.875" vertical-offset="795" max-vertical-offset="4005">
+            <state line="87" column="31" selection-start="1692" selection-end="1703" vertical-scroll-proportion="-18.166666" vertical-offset="869" max-vertical-offset="4230">
               <folding />
             </state>
           </provider>
@@ -92,16 +98,7 @@
       <file leaf-file-name="EntityFormController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityFormController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="12" selection-start="3053" selection-end="3110" vertical-scroll-proportion="-6.25" vertical-offset="1260" max-vertical-offset="1935">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="entity_referenceList_list.html.twig" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_list.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="0" selection-start="1501" selection-end="1718" vertical-scroll-proportion="-19.083334" vertical-offset="172" max-vertical-offset="1125">
+            <state line="84" column="8" selection-start="2400" selection-end="2492" vertical-scroll-proportion="-24.375" vertical-offset="525" max-vertical-offset="1935">
               <folding />
             </state>
           </provider>
@@ -110,14 +107,8 @@
       <file leaf-file-name="entity_referenceList_edit.html.twig" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_edit.html.twig">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="70" column="230" selection-start="2255" selection-end="2255" vertical-scroll-proportion="-9.375" vertical-offset="825" max-vertical-offset="2070">
-              <folding>
-                <element signature="e#944#962#0" expanded="true" />
-                <element signature="e#1953#1978#0" expanded="true" />
-                <element signature="e#2118#2148#0" expanded="true" />
-                <element signature="e#3311#3356#0" expanded="true" />
-                <element signature="e#3511#3556#0" expanded="true" />
-              </folding>
+            <state line="119" column="14" selection-start="3955" selection-end="3955" vertical-scroll-proportion="-22.0" vertical-offset="1257" max-vertical-offset="2070">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -125,7 +116,7 @@
       <file leaf-file-name="base.css" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/bundles/tellawleadsfactory/css/base.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="662" selection-start="157214" selection-end="157214" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
+            <state line="14" column="662" selection-start="157214" selection-end="157214" vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="525">
               <folding />
             </state>
           </provider>
@@ -149,7 +140,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Utils.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/LFUtils.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityFormController.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/UtilsController.php" />
@@ -157,23 +147,23 @@
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/Form/entity_form_list.html.twig" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/FormType/entity_formType_list.html.twig" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceListElement/list.html.twig" />
-        <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/EmailFieldType.php" />
-        <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/base.html.twig" />
         <option value="$PROJECT_DIR$/web/bundles/tellawleadsfactory/css/base.css" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityReferenceListController.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_edit.html.twig" />
+        <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Leads.php" />
+        <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php" />
+        <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php" />
         <option value="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/FrontController.php" />
       </list>
     </option>
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="1280" />
-    <option name="y" value="302" />
+    <option name="y" value="22" />
     <option name="width" value="1920" />
-    <option name="height" value="738" />
+    <option name="height" value="1019" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -471,188 +461,6 @@
               <option name="myItemId" value="Resources" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tellaw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LeadsFactoryBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ReferenceListElement" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tellaw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LeadsFactoryBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ReferenceList" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tellaw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LeadsFactoryBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FormType" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tellaw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LeadsFactoryBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="views" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="entity" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Form" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="leadsfactory" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Tellaw" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="LeadsFactoryBundle" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -798,6 +606,24 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="FullScreen" value="false" />
   </component>
+  <component name="PublishConfig">
+    <servers>
+      <server id="adfb7c91-5897-49a6-a4e1-ac78ce8bcf94">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </server>
+      <server id="c087d6c9-7f75-4b4f-88ed-903694bfae22">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </server>
+    </servers>
+  </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller" />
@@ -838,25 +664,25 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1280" y="302" width="1920" height="738" extended-state="6" />
+    <frame x="0" y="22" width="1920" height="1019" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32741398" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4903226" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Framework" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32847896" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22998933" sideWeight="0.5096774" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Framework" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23265742" sideWeight="0.5096774" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32847896" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4903226" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -874,51 +700,14 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceListElement/list.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="56" selection-start="1274" selection-end="1274" vertical-scroll-proportion="0.0" vertical-offset="555" max-vertical-offset="1125">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="93" column="57" selection-start="2586" selection-end="2586" vertical-scroll-proportion="0.0" vertical-offset="918" max-vertical-offset="2580">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/EmailFieldType.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="42" selection-start="446" selection-end="446" vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="360">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/_templatev2/ui_dialogs.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="281" column="0" selection-start="15990" selection-end="16080" vertical-scroll-proportion="-7.9166665" vertical-offset="4025" max-vertical-offset="4875">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/base.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="146" column="113" selection-start="8191" selection-end="8191" vertical-scroll-proportion="-18.458334" vertical-offset="1747" max-vertical-offset="6120">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/bundles/tellawleadsfactory/css/base.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="662" selection-start="157214" selection-end="157214" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
-          <folding />
-        </state>
+        <state line="146" column="113" selection-start="8191" selection-end="8191" vertical-scroll-proportion="-18.458334" vertical-offset="1747" max-vertical-offset="6120" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/ReferenceList.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="37" selection-start="122" selection-end="122" vertical-scroll-proportion="-3.125" vertical-offset="0" max-vertical-offset="2130">
+        <state line="5" column="37" selection-start="122" selection-end="122" vertical-scroll-proportion="0.0" vertical-offset="75" max-vertical-offset="2130">
           <folding />
         </state>
       </provider>
@@ -932,62 +721,89 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/Form/entity_form_list.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="193" selection-start="1644" selection-end="1661" vertical-scroll-proportion="-11.25" vertical-offset="360" max-vertical-offset="1005">
+        <state line="42" column="193" selection-start="1644" selection-end="1661" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="1005">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_list.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="1501" selection-end="1718" vertical-scroll-proportion="-19.083334" vertical-offset="172" max-vertical-offset="1125">
+        <state line="42" column="0" selection-start="1501" selection-end="1718" vertical-scroll-proportion="0.0" vertical-offset="172" max-vertical-offset="1125">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_edit.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="70" column="230" selection-start="2255" selection-end="2255" vertical-scroll-proportion="-9.375" vertical-offset="825" max-vertical-offset="2070">
-          <folding>
-            <element signature="e#944#962#0" expanded="true" />
-            <element signature="e#1953#1978#0" expanded="true" />
-            <element signature="e#2118#2148#0" expanded="true" />
-            <element signature="e#3311#3356#0" expanded="true" />
-            <element signature="e#3511#3556#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityReferenceListController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="83" selection-start="5161" selection-end="5161" vertical-scroll-proportion="2.6844919" vertical-offset="759" max-vertical-offset="3075">
+        <state line="163" column="83" selection-start="5161" selection-end="5161" vertical-scroll-proportion="2.6844919" vertical-offset="759" max-vertical-offset="3075" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/bundles/tellawleadsfactory/css/base.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="662" selection-start="157214" selection-end="157214" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="525">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php">
+    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/EmailFieldType.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="5" selection-start="1692" selection-end="1692" vertical-scroll-proportion="-33.75" vertical-offset="15" max-vertical-offset="1980">
+        <state line="18" column="1" selection-start="492" selection-end="492" vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="360">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/TextFieldType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="1" selection-start="614" selection-end="614" vertical-scroll-proportion="-13.125" vertical-offset="0" max-vertical-offset="405">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Form.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="71" column="31" selection-start="1370" selection-end="1381" vertical-scroll-proportion="-25.625" vertical-offset="450" max-vertical-offset="2700">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Entity/Leads.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="19" selection-start="1436" selection-end="1436" vertical-scroll-proportion="-11.875" vertical-offset="795" max-vertical-offset="4005">
+        <state line="87" column="31" selection-start="1692" selection-end="1703" vertical-scroll-proportion="-18.166666" vertical-offset="869" max-vertical-offset="4230">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/EntityFormController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="12" selection-start="3053" selection-end="3110" vertical-scroll-proportion="-6.25" vertical-offset="1260" max-vertical-offset="1935">
+        <state line="84" column="8" selection-start="2400" selection-end="2492" vertical-scroll-proportion="-24.375" vertical-offset="525" max-vertical-offset="1935">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Resources/views/entity/ReferenceList/entity_referenceList_edit.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="119" column="14" selection-start="3955" selection-end="3955" vertical-scroll-proportion="-22.0" vertical-offset="1257" max-vertical-offset="2070">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/FormUtils.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="154" column="39" selection-start="4285" selection-end="4285" vertical-scroll-proportion="-56.291668" vertical-offset="914" max-vertical-offset="2565">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Utils/Fields/AbstractFieldType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="0" selection-start="2504" selection-end="2504" vertical-scroll-proportion="-18.791666" vertical-offset="749" max-vertical-offset="1980">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tellaw/LeadsFactoryBundle/Controller/FrontController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="14" selection-start="2443" selection-end="2443" vertical-scroll-proportion="1.9917012" vertical-offset="585" max-vertical-offset="1200">
+        <state line="69" column="13" selection-start="1923" selection-end="1923" vertical-scroll-proportion="0.39951575" vertical-offset="525" max-vertical-offset="1440">
           <folding />
         </state>
       </provider>
