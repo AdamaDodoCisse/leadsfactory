@@ -1,3 +1,15 @@
 .idea
 app/cache/*
 app/logs/*
+# Cache and logs
+/app/cache/*
+/app/logs/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+
+# Parameters
+/app/config/parameters.yml
+/app/config/parameters.ini
+
+# Composer PHAR
+/composer.phar
