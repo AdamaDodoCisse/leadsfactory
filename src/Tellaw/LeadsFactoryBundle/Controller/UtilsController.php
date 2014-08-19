@@ -28,7 +28,7 @@ class UtilsController extends Controller
     {
 
 
-        $sections = array(  "formulaires" => '0', "donnees" => '0' );
+        $sections = array(  "formulaires" => '0', "donnees" => '0', "users" => 0 );
 
         $mainRoute = $parentRoute;
 
@@ -37,6 +37,10 @@ class UtilsController extends Controller
                 substr ($mainRoute, 0, strlen ("_referenceList_")) == "_referenceList_"   ) {
 
             $sections['formulaires'] = '1';
+
+        } else if (    substr ($mainRoute, 0, strlen ("_leads_")) == "_leads_"  ) {
+
+            $sections['donnees'] = '1';
 
         }
 

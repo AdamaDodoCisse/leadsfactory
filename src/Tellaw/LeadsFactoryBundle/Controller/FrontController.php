@@ -42,10 +42,31 @@ class FrontController extends Controller
 
         $html = $formUtils->buildHtmlForm( $source, $id, $object );
 
-        echo ("Success<br/>");
         echo ($html);
         die();
 
+    }
+
+    /**
+     *
+     * @Route("/form/js/{id}", name="_client_get_form_js")
+     *
+     */
+    public function getFormAsJsAction ( Request $request, $id ) {
+
+        //$formUtils = new FormUtils();
+        $formUtils = $this->get("js_utils");
+
+        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+
+        $source = $object->getSource();
+
+        //$tags = $formUtils->parseTags( $source );
+
+        $jsForm = $formUtils->buildAndWrapForm ( $source, $id, $object );
+
+        echo ($jsForm);
+        die();
 
     }
 
