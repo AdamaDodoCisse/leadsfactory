@@ -42,6 +42,10 @@ class UtilsController extends Controller
 
             $sections['donnees'] = '1';
 
+        } else if (    substr ($mainRoute, 0, strlen ("_users_")) == "_users_"  ) {
+
+            $sections['users'] = '1';
+
         }
 
         return $this->render('TellawLeadsFactoryBundle:Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
