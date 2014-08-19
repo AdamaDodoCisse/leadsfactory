@@ -31,7 +31,7 @@ class EntityFormTypeController extends Controller
         $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/formType:entity_formType_list.html.twig',
+            'TellawLeadsFactoryBundle:entity/FormType:entity_formType_list.html.twig',
             array(  'forms' => $forms )
         );
 
@@ -64,7 +64,7 @@ class EntityFormTypeController extends Controller
             return $this->redirect($this->generateUrl('_formType_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/formType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                          'title' => "Création d'un type"));
     }
 
@@ -103,7 +103,7 @@ class EntityFormTypeController extends Controller
             return $this->redirect($this->generateUrl('_formType_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/formType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                         'title' => "Edition d'un type"));
 
     }

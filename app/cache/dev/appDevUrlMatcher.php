@@ -194,6 +194,19 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
             }
 
+            if (0 === strpos($pathinfo, '/entity/leads')) {
+                // _leads_list
+                if ($pathinfo === '/entity/leads/list') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityLeadsController::indexAction',  '_route' => '_leads_list',);
+                }
+
+                // _leads_edit
+                if (0 === strpos($pathinfo, '/entity/leads/edit') && preg_match('#^/entity/leads/edit/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_leads_edit')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityLeadsController::editAction',));
+                }
+
+            }
+
             if (0 === strpos($pathinfo, '/entity/referenceList')) {
                 // _referenceList_list
                 if ($pathinfo === '/entity/referenceList/list') {
@@ -271,12 +284,49 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
             }
 
+            if (0 === strpos($pathinfo, '/entity/users')) {
+                // _users_list
+                if ($pathinfo === '/entity/users/list') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityUsersController::indexAction',  '_route' => '_users_list',);
+                }
+
+                // _users_new
+                if ($pathinfo === '/entity/users/new') {
+                    return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityUsersController::newAction',  '_route' => '_users_new',);
+                }
+
+                // _users_edit
+                if (0 === strpos($pathinfo, '/entity/users/edit') && preg_match('#^/entity/users/edit/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_users_edit')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityUsersController::editAction',));
+                }
+
+                // _users_delete
+                if (0 === strpos($pathinfo, '/entity/users/delete/id') && preg_match('#^/entity/users/delete/id/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    if (!in_array($this->context->getMethod(), array('GET', 'HEAD'))) {
+                        $allow = array_merge($allow, array('GET', 'HEAD'));
+                        goto not__users_delete;
+                    }
+
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_users_delete')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\EntityUsersController::deleteAction',));
+                }
+                not__users_delete:
+
+            }
+
         }
 
         if (0 === strpos($pathinfo, '/client')) {
-            // _client_get_form
-            if (0 === strpos($pathinfo, '/client/form') && preg_match('#^/client/form/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => '_client_get_form')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\FrontController::getFormAction',));
+            if (0 === strpos($pathinfo, '/client/form')) {
+                // _client_get_form
+                if (preg_match('#^/client/form/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_client_get_form')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\FrontController::getFormAction',));
+                }
+
+                // _client_get_form_js
+                if (0 === strpos($pathinfo, '/client/form/js') && preg_match('#^/client/form/js/(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
+                    return $this->mergeDefaults(array_replace($matches, array('_route' => '_client_get_form_js')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\FrontController::getFormAsJsAction',));
+                }
+
             }
 
             // _client_post_form

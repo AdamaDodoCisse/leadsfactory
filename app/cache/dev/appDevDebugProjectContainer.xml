@@ -2421,6 +2421,11 @@
         <argument type="service" id="service_container"/>
       </call>
     </service>
+    <service id="js_utils" class="Tellaw\LeadsFactoryBundle\Utils\JsUtils">
+      <call method="setContainer">
+        <argument type="service" id="service_container"/>
+      </call>
+    </service>
     <service id="web_profiler.controller.profiler" class="Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController">
       <argument type="service" id="router" on-invalid="null"/>
       <argument type="service" id="profiler" on-invalid="null"/>

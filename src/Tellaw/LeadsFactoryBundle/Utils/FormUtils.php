@@ -29,7 +29,7 @@ class FormUtils {
 
         foreach ($tags as $id => $tag) {
 
-            print_r ($tags);
+            //print_r ($tags);
 
             $htmlTag = $this->renderTag( $id, $tag );
             $source = str_replace( $tag["raw"]->asXML(), $htmlTag, $source );
@@ -84,7 +84,7 @@ class FormUtils {
 
         $type = $tag["type"];
 
-        echo ("Tag Detected : ".$type);
+        //echo ("Tag Detected : ".$type);
 
         $type = strtolower($type);
 

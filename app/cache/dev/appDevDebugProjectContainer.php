@@ -116,6 +116,7 @@ class appDevDebugProjectContainer extends Container
             'fragment.renderer.hinclude' => 'getFragment_Renderer_HincludeService',
             'fragment.renderer.inline' => 'getFragment_Renderer_InlineService',
             'http_kernel' => 'getHttpKernelService',
+            'js_utils' => 'getJsUtilsService',
             'kernel' => 'getKernelService',
             'locale_listener' => 'getLocaleListenerService',
             'logger' => 'getLoggerService',
@@ -1383,6 +1384,23 @@ class appDevDebugProjectContainer extends Container
     protected function getHttpKernelService()
     {
         return $this->services['http_kernel'] = new \Symfony\Component\HttpKernel\DependencyInjection\ContainerAwareHttpKernel($this->get('debug.event_dispatcher'), $this, $this->get('debug.controller_resolver'), $this->get('request_stack'));
+    }
+
+    /**
+     * Gets the 'js_utils' service.
+     *
+     * This service is shared.
+     * This method always returns the same instance of the service.
+     *
+     * @return Tellaw\LeadsFactoryBundle\Utils\JsUtils A Tellaw\LeadsFactoryBundle\Utils\JsUtils instance.
+     */
+    protected function getJsUtilsService()
+    {
+        $this->services['js_utils'] = $instance = new \Tellaw\LeadsFactoryBundle\Utils\JsUtils();
+
+        $instance->setContainer($this);
+
+        return $instance;
     }
 
     /**

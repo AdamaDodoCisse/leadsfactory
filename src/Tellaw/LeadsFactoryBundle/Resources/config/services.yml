@@ -13,3 +13,8 @@ services:
     class:        Tellaw\LeadsFactoryBundle\Utils\FormUtils
     calls:
                   - [ setContainer, [ @service_container ] ]
+
+  js_utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\JsUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
