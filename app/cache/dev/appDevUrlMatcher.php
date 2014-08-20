@@ -135,6 +135,20 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
+        // _index
+        if ($pathinfo === '/index.html') {
+            return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\DefaultController::indexAction',  '_route' => '_index',);
+        }
+
+        // tellaw_leadsfactory_default_index
+        if (rtrim($pathinfo, '/') === '') {
+            if (substr($pathinfo, -1) !== '/') {
+                return $this->redirect($pathinfo.'/', 'tellaw_leadsfactory_default_index');
+            }
+
+            return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\DefaultController::indexAction',  '_route' => 'tellaw_leadsfactory_default_index',);
+        }
+
         if (0 === strpos($pathinfo, '/entity')) {
             if (0 === strpos($pathinfo, '/entity/form')) {
                 // _form_list
@@ -336,15 +350,28 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
         }
 
+        // _security_login
+        if ($pathinfo === '/login') {
+            return array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\SecurityController::loginAction',  '_route' => '_security_login',);
+        }
+
         // _utils_navigation
         if (0 === strpos($pathinfo, '/utils/navigation') && preg_match('#^/utils/navigation/(?P<parentRoute>[^/]++)$#s', $pathinfo, $matches)) {
             return $this->mergeDefaults(array_replace($matches, array('_route' => '_utils_navigation')), array (  '_controller' => 'Tellaw\\LeadsFactoryBundle\\Controller\\UtilsController::navigationAction',));
         }
 
         if (0 === strpos($pathinfo, '/log')) {
-            // login_check
-            if ($pathinfo === '/login_check') {
-                return array('_route' => 'login_check');
+            if (0 === strpos($pathinfo, '/login')) {
+                // login_path
+                if ($pathinfo === '/login') {
+                    return array('_route' => 'login_path');
+                }
+
+                // login_check
+                if ($pathinfo === '/login_check') {
+                    return array('_route' => 'login_check');
+                }
+
             }
 
             // _security_logout

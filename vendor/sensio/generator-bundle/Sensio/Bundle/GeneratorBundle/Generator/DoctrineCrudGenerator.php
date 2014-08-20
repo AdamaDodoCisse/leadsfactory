@@ -202,18 +202,18 @@ class DoctrineCrudGenerator extends Generator
             'namespace'         => $this->bundle->getNamespace(),
             'entity_namespace'  => $entityNamespace,
             'actions'           => $this->actions,
-            'form_type_name'    => strtolower(str_replace('\\', '_', $this->bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$entityClass.'Type'),
+            'form_type_name'    => strtolower(str_replace('\\', '_', $this->bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.$entityClass),
         ));
     }
 
     /**
-     * Generates the entity_referenceList_list.html.twig template in the final bundle.
+     * Generates the index.html.twig template in the final bundle.
      *
      * @param string $dir The path to the folder that hosts templates in the bundle
      */
     protected function generateIndexView($dir)
     {
-        $this->renderFile('crud/views/entity_referenceList_list.html.twig.twig', $dir.'/entity_referenceList_list.html.twig', array(
+        $this->renderFile('crud/views/index.html.twig.twig', $dir.'/index.html.twig', array(
             'bundle'            => $this->bundle->getName(),
             'entity'            => $this->entity,
             'fields'            => $this->metadata->fieldMappings,
@@ -268,6 +268,7 @@ class DoctrineCrudGenerator extends Generator
             'route_prefix'      => $this->routePrefix,
             'route_name_prefix' => $this->routeNamePrefix,
             'entity'            => $this->entity,
+            'fields'            => $this->metadata->fieldMappings,
             'bundle'            => $this->bundle->getName(),
             'actions'           => $this->actions,
         ));
@@ -280,7 +281,7 @@ class DoctrineCrudGenerator extends Generator
      */
     protected function getRecordActions()
     {
-        return array_filter($this->actions, function($item) {
+        return array_filter($this->actions, function ($item) {
             return in_array($item, array('show', 'edit'));
         });
     }

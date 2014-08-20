@@ -80,7 +80,8 @@ class XmlUtils
                     $valid = false;
                 }
             } elseif (!is_array($schemaOrCallable) && is_file((string) $schemaOrCallable)) {
-                $valid = @$dom->schemaValidate($schemaOrCallable);
+                $schemaSource = file_get_contents((string) $schemaOrCallable);
+                $valid = @$dom->schemaValidateSource($schemaSource);
             } else {
                 libxml_use_internal_errors($internalErrors);
 
@@ -117,7 +118,7 @@ class XmlUtils
      *  * The nested-tags are converted to keys (<foo><foo>bar</foo></foo>)
      *
      * @param \DomElement $element     A \DomElement instance
-     * @param Boolean     $checkPrefix Check prefix in an element or an attribute name
+     * @param bool        $checkPrefix Check prefix in an element or an attribute name
      *
      * @return array A PHP array
      */
@@ -186,7 +187,7 @@ class XmlUtils
 
         switch (true) {
             case 'null' === $lowercaseValue:
-                return null;
+                return;
             case ctype_digit($value):
                 $raw = $value;
                 $cast = intval($value);

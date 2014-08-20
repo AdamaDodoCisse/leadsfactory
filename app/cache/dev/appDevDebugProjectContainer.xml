@@ -15,6 +15,9 @@
       <parameter key="SwiftmailerBundle">Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle</parameter>
       <parameter key="AsseticBundle">Symfony\Bundle\AsseticBundle\AsseticBundle</parameter>
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
+      <parameter key="JMSAopBundle">JMS\AopBundle\JMSAopBundle</parameter>
+      <parameter key="JMSSecurityExtraBundle">JMS\SecurityExtraBundle\JMSSecurityExtraBundle</parameter>
+      <parameter key="JMSDiExtraBundle">JMS\DiExtraBundle\JMSDiExtraBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
       <parameter key="TellawLeadsFactoryBundle">Tellaw\LeadsFactoryBundle\TellawLeadsFactoryBundle</parameter>
       <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
@@ -88,6 +91,7 @@
     <parameter key="debug.stopwatch.class">Symfony\Component\Stopwatch\Stopwatch</parameter>
     <parameter key="debug.container.dump">/var/www/leadsfactory/app/cache/dev/appDevDebugProjectContainer.xml</parameter>
     <parameter key="debug.controller_resolver.class">Symfony\Component\HttpKernel\Controller\TraceableControllerResolver</parameter>
+    <parameter key="debug.debug_handlers_listener.class">Symfony\Component\HttpKernel\EventListener\DebugHandlersListener</parameter>
     <parameter key="kernel.secret">ThisTokenIsNotSoSecretChangeIt</parameter>
     <parameter key="kernel.http_method_override">true</parameter>
     <parameter key="kernel.trusted_hosts" type="collection"/>
@@ -104,8 +108,10 @@
     <parameter key="session.handler.native_file.class">Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler</parameter>
     <parameter key="session.handler.write_check.class">Symfony\Component\HttpFoundation\Session\Storage\Handler\WriteCheckSessionHandler</parameter>
     <parameter key="session_listener.class">Symfony\Bundle\FrameworkBundle\EventListener\SessionListener</parameter>
-    <parameter key="session.storage.options" type="collection"/>
-    <parameter key="session.save_path">/var/www/leadsfactory/app/cache/dev/sessions</parameter>
+    <parameter key="session.storage.options" type="collection">
+      <parameter key="gc_probability">1</parameter>
+    </parameter>
+    <parameter key="session.save_path">/var/www/leadsfactory/app/sessions</parameter>
     <parameter key="session.metadata.update_threshold">0</parameter>
     <parameter key="security.secure_random.class">Symfony\Component\Security\Core\Util\SecureRandom</parameter>
     <parameter key="form.resolved_type_factory.class">Symfony\Component\Form\ResolvedFormTypeFactory</parameter>
@@ -113,6 +119,7 @@
     <parameter key="form.factory.class">Symfony\Component\Form\FormFactory</parameter>
     <parameter key="form.extension.class">Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension</parameter>
     <parameter key="form.type_guesser.validator.class">Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser</parameter>
+    <parameter key="form.type_extension.form.request_handler.class">Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationRequestHandler</parameter>
     <parameter key="form.type_extension.csrf.enabled">true</parameter>
     <parameter key="form.type_extension.csrf.field_name">_token</parameter>
     <parameter key="security.csrf.token_generator.class">Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator</parameter>
@@ -153,21 +160,15 @@
     <parameter key="templating.engines" type="collection">
       <parameter>twig</parameter>
     </parameter>
-    <parameter key="validator.class">Symfony\Component\Validator\Validator</parameter>
-    <parameter key="validator.mapping.class_metadata_factory.class">Symfony\Component\Validator\Mapping\ClassMetadataFactory</parameter>
+    <parameter key="validator.class">Symfony\Component\Validator\ValidatorInterface</parameter>
+    <parameter key="validator.builder.class">Symfony\Component\Validator\ValidatorBuilderInterface</parameter>
+    <parameter key="validator.builder.factory.class">Symfony\Component\Validator\Validation</parameter>
     <parameter key="validator.mapping.cache.apc.class">Symfony\Component\Validator\Mapping\Cache\ApcCache</parameter>
     <parameter key="validator.mapping.cache.prefix"></parameter>
-    <parameter key="validator.mapping.loader.loader_chain.class">Symfony\Component\Validator\Mapping\Loader\LoaderChain</parameter>
-    <parameter key="validator.mapping.loader.static_method_loader.class">Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader</parameter>
-    <parameter key="validator.mapping.loader.annotation_loader.class">Symfony\Component\Validator\Mapping\Loader\AnnotationLoader</parameter>
-    <parameter key="validator.mapping.loader.xml_files_loader.class">Symfony\Component\Validator\Mapping\Loader\XmlFilesLoader</parameter>
-    <parameter key="validator.mapping.loader.yaml_files_loader.class">Symfony\Component\Validator\Mapping\Loader\YamlFilesLoader</parameter>
     <parameter key="validator.validator_factory.class">Symfony\Bundle\FrameworkBundle\Validator\ConstraintValidatorFactory</parameter>
-    <parameter key="validator.mapping.loader.xml_files_loader.mapping_files" type="collection">
-      <parameter>/var/www/leadsfactory/vendor/symfony/symfony/src/Symfony/Component/Form/Resources/config/validation.xml</parameter>
-    </parameter>
-    <parameter key="validator.mapping.loader.yaml_files_loader.mapping_files" type="collection"/>
+    <parameter key="validator.legacy_validator_factory.class">Symfony\Bundle\FrameworkBundle\Validator\LegacyConstraintValidatorFactory</parameter>
     <parameter key="validator.expression.class">Symfony\Component\Validator\Constraints\ExpressionValidator</parameter>
+    <parameter key="validator.email.class">Symfony\Component\Validator\Constraints\EmailValidator</parameter>
     <parameter key="validator.translation_domain">validators</parameter>
     <parameter key="fragment.listener.class">Symfony\Component\HttpKernel\EventListener\FragmentListener</parameter>
     <parameter key="form.resolved_type_factory.data_collector_proxy.class">Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeFactoryDataCollectorProxy</parameter>
@@ -337,15 +338,20 @@
     </parameter>
     <parameter key="monolog.logger.class">Symfony\Bridge\Monolog\Logger</parameter>
     <parameter key="monolog.gelf.publisher.class">Gelf\MessagePublisher</parameter>
+    <parameter key="monolog.gelfphp.publisher.class">Gelf\Publisher</parameter>
     <parameter key="monolog.handler.stream.class">Monolog\Handler\StreamHandler</parameter>
     <parameter key="monolog.handler.console.class">Symfony\Bridge\Monolog\Handler\ConsoleHandler</parameter>
     <parameter key="monolog.handler.group.class">Monolog\Handler\GroupHandler</parameter>
     <parameter key="monolog.handler.buffer.class">Monolog\Handler\BufferHandler</parameter>
     <parameter key="monolog.handler.rotating_file.class">Monolog\Handler\RotatingFileHandler</parameter>
     <parameter key="monolog.handler.syslog.class">Monolog\Handler\SyslogHandler</parameter>
+    <parameter key="monolog.handler.syslogudp.class">Monolog\Handler\SyslogUdpHandler</parameter>
     <parameter key="monolog.handler.null.class">Monolog\Handler\NullHandler</parameter>
     <parameter key="monolog.handler.test.class">Monolog\Handler\TestHandler</parameter>
     <parameter key="monolog.handler.gelf.class">Monolog\Handler\GelfHandler</parameter>
+    <parameter key="monolog.handler.rollbar.class">Monolog\Handler\RollbarHandler</parameter>
+    <parameter key="monolog.handler.flowdock.class">Monolog\Handler\FlowdockHandler</parameter>
+    <parameter key="monolog.handler.browser_console.class">Monolog\Handler\BrowserConsoleHandler</parameter>
     <parameter key="monolog.handler.firephp.class">Symfony\Bridge\Monolog\Handler\FirePHPHandler</parameter>
     <parameter key="monolog.handler.chromephp.class">Symfony\Bridge\Monolog\Handler\ChromePhpHandler</parameter>
     <parameter key="monolog.handler.debug.class">Symfony\Bridge\Monolog\Handler\DebugHandler</parameter>
@@ -360,9 +366,11 @@
     <parameter key="monolog.handler.amqp.class">Monolog\Handler\AmqpHandler</parameter>
     <parameter key="monolog.handler.error_log.class">Monolog\Handler\ErrorLogHandler</parameter>
     <parameter key="monolog.handler.loggly.class">Monolog\Handler\LogglyHandler</parameter>
+    <parameter key="monolog.handler.logentries.class">Monolog\Handler\LogEntriesHandler</parameter>
     <parameter key="monolog.activation_strategy.not_found.class">Symfony\Bundle\MonologBundle\NotFoundActivationStrategy</parameter>
     <parameter key="monolog.handler.fingers_crossed.class">Monolog\Handler\FingersCrossedHandler</parameter>
     <parameter key="monolog.handler.fingers_crossed.error_level_activation_strategy.class">Monolog\Handler\FingersCrossed\ErrorLevelActivationStrategy</parameter>
+    <parameter key="monolog.handler.filter.class">Monolog\Handler\FilterHandler</parameter>
     <parameter key="monolog.handler.mongo.class">Monolog\Handler\MongoDBHandler</parameter>
     <parameter key="monolog.mongo.client.class">MongoClient</parameter>
     <parameter key="monolog.swift_mailer.handlers" type="collection"/>
@@ -498,6 +506,50 @@
     <parameter key="doctrine.orm.auto_generate_proxy_classes">true</parameter>
     <parameter key="doctrine.orm.proxy_dir">/var/www/leadsfactory/app/cache/dev/doctrine/orm/Proxies</parameter>
     <parameter key="doctrine.orm.proxy_namespace">Proxies</parameter>
+    <parameter key="jms_aop.cache_dir">/var/www/leadsfactory/app/cache/dev/jms_aop</parameter>
+    <parameter key="jms_aop.interceptor_loader.class">JMS\AopBundle\Aop\InterceptorLoader</parameter>
+    <parameter key="security.secured_services" type="collection"/>
+    <parameter key="security.access.method_interceptor.class">JMS\SecurityExtraBundle\Security\Authorization\Interception\MethodSecurityInterceptor</parameter>
+    <parameter key="security.access.method_access_control" type="collection"/>
+    <parameter key="security.access.remembering_access_decision_manager.class">JMS\SecurityExtraBundle\Security\Authorization\RememberingAccessDecisionManager</parameter>
+    <parameter key="security.access.run_as_manager.class">JMS\SecurityExtraBundle\Security\Authorization\RunAsManager</parameter>
+    <parameter key="security.authentication.provider.run_as.class">JMS\SecurityExtraBundle\Security\Authentication\Provider\RunAsAuthenticationProvider</parameter>
+    <parameter key="security.run_as.key">RunAsToken</parameter>
+    <parameter key="security.run_as.role_prefix">ROLE_</parameter>
+    <parameter key="security.access.after_invocation_manager.class">JMS\SecurityExtraBundle\Security\Authorization\AfterInvocation\AfterInvocationManager</parameter>
+    <parameter key="security.access.after_invocation.acl_provider.class">JMS\SecurityExtraBundle\Security\Authorization\AfterInvocation\AclAfterInvocationProvider</parameter>
+    <parameter key="security.access.iddqd_voter.class">JMS\SecurityExtraBundle\Security\Authorization\Voter\IddqdVoter</parameter>
+    <parameter key="security.extra.metadata_factory.class">Metadata\MetadataFactory</parameter>
+    <parameter key="security.extra.lazy_loading_driver.class">Metadata\Driver\LazyLoadingDriver</parameter>
+    <parameter key="security.extra.driver_chain.class">Metadata\Driver\DriverChain</parameter>
+    <parameter key="security.extra.annotation_driver.class">JMS\SecurityExtraBundle\Metadata\Driver\AnnotationDriver</parameter>
+    <parameter key="security.extra.file_cache.class">Metadata\Cache\FileCache</parameter>
+    <parameter key="security.access.secure_all_services">false</parameter>
+    <parameter key="security.extra.cache_dir">/var/www/leadsfactory/app/cache/dev/jms_security</parameter>
+    <parameter key="security.authenticated_voter.disabled">false</parameter>
+    <parameter key="security.role_voter.disabled">false</parameter>
+    <parameter key="security.acl_voter.disabled">false</parameter>
+    <parameter key="security.extra.iddqd_ignore_roles" type="collection">
+      <parameter>ROLE_PREVIOUS_ADMIN</parameter>
+    </parameter>
+    <parameter key="security.iddqd_aliases" type="collection"/>
+    <parameter key="jms_di_extra.metadata.driver.annotation_driver.class">JMS\DiExtraBundle\Metadata\Driver\AnnotationDriver</parameter>
+    <parameter key="jms_di_extra.metadata.driver.configured_controller_injections.class">JMS\DiExtraBundle\Metadata\Driver\ConfiguredControllerInjectionsDriver</parameter>
+    <parameter key="jms_di_extra.metadata.driver.lazy_loading_driver.class">Metadata\Driver\LazyLoadingDriver</parameter>
+    <parameter key="jms_di_extra.metadata.metadata_factory.class">Metadata\MetadataFactory</parameter>
+    <parameter key="jms_di_extra.metadata.cache.file_cache.class">Metadata\Cache\FileCache</parameter>
+    <parameter key="jms_di_extra.metadata.converter.class">JMS\DiExtraBundle\Metadata\MetadataConverter</parameter>
+    <parameter key="jms_di_extra.controller_resolver.class">JMS\DiExtraBundle\HttpKernel\ControllerResolver</parameter>
+    <parameter key="jms_di_extra.controller_injectors_warmer.class">JMS\DiExtraBundle\HttpKernel\ControllerInjectorsWarmer</parameter>
+    <parameter key="jms_di_extra.all_bundles">false</parameter>
+    <parameter key="jms_di_extra.bundles" type="collection"/>
+    <parameter key="jms_di_extra.directories" type="collection"/>
+    <parameter key="jms_di_extra.cache_dir">/var/www/leadsfactory/app/cache/dev/jms_diextra</parameter>
+    <parameter key="jms_di_extra.disable_grep">false</parameter>
+    <parameter key="jms_di_extra.doctrine_integration">true</parameter>
+    <parameter key="jms_di_extra.cache_warmer.controller_file_blacklist" type="collection"/>
+    <parameter key="jms_di_extra.doctrine_integration.entity_manager.file">/var/www/leadsfactory/app/cache/dev/jms_diextra/doctrine/EntityManager_53f46eef65d65.php</parameter>
+    <parameter key="jms_di_extra.doctrine_integration.entity_manager.class">EntityManager53f46eef65d65_546a8d27f194334ee012bfe64f629947b07e4919\__CG__\Doctrine\ORM\EntityManager</parameter>
     <parameter key="sensio_framework_extra.view.guesser.class">Sensio\Bundle\FrameworkExtraBundle\Templating\TemplateGuesser</parameter>
     <parameter key="sensio_framework_extra.controller.listener.class">Sensio\Bundle\FrameworkExtraBundle\EventListener\ControllerListener</parameter>
     <parameter key="sensio_framework_extra.routing.loader.annot_dir.class">Symfony\Component\Routing\Loader\AnnotationDirectoryLoader</parameter>
@@ -511,10 +563,8 @@
     <parameter key="web_profiler.controller.profiler.class">Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController</parameter>
     <parameter key="web_profiler.controller.router.class">Symfony\Bundle\WebProfilerBundle\Controller\RouterController</parameter>
     <parameter key="web_profiler.controller.exception.class">Symfony\Bundle\WebProfilerBundle\Controller\ExceptionController</parameter>
+    <parameter key="twig.extension.webprofiler.class">Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension</parameter>
     <parameter key="web_profiler.debug_toolbar.position">bottom</parameter>
-    <parameter key="web_profiler.debug_toolbar.class">Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener</parameter>
-    <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
-    <parameter key="web_profiler.debug_toolbar.mode">2</parameter>
     <parameter key="sensio_distribution.webconfigurator.class">Sensio\Bundle\DistributionBundle\Configurator\Configurator</parameter>
     <parameter key="data_collector.templates" type="collection">
       <parameter key="data_collector.config" type="collection">
@@ -637,6 +687,14 @@
           <service class="Symfony\Bridge\Doctrine\CacheWarmer\ProxyCacheWarmer" public="false">
             <tag name="kernel.cache_warmer"/>
             <argument type="service" id="doctrine"/>
+          </service>
+        </argument>
+        <argument type="service">
+          <service class="JMS\DiExtraBundle\HttpKernel\ControllerInjectorsWarmer" public="false">
+            <tag name="kernel.cache_warmer"/>
+            <argument type="service" id="kernel"/>
+            <argument type="service" id="jms_di_extra.controller_resolver"/>
+            <argument type="collection"/>
           </service>
         </argument>
       </argument>
@@ -936,6 +994,22 @@
         <argument>0</argument>
       </call>
       <call method="addListenerService">
+        <argument>console.command</argument>
+        <argument type="collection">
+          <argument>monolog.handler.console</argument>
+          <argument>onCommand</argument>
+        </argument>
+        <argument>255</argument>
+      </call>
+      <call method="addListenerService">
+        <argument>console.terminate</argument>
+        <argument type="collection">
+          <argument>monolog.handler.console</argument>
+          <argument>onTerminate</argument>
+        </argument>
+        <argument>-255</argument>
+      </call>
+      <call method="addListenerService">
         <argument>kernel.request</argument>
         <argument type="collection">
           <argument>assetic.request_listener</argument>
@@ -962,6 +1036,14 @@
       <call method="addSubscriberService">
         <argument>debug.deprecation_logger_listener</argument>
         <argument>Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener</argument>
+      </call>
+      <call method="addSubscriberService">
+        <argument>debug.scream_logger_listener</argument>
+        <argument>Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener</argument>
+      </call>
+      <call method="addSubscriberService">
+        <argument>debug.debug_handlers_listener</argument>
+        <argument>Symfony\Component\HttpKernel\EventListener\DebugHandlersListener</argument>
       </call>
       <call method="addSubscriberService">
         <argument>session_listener</argument>
@@ -996,10 +1078,6 @@
         <argument>Symfony\Component\HttpKernel\EventListener\ExceptionListener</argument>
       </call>
       <call method="addSubscriberService">
-        <argument>monolog.handler.console</argument>
-        <argument>Symfony\Bridge\Monolog\Handler\ConsoleHandler</argument>
-      </call>
-      <call method="addSubscriberService">
         <argument>swiftmailer.email_sender.listener</argument>
         <argument>Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener</argument>
       </call>
@@ -1023,20 +1101,9 @@
         <argument>sensio_framework_extra.security.listener</argument>
         <argument>Sensio\Bundle\FrameworkExtraBundle\EventListener\SecurityListener</argument>
       </call>
-      <call method="addSubscriberService">
-        <argument>web_profiler.debug_toolbar</argument>
-        <argument>Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener</argument>
-      </call>
     </service>
     <service id="debug.controller_resolver" class="Symfony\Component\HttpKernel\Controller\TraceableControllerResolver">
-      <argument type="service">
-        <service class="Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver" public="false">
-          <tag name="monolog.logger" channel="request"/>
-          <argument type="service" id="service_container"/>
-          <argument type="service" id="controller_name_converter"/>
-          <argument type="service" id="monolog.logger.request" on-invalid="ignore"/>
-        </service>
-      </argument>
+      <argument type="service" id="jms_di_extra.controller_resolver"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
     <service id="debug.deprecation_logger_listener" class="Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener">
@@ -1044,6 +1111,19 @@
       <tag name="monolog.logger" channel="deprecation"/>
       <argument>deprecation</argument>
       <argument type="service" id="monolog.logger.deprecation" on-invalid="null"/>
+    </service>
+    <service id="debug.scream_logger_listener" class="Symfony\Component\HttpKernel\EventListener\ErrorsLoggerListener">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="monolog.logger" channel="scream"/>
+      <argument>scream</argument>
+      <argument type="service" id="monolog.logger.scream" on-invalid="null"/>
+    </service>
+    <service id="debug.debug_handlers_listener" class="Symfony\Component\HttpKernel\EventListener\DebugHandlersListener">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="collection">
+        <argument type="service" id="http_kernel" on-invalid="null"/>
+        <argument>terminateWithException</argument>
+      </argument>
     </service>
     <service id="session" class="Symfony\Component\HttpFoundation\Session\Session">
       <argument type="service" id="session.storage.native"/>
@@ -1059,12 +1139,14 @@
       <argument>0</argument>
     </service>
     <service id="session.storage.native" class="Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage">
-      <argument type="collection"/>
-      <argument>null</argument>
+      <argument type="collection">
+        <argument key="gc_probability">1</argument>
+      </argument>
+      <argument type="service" id="session.handler"/>
       <argument type="service" id="session.storage.metadata_bag"/>
     </service>
     <service id="session.storage.php_bridge" class="Symfony\Component\HttpFoundation\Session\Storage\PhpBridgeSessionStorage">
-      <argument>null</argument>
+      <argument type="service" id="session.handler"/>
       <argument type="service" id="session.storage.metadata_bag"/>
     </service>
     <service id="session_listener" class="Symfony\Bundle\FrameworkBundle\EventListener\SessionListener">
@@ -1077,9 +1159,7 @@
       <argument type="service" id="monolog.logger.security" on-invalid="ignore"/>
     </service>
     <service id="form.resolved_type_factory" class="Symfony\Component\Form\Extension\DataCollector\Proxy\ResolvedTypeFactoryDataCollectorProxy">
-      <argument type="service">
-        <service class="Symfony\Component\Form\ResolvedFormTypeFactory" public="false"/>
-      </argument>
+      <argument type="service" id="abfdd73aac54eb2585be58e5877587cd27f6a10de17c6feb71c8af7569381361_1"/>
       <argument type="service" id="data_collector.form"/>
     </service>
     <service id="form.registry" class="Symfony\Component\Form\FormRegistry">
@@ -1149,7 +1229,7 @@
     </service>
     <service id="form.type_guesser.validator" class="Symfony\Component\Form\Extension\Validator\ValidatorTypeGuesser">
       <tag name="form.type_guesser"/>
-      <argument type="service" id="validator.mapping.class_metadata_factory"/>
+      <argument type="service" id="validator"/>
     </service>
     <service id="form.type.form" class="Symfony\Component\Form\Extension\Core\Type\FormType">
       <tag name="form.type" alias="form"/>
@@ -1244,6 +1324,9 @@
     </service>
     <service id="form.type_extension.form.http_foundation" class="Symfony\Component\Form\Extension\HttpFoundation\Type\FormTypeHttpFoundationExtension">
       <tag name="form.type_extension" alias="form"/>
+      <argument type="service">
+        <service class="Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationRequestHandler" public="false"/>
+      </argument>
     </service>
     <service id="form.type_extension.form.validator" class="Symfony\Component\Form\Extension\Validator\Type\FormTypeValidatorExtension">
       <tag name="form.type_extension" alias="form"/>
@@ -1305,11 +1388,11 @@
     </service>
     <service id="templating.helper.request" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\RequestHelper">
       <tag name="templating.helper" alias="request"/>
-      <argument type="service" id="request" strict="false"/>
+      <argument type="service" id="request_stack"/>
     </service>
     <service id="templating.helper.session" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\SessionHelper">
       <tag name="templating.helper" alias="session"/>
-      <argument type="service" id="request" strict="false"/>
+      <argument type="service" id="request_stack"/>
     </service>
     <service id="templating.helper.router" class="Symfony\Bundle\FrameworkBundle\Templating\Helper\RouterHelper">
       <tag name="templating.helper" alias="router"/>
@@ -1352,62 +1435,58 @@
     <service id="templating.globals" class="Symfony\Bundle\FrameworkBundle\Templating\GlobalVariables">
       <argument type="service" id="service_container"/>
     </service>
-    <service id="validator" class="Symfony\Component\Validator\Validator">
-      <argument type="service" id="validator.mapping.class_metadata_factory"/>
-      <argument type="service">
-        <service class="Symfony\Bundle\FrameworkBundle\Validator\ConstraintValidatorFactory" public="false">
-          <argument type="service" id="service_container"/>
-          <argument type="collection">
-            <argument key="validator.expression">validator.expression</argument>
-            <argument key="security.validator.user_password">security.validator.user_password</argument>
-            <argument key="doctrine.orm.validator.unique">doctrine.orm.validator.unique</argument>
-          </argument>
-        </service>
-      </argument>
-      <argument type="service" id="translator"/>
-      <argument>validators</argument>
-      <argument type="collection">
-        <argument type="service" id="doctrine.orm.validator_initializer"/>
-      </argument>
-    </service>
-    <service id="validator.mapping.class_metadata_factory" class="Symfony\Component\Validator\Mapping\ClassMetadataFactory" public="false">
-      <argument type="service">
-        <service class="Symfony\Component\Validator\Mapping\Loader\LoaderChain" public="false">
-          <argument type="collection">
-            <argument type="service">
-              <service class="Symfony\Component\Validator\Mapping\Loader\AnnotationLoader" public="false">
-                <argument type="service" id="annotation_reader"/>
-              </service>
+    <service id="validator" class="Symfony\Component\Validator\ValidatorInterface" factory-method="getValidator" factory-service="validator.builder"/>
+    <service id="validator.builder" class="Symfony\Component\Validator\ValidatorBuilderInterface" factory-method="createValidatorBuilder" factory-class="%validator.builder.factory.class%">
+      <call method="setConstraintValidatorFactory">
+        <argument type="service">
+          <service class="Symfony\Bundle\FrameworkBundle\Validator\ConstraintValidatorFactory" public="false">
+            <argument type="service" id="service_container"/>
+            <argument type="collection">
+              <argument key="validator.expression">validator.expression</argument>
+              <argument key="Symfony\Component\Validator\Constraints\EmailValidator">validator.email</argument>
+              <argument key="security.validator.user_password">security.validator.user_password</argument>
+              <argument key="doctrine.orm.validator.unique">doctrine.orm.validator.unique</argument>
             </argument>
-            <argument type="service">
-              <service class="Symfony\Component\Validator\Mapping\Loader\StaticMethodLoader" public="false"/>
-            </argument>
-            <argument type="service">
-              <service class="Symfony\Component\Validator\Mapping\Loader\XmlFilesLoader" public="false">
-                <argument type="collection">
-                  <argument>/var/www/leadsfactory/vendor/symfony/symfony/src/Symfony/Component/Form/Resources/config/validation.xml</argument>
-                </argument>
-              </service>
-            </argument>
-            <argument type="service">
-              <service class="Symfony\Component\Validator\Mapping\Loader\YamlFilesLoader" public="false">
-                <argument type="collection"/>
-              </service>
-            </argument>
-          </argument>
-        </service>
-      </argument>
-      <argument>null</argument>
+          </service>
+        </argument>
+      </call>
+      <call method="setTranslator">
+        <argument type="service" id="translator"/>
+      </call>
+      <call method="setTranslationDomain">
+        <argument>validators</argument>
+      </call>
+      <call method="addXmlMappings">
+        <argument type="collection">
+          <argument>/var/www/leadsfactory/vendor/symfony/symfony/src/Symfony/Component/Form/Resources/config/validation.xml</argument>
+        </argument>
+      </call>
+      <call method="enableAnnotationMapping">
+        <argument type="service" id="annotation_reader"/>
+      </call>
+      <call method="addMethodMapping">
+        <argument>loadValidatorMetadata</argument>
+      </call>
+      <call method="addObjectInitializers">
+        <argument type="collection">
+          <argument type="service" id="doctrine.orm.validator_initializer"/>
+        </argument>
+      </call>
     </service>
     <service id="validator.expression" class="Symfony\Component\Validator\Constraints\ExpressionValidator">
       <tag name="validator.constraint_validator" alias="validator.expression"/>
       <argument type="service" id="property_accessor"/>
+    </service>
+    <service id="validator.email" class="Symfony\Component\Validator\Constraints\EmailValidator">
+      <tag name="validator.constraint_validator" alias="Symfony\Component\Validator\Constraints\EmailValidator"/>
+      <argument>false</argument>
     </service>
     <service id="fragment.listener" class="Symfony\Component\HttpKernel\EventListener\FragmentListener">
       <tag name="kernel.event_subscriber"/>
       <argument type="service" id="uri_signer"/>
       <argument>/_fragment</argument>
     </service>
+    <service id="abfdd73aac54eb2585be58e5877587cd27f6a10de17c6feb71c8af7569381361_1" class="Symfony\Component\Form\ResolvedFormTypeFactory"/>
     <service id="form.type_extension.form.data_collector" class="Symfony\Component\Form\Extension\DataCollector\Type\DataCollectorTypeExtension">
       <tag name="form.type_extension" alias="form"/>
       <argument type="service" id="data_collector.form"/>
@@ -1634,13 +1713,18 @@
       <argument type="collection">
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider" public="false">
-            <argument type="service" id="security.user.provider.concrete.in_memory"/>
+            <argument type="service" id="security.user.provider.concrete.main"/>
             <argument type="service">
               <service class="Symfony\Component\Security\Core\User\UserChecker" public="false"/>
             </argument>
             <argument>secured_area</argument>
             <argument type="service" id="security.encoder_factory"/>
             <argument>true</argument>
+          </service>
+        </argument>
+        <argument type="service">
+          <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
+            <argument>53f46eeeae207</argument>
           </service>
         </argument>
       </argument>
@@ -1653,36 +1737,40 @@
       <argument>Symfony\Component\Security\Core\Authentication\Token\AnonymousToken</argument>
       <argument>Symfony\Component\Security\Core\Authentication\Token\RememberMeToken</argument>
     </service>
-    <service id="security.access.decision_manager" class="Symfony\Component\Security\Core\Authorization\AccessDecisionManager" public="false">
-      <argument type="collection">
-        <argument type="service">
-          <service class="Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter" public="false">
-            <tag name="security.voter" priority="245"/>
-            <argument type="service" id="security.role_hierarchy"/>
-          </service>
-        </argument>
-        <argument type="service">
-          <service class="Symfony\Component\Security\Core\Authorization\Voter\ExpressionVoter" public="false">
-            <tag name="security.voter" priority="245"/>
+    <service id="security.access.decision_manager" class="JMS\SecurityExtraBundle\Security\Authorization\RememberingAccessDecisionManager">
+      <argument type="service">
+        <service class="Symfony\Component\Security\Core\Authorization\AccessDecisionManager" public="false">
+          <argument type="collection">
             <argument type="service">
-              <service class="Symfony\Component\Security\Core\Authorization\ExpressionLanguage" public="false"/>
+              <service class="Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter" public="false">
+                <tag name="security.voter" priority="245"/>
+                <argument type="service" id="security.role_hierarchy"/>
+              </service>
             </argument>
-            <argument type="service" id="security.authentication.trust_resolver"/>
-            <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
-          </service>
-        </argument>
-        <argument type="service">
-          <service class="Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter" public="false">
-            <tag name="security.voter" priority="250"/>
-            <argument type="service" id="security.authentication.trust_resolver"/>
-          </service>
-        </argument>
+            <argument type="service">
+              <service class="Symfony\Component\Security\Core\Authorization\Voter\ExpressionVoter" public="false">
+                <tag name="security.voter" priority="245"/>
+                <argument type="service">
+                  <service class="Symfony\Component\Security\Core\Authorization\ExpressionLanguage" public="false"/>
+                </argument>
+                <argument type="service" id="security.authentication.trust_resolver"/>
+                <argument type="service" id="security.role_hierarchy" on-invalid="null"/>
+              </service>
+            </argument>
+            <argument type="service">
+              <service class="Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter" public="false">
+                <tag name="security.voter" priority="250"/>
+                <argument type="service" id="security.authentication.trust_resolver"/>
+              </service>
+            </argument>
+          </argument>
+          <argument>affirmative</argument>
+          <argument>false</argument>
+          <argument>true</argument>
+        </service>
       </argument>
-      <argument>affirmative</argument>
-      <argument>false</argument>
-      <argument>true</argument>
     </service>
-    <service id="security.role_hierarchy" class="Symfony\Component\Security\Core\Role\RoleHierarchy" public="false">
+    <service id="security.role_hierarchy" class="Symfony\Component\Security\Core\Role\RoleHierarchy">
       <argument type="collection">
         <argument key="ROLE_ADMIN" type="collection">
           <argument>ROLE_USER</argument>
@@ -1700,19 +1788,9 @@
         <service class="Symfony\Bundle\SecurityBundle\Security\FirewallMap" public="false">
           <argument type="service" id="service_container"/>
           <argument type="collection">
-            <argument key="security.firewall.map.context.dev" type="service">
-              <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
-                <argument>^/(_(profiler|wdt)|css|images|js)/</argument>
-              </service>
-            </argument>
-            <argument key="security.firewall.map.context.login" type="service">
-              <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
-                <argument>^/demo/secured/login$</argument>
-              </service>
-            </argument>
             <argument key="security.firewall.map.context.secured_area" type="service">
               <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
-                <argument>^/demo/secured/</argument>
+                <argument>^/</argument>
               </service>
             </argument>
           </argument>
@@ -1734,7 +1812,7 @@
       <argument type="service" id="router"/>
       <call method="registerListener">
         <argument>secured_area</argument>
-        <argument>_demo_logout</argument>
+        <argument>/logout</argument>
         <argument>logout</argument>
         <argument>_csrf_token</argument>
         <argument>null</argument>
@@ -1744,36 +1822,10 @@
       <tag name="templating.helper" alias="security"/>
       <argument type="service" id="security.context" on-invalid="ignore"/>
     </service>
-    <service id="security.user.provider.concrete.in_memory" class="Symfony\Component\Security\Core\User\InMemoryUserProvider" public="false">
-      <call method="createUser">
-        <argument type="service">
-          <service class="Symfony\Component\Security\Core\User\User" public="false">
-            <argument>user</argument>
-            <argument>userpass</argument>
-            <argument type="collection">
-              <argument>ROLE_USER</argument>
-            </argument>
-          </service>
-        </argument>
-      </call>
-      <call method="createUser">
-        <argument type="service">
-          <service class="Symfony\Component\Security\Core\User\User" public="false">
-            <argument>admin</argument>
-            <argument>adminpass</argument>
-            <argument type="collection">
-              <argument>ROLE_ADMIN</argument>
-            </argument>
-          </service>
-        </argument>
-      </call>
-    </service>
-    <service id="security.firewall.map.context.dev" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
-      <argument type="collection"/>
-      <argument>null</argument>
-    </service>
-    <service id="security.firewall.map.context.login" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
-      <argument type="collection"/>
+    <service id="security.user.provider.concrete.main" class="Symfony\Bridge\Doctrine\Security\User\EntityUserProvider" public="false">
+      <argument type="service" id="doctrine"/>
+      <argument>Tellaw\LeadsFactoryBundle\Entity\Users</argument>
+      <argument>login</argument>
       <argument>null</argument>
     </service>
     <service id="security.firewall.map.context.secured_area" class="Symfony\Bundle\SecurityBundle\Security\FirewallContext">
@@ -1782,7 +1834,30 @@
           <service class="Symfony\Component\Security\Http\Firewall\ChannelListener" public="false">
             <tag name="monolog.logger" channel="security"/>
             <argument type="service">
-              <service class="Symfony\Component\Security\Http\AccessMap" public="false"/>
+              <service class="Symfony\Component\Security\Http\AccessMap" public="false">
+                <call method="add">
+                  <argument type="service">
+                    <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+                      <argument>^/login</argument>
+                    </service>
+                  </argument>
+                  <argument type="collection">
+                    <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+                  </argument>
+                  <argument>null</argument>
+                </call>
+                <call method="add">
+                  <argument type="service">
+                    <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+                      <argument>^/</argument>
+                    </service>
+                  </argument>
+                  <argument type="collection">
+                    <argument>ROLE_ADMIN</argument>
+                  </argument>
+                  <argument>null</argument>
+                </call>
+              </service>
             </argument>
             <argument type="service">
               <service class="Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint" public="false">
@@ -1797,7 +1872,7 @@
           <service class="Symfony\Component\Security\Http\Firewall\ContextListener" public="false">
             <argument type="service" id="security.context"/>
             <argument type="collection">
-              <argument type="service" id="security.user.provider.concrete.in_memory"/>
+              <argument type="service" id="security.user.provider.concrete.main"/>
             </argument>
             <argument>secured_area</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
@@ -1821,13 +1896,13 @@
                     <argument type="service" id="router" on-invalid="null"/>
                   </service>
                 </argument>
-                <argument>_demo</argument>
+                <argument>/</argument>
               </service>
             </argument>
             <argument type="collection">
               <argument key="csrf_parameter">_csrf_token</argument>
               <argument key="intention">logout</argument>
-              <argument key="logout_path">_demo_logout</argument>
+              <argument key="logout_path">/logout</argument>
             </argument>
             <call method="addHandler">
               <argument type="service">
@@ -1838,7 +1913,7 @@
         </argument>
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener" public="false">
-            <tag name="security.remember_me_aware" id="secured_area" provider="security.user.provider.concrete.in_memory"/>
+            <tag name="security.remember_me_aware" id="secured_area" provider="security.user.provider.concrete.main"/>
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.authentication.manager"/>
             <argument type="service">
@@ -1862,7 +1937,7 @@
                   </service>
                 </argument>
                 <argument type="collection">
-                  <argument key="login_path">_demo_login</argument>
+                  <argument key="login_path">/login</argument>
                   <argument key="always_use_default_target_path">false</argument>
                   <argument key="default_target_path">/</argument>
                   <argument key="target_path_parameter">_target_path</argument>
@@ -1883,7 +1958,7 @@
                   </service>
                 </argument>
                 <argument type="collection">
-                  <argument key="login_path">_demo_login</argument>
+                  <argument key="login_path">/login</argument>
                   <argument key="failure_path">null</argument>
                   <argument key="failure_forward">false</argument>
                   <argument key="failure_path_parameter">_failure_path</argument>
@@ -1892,7 +1967,7 @@
               </service>
             </argument>
             <argument type="collection">
-              <argument key="check_path">_security_check</argument>
+              <argument key="check_path">/login_check</argument>
               <argument key="use_forward">false</argument>
               <argument key="require_previous_session">true</argument>
               <argument key="username_parameter">_username</argument>
@@ -1907,12 +1982,42 @@
           </service>
         </argument>
         <argument type="service">
+          <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
+            <argument type="service" id="security.context"/>
+            <argument>53f46eeeae207</argument>
+            <argument type="service" id="monolog.logger.security" on-invalid="null"/>
+          </service>
+        </argument>
+        <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AccessListener" public="false">
             <tag name="monolog.logger" channel="security"/>
             <argument type="service" id="security.context"/>
             <argument type="service" id="security.access.decision_manager"/>
             <argument type="service">
-              <service class="Symfony\Component\Security\Http\AccessMap" public="false"/>
+              <service class="Symfony\Component\Security\Http\AccessMap" public="false">
+                <call method="add">
+                  <argument type="service">
+                    <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+                      <argument>^/login</argument>
+                    </service>
+                  </argument>
+                  <argument type="collection">
+                    <argument>IS_AUTHENTICATED_ANONYMOUSLY</argument>
+                  </argument>
+                  <argument>null</argument>
+                </call>
+                <call method="add">
+                  <argument type="service">
+                    <service class="Symfony\Component\HttpFoundation\RequestMatcher" public="false">
+                      <argument>^/</argument>
+                    </service>
+                  </argument>
+                  <argument type="collection">
+                    <argument>ROLE_ADMIN</argument>
+                  </argument>
+                  <argument>null</argument>
+                </call>
+              </service>
             </argument>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -1938,7 +2043,7 @@
                   <argument type="service" id="router" on-invalid="null"/>
                 </service>
               </argument>
-              <argument>_demo_login</argument>
+              <argument>/login</argument>
               <argument>false</argument>
             </service>
           </argument>
@@ -1989,6 +2094,7 @@
           <service class="Symfony\Bundle\TwigBundle\Extension\AssetsExtension" public="false">
             <tag name="twig.extension"/>
             <argument type="service" id="service_container"/>
+            <argument type="service" id="router.request_context"/>
           </service>
         </argument>
       </call>
@@ -2095,6 +2201,13 @@
           </service>
         </argument>
       </call>
+      <call method="addExtension">
+        <argument type="service">
+          <service class="Symfony\Bundle\WebProfilerBundle\Twig\WebProfilerExtension" public="false">
+            <tag name="twig.extension"/>
+          </service>
+        </argument>
+      </call>
       <call method="addGlobal">
         <argument>app</argument>
         <argument type="service" id="templating.globals"/>
@@ -2116,15 +2229,19 @@
     </service>
     <service id="monolog.handler.main" class="Monolog\Handler\StreamHandler">
       <argument>/var/www/leadsfactory/app/logs/dev.log</argument>
-      <argument>100</argument>
+      <argument>200</argument>
       <argument>true</argument>
     </service>
     <service id="monolog.handler.console" class="Symfony\Bridge\Monolog\Handler\ConsoleHandler">
-      <tag name="kernel.event_subscriber"/>
+      <tag name="kernel.event_listener" event="console.command" method="onCommand" priority="255"/>
+      <tag name="kernel.event_listener" event="console.terminate" method="onTerminate" priority="-255"/>
       <argument>null</argument>
       <argument>false</argument>
       <argument type="collection"/>
     </service>
+    <service id="c2d449c7562230040937a828467826a04a18dda8f31fc01f0ed3e4acee8c0a8b_3" class="Swift_Transport_Esmtp_Auth_PlainAuthenticator"/>
+    <service id="c2d449c7562230040937a828467826a04a18dda8f31fc01f0ed3e4acee8c0a8b_2" class="Swift_Transport_Esmtp_Auth_LoginAuthenticator"/>
+    <service id="c2d449c7562230040937a828467826a04a18dda8f31fc01f0ed3e4acee8c0a8b_1" class="Swift_Transport_Esmtp_Auth_CramMd5Authenticator"/>
     <service id="swiftmailer.email_sender.listener" class="Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener">
       <tag name="kernel.event_subscriber"/>
       <argument type="service" id="service_container"/>
@@ -2291,82 +2408,163 @@
       <argument type="collection"/>
       <argument type="collection"/>
     </service>
-    <service id="doctrine.orm.default_entity_manager" class="Doctrine\ORM\EntityManager" factory-method="create">
-      <argument type="service" id="doctrine.dbal.default_connection"/>
+    <service id="doctrine.orm.default_entity_manager" class="EntityManager53f46eef65d65_546a8d27f194334ee012bfe64f629947b07e4919\__CG__\Doctrine\ORM\EntityManager">
+      <file>/var/www/leadsfactory/app/cache/dev/jms_diextra/doctrine/EntityManager_53f46eef65d65.php</file>
       <argument type="service">
-        <service class="Doctrine\ORM\Configuration" public="false">
-          <call method="setEntityNamespaces">
-            <argument type="collection">
-              <argument key="TellawLeadsFactoryBundle">Tellaw\LeadsFactoryBundle\Entity</argument>
-            </argument>
-          </call>
-          <call method="setMetadataCacheImpl">
-            <argument type="service">
-              <service class="Doctrine\Common\Cache\ArrayCache" public="false">
-                <call method="setNamespace">
-                  <argument>sf2orm_default_bfb71d9d3123bbe10c221f4ce02e17bce083b5944b2b61fb67eb2413900ecede</argument>
-                </call>
-              </service>
-            </argument>
-          </call>
-          <call method="setQueryCacheImpl">
-            <argument type="service">
-              <service class="Doctrine\Common\Cache\ArrayCache" public="false">
-                <call method="setNamespace">
-                  <argument>sf2orm_default_bfb71d9d3123bbe10c221f4ce02e17bce083b5944b2b61fb67eb2413900ecede</argument>
-                </call>
-              </service>
-            </argument>
-          </call>
-          <call method="setResultCacheImpl">
-            <argument type="service">
-              <service class="Doctrine\Common\Cache\ArrayCache" public="false">
-                <call method="setNamespace">
-                  <argument>sf2orm_default_bfb71d9d3123bbe10c221f4ce02e17bce083b5944b2b61fb67eb2413900ecede</argument>
-                </call>
-              </service>
-            </argument>
-          </call>
-          <call method="setMetadataDriverImpl">
-            <argument type="service">
-              <service class="Doctrine\ORM\Mapping\Driver\DriverChain" public="false">
-                <call method="addDriver">
-                  <argument type="service">
-                    <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
-                      <argument type="service" id="annotation_reader"/>
-                      <argument type="collection">
-                        <argument>/var/www/leadsfactory/src/Tellaw/LeadsFactoryBundle/Entity</argument>
+        <service class="Doctrine\ORM\EntityManager" factory-method="create" factory-class="%doctrine.orm.entity_manager.class%" public="false">
+          <argument type="service" id="doctrine.dbal.default_connection"/>
+          <argument type="service">
+            <service class="Doctrine\ORM\Configuration" public="false">
+              <call method="setEntityNamespaces">
+                <argument type="collection">
+                  <argument key="TellawLeadsFactoryBundle">Tellaw\LeadsFactoryBundle\Entity</argument>
+                </argument>
+              </call>
+              <call method="setMetadataCacheImpl">
+                <argument type="service">
+                  <service class="Doctrine\Common\Cache\ArrayCache" public="false">
+                    <call method="setNamespace">
+                      <argument>sf2orm_default_bfb71d9d3123bbe10c221f4ce02e17bce083b5944b2b61fb67eb2413900ecede</argument>
+                    </call>
+                  </service>
+                </argument>
+              </call>
+              <call method="setQueryCacheImpl">
+                <argument type="service">
+                  <service class="Doctrine\Common\Cache\ArrayCache" public="false">
+                    <call method="setNamespace">
+                      <argument>sf2orm_default_bfb71d9d3123bbe10c221f4ce02e17bce083b5944b2b61fb67eb2413900ecede</argument>
+                    </call>
+                  </service>
+                </argument>
+              </call>
+              <call method="setResultCacheImpl">
+                <argument type="service">
+                  <service class="Doctrine\Common\Cache\ArrayCache" public="false">
+                    <call method="setNamespace">
+                      <argument>sf2orm_default_bfb71d9d3123bbe10c221f4ce02e17bce083b5944b2b61fb67eb2413900ecede</argument>
+                    </call>
+                  </service>
+                </argument>
+              </call>
+              <call method="setMetadataDriverImpl">
+                <argument type="service">
+                  <service class="Doctrine\ORM\Mapping\Driver\DriverChain" public="false">
+                    <call method="addDriver">
+                      <argument type="service">
+                        <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
+                          <argument type="service" id="annotation_reader"/>
+                          <argument type="collection">
+                            <argument>/var/www/leadsfactory/src/Tellaw/LeadsFactoryBundle/Entity</argument>
+                          </argument>
+                        </service>
                       </argument>
-                    </service>
-                  </argument>
-                  <argument>Tellaw\LeadsFactoryBundle\Entity</argument>
-                </call>
-              </service>
-            </argument>
-          </call>
-          <call method="setProxyDir">
-            <argument>/var/www/leadsfactory/app/cache/dev/doctrine/orm/Proxies</argument>
-          </call>
-          <call method="setProxyNamespace">
-            <argument>Proxies</argument>
-          </call>
-          <call method="setAutoGenerateProxyClasses">
-            <argument>true</argument>
-          </call>
-          <call method="setClassMetadataFactoryName">
-            <argument>Doctrine\ORM\Mapping\ClassMetadataFactory</argument>
-          </call>
-          <call method="setDefaultRepositoryClassName">
-            <argument>Doctrine\ORM\EntityRepository</argument>
-          </call>
-          <call method="setNamingStrategy">
-            <argument type="service">
-              <service class="Doctrine\ORM\Mapping\DefaultNamingStrategy" public="false"/>
-            </argument>
-          </call>
+                      <argument>Tellaw\LeadsFactoryBundle\Entity</argument>
+                    </call>
+                  </service>
+                </argument>
+              </call>
+              <call method="setProxyDir">
+                <argument>/var/www/leadsfactory/app/cache/dev/doctrine/orm/Proxies</argument>
+              </call>
+              <call method="setProxyNamespace">
+                <argument>Proxies</argument>
+              </call>
+              <call method="setAutoGenerateProxyClasses">
+                <argument>true</argument>
+              </call>
+              <call method="setClassMetadataFactoryName">
+                <argument>Doctrine\ORM\Mapping\ClassMetadataFactory</argument>
+              </call>
+              <call method="setDefaultRepositoryClassName">
+                <argument>Doctrine\ORM\EntityRepository</argument>
+              </call>
+              <call method="setNamingStrategy">
+                <argument type="service">
+                  <service class="Doctrine\ORM\Mapping\DefaultNamingStrategy" public="false"/>
+                </argument>
+              </call>
+            </service>
+          </argument>
+          <configurator service="doctrine.orm.default_manager_configurator" method="configure"/>
         </service>
       </argument>
-      <configurator service="doctrine.orm.default_manager_configurator" method="configure"/>
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="jms_aop.pointcut_container" class="JMS\AopBundle\Aop\PointcutContainer"/>
+    <service id="jms_aop.interceptor_loader" class="JMS\AopBundle\Aop\InterceptorLoader">
+      <argument type="service" id="service_container"/>
+    </service>
+    <service id="security.access.method_interceptor" class="JMS\SecurityExtraBundle\Security\Authorization\Interception\MethodSecurityInterceptor">
+      <tag name="monolog.logger" channel="security"/>
+      <argument type="service" id="security.context"/>
+      <argument type="service" id="security.authentication.manager"/>
+      <argument type="service" id="security.access.decision_manager"/>
+      <argument type="service">
+        <service class="JMS\SecurityExtraBundle\Security\Authorization\AfterInvocation\AfterInvocationManager" public="false">
+          <argument type="collection"/>
+        </service>
+      </argument>
+      <argument type="service">
+        <service class="JMS\SecurityExtraBundle\Security\Authorization\RunAsManager" public="false">
+          <argument>RunAsToken</argument>
+          <argument>ROLE_</argument>
+        </service>
+      </argument>
+      <argument type="service" id="security.extra.metadata_factory"/>
+      <argument type="service" id="monolog.logger.security" on-invalid="null"/>
+    </service>
+    <service id="security.access.pointcut" class="JMS\SecurityExtraBundle\Security\Authorization\Interception\SecurityPointcut">
+      <tag name="jms_aop.pointcut" interceptor="security.access.method_interceptor"/>
+      <argument type="service" id="security.extra.metadata_factory"/>
+      <argument>false</argument>
+      <argument type="collection"/>
+      <call method="setSecuredClasses">
+        <argument type="collection"/>
+      </call>
+    </service>
+    <service id="security.extra.metadata_factory" class="Metadata\MetadataFactory" public="false">
+      <argument type="service">
+        <service class="Metadata\Driver\LazyLoadingDriver" public="false">
+          <argument type="service" id="service_container"/>
+          <argument>security.extra.metadata_driver</argument>
+        </service>
+      </argument>
+      <call method="setCache">
+        <argument type="service">
+          <service class="Metadata\Cache\FileCache" public="false">
+            <argument>/var/www/leadsfactory/app/cache/dev/jms_security</argument>
+            <argument>true</argument>
+          </service>
+        </argument>
+      </call>
+      <call method="setIncludeInterfaces">
+        <argument>true</argument>
+      </call>
+    </service>
+    <service id="jms_di_extra.metadata.metadata_factory" class="Metadata\MetadataFactory">
+      <argument type="service">
+        <service class="Metadata\Driver\LazyLoadingDriver" public="false">
+          <argument type="service" id="service_container"/>
+          <argument>jms_di_extra.metadata_driver</argument>
+        </service>
+      </argument>
+      <argument>Metadata\ClassHierarchyMetadata</argument>
+      <argument>true</argument>
+      <call method="setCache">
+        <argument type="service">
+          <service class="Metadata\Cache\FileCache" public="false">
+            <argument>/var/www/leadsfactory/app/cache/dev/jms_diextra/metadata</argument>
+          </service>
+        </argument>
+      </call>
+    </service>
+    <service id="jms_di_extra.metadata.converter" class="JMS\DiExtraBundle\Metadata\MetadataConverter"/>
+    <service id="jms_di_extra.controller_resolver" class="JMS\DiExtraBundle\HttpKernel\ControllerResolver" public="false">
+      <tag name="monolog.logger" channel="request"/>
+      <argument type="service" id="service_container"/>
+      <argument type="service" id="controller_name_converter"/>
+      <argument type="service" id="monolog.logger.request" on-invalid="ignore"/>
     </service>
     <service id="sensio_framework_extra.view.guesser" class="Sensio\Bundle\FrameworkExtraBundle\Templating\TemplateGuesser">
       <argument type="service" id="kernel"/>
@@ -2378,6 +2576,7 @@
     <service id="sensio_framework_extra.converter.listener" class="Sensio\Bundle\FrameworkExtraBundle\EventListener\ParamConverterListener">
       <tag name="kernel.event_subscriber"/>
       <argument type="service" id="sensio_framework_extra.converter.manager"/>
+      <argument>true</argument>
     </service>
     <service id="sensio_framework_extra.converter.manager" class="Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterManager">
       <call method="add">
@@ -2492,14 +2691,6 @@
       <argument type="service" id="twig"/>
       <argument>true</argument>
     </service>
-    <service id="web_profiler.debug_toolbar" class="Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener">
-      <tag name="kernel.event_subscriber"/>
-      <argument type="service" id="twig"/>
-      <argument>false</argument>
-      <argument>2</argument>
-      <argument>bottom</argument>
-      <argument type="service" id="router" on-invalid="ignore"/>
-    </service>
     <service id="sensio_distribution.webconfigurator" class="Sensio\Bundle\DistributionBundle\Configurator\Configurator">
       <argument>/var/www/leadsfactory/app</argument>
     </service>
@@ -2541,6 +2732,18 @@
     </service>
     <service id="monolog.logger.deprecation" class="Symfony\Bridge\Monolog\Logger">
       <argument>deprecation</argument>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.console"/>
+      </call>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.main"/>
+      </call>
+      <call method="pushHandler">
+        <argument type="service" id="monolog.handler.debug"/>
+      </call>
+    </service>
+    <service id="monolog.logger.scream" class="Symfony\Bridge\Monolog\Logger">
+      <argument>scream</argument>
       <call method="pushHandler">
         <argument type="service" id="monolog.handler.console"/>
       </call>
@@ -2620,6 +2823,9 @@
       <argument>MOCKSESSID</argument>
       <argument type="service" id="session.storage.metadata_bag"/>
     </service>
+    <service id="session.handler" class="Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler">
+      <argument>/var/www/leadsfactory/app/sessions</argument>
+    </service>
     <service id="templating.loader" class="Symfony\Bundle\FrameworkBundle\Templating\Loader\FilesystemLoader">
       <argument type="service" id="templating.locator"/>
     </service>
@@ -2629,6 +2835,9 @@
       <argument type="service" id="templating.loader"/>
       <argument type="service" id="debug.stopwatch"/>
       <argument type="service" id="templating.globals"/>
+      <call method="setCharset">
+        <argument>UTF-8</argument>
+      </call>
       <call method="setHelpers">
         <argument type="collection">
           <argument key="slots">templating.helper.slots</argument>
@@ -2652,7 +2861,6 @@
       <argument type="service" id="templating.name_parser"/>
       <argument type="service" id="templating.locator"/>
       <argument type="service" id="debug.stopwatch"/>
-      <argument type="service" id="templating.globals"/>
       <call method="setDefaultEscapingStrategy">
         <argument type="collection">
           <argument type="service" id="templating"/>
@@ -2689,7 +2897,7 @@
     </service>
     <service id="security.encoder_factory" class="Symfony\Component\Security\Core\Encoder\EncoderFactory">
       <argument type="collection">
-        <argument key="Symfony\Component\Security\Core\User\User" type="collection">
+        <argument key="Tellaw\LeadsFactoryBundle\Entity\Users" type="collection">
           <argument key="class">%security.encoder.plain.class%</argument>
           <argument key="arguments" type="collection">
             <argument>false</argument>
@@ -2772,15 +2980,9 @@
         <argument type="service">
           <service class="Swift_Transport_Esmtp_AuthHandler" public="false">
             <argument type="collection">
-              <argument type="service">
-                <service class="Swift_Transport_Esmtp_Auth_CramMd5Authenticator" public="false"/>
-              </argument>
-              <argument type="service">
-                <service class="Swift_Transport_Esmtp_Auth_LoginAuthenticator" public="false"/>
-              </argument>
-              <argument type="service">
-                <service class="Swift_Transport_Esmtp_Auth_PlainAuthenticator" public="false"/>
-              </argument>
+              <argument type="service" id="c2d449c7562230040937a828467826a04a18dda8f31fc01f0ed3e4acee8c0a8b_1"/>
+              <argument type="service" id="c2d449c7562230040937a828467826a04a18dda8f31fc01f0ed3e4acee8c0a8b_2"/>
+              <argument type="service" id="c2d449c7562230040937a828467826a04a18dda8f31fc01f0ed3e4acee8c0a8b_3"/>
             </argument>
             <call method="setUsername">
               <argument>null</argument>
@@ -2810,6 +3012,18 @@
       <call method="setSourceIp">
         <argument>null</argument>
       </call>
+    </service>
+    <service id="security.extra.metadata_driver" class="Metadata\Driver\DriverChain">
+      <argument type="collection">
+        <argument type="service">
+          <service class="JMS\SecurityExtraBundle\Metadata\Driver\AnnotationDriver" public="false">
+            <argument type="service" id="annotation_reader"/>
+          </service>
+        </argument>
+      </argument>
+    </service>
+    <service id="jms_di_extra.metadata_driver" class="JMS\DiExtraBundle\Metadata\Driver\AnnotationDriver">
+      <argument type="service" id="annotation_reader"/>
     </service>
     <service id="event_dispatcher" alias="debug.event_dispatcher"/>
     <service id="session.storage" alias="session.storage.native"/>

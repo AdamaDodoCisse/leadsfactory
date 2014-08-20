@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
@@ -24,6 +25,7 @@ class EntityFormController extends Controller
     /**
      *
      * @Route("/form/list", name="_form_list")
+     * @Secure(roles="ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN")
      *
      */
     public function indexAction(Request $request)

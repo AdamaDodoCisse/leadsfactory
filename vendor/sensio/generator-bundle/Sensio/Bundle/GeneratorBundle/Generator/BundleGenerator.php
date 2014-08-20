@@ -56,9 +56,9 @@ class BundleGenerator extends Generator
         $this->renderFile('bundle/Bundle.php.twig', $dir.'/'.$bundle.'.php', $parameters);
         $this->renderFile('bundle/Extension.php.twig', $dir.'/DependencyInjection/'.$basename.'Extension.php', $parameters);
         $this->renderFile('bundle/Configuration.php.twig', $dir.'/DependencyInjection/Configuration.php', $parameters);
-        $this->renderFile('bundle/EntityFormController.php.twig', $dir.'/Controller/EntityFormController.php', $parameters);
+        $this->renderFile('bundle/DefaultController.php.twig', $dir.'/Controller/DefaultController.php', $parameters);
         $this->renderFile('bundle/DefaultControllerTest.php.twig', $dir.'/Tests/Controller/DefaultControllerTest.php', $parameters);
-        $this->renderFile('bundle/entity_referenceList_list.html.twig.twig', $dir.'/Resources/views/Default/entity_referenceList_list.html.twig', $parameters);
+        $this->renderFile('bundle/index.html.twig.twig', $dir.'/Resources/views/Default/index.html.twig', $parameters);
 
         if ('xml' === $format || 'annotation' === $format) {
             $this->renderFile('bundle/services.xml.twig', $dir.'/Resources/config/services.xml', $parameters);

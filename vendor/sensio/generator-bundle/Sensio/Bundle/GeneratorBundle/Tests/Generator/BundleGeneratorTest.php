@@ -21,8 +21,8 @@ class BundleGeneratorTest extends GeneratorTest
 
         $files = array(
             'FooBarBundle.php',
-            'Controller/EntityFormController.php',
-            'Resources/views/Default/entity_referenceList_list.html.twig',
+            'Controller/DefaultController.php',
+            'Resources/views/Default/index.html.twig',
             'Resources/config/routing.yml',
             'Tests/Controller/DefaultControllerTest.php',
             'Resources/config/services.yml',
@@ -36,11 +36,11 @@ class BundleGeneratorTest extends GeneratorTest
         $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/FooBarBundle.php');
         $this->assertContains('namespace Foo\\BarBundle', $content);
 
-        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/EntityFormController.php');
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/DefaultController.php');
         $this->assertContains('public function indexAction', $content);
         $this->assertNotContains('@Route("/hello/{name}"', $content);
 
-        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Resources/views/Default/entity_referenceList_list.html.twig');
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Resources/views/Default/index.html.twig');
         $this->assertContains('Hello {{ name }}!', $content);
     }
 
@@ -51,7 +51,7 @@ class BundleGeneratorTest extends GeneratorTest
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.yml'));
         $this->assertFalse(file_exists($this->tmpDir.'/Foo/BarBundle/Resources/config/routing.xml'));
 
-        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/EntityFormController.php');
+        $content = file_get_contents($this->tmpDir.'/Foo/BarBundle/Controller/DefaultController.php');
         $this->assertContains('@Route("/hello/{name}"', $content);
     }
 
