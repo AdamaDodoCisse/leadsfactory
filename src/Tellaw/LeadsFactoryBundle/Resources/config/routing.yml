@@ -1,9 +1,4 @@
 tellaw_leads_factory_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: TellawLeadsFactoryBundle:Default:index }
-
-
-tellaw_leads_factory_homepage:
     resource: "@TellawLeadsFactoryBundle/Controller/"
     type:     annotation
     prefix:   /

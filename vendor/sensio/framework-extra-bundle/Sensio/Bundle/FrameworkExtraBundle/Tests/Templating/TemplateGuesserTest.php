@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Sensio\Bundle\FrameworkExtraBundle\Tests\Templating;
 
 use Sensio\Bundle\FrameworkExtraBundle\Templating\TemplateGuesser;
@@ -41,7 +50,7 @@ class TemplateGuesserTest extends \PHPUnit_Framework_TestCase
             'indexAction',
         ), new Request());
 
-        $this->assertEquals('FooBundle:Foo:entity_referenceList_list.html.twig', (string) $templateReference);;
+        $this->assertEquals('FooBundle:Foo:index.html.twig', (string) $templateReference);;
     }
 
     public function testGuessTemplateNameWithParentBundle()
@@ -58,7 +67,7 @@ class TemplateGuesserTest extends \PHPUnit_Framework_TestCase
             'indexAction',
         ), new Request());
 
-        $this->assertEquals('FooBundle:Bar:entity_referenceList_list.html.twig', (string) $templateReference);;
+        $this->assertEquals('FooBundle:Bar:index.html.twig', (string) $templateReference);;
     }
 
     public function testGuessTemplateNameWithCascadingParentBundle()
@@ -81,7 +90,7 @@ class TemplateGuesserTest extends \PHPUnit_Framework_TestCase
             'indexAction',
         ), new Request());
 
-        $this->assertEquals('FooBundle:FooBar:entity_referenceList_list.html.twig', (string) $templateReference);;
+        $this->assertEquals('FooBundle:FooBar:index.html.twig', (string) $templateReference);;
     }
 
     protected function getBundle($name, $namespace, $parent = null)

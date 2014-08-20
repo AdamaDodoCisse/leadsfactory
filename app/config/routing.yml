@@ -1,3 +1,12 @@
 tellaw_leads_factory:
     resource: "@TellawLeadsFactoryBundle/Resources/config/routing.yml"
     prefix:   /
+
+login_path:
+    pattern:   /login
+
+login_check:
+    pattern:   /login_check
+
+_security_logout:
+    pattern:  /logout

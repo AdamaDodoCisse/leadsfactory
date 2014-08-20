@@ -2,7 +2,7 @@
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Security\Core\User\UserInterface;
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Users
@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * 
  * @ORM\Entity
  */
-class Users {
+class Users implements UserInterface {
 
 	/**
 	 * @var integer $id
@@ -29,20 +29,20 @@ class Users {
 
     /**
      * @var string $lastname
-     * @ORM\Column(type="text", nullable=true, name="lastname")
+     * @ORM\Column(type="string", nullable=true, name="lastname")
      */
     protected $lastname;
 
 
     /**
      * @var string $login
-     * @ORM\Column(type="text", nullable=true, name="login")
+     * @ORM\Column(type="string", nullable=true, name="login")
      */
     protected $login;
 
     /**
      * @var string $password
-     * @ORM\Column(type="text", nullable=true, name="password")
+     * @ORM\Column(type="string", nullable=true, name="password")
      */
     protected $password;
 
@@ -126,6 +126,30 @@ class Users {
         return $this->password;
     }
 
+    public function getRoles() {
+        return array('ROLE_ADMIN');
+    }
 
+    public function getSalt() {
+        return null;
+    }
+
+    public function eraseCredentials() {
+        return null;
+    }
+
+    public function getUsername() {
+        return $this->getLogin();
+
+    }
+
+    public function equals(UserInterface $user) {
+
+        if ($user->getLogin() == $this->getLogin())
+            return true;
+        else
+            return false;
+
+    }
 
 }
