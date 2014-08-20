@@ -3,8 +3,10 @@ app/config/parameters.yml
 app/cache
 app/logs
 app/sessions
+vendor/
 
 # Cache and logs
+/vendor/*
 /app/cache/*
 /app/logs/*
 /app/sessions/*
