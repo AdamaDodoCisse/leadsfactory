@@ -1,6 +1,5 @@
 .idea/*
-app/cache/*
-app/logs/*
+
 # Cache and logs
 /app/cache/*
 /app/logs/*
