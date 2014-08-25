@@ -12,9 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Leads {
 
-    public static $_STATUS_PENDING_EXPORT = 1;
-    public static $_STATUS_EXPORT_FAILED = 2;
-    public static $_STATUS_EXPORT_DONE = 3;
+    public static $_EXPORT_NOT_PROCESSED = 0;
+    public static $_EXPORT_SUCCESS = 1;
+    public static $_EXPORT_ONE_TRY_ERROR = 2;
+    public static $_EXPORT_MULTIPLE_ERROR = 3;
 
 	/**
 	 * @var integer $id
@@ -72,7 +73,7 @@ class Leads {
     private $formType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form", inversedBy="leads")
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form")
      * @ORM\JoinColumn(name="form_id", referencedColumnName="id")
      */
     private $form;
@@ -334,5 +335,20 @@ class Leads {
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Return new export error status
+     *
+     * @param $lead
+     * @return mixed
+     */
+    public function getNewErrorStatus(){
+        if($this->getStatus == self::$_EXPORT_NOT_PROCESSED || is_null($this->getStatus())){
+            return self::$_EXPORT_MULTIPLE_ERROR;
+        }else{
+            return self::$_EXPORT_ONE_TRY_ERROR;
+        }
+
     }
 }

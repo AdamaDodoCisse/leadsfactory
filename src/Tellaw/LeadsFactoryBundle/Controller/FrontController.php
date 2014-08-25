@@ -103,7 +103,7 @@ class FrontController extends Controller
             $leads->setFormType( $formTypeObject );
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
-            $leads->setStatus($this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_STATUS_PENDING_EXPORT : null);
+            $leads->setStatus($this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_EXPORT_NOT_PROCESSED : null);
             $leads->setCreatedAt( new \DateTime() );
 
 

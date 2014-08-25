@@ -3,9 +3,9 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 
 
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class CSV extends AbstractExportMethod{
-
 
     /**
      * Process export to CSV file
@@ -21,18 +21,23 @@ class CSV extends AbstractExportMethod{
         $path = $this->getExportPath();
 
         $handle = fopen($path.DIRECTORY_SEPARATOR.$fileName, 'w+');
+        if($handle === false){
+            //Log error
+        }
 
         foreach($leads as $lead){
             $data = json_decode($lead->getData(), true);
-            fputcsv($handle, $data) ? $lead->setStatus($lead::$_STATUS_EXPORT_DONE) : $lead->setStatus($lead::$_STATUS_EXPORT_FAILED);
-
+            $status = fputcsv($handle, $data) ? $lead::$_EXPORT_SUCCESS : $lead->getNewErrorStatus();
+            $lead->setStatus($status);
             try{
                 $em = $this->getContainer()->get('doctrine')->getManager();
                 $em->persist($lead);
                 $em->flush();
             }catch (Exception $e) {
-
+                //Error
             }
+
+            $this->updateHistory($lead, $form);
         }
         fclose($handle);
     }

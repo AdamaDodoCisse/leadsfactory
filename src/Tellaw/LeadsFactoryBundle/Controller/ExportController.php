@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
+use Tellaw\LeadsFactoryBundle\Entity;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -35,7 +36,7 @@ class ExportController extends Controller
                 if($this->get('export_utils')->isValidExportMethod($method)){
                     $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findBy(
                         array(
-                            'status' => array(1, 2),
+                            'status' => array(0, 2),
                             'form' => $form->getId())
                     );
 
