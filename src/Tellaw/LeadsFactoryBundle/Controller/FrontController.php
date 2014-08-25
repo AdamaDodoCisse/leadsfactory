@@ -91,8 +91,9 @@ class FrontController extends Controller
         try {
 
             $formTypeObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find((string)$request->get ("lfFormType"));
+            $formObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($request->get("lfFormId"));
 
-            // Create new Leads Entity Objects
+            // Create new Leads Entity Object
             $leads = new Leads();
             $leads->setFirstname( @$fields["firstname"] );
             $leads->setLastname( @$fields["lastname"] );
@@ -100,7 +101,9 @@ class FrontController extends Controller
             $leads->setLog( "leads importée le : ".date('Y-m-d h:s') );
             $leads->setUtmcampaign( @$fields["utmcampaign"] );
             $leads->setFormType( $formTypeObject );
-            //$leads->setTelephone( @$fields["phone"] );
+            $leads->setForm($formObject);
+            $leads->setTelephone( @$fields["phone"] );
+            $leads->setStatus($this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_STATUS_PENDING_EXPORT : null);
             $leads->setCreatedAt( new \DateTime() );
 
 

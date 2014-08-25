@@ -53,6 +53,12 @@ class Form {
     protected $style;
 
     /**
+     * @var longtext $exportConfig
+     * @ORM\Column(type="text", nullable=true, name="export_config")
+     */
+    protected $exportConfig;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\FormType")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      */
@@ -170,5 +176,39 @@ class Form {
         return $this->style;
     }
 
+    /**
+     * Set exportConfig
+     *
+     * @todo sanitize input data
+     *
+     * @param string $exportConfig
+     * @return Form
+     */
+    public function setExportConfig($exportConfig)
+    {
+        $this->exportConfig = $exportConfig;
+
+        return $this;
+    }
+
+    /**
+     * Get exportConfig
+     *
+     * @return string 
+     */
+    public function getExportConfig()
+    {
+        return $this->exportConfig;
+    }
+
+    /**
+     * Get config export methods
+     *
+     * @return string
+     */
+    public function getExportMethods()
+    {
+        return json_decode(trim($this->getExportConfig()), true);
+    }
 
 }

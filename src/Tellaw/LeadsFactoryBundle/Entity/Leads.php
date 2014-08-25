@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Leads {
 
+    public static $_STATUS_PENDING_EXPORT = 1;
+    public static $_STATUS_EXPORT_FAILED = 2;
+    public static $_STATUS_EXPORT_DONE = 3;
+
 	/**
 	 * @var integer $id
 	 *
@@ -68,6 +72,12 @@ class Leads {
     private $formType;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form", inversedBy="leads")
+     * @ORM\JoinColumn(name="form_id", referencedColumnName="id")
+     */
+    private $form;
+
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $utmcampaign;
@@ -81,6 +91,7 @@ class Leads {
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
+
 
     /**
      * @param mixed $formType
@@ -273,4 +284,55 @@ class Leads {
         return $this->utmcampaign;
     }
 
+    public function getExportConfig()
+    {
+
+    }
+
+
+    /**
+     * Set formId
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $formId
+     * @return Leads
+     */
+    public function setFormId(\Tellaw\LeadsFactoryBundle\Entity\Form $formId = null)
+    {
+        $this->formId = $formId;
+
+        return $this;
+    }
+
+    /**
+     * Get formId
+     *
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     */
+    public function getFormId()
+    {
+        return $this->formId;
+    }
+
+    /**
+     * Set form
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
+     * @return Leads
+     */
+    public function setForm(\Tellaw\LeadsFactoryBundle\Entity\Form $form = null)
+    {
+        $this->form = $form;
+
+        return $this;
+    }
+
+    /**
+     * Get form
+     *
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
 }
