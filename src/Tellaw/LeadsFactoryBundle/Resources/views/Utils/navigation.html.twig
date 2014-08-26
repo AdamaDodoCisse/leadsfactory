@@ -10,6 +10,7 @@
     <li class="accordion-group {% if sections['donnees'] == '1' %}active{% endif %} color_19"> <a class="accordion-toggle widgets collapsed " data-toggle="collapse" data-parent="#sidebar_menu" href="#collapse2"> <img src="{{ asset('bundles/tellawleadsfactory/img/menu_icons/forms.png') }}"><span>Données</span></a>
         <ul id="collapse2" class="accordion-body collapse {% if sections['donnees'] == '1' %}in{% endif %}">
             <li {% if ( route == '_leads_list' or route == '_leads_edit') %}class="active"{% endif %}><a href="{{ path ('_leads_list') }}">Gestion des leads</a></li>
+            <li {% if ( route == '_leads_list' or route == '_export_history') %}class="active"{% endif %}><a href="{{ path ('_export_history') }}">Export history</a></li>
         </ul>
     </li>
 

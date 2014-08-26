@@ -26,7 +26,14 @@ class ExportController extends Controller
      */
     public function ExportAction(Request $request)
     {
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+        $formId = $request->query->get('id');
+        $redirectUrl = $request->query->get('redirect_url') ? $request->query->get('redirect_url') : '_leads_list';
+
+        if(is_null($formId)){
+            $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+        }else{
+            $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($formId);
+        }
 
         foreach($forms as $form){
             $configMethods = $form->getExportMethods();
@@ -39,12 +46,26 @@ class ExportController extends Controller
                             'status' => array(0, 2),
                             'form' => $form->getId())
                     );
-
                     $this->get($method.'_method')->export($leads, $form);
                 }
             }
         }
-        die('you\'re dead');
+        return $this->redirect($this->generateUrl($redirectUrl));
     }
+
+    /**
+     * @route("/export/history", name="_export_history")
+     */
+    public function showHistoryAction()
+    {
+        $history = $this->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Export')->findAll();
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
+            array('history' => $history)
+        );
+    }
+
+
 
 }

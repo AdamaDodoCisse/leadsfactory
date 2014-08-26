@@ -41,8 +41,9 @@
                                 <td style="text-align:center">
                                     <center>
                                         <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Edit</button>
-                                        <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Delete</button>
+                                        <button type="button" class="btns  red  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Delete</button>
                                         <button type="button" class="btns  green  m-sml-btn " style="margin:0px 0px 0px 5px">Preview</button>
+                                        <button type="button" class="btns  yellow  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_entity_export', {'id': item.id}) }}'">Exporter</button>
                                     </center>
                                 </td>
                             </tr>
