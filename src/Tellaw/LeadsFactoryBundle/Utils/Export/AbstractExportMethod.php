@@ -17,6 +17,13 @@ abstract class AbstractExportMethod {
     protected $exportDir = 'Export';
 
     /**
+     * Time gap before processing export
+     *
+     * @var string
+     */
+    protected $gap = '0';
+
+    /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
@@ -36,7 +43,7 @@ abstract class AbstractExportMethod {
         return $this->container;
     }
 
-    abstract protected function export($leads, $form);
+    abstract protected function export($jobs, $form);
 
     /**
      * Retourne le chemin du dossier d'export
@@ -72,6 +79,25 @@ abstract class AbstractExportMethod {
         $new->setForm($form);
         $new->setStatus($lead->getStatus());
         $new->setLog($log);
+        $new->setExportDate(new \DateTime());
+
+        try{
+            $em = $this->getContainer()->get('doctrine')->getManager();
+            $em->persist($new);
+            $em->flush();
+        }catch (Exception $e) {
+            echo $e->getMessage();
+            //Error
+        }
+    }
+
+    public function createJob($lead)
+    {
+        $new = new Export();
+        $new->setLead($lead);
+        //$new->setForm($form);
+        $new->setStatus($lead->getStatus());
+        //$new->setLog($log);
         $new->setExportDate(new \DateTime());
 
         try{

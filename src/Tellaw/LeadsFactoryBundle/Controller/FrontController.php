@@ -103,14 +103,20 @@ class FrontController extends Controller
             $leads->setFormType( $formTypeObject );
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
-            $leads->setStatus($this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_EXPORT_NOT_PROCESSED : null);
+
+            $status = $this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_EXPORT_NOT_PROCESSED : $leads::$_EXPORT_NOT_SCHEDULED;
+            $leads->setStatus($status);
+
             $leads->setCreatedAt( new \DateTime() );
-
-
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($leads);
             $em->flush();
+
+            // Create export job(s)
+            if($status == $leads::$_EXPORT_NOT_PROCESSED){
+                $this->get('export_utils')->createJob($leads);
+            }
 
             if ( trim ( $redirectUrlSuccess ) != "") {
                 return $this->redirect($redirectUrlSuccess);

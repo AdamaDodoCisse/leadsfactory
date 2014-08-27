@@ -16,6 +16,7 @@ class Leads {
     public static $_EXPORT_SUCCESS = 1;
     public static $_EXPORT_ONE_TRY_ERROR = 2;
     public static $_EXPORT_MULTIPLE_ERROR = 3;
+    public static $_EXPORT_NOT_SCHEDULED = 4;
 
 	/**
 	 * @var integer $id
@@ -279,12 +280,6 @@ class Leads {
         return $this->utmcampaign;
     }
 
-    public function getExportConfig()
-    {
-
-    }
-
-
     /**
      * Set formId
      *
@@ -337,12 +332,11 @@ class Leads {
      * @param $lead
      * @return mixed
      */
-    public function getNewErrorStatus(){
-        if($this->getStatus == self::$_EXPORT_NOT_PROCESSED || is_null($this->getStatus())){
-            return self::$_EXPORT_MULTIPLE_ERROR;
-        }else{
+    public function getErrorStatus(){
+        if($this->getStatus() == self::$_EXPORT_NOT_PROCESSED || is_null($this->getStatus())){
             return self::$_EXPORT_ONE_TRY_ERROR;
+        }else{
+            return self::$_EXPORT_MULTIPLE_ERROR;
         }
-
     }
 }

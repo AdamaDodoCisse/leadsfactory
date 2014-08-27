@@ -206,7 +206,7 @@ class Form {
      *
      * @return string
      */
-    public function getExportMethods()
+    public function getConfig()
     {
         return json_decode(trim($this->getExportConfig()), true);
     }

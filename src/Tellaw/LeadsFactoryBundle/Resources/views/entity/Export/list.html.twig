@@ -25,33 +25,34 @@
                             <th>Lead_Id</th>
                             <th>Form_Id</th>
                             <th>Form type</th>
-                            <th>Date</th>
+                            <th>Créé le</th>
+                            <th>Planifié le</th>
+                            <th>Exécuté le</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        {% for item in history %}
+                        {% for job in jobs %}
                             <tr>
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.lead.id }}</td>
-                                <td>{{ item.form.id }}</td>
-                                <td>{{ item.form.formType }}</td>
-                                <td>{{ item.exportdate.date }}</td>
-                                <td>{{ item.status }}</td>
+                                <td>{{ job.id }}</td>
+                                <td>{{ job.lead.id }}</td>
+                                <td>{{ job.form.id }}</td>
+                                <td>{{ job.form.formType }}</td>
+                                <td>{{ job.created_at.date }}</td>
+                                <td>{{ job.scheduled_at }}</td>
+                                <td>{% if job.executed_at.date != null %}{{ job.executed_at.date }}{% endif %}</td>
+                                <td>{{ job.status }}</td>
                                 <td style="text-align:center">
 
                                 </td>
                             </tr>
 
                         {% else %}
-
                             <tr>
-                                <td colspan="5">Aucun élément dans cette liste</td>
-
+                                <td colspan="5">Aucun élément.</td>
                             </tr>
-
                         {% endfor %}
 
                         </tbody>
