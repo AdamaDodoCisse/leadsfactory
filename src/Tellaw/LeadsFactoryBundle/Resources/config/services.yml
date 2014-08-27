@@ -5,6 +5,8 @@ services:
 
   export_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ExportUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
 
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV

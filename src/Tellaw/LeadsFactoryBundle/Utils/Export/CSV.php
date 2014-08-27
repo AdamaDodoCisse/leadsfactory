@@ -12,10 +12,10 @@ class CSV extends AbstractExportMethod{
      *
      * @todo log
      *
-     * @param $leads
-     * @param $form
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Export $jobs
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      */
-    public function export($leads, $form)
+    public function export($jobs, $form)
     {
         $fileName = 'export_'.$form->getFormType().'_'.time().'.csv';
         $path = $this->getExportPath();
@@ -25,9 +25,10 @@ class CSV extends AbstractExportMethod{
             //Log error
         }
 
-        foreach($leads as $lead){
+        foreach($jobs as $job){
+            $lead = $job->getLead();
             $data = json_decode($lead->getData(), true);
-            $status = fputcsv($handle, $data) ? $lead::$_EXPORT_SUCCESS : $lead->getNewErrorStatus();
+            $status = fputcsv($handle, $data) ? $lead::$_EXPORT_SUCCESS : $lead->getErrorStatus();
             $lead->setStatus($status);
             try{
                 $em = $this->getContainer()->get('doctrine')->getManager();
@@ -37,7 +38,7 @@ class CSV extends AbstractExportMethod{
                 //Error
             }
 
-            $this->updateHistory($lead, $form);
+            $this->getContainer()->get('export_utils')->updateJob($job, $status);
         }
         fclose($handle);
     }

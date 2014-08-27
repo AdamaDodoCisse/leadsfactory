@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="export_history")
+ * @ORM\Table(name="export_jobs")
  */
 class Export {
 
@@ -30,9 +30,24 @@ class Export {
     protected $form;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true, name="exportdate")
+     * @ORM\Column(type="string", nullable=false, name="method")
      */
-    protected $exportdate;
+    protected $method;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false, name="created_at")
+     */
+    protected $created_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false, name="scheduled_at")
+     */
+    protected $scheduled_at;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true, name="executed_at")
+     */
+    protected $executed_at;
 
     /**
      * @var int $status
@@ -53,29 +68,6 @@ class Export {
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set exportdate
-     *
-     * @param \DateTime $exportdate
-     * @return Export
-     */
-    public function setExportdate($exportdate)
-    {
-        $this->exportdate = $exportdate;
-
-        return $this;
-    }
-
-    /**
-     * Get exportdate
-     *
-     * @return \DateTime 
-     */
-    public function getExportdate()
-    {
-        return $this->exportdate;
     }
 
     /**
@@ -168,5 +160,97 @@ class Export {
     public function getLog()
     {
         return $this->log;
+    }
+
+    /**
+     * Set created_at
+     *
+     * @param \DateTime $createdAt
+     * @return Export
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->created_at = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get created_at
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Set scheduled_at
+     *
+     * @param \DateTime $scheduledAt
+     * @return Export
+     */
+    public function setScheduledAt($scheduledAt)
+    {
+        $this->scheduled_at = $scheduledAt;
+
+        return $this;
+    }
+
+    /**
+     * Get scheduled_at
+     *
+     * @return \DateTime 
+     */
+    public function getScheduledAt()
+    {
+        return $this->scheduled_at;
+    }
+
+    /**
+     * Set executed_at
+     *
+     * @param \DateTime $executedAt
+     * @return Export
+     */
+    public function setExecutedAt($executedAt)
+    {
+        $this->executed_at = $executedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get executed_at
+     *
+     * @return \DateTime 
+     */
+    public function getExecutedAt()
+    {
+        return $this->executed_at;
+    }
+
+    /**
+     * Set method
+     *
+     * @param string $method
+     * @return Export
+     */
+    public function setMethod($method)
+    {
+        $this->method = $method;
+
+        return $this;
+    }
+
+    /**
+     * Get method
+     *
+     * @return string 
+     */
+    public function getMethod()
+    {
+        return $this->method;
     }
 }
