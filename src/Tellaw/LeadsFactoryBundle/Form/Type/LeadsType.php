@@ -32,6 +32,14 @@ class LeadsType extends AbstractType
         $builder->add('firstname');
         $builder->add('lastname');
 
+        $builder->add('data');
+        $builder->add('exportdate');
+        $builder->add('log');
+        $builder->add('utmcampaign');
+        $builder->add('telephone');
+        $builder->add('createdAt');
+
+        $builder->add('save', 'submit');
 
     }
 

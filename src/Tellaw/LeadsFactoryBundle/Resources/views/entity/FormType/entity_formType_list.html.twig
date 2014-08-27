@@ -34,7 +34,7 @@
                         <tbody>
 
                         {% for item in forms %}
-                            <tr>
+                            <tr onclick="window.location.href='{{ path('_formType_edit', {'id': item.id}) }}'">
                                 <td>{{ item.id }}</td>
                                 <td>{{ item.name }}</td>
                                 <td>{{ item.description }}</td>

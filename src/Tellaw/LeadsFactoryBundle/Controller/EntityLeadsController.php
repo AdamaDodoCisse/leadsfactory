@@ -73,7 +73,7 @@ class EntityLeadsController extends Controller
         }
 
         return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array(  'form' => $form->createView(),
-                                                                                             'title' => "Edition d'un formulaire"));
+                                                                                             'title' => "Edition d'un leads"));
 
     }
 

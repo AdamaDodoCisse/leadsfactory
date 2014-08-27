@@ -44,12 +44,6 @@ class Leads {
     private $data;
 
     /**
-     * @var longtext $content
-     * 
-     */
-    protected $content;
-
-    /**
      * @var int $status
      * @ORM\Column(type="integer", nullable=true, name="status")
      */

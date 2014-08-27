@@ -31,14 +31,14 @@
                         <tbody>
 
                         {% for item in elements %}
-                            <tr>
+                            <tr onclick="window.location.href='{{ path('_leads_edit', {'id': item.id}) }}'">
                                 <td>{{ item.id }}</td>
                                 <td>{{ item.lastname }}</td>
                                 <td>{{ item.firstname }}</td>
                                 <td>{{ item.status }}</td>
                                 <td style="text-align:center">
                                     <center>
-                                    <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_referenceList_edit', {'id': item.id}) }}'">Edit</button>
+                                    <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_leads_edit', {'id': item.id}) }}'">Edit</button>
                                     </center>
                                 </td>
                             </tr>
