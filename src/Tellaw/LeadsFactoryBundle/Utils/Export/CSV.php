@@ -1,8 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 
-
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints\DateTime;
 
 class CSV extends AbstractMethod{
@@ -20,9 +18,11 @@ class CSV extends AbstractMethod{
         $fileName = 'export_'.$form->getFormType().'_'.time().'.csv';
         $path = $this->getExportPath();
 
+        $logger = $this->getContainer()->get('export.logger');
+
         $handle = fopen($path.DIRECTORY_SEPARATOR.$fileName, 'w+');
         if($handle === false){
-            throw new \Exception("Impossible d'ouvrir ou créer le fichier ".$fileName);
+            $logger->error("Export CSV : impossible d'ouvrir ou créer le fichier ".$fileName);
         }
 
         $exportUtils = $this->getContainer()->get('export_utils');
@@ -32,7 +32,9 @@ class CSV extends AbstractMethod{
             $data = json_decode($lead->getData(), true);
             $status = fputcsv($handle, $data) ? $exportUtils::$_EXPORT_SUCCESS : $exportUtils->getErrorStatus($job);
             $lead->setStatus($status);
-            $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Erreur lors de l'édition du fichier CSV" : 'Succès';
+            $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Job ".$job->getId().": erreur lors de l'édition du fichier CSV" : "Job ".$job->getId().": Exporté avec succès";
+
+            $logger->info($log);
 
             $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($lead);

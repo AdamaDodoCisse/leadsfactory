@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
@@ -33,6 +34,8 @@ class ExportController extends Controller
         $formId = $request->query->get('id');
         $redirectUrl = $request->query->get('redirect_url') ? $request->query->get('redirect_url') : '_export_history';
 
+        $logger = $this->get('export.logger');
+
         if(is_null($formId)){
             $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
         }else{
@@ -40,7 +43,11 @@ class ExportController extends Controller
         }
 
         foreach($forms as $form){
-            $this->get('export_utils')->export($form);
+            try{
+                $this->get('export_utils')->export($form);
+            }catch(\Exception $e){
+                $logger->error($e->getMessage());
+            }
         }
         return $this->redirect($this->generateUrl($redirectUrl));
     }

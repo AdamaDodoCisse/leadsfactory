@@ -200,8 +200,8 @@ class ExportUtils{
             $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($job);
             $em->flush();
-        }catch (Exception $e) {
-            //Error
+        }catch (\Exception $e) {
+            $this->getContainer()->get('export.logger')->error($e->getMessage());
         }
     }
 

@@ -44,13 +44,12 @@ abstract class AbstractMethod {
      */
     protected function getExportPath()
     {
-        //$basePath = $this->getContainer()->get('kernel')->locateResource('@TellawLeadsFactoryBundle');
         $basePath = $this->getContainer()->get('kernel')->getRootDir();
         $path = $basePath . DIRECTORY_SEPARATOR . $this->exportDir;
 
         if(!file_exists($path)){
             if(!mkdir($path, '0755')){
-                throw new Exception('Error : can\'t create the export directory');
+                throw new \Exception('Error : can\'t create the export directory');
             }
         }
         return $path;
