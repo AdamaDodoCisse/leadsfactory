@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/client")
@@ -24,9 +25,7 @@ class FrontController extends Controller
 {
 
     /**
-     *
      * @Route("/form/{id}", name="_client_get_form")
-     *
      */
     public function getFormAction(Request $request, $id )
     {
@@ -48,9 +47,7 @@ class FrontController extends Controller
     }
 
     /**
-     *
      * @Route("/form/js/{id}", name="_client_get_form_js")
-     *
      */
     public function getFormAsJsAction ( Request $request, $id ) {
 
@@ -77,7 +74,6 @@ class FrontController extends Controller
      * 2) Save in DB
      *
      * @Route("/post", name="_client_post_form")
-     *
      * @param Request $request
      * @param $id
      */

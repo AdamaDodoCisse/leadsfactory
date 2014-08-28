@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
@@ -23,6 +24,7 @@ class ExportController extends Controller
 
     /**
      * @Route("/leads/export", name="_entity_leads_export")
+     * @Secure(roles="ROLE_USER")
      */
     public function ExportAction(Request $request)
     {
@@ -44,6 +46,7 @@ class ExportController extends Controller
 
     /**
      * @route("/export/history", name="_export_history")
+     * @Secure(roles="ROLE_USER")
      */
     public function showHistoryAction()
     {

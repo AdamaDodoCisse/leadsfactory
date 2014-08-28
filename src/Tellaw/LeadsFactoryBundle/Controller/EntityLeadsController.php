@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
@@ -21,9 +22,8 @@ class EntityLeadsController extends Controller
 {
 
     /**
-     *
+     * @Secure(roles="ROLE_USER")
      * @Route("/leads/list", name="_leads_list")
-     *
      */
     public function indexAction(Request $request)
     {
@@ -39,6 +39,7 @@ class EntityLeadsController extends Controller
 
     /**
      * @Route("/leads/edit/{id}", name="_leads_edit")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function editAction( Request $request, $id )

@@ -5,11 +5,17 @@
 
     <div class="row-fluid">
 
-        <div class="span12">
+
+        <div class="span8">
             <div class="heading-sec">
-                <h1>Leads enregistrés</h1>
+                <h1>Utilisateurs de l'application</h1>
             </div>
         </div>
+
+        <div class="span4">
+            <button class="btn btn-success btn-large"  onclick="window.location.href='{{ path ('_users_new') }}'">Créer un compte utilisateur</button>
+        </div>
+
 
     </div>
 
@@ -24,21 +30,20 @@
                             <th>Identifiant</th>
                             <th>Lastname</th>
                             <th>Firstname</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
 
                         {% for item in elements %}
-                            <tr onclick="window.location.href='{{ path('_referenceList_edit', {'id': item.id}) }}'">
+                            <tr onclick="window.location.href='{{ path('_users_edit', {'id': item.id}) }}'">
                                 <td>{{ item.id }}</td>
                                 <td>{{ item.lastname }}</td>
                                 <td>{{ item.firstname }}</td>
-                                <td>{{ item.status }}</td>
                                 <td style="text-align:center">
                                     <center>
-                                    <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_referenceList_edit', {'id': item.id}) }}'">Edit</button>
+                                    <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_edit', {'id': item.id}) }}'">Editer</button>
+                                    <button type="button" class="btns  red  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_delete', {'id': item.id}) }}'">Supprimer</button>
                                     </center>
                                 </td>
                             </tr>
