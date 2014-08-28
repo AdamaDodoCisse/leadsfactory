@@ -32,7 +32,7 @@ class CSV extends AbstractMethod{
             $data = json_decode($lead->getData(), true);
             $status = fputcsv($handle, $data) ? $exportUtils::$_EXPORT_SUCCESS : $exportUtils->getErrorStatus($job);
             $lead->setStatus($status);
-            $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Job ".$job->getId().": erreur lors de l'édition du fichier CSV" : "Job ".$job->getId().": Exporté avec succès";
+            $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Job export (ID ".$job->getId().") : erreur lors de l'édition du fichier CSV" : "Job export (ID ".$job->getId().") : exporté avec succès";
 
             $logger->info($log);
 

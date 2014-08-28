@@ -92,20 +92,22 @@ class ExportUtils{
                 continue;
             }
 
-            $new = new Export();
-            $new->setMethod($method);
-            $new->setLead($lead);
-            $new->setForm($lead->getForm());
-            $new->setStatus($lead->getStatus());
-            $new->setCreatedAt(new \DateTime());
-            $new->setScheduledAt($this->getScheduledDate($methodConfig));
+            $job = new Export();
+            $job->setMethod($method);
+            $job->setLead($lead);
+            $job->setForm($lead->getForm());
+            $job->setStatus($lead->getStatus());
+            $job->setCreatedAt(new \DateTime());
+            $job->setScheduledAt($this->getScheduledDate($methodConfig));
 
             try{
                 $em = $this->getContainer()->get('doctrine')->getManager();
-                $em->persist($new);
+                $em->persist($job);
                 $em->flush();
+                $this->getContainer()->get('export.logger')->info('Job export (ID '.$job->getId().') créé avec succès');
+
             }catch (Exception $e) {
-                echo $e->getMessage();
+                $this->getContainer()->get('export.logger')->error($e->getMessage());
                 //Error
             }
         }
