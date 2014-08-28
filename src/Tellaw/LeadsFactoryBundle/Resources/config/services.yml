@@ -11,7 +11,9 @@ services:
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV
     calls:
-                      - [ setContainer, [ @service_container ] ]
+                  - [ setContainer, [ @service_container ] ]
+    tags:
+                  - { name: export.method, alias: csv }
 
   entity_form:
     class:        Tellaw\LeadsFactoryBundle\Form\Type\FormType

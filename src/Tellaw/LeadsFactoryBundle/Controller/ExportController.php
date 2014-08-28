@@ -22,12 +22,14 @@ class ExportController extends Controller
 {
 
     /**
+     * Start export
+     *
      * @Route("/leads/export", name="_entity_leads_export")
      */
-    public function ExportAction(Request $request)
+    public function exportAction(Request $request)
     {
         $formId = $request->query->get('id');
-        $redirectUrl = $request->query->get('redirect_url') ? $request->query->get('redirect_url') : '_leads_list';
+        $redirectUrl = $request->query->get('redirect_url') ? $request->query->get('redirect_url') : '_export_history';
 
         if(is_null($formId)){
             $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
@@ -43,6 +45,8 @@ class ExportController extends Controller
 
 
     /**
+     * Display export jobs
+     *
      * @route("/export/history", name="_export_history")
      */
     public function showHistoryAction()

@@ -88,6 +88,8 @@ class FrontController extends Controller
         $redirectUrlSuccess = (string)$request->get ("successUrl");
         $redirectUrlError = (string)$request->get ("errorUrl");
 
+        $exportUtils = $this->get('export_utils');
+
         try {
 
             $formTypeObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find((string)$request->get ("lfFormType"));
@@ -104,7 +106,7 @@ class FrontController extends Controller
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
 
-            $status = $this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_EXPORT_NOT_PROCESSED : $leads::$_EXPORT_NOT_SCHEDULED;
+            $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
 
             $leads->setCreatedAt( new \DateTime() );
@@ -114,8 +116,8 @@ class FrontController extends Controller
             $em->flush();
 
             // Create export job(s)
-            if($status == $leads::$_EXPORT_NOT_PROCESSED){
-                $this->get('export_utils')->createJob($leads);
+            if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
+                $exportUtils->createJob($leads);
             }
 
             if ( trim ( $redirectUrlSuccess ) != "") {

@@ -10,18 +10,9 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
 
 
-abstract class AbstractExportMethod {
-
-    protected $config;
+abstract class AbstractMethod {
 
     protected $exportDir = 'Export';
-
-    /**
-     * Time gap before processing export
-     *
-     * @var string
-     */
-    protected $gap = '0';
 
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -65,48 +56,4 @@ abstract class AbstractExportMethod {
         return $path;
     }
 
-    /**
-     * Add export history line
-     *
-     * @param $lead
-     * @param $form
-     * @param null $log
-     */
-    public function updateHistory($lead, $form, $log=null)
-    {
-        $new = new Export();
-        $new->setLead($lead);
-        $new->setForm($form);
-        $new->setStatus($lead->getStatus());
-        $new->setLog($log);
-        $new->setExportDate(new \DateTime());
-
-        try{
-            $em = $this->getContainer()->get('doctrine')->getManager();
-            $em->persist($new);
-            $em->flush();
-        }catch (Exception $e) {
-            echo $e->getMessage();
-            //Error
-        }
-    }
-
-    public function createJob($lead)
-    {
-        $new = new Export();
-        $new->setLead($lead);
-        //$new->setForm($form);
-        $new->setStatus($lead->getStatus());
-        //$new->setLog($log);
-        $new->setExportDate(new \DateTime());
-
-        try{
-            $em = $this->getContainer()->get('doctrine')->getManager();
-            $em->persist($new);
-            $em->flush();
-        }catch (Exception $e) {
-            echo $e->getMessage();
-            //Error
-        }
-    }
 } 
