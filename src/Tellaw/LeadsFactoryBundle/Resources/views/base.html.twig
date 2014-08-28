@@ -58,11 +58,12 @@
     <div class="logo"> <a href="index.html"><span>Leads FACTORY</span><span class="icon"></span></a> </div>
     <div class="top_right">
         <ul class="nav nav_menu">
+            <!-- user management -->
             <li class="dropdown"> <a class="dropdown-toggle administrator" id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
-                    <div class="title"><span class="name">George</span><span class="subtitle">Future Buyer</span></div>
+                    <div class="title"><span class="name">{{ app.user.firstname }} {{ app.user.lastname }}</span><span class="subtitle">{{ app.user.login }}</span></div>
                     <span class="icon"><img src="{{ asset('bundles/tellawleadsfactory/img/bernard.jpg') }}" width="73"/></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <li><a href="{{ path('_security_logout') }}"><i class=" icon-unlock"></i>Log Out</a></li>
+                    <li><a href="{{ path('_security_logout') }}"><i class=" icon-unlock"></i>Se deconnecter</a></li>
                 </ul>
             </li>
         </ul>

@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Cache(expires="tomorrow")
@@ -36,6 +37,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/form/new", name="_form_new")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function newAction( Request $request )
@@ -69,6 +71,7 @@ class DefaultController extends Controller
     /**
      * @Route("/form/edit/{id}", name="_form_edit")
      * @Template()
+     * @Secure(roles="ROLE_USER")
      */
     public function editAction( Request $request, $id )
     {
@@ -109,6 +112,7 @@ class DefaultController extends Controller
     /**
      * @Route("/form/delete/id/{id}", name="_form_delete")
      * @Method("GET")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function deleteAction ( $id ) {
