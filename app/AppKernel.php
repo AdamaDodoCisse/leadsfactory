@@ -21,6 +21,7 @@ class AppKernel extends Kernel
             new JMS\DiExtraBundle\JMSDiExtraBundle($this),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Tellaw\LeadsFactoryBundle\TellawLeadsFactoryBundle(),
+            new Weka\LeadsExportBundle\WekaLeadsExportBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

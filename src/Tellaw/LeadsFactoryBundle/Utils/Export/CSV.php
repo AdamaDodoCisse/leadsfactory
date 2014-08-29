@@ -10,7 +10,7 @@ class CSV extends AbstractMethod{
      *
      * @todo log
      *
-     * @param \Tellaw\LeadsFactoryBundle\Entity\Export $jobs
+     * @param array $jobs
      * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      */
     public function export($jobs, $form)

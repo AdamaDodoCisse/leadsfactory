@@ -1,3 +1,7 @@
+weka_leads_export:
+    resource: "@WekaLeadsExportBundle/Resources/config/routing.yml"
+    prefix:   /
+
 tellaw_leads_factory:
     resource: "@TellawLeadsFactoryBundle/Resources/config/routing.yml"
     prefix:   /
