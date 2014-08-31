@@ -1,0 +1,13 @@
+parameters:
+    weka_leads_export.athena.class: Weka\LeadsExportBundle\Utils\Athena
+    athena_url: http://athena.host-athena-dev1.captivea.net/index.php
+
+services:
+    athena_method:
+        class: %weka_leads_export.athena.class%
+        calls:
+          - [setContainer, [@service_container]]
+        tags:
+          - {name: export.method, alias: athena}
+        arguments: [%athena_url%]
+

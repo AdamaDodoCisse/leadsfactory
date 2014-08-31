@@ -1,9 +1,4 @@
 <?php
-/**
- * @package
- * @author: nicolas
- * @since:  22/08/14
- */
 
 namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 

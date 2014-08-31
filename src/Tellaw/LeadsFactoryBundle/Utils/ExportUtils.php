@@ -16,7 +16,15 @@ class ExportUtils{
     public static $_EXPORT_MULTIPLE_ERROR = 3;
     public static $_EXPORT_NOT_SCHEDULED = 4;
 
+    /**
+     * @var array
+     */
     private $_methods;
+
+    /**
+     * @var string
+     */
+    private $_defaultCronExp;
 
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
@@ -27,10 +35,11 @@ class ExportUtils{
     public function __construct()
     {
         $this->_methods = array();
+        $this->_defaultCronExp = "0 * * * *";
     }
 
     /**
-     *
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container)
     {
@@ -87,12 +96,13 @@ class ExportUtils{
         $config = $lead->getForm()->getConfig();
         foreach($config as $method=>$methodConfig){
 
+            $job = new Export();
+
             if(!$this->isValidExportMethod($method)){
-                throw new \Exception('Méthode d\'export "'.$method.'" invalide, le job n\'a pas été créé');
-                continue;
+                $job->setLog('Méthode d\'export invalide');
+                $this->getContainer()->get('export.logger')->info('Méthode d\'export invalide (formulaire ID '.$lead->getForm()->getId().')');
             }
 
-            $job = new Export();
             $job->setMethod($method);
             $job->setLead($lead);
             $job->setForm($lead->getForm());
@@ -121,7 +131,8 @@ class ExportUtils{
      */
     protected function getScheduledDate($methodConfig)
     {
-        $cron = CronExpression::factory($methodConfig['cron']);
+        $cronExp = (isset($methodConfig['cron'])) ? $methodConfig['cron'] : $this->_defaultCronExp;
+        $cron = CronExpression::factory($cronExp);
         return $cron->getNextRunDate($this->getMinDate($methodConfig));
     }
 
@@ -155,7 +166,9 @@ class ExportUtils{
                 continue;
             }
             $jobs = $this->getExportableJobs($form, $method, $methodConfig);
-            $this->getMethod($method)->export($jobs, $form);
+
+            if(count($jobs))
+                $this->getMethod($method)->export($jobs, $form);
         }
     }
 
@@ -201,6 +214,29 @@ class ExportUtils{
         try{
             $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($job);
+            $em->flush();
+        }catch (\Exception $e) {
+            $this->getContainer()->get('export.logger')->error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Lead $lead
+     * @param int $status
+     * @param string $log
+     * @param DateTime $exportDate
+     */
+    public function updateLead($lead, $status, $log, $exportDate = null)
+    {
+        $exportDate = is_null($exportDate) ? new \DateTime() : $exportDate;
+
+        $lead->setStatus($status);
+        $lead->setLog($log);
+        $lead->setExportdate($exportDate);
+
+        try{
+            $em = $this->getContainer()->get('doctrine')->getManager();
+            $em->persist($lead);
             $em->flush();
         }catch (\Exception $e) {
             $this->getContainer()->get('export.logger')->error($e->getMessage());
