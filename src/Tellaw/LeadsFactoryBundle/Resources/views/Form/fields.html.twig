@@ -1,33 +1,29 @@
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input type="{{ type }}" class="input full-width" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock form_widget_simple %}
+
 {# src/Acme/TaskBundle/Resources/views/Form/fields.html.twig #}
 {% block form_row %}
     {% spaceless %}
-        <div class="form-row control-group row-fluid">
-            <label class="control-label span3" for="normal-field">{{ form_label(form) }}</label>
-            <div class="controls span9">
-                {{ form_widget(form) }}
-                <!--<label for="cname" generated="true" class="error" style="display: block;">This field is required.</label>-->
-                {{ form_widget(form) }}
-            </div>
-        </div>
+        <p class="button-height inline-label">
+            <label for="input-3" class="label">{{ form_label(form) }}</label>
+            {{ form_widget(form) }}
+        </p>
     {% endspaceless %}
 {% endblock form_row %}
 
 {% block textarea_widget %}
     {% spaceless %}
-        <textarea {{ block('widget_attributes') }} rows="3" class="row-fluid">{{ value }}</textarea>
+        <textarea {{ block('widget_attributes') }} rows="3" class="input full-width">{{ value }}</textarea>
     {% endspaceless %}
 {% endblock textarea_widget %}
 
-{% block form_widget_simple %}
-    {% spaceless %}
-        {% set type = type|default('text') %}
-        <input type="{{ type }}" class="row-fluid" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-    {% endspaceless %}
-{% endblock form_widget_simple %}
-
 {% block submit_widget %}
     {% spaceless %}
-        <input type="submit" class="btn btn-primary" {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        <input type="submit" class="button blue-gradient" {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% endspaceless %}
 {% endblock submit_widget %}
 

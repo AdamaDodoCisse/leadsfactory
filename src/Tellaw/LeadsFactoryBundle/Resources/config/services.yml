@@ -3,6 +3,16 @@ parameters:
 
 services:
 
+  export.logger:
+    class: Symfony\Bridge\Monolog\Logger
+    arguments: [app]
+    calls:
+      - [pushHandler, [@export.logger_handler]]
+
+  export.logger_handler:
+    class: Monolog\Handler\StreamHandler
+    arguments: [%kernel.logs_dir%/%kernel.environment%.export.log, 200]
+
   export_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ExportUtils
     calls:
@@ -11,7 +21,9 @@ services:
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV
     calls:
-                      - [ setContainer, [ @service_container ] ]
+                  - [ setContainer, [ @service_container ] ]
+    tags:
+                  - { name: export.method, alias: csv }
 
   entity_form:
     class:        Tellaw\LeadsFactoryBundle\Form\Type\FormType

@@ -1,28 +1,19 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
-<div class="main_container">
 
-    <div class="row-fluid">
+    <hgroup id="main-title" class="thin">
+        <h1>Administration des types de formulaires</h1>
+    </hgroup>
 
-        <div class="span7">
-            <div class="heading-sec">
-                <h1>Liste des Types de Formulaire</h1>
-            </div>
-        </div>
+    <div class="columns">
 
-        <div class="span4">
-            <button class="btn btn-success btn-large"  onclick="window.location.href='{{ path ('_formType_new') }}'">Créer un nouveau types</button>
-        </div>
+        <div class="eight-columns with-padding">
 
-    </div>
+            <h3 class="thin underline">Liste des types de formulaires</h3>
 
-    <div class="row-fluid">
 
-        <div class="span12">
-            <div class="">
-                <div class="streaming-table">
-                    <table id="stream_table" class="table table-striped table-bordered">
+                    <table id="sorting-advanced" class="table table-striped table-bordered">
                         <thead>
                         <tr>
                             <th>Identifiant</th>
@@ -51,12 +42,37 @@
                         </tbody>
                     </table>
 
-                </div>
-            </div>
+
+
         </div>
 
+
+        <div class="three-columns with-padding">
+
+            <h3 class="thin underline">Actions</h3>
+
+            <p class="button-height">
+                <a href="{{ path ('_formType_new') }}" class="button huge full-width green-gradient glossy">Créer un type</a>
+            </p>
+
+        </div>
     </div>
 
-</div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        // Table sort - DataTables
+        var table = $('#sorting-advanced');
+        table.dataTable({
 
+            'sPaginationType': 'full_numbers',
+            'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
+            'fnInitComplete': function( oSettings )
+            {
+                // Style length select
+                table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
+                tableStyled = true;
+            }
+        });
+    </script>
 {% endblock %}

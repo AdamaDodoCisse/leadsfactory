@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/client")
@@ -24,9 +25,7 @@ class FrontController extends Controller
 {
 
     /**
-     *
      * @Route("/form/{id}", name="_client_get_form")
-     *
      */
     public function getFormAction(Request $request, $id )
     {
@@ -48,9 +47,7 @@ class FrontController extends Controller
     }
 
     /**
-     *
      * @Route("/form/js/{id}", name="_client_get_form_js")
-     *
      */
     public function getFormAsJsAction ( Request $request, $id ) {
 
@@ -77,7 +74,6 @@ class FrontController extends Controller
      * 2) Save in DB
      *
      * @Route("/post", name="_client_post_form")
-     *
      * @param Request $request
      * @param $id
      */
@@ -87,6 +83,8 @@ class FrontController extends Controller
         $json = json_encode( $fields );
         $redirectUrlSuccess = (string)$request->get ("successUrl");
         $redirectUrlError = (string)$request->get ("errorUrl");
+
+        $exportUtils = $this->get('export_utils');
 
         try {
 
@@ -104,7 +102,7 @@ class FrontController extends Controller
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
 
-            $status = $this->get('export_utils')->hasScheduledExport($formObject->getExportConfig()) ? $leads::$_EXPORT_NOT_PROCESSED : $leads::$_EXPORT_NOT_SCHEDULED;
+            $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
 
             $leads->setCreatedAt( new \DateTime() );
@@ -114,8 +112,8 @@ class FrontController extends Controller
             $em->flush();
 
             // Create export job(s)
-            if($status == $leads::$_EXPORT_NOT_PROCESSED){
-                $this->get('export_utils')->createJob($leads);
+            if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
+                $exportUtils->createJob($leads);
             }
 
             if ( trim ( $redirectUrlSuccess ) != "") {

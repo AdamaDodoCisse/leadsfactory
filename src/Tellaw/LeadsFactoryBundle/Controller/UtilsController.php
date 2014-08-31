@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/utils")
@@ -22,6 +23,7 @@ class UtilsController extends Controller
     /**
      *
      * @Route("/navigation/{parentRoute}", name="_utils_navigation")
+     * @Secure(roles="ROLE_USER")
      * @template()
      */
     public function navigationAction(Request $request, $parentRoute)

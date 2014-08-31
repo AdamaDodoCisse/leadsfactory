@@ -25,7 +25,7 @@ class EntityFormController extends Controller
     /**
      *
      * @Route("/form/list", name="_form_list")
-     * @Secure(roles="ROLE_USER, ROLE_ADMIN, ROLE_SUPER_ADMIN")
+     * @Secure(roles="ROLE_USER")
      *
      */
     public function indexAction(Request $request)
@@ -42,6 +42,7 @@ class EntityFormController extends Controller
 
     /**
      * @Route("/form/new", name="_form_new")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function newAction( Request $request )
@@ -74,6 +75,7 @@ class EntityFormController extends Controller
 
     /**
      * @Route("/form/edit/{id}", name="_form_edit")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function editAction( Request $request, $id )
@@ -114,6 +116,7 @@ class EntityFormController extends Controller
 
     /**
      * @Route("/form/delete/id/{id}", name="_form_delete")
+     * @Secure(roles="ROLE_USER")
      * @Method("GET")
      * @Template()
      */

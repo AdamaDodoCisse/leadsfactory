@@ -2,30 +2,38 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 use Cron\CronExpression;
 
 class ExportUtils{
 
-    const CSV_METHOD = 'csv';
+    public static $_EXPORT_NOT_PROCESSED = 0;
+    public static $_EXPORT_SUCCESS = 1;
+    public static $_EXPORT_ONE_TRY_ERROR = 2;
+    public static $_EXPORT_MULTIPLE_ERROR = 3;
+    public static $_EXPORT_NOT_SCHEDULED = 4;
 
-    /**
-     * @var array
-     */
-    static $export_methods = array(
-        self::CSV_METHOD
-    );
+    private $_methods;
 
     /**
      * @var \Symfony\Component\DependencyInjection\ContainerInterface
      */
     protected $container;
 
-    /*
+
+    public function __construct()
+    {
+        $this->_methods = array();
+    }
+
+    /**
      *
      */
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
+    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
@@ -37,21 +45,25 @@ class ExportUtils{
         return $this->container;
     }
 
+    public function addMethod(AbstractMethod $method, $alias)
+    {
+        $this->_methods[$alias] = $method;
+    }
+
+    public function getMethod($alias)
+    {
+        return $this->_methods[$alias];
+    }
+
     /**
      * Check if form is configured for export
      *
-     * @param json $exportConfig
+     * @param string $exportConfig
      * @return bool
      */
     public function hasScheduledExport($exportConfig)
     {
-        $exportConfig = json_decode(trim($exportConfig), true);
-        foreach(self::$export_methods as $type){
-            if(array_key_exists($type, $exportConfig)){
-                return true;
-            }
-        }
-        return false;
+        return (is_array($exportConfig)) ? true : false;
     }
 
     /**
@@ -62,7 +74,7 @@ class ExportUtils{
      */
     public function isValidExportMethod($method)
     {
-        return in_array($method, self::$export_methods) ? true : false;
+        return array_key_exists($method, $this->_methods) ? true : false;
     }
 
     /**
@@ -75,22 +87,27 @@ class ExportUtils{
         $config = $lead->getForm()->getConfig();
         foreach($config as $method=>$methodConfig){
 
-            //todo check method availability
+            if(!$this->isValidExportMethod($method)){
+                throw new \Exception('Méthode d\'export "'.$method.'" invalide, le job n\'a pas été créé');
+                continue;
+            }
 
-            $new = new Export();
-            $new->setType($method);
-            $new->setLead($lead);
-            $new->setForm($lead->getForm());
-            $new->setStatus($lead->getStatus());
-            $new->setCreatedAt(new \DateTime());
-            $new->setScheduledAt($this->getScheduledDate($methodConfig));
+            $job = new Export();
+            $job->setMethod($method);
+            $job->setLead($lead);
+            $job->setForm($lead->getForm());
+            $job->setStatus($lead->getStatus());
+            $job->setCreatedAt(new \DateTime());
+            $job->setScheduledAt($this->getScheduledDate($methodConfig));
 
             try{
                 $em = $this->getContainer()->get('doctrine')->getManager();
-                $em->persist($new);
+                $em->persist($job);
                 $em->flush();
+                $this->getContainer()->get('export.logger')->info('Job export (ID '.$job->getId().') créé avec succès');
+
             }catch (Exception $e) {
-                echo $e->getMessage();
+                $this->getContainer()->get('export.logger')->error($e->getMessage());
                 //Error
             }
         }
@@ -132,8 +149,13 @@ class ExportUtils{
     {
         $config = $form->getConfig();
         foreach($config as $method=>$methodConfig){
+
+            if(!$this->isValidExportMethod($method)){
+                throw new \Exception('Méthode d\'export "'.$method.'" invalide');
+                continue;
+            }
             $jobs = $this->getExportableJobs($form, $method, $methodConfig);
-            $this->getContainer()->get($method.'_method')->export($jobs, $form);
+            $this->getMethod($method)->export($jobs, $form);
         }
     }
 
@@ -160,27 +182,42 @@ class ExportUtils{
             'form'      => $form,
             'method'    => $method,
             'now'       => new \DateTime(),
-            'status'    => '1'
+            'status'    => self::$_EXPORT_SUCCESS
         ));
-        $jobs = $query->getResult();
-        return $jobs;
+        return $query->getResult();
     }
 
     /**
-     * @param \Tellaw\LeadsFactoryBundle\Entity\Job $job
-     * @param int $status
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Export $job
+     * @param $status
+     * @param string $log
      */
-    public function updateJob($job, $status)
+    public function updateJob($job, $status, $log='')
     {
         $job->setStatus($status);
         $job->setExecutedAt(new \DateTime());
+        $job->setLog($log);
 
         try{
             $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($job);
             $em->flush();
-        }catch (Exception $e) {
-            //Error
+        }catch (\Exception $e) {
+            $this->getContainer()->get('export.logger')->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Return error status
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Export $job
+     * @return int
+     */
+    public function getErrorStatus($job){
+        if($job->getStatus() == self::$_EXPORT_NOT_PROCESSED || is_null($job->getStatus())){
+            return self::$_EXPORT_ONE_TRY_ERROR;
+        }else{
+            return self::$_EXPORT_MULTIPLE_ERROR;
         }
     }
 }

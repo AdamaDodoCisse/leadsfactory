@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-
+use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
@@ -23,9 +23,8 @@ class EntityReferenceListElementController extends Controller
 {
 
     /**
-     *
      * @Route("/referenceListElement/list/{id}", name="_referenceListElement_list")
-     *
+     * @Secure(roles="ROLE_USER")
      */
     public function indexAction(Request $request, $id)
     {
@@ -49,6 +48,7 @@ class EntityReferenceListElementController extends Controller
 
     /**
      * @Route("/referenceListElement/new", name="_referenceListElement_new")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function newAction( Request $request )
@@ -81,6 +81,7 @@ class EntityReferenceListElementController extends Controller
 
     /**
      * @Route("/referenceListElement/edit/{id}", name="_referenceListElement_edit")
+     * @Secure(roles="ROLE_USER")
      * @Template()
      */
     public function editAction( Request $request, $id )
@@ -128,6 +129,7 @@ class EntityReferenceListElementController extends Controller
 
     /**
      * @Route("/referenceListElement/delete/id/{id}", name="_referenceListElement_delete")
+     * @Secure(roles="ROLE_USER")
      * @Method("GET")
      * @Template()
      */

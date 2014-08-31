@@ -25,7 +25,7 @@ class Users implements UserInterface {
      * @var string $firstname
      * @ORM\Column(type="string", nullable=true, name="firstname")
      */
-    protected $fistname;
+    protected $firstname;
 
     /**
      * @var string $lastname
@@ -49,17 +49,17 @@ class Users implements UserInterface {
     /**
      * @param string $fistname
      */
-    public function setFistname($fistname)
+    public function setFirstname($firstname)
     {
-        $this->fistname = $fistname;
+        $this->firstname = $firstname;
     }
 
     /**
      * @return string
      */
-    public function getFistname()
+    public function getFirstname()
     {
-        return $this->fistname;
+        return $this->firstname;
     }
 
     /**
