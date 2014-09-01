@@ -3,27 +3,14 @@
 
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
-<div class="main_container">
+    <hgroup id="main-title" class="thin">
+        <h1>{{ title }}</h1>
+    </hgroup>
 
-    <div class="row-fluid">
-
-        <div class="span7">
-
-            <div class="box color_7">
-                <div class="title">
-                    <h4> <i class="icon-book"></i><span>{{ title }}</span> </h4>
-                </div>
-                <div class="content">
-
+    <div class="with-padding">
                     {{ form(form) }}
 
-                </div>
-            </div>
-
-        </div>
 
     </div>
-
-</div>
 
 {% endblock %}
