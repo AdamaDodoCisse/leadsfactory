@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
-    <title>Developr</title>
+    <title>Lead's factory</title>
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -156,7 +156,7 @@
         <div id="profile">
             <img src="{{ asset('bundles/tellawleadsfactory/img/user.png') }}" width="64" height="64" alt="User name" class="user-icon">
             Hello
-            <span class="name">Eric <b>Wallet</b></span>
+            <span class="name">{{ app.user.firstname }} <b>{{ app.user.lastname }}</b></span>
         </div>
 
         {{ render(controller('TellawLeadsFactoryBundle:Utils:navigation', { "parentRoute" : app.request.attributes.get('_route') } )) }}
