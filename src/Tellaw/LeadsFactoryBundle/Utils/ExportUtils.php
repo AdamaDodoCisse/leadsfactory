@@ -94,7 +94,7 @@ class ExportUtils{
     public function createJob($lead)
     {
         $config = $lead->getForm()->getConfig();
-        foreach($config as $method=>$methodConfig){
+        foreach($config['export'] as $method=>$methodConfig){
 
             $job = new Export();
 
@@ -159,7 +159,7 @@ class ExportUtils{
     public function export($form)
     {
         $config = $form->getConfig();
-        foreach($config as $method=>$methodConfig){
+        foreach($config['export'] as $method=>$methodConfig){
 
             if(!$this->isValidExportMethod($method)){
                 throw new \Exception('Méthode d\'export "'.$method.'" invalide');
