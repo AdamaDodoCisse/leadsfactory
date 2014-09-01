@@ -11,7 +11,18 @@ source :
 </form>
 
 config :
-{"csv":"gap":"60", "cron":"0 * * * *"}}
+{
+  "exports": {
+    "csv": {
+      "gap": "60",
+      "cron": "0 * * * *"
+    }
+  },
+  "configuration": {
+    "firstname": "prenom",
+    "lastname": "nom"
+  }
+}
 
 
 ***************************************
@@ -33,4 +44,8 @@ source :
 Form type : EtiFormationDemandeInfo
 
 config :
-{"athena":{"gap":"10", "cron":"0 * * * *"}}
+{
+  "exports": {
+    "athena":{"gap":"10", "cron":"0 * * * *"}
+  }
+}

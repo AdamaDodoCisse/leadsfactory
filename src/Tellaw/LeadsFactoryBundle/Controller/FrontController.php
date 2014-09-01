@@ -91,6 +91,22 @@ class FrontController extends Controller
             $formTypeObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find((string)$request->get ("lfFormType"));
             $formObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($request->get("lfFormId"));
 
+            // Read configuration to map attributes correctly
+            $decodedJson = $formObject->getConfig();
+//print_r ($json);die();
+
+            if ( array_key_exists('configuration', $decodedJson) ) {
+
+                if (array_key_exists(  'lastname' , $decodedJson["configuration"] )) {
+                    $fields["lastname"] = ucfirst ($fields[ $decodedJson["configuration"]["lastname"] ]);
+                }
+
+                if (array_key_exists(  'firstname' , $decodedJson["configuration"] )) {
+                    $fields["firstname"] = ucfirst( $fields[ $decodedJson["configuration"]["firstname"] ] );
+                }
+
+            }
+
             // Create new Leads Entity Object
             $leads = new Leads();
             $leads->setFirstname( @$fields["firstname"] );

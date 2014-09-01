@@ -94,7 +94,7 @@ class ExportUtils{
     public function createJob($lead)
     {
         $config = $lead->getForm()->getConfig();
-        foreach($config as $method=>$methodConfig){
+        foreach($config["exports"] as $method=>$methodConfig){
 
             $job = new Export();
 
