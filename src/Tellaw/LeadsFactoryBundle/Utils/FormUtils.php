@@ -1,6 +1,7 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
@@ -8,11 +9,22 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 
 class FormUtils {
 
-    /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
+    public function setContainer (ContainerInterface $container)
+    {
         $this->container = $container;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    protected function getContainer()
+    {
+        return $this->container;
     }
 
     /**
@@ -73,11 +85,14 @@ class FormUtils {
             $items[(string)$result['id']] = array ( "type"=>(string)$result['type'],
                                                     "attributes" => $attributes,
                                                     "raw" => $result);
-
+            //if options node
+            if(isset($result->attributes()['data-list'])){
+                $listCode = $result->attributes()['data-list']->__toString();
+                $options = $this->getElementOptions($listCode);
+                $items[(string)$result['id']]['options'] = $options;
+            }
         }
-
         return $items;
-
     }
 
     public function renderTag( $id, $tag ) {
@@ -164,6 +179,19 @@ class FormUtils {
 
         return $source;
 
+    }
+
+    /**
+     * Retrieve node options
+     *
+     * @param string $listCode
+     * @return array mixed
+     */
+    public function getElementOptions($listCode)
+    {
+        $list = $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneBy(array('code' => $listCode));
+        $options = $list->getElements()->getValues();
+        return $options;
     }
 
 }

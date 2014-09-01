@@ -12,7 +12,7 @@ source :
 
 config :
 {
-  "exports": {
+  "export": {
     "csv": {
       "gap": "60",
       "cron": "0 * * * *"
@@ -45,7 +45,7 @@ Form type : EtiFormationDemandeInfo
 
 config :
 {
-  "exports": {
+  "export": {
     "athena":{"gap":"10", "cron":"0 * * * *"}
   }
 }

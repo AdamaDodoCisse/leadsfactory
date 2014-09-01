@@ -29,8 +29,8 @@ class EtiFormationDemandeInfo extends AbstractMapping{
     {
         return array(
             "ref"			=> "product",
-            "entreprise"    => "account",
-            "civilite"		=> "salutation",
+            "company"       => "account",
+            "salutation"	=> "salutation",
             "lastname"  	=> "last_name",
             "firstname"     => "first_name",
             "fonction"		=> "title",

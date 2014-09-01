@@ -4,14 +4,14 @@ parameters:
 services:
 
   export.logger:
-    class: Symfony\Bridge\Monolog\Logger
-    arguments: [app]
+    class:        Symfony\Bridge\Monolog\Logger
+    arguments:    [app]
     calls:
-      - [pushHandler, [@export.logger_handler]]
+                  - [pushHandler, [@export.logger_handler]]
 
   export.logger_handler:
-    class: Monolog\Handler\StreamHandler
-    arguments: [%kernel.logs_dir%/%kernel.environment%.export.log, 200]
+    class:        Monolog\Handler\StreamHandler
+    arguments:    [%kernel.logs_dir%/%kernel.environment%.export.log, 200]
 
   export_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ExportUtils
