@@ -41,8 +41,10 @@ class FrontController extends Controller
 
         $html = $formUtils->buildHtmlForm( $source, $id, $object );
 
-        echo ($html);
-        die();
+        return $this->render(
+            'TellawLeadsFactoryBundle:Front:display_form.html.twig',
+            array(  'formHtmlObject' => $html )
+        );
 
     }
 
