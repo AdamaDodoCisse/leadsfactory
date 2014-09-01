@@ -35,7 +35,7 @@ class JsUtils {
         $jsWrapOfForm = str_replace("\t", '', $jsWrapOfForm); // remove tabs
         $jsWrapOfForm = str_replace("\n", '', $jsWrapOfForm); // remove new lines
         $jsWrapOfForm = str_replace("\r", '', $jsWrapOfForm); // remove carriage returns
-        $jsWrap = "var frmObj=\"".$jsWrapOfForm."\";function displayFrm () {document.writeln(frmObj);}";
+        $jsWrap = "var leadsfactory = new Object();\r\nleadsfactory.render= function() { var frmObj=\"".$jsWrapOfForm."\";document.writeln(frmObj);};\r\n";
 
         return $jsWrap;
 
@@ -56,7 +56,7 @@ class JsUtils {
     }
 
     private function buildGetterAndSetterForId ( $id ) {
-        return "function setLf".ucfirst($id)."(value){document.getElementById(\"lffield[".$id."]\").value=value;}function getLf".ucfirst($id)."(){return document.getElementById(\"lffield[".$id."]\").value;}";
+       return "leadsfactory.set".ucfirst($id)."= function (value){document.getElementById(\"lffield[".$id."]\").value=value;};\r\nleadsfactory.get".ucfirst($id)." = function(){return document.getElementById(\"lffield[".$id."]\").value;};\r\n";
     }
 
 }
