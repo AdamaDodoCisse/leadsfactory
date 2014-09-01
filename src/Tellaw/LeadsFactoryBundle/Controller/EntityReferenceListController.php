@@ -71,7 +71,7 @@ class EntityReferenceListController extends Controller
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'une liste de référence",
                                                                                                     'refernceListId' => '-1'));
     }
