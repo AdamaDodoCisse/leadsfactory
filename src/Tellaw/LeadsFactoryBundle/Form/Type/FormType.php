@@ -23,6 +23,9 @@ class FormType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'Tellaw\LeadsFactoryBundle\Entity\Form',
+                'attr' => ['id' => 'form-form',
+                            'onSubmit' => 'validateFormAction();'
+                            ]
             )
         );
 
@@ -36,7 +39,7 @@ class FormType extends AbstractType
         $builder->add('source');
         $builder->add('style');
         $builder->add('script');
-        $builder->add('exportConfig', null, array('label' => 'Export config'));
+        $builder->add('exportConfig', new JsonType(), array('label' => 'Export config'));
 
         $builder->add ( 'formType' );
 

@@ -52,3 +52,36 @@
         {% endif %}
     {% endspaceless %}
 {% endblock form_start %}
+
+{% block json_widget %}
+
+    <div id="jsoneditor-{{ id }}"></div>
+
+    <script type="text/javascript" >
+        // create the editor
+        var container = document.getElementById('jsoneditor-{{ id }}');
+
+
+        var options = {
+            mode: 'code',
+            modes: ['code', 'form', 'text', 'tree', 'view'], // allowed modes
+            error: function (err) {
+                alert(err.toString());
+            }
+        };
+
+        var json = {{ value|raw }};
+
+        var editor = new JSONEditor(container, options, json);
+
+        function validateFormAction() {
+            document.getElementById("form_exportConfig").value = JSON.stringify(editor.get());
+            alert (document.getElementById("form_exportConfig").value);
+        }
+
+    </script>
+
+    {% spaceless %}
+        <textarea {{ block('widget_attributes') }} rows="3" style="display:none" class="json input full-width">{{ value|raw }}</textarea>
+    {% endspaceless %}
+{% endblock %}
