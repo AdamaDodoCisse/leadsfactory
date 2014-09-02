@@ -4,6 +4,21 @@
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
 
+    <script>
+
+        function validateFormAction() {
+
+            document.getElementById("form_exportConfig").value = JSON.stringify(editor.get());
+            //alert (document.getElementById("form_exportConfig").value);
+
+            document.getElementById("sourceWidget").value = editor1.getValue();
+
+            alert (editor1.getValue());
+
+        }
+
+    </script>
+
     <hgroup id="main-title" class="thin">
         <h1>Tables</h1>
     </hgroup>

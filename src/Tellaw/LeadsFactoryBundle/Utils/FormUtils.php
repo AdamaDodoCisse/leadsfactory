@@ -38,7 +38,7 @@ class FormUtils {
     public function buildHtmlForm ( $source, $formId, $formObject ) {
 
         $tags = $this->parseTags( $source );
-//        print_r ($tags);
+        print_r ($tags);
         foreach ($tags as $id => $tag) {
             $htmlTag = $this->renderTag( $id, $tag );
 //echo ("Raw : ".$tag["raw"]->asXML());
