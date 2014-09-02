@@ -172,7 +172,7 @@ class FormUtils {
             <input type='hidden' name='lfForwardSuccess' id='lfForwardSuccess' value='' />
             <input type='hidden' name='lfForwardError' id='lfForwardError' value='' />
             <input type='hidden' name='lfFormType' id='lfFormType' value='".$formObject->getFormType()->getId()."'/>
-            <input type='hidden' name='lfFormKey' id='lfFormKey' value=''/>
+            <input type='hidden' name='lfFormKey' id='lfFormKey' value='".$this->getFormKey($formId)."'/>
             </form>
         ";
 
@@ -193,6 +193,35 @@ class FormUtils {
         $list = $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneBy(array('code' => $listCode));
         $options = $list->getElements()->getValues();
         return $options;
+    }
+
+    public function getFormKey ($formId, $hourOffset = 0) {
+
+        $date = date_create();
+
+        if ( $hourOffset > 0 ) {
+            $date->add ( new \DateInterval('P'.$hourOffset.'H') );
+        }
+
+        $hour   = $date->format ("H");
+        $day    = $date->format ("d");
+        $month  = $date->format ("m");
+        $year   = $date->format ("Y");
+
+        $salt = "fac0ry".$month.$hour.$year."l3a".$formId."ds".$day;
+        return md5 ( $salt );
+
+    }
+
+    public function checkFormKey ( $md5, $formId ) {
+
+        if ($md5 == $this->getFormKey( $formId )) {
+            return true;
+        } else if ($md5 == $this->getFormKey( $formId, '-1' )) {
+            return true;
+        } else
+            return false;
+
     }
 
 }

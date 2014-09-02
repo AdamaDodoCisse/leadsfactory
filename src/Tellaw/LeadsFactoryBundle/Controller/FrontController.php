@@ -81,12 +81,17 @@ class FrontController extends Controller
      */
     public function postLeadsAction ( Request $request ) {
 
+        $formUtils = $this->get("form_utils");
+
         $fields = $request->get ("lffield");
         $json = json_encode( $fields );
         $redirectUrlSuccess = (string)$request->get ("successUrl");
         $redirectUrlError = (string)$request->get ("errorUrl");
 
         $exportUtils = $this->get('export_utils');
+
+        if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
+            throw new \Exception ("Form Key is not allowed");
 
         try {
 
