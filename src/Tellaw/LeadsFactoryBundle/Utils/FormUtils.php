@@ -38,10 +38,9 @@ class FormUtils {
     public function buildHtmlForm ( $source, $formId, $formObject ) {
 
         $tags = $this->parseTags( $source );
-        print_r ($tags);
+
         foreach ($tags as $id => $tag) {
             $htmlTag = $this->renderTag( $id, $tag );
-//echo ("Raw : ".$tag["raw"]->asXML());
             $source = str_replace( $tag["raw"]->asXML(), $htmlTag, $source );
         }
 
@@ -67,27 +66,36 @@ class FormUtils {
     public function parseTags ( $source ) {
 
         $xml = simplexml_load_string( $source );
-
         $results = $xml->xpath('//field');
 
         $items = array();
-
         foreach ($results as $result) {
 
             $attributes = array();
-
             foreach ($result->attributes() as $attribute => $value) {
                 $attributes[$attribute] = (string)$value;
             }
 
+            //Class attribute
+            $this->_setClassAttribute($attributes);
+
+            //Add validation rules if needed
+            if(isset($attributes['validator']))
+                $this->_setValidationRules($attributes);
+
             $items[(string)$result['id']] = array ( "type"=>(string)$result['type'],
                                                     "attributes" => $attributes,
                                                     "raw" => $result);
-            //if options node
+            //if element has options
             if(isset($result->attributes()['data-list'])){
                 $listCode = $result->attributes()['data-list']->__toString();
                 $options = $this->getElementOptions($listCode);
                 $items[(string)$result['id']]['options'] = $options;
+            }
+
+            //if validation is needed
+            if(isset($result->attributes()['data-list'])){
+
             }
         }
         return $items;
@@ -111,9 +119,6 @@ class FormUtils {
                 break;
             case "reference-list":
                 $fieldType = ReferenceListFieldType::getInstance();
-                break;
-            default:
-                $fieldType = TextFieldType::getInstance();
                 break;
         }
 
@@ -183,7 +188,7 @@ class FormUtils {
     }
 
     /**
-     * Retrieve node options
+     * Retrieve element options
      *
      * @param string $listCode
      * @return array mixed
@@ -193,6 +198,31 @@ class FormUtils {
         $list = $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneBy(array('code' => $listCode));
         $options = $list->getElements()->getValues();
         return $options;
+    }
+
+    /**
+     * Set Attribute class. Merge default and user defined value
+     *
+     * @param array $attributes
+     */
+    private function _setClassAttribute(&$attributes)
+    {
+        $class = 'input input-'.$attributes['type'];
+        if(isset($attributes['class'])){
+            $class = $attributes['class'] . ' '. $class;
+        }
+        $attributes['class'] = $class;
+    }
+
+    /**
+     * Add validation rules to class attributes
+     * @see https://github.com/posabsolute/jQuery-Validation-Engine
+     *
+     * @param array $attributes
+     */
+    private function _setValidationRules(&$attributes)
+    {
+        $attributes['class'] .= ' validate['.$attributes['validator'].']';
     }
 
     public function getFormKey ($formId, $hourOffset = 0) {

@@ -8,8 +8,6 @@ class CSV extends AbstractMethod{
     /**
      * Process export to CSV file
      *
-     * @todo log
-     *
      * @param array $jobs
      * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      */
