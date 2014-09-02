@@ -70,7 +70,12 @@
             }
         };
 
+        {% if value == "" %}
+        var json = "";
+        {% else %}
         var json = {{ value|raw }};
+        {% endif %}
+
 
         var editor = new JSONEditor(container, options, json);
 
