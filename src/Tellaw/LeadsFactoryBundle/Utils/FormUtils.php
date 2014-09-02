@@ -120,6 +120,9 @@ class FormUtils {
             case "reference-list":
                 $fieldType = ReferenceListFieldType::getInstance();
                 break;
+            default:
+                $fieldType = TextFieldType::getInstance();
+
         }
 
         return $fieldType->renderToHtml ( $tag );
