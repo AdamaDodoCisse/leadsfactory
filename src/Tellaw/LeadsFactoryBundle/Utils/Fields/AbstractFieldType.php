@@ -7,7 +7,7 @@ abstract class AbstractFieldType {
      * Generic list of attributes to ignore for tags
      * @var array $attributesToIgnore Defines attributes which should not be copied to html output for the field
      */
-    private $attributesToIgnore = array ("type", "id", "validator");
+    private $attributesToIgnore = array ("type", "id", "validator", "display");
 
     /**
      * List of attributes to ignore specifics to the current tag
