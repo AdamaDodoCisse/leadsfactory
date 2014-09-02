@@ -47,12 +47,6 @@ class Form {
     protected $script;
 
     /**
-     * @var longtext $style
-     * @ORM\Column(type="text", nullable=true, name="style")
-     */
-    protected $style;
-
-    /**
      * @var longtext $exportConfig
      * @ORM\Column(type="text", nullable=true, name="export_config")
      */
@@ -158,22 +152,6 @@ class Form {
     public function getSource()
     {
         return $this->source;
-    }
-
-    /**
-     * @param mixed $style
-     */
-    public function setStyle($style)
-    {
-        $this->style = $style;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getStyle()
-    {
-        return $this->style;
     }
 
     /**

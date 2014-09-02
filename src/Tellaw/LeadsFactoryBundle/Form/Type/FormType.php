@@ -37,7 +37,6 @@ class FormType extends AbstractType
         $builder->add('description');
 
         $builder->add('source');
-        $builder->add('style');
         $builder->add('script');
         $builder->add('exportConfig', new JsonType(), array('label' => 'Export config'));
 
