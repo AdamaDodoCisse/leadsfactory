@@ -87,6 +87,25 @@
     {% endspaceless %}
 {% endblock %}
 
+{% block script_widget %}
+
+    {% spaceless %}
+        <textarea name="form[{{ name }}]" id="scriptWidget" rows="3" style="display:none" class="json input full-width">{{ value }}</textarea>
+    {% endspaceless %}
+
+    <pre id="scriptEditor1" style="height:250px;border: 1px solid #EFEFEF;">&nbsp;</pre>
+
+    <script type="text/javascript" >
+        ace.require("ace/ext/language_tools");
+        var editor2 = ace.edit("scriptEditor1");
+        editor2.setTheme("ace/theme/chrome");
+        editor2.getSession().setMode("ace/mode/javascript");
+        //editor1.getSession().setUseWrapMode(true);
+        editor2.setValue(document.getElementById('scriptWidget').value);
+    </script>
+
+{% endblock %}
+
 {% block source_widget %}
 
     {% spaceless %}
