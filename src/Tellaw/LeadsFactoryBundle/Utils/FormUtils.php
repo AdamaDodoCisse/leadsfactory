@@ -38,12 +38,10 @@ class FormUtils {
     public function buildHtmlForm ( $source, $formId, $formObject ) {
 
         $tags = $this->parseTags( $source );
-
+//        print_r ($tags);
         foreach ($tags as $id => $tag) {
-
-            //print_r ($tags);
-
             $htmlTag = $this->renderTag( $id, $tag );
+//echo ("Raw : ".$tag["raw"]->asXML());
             $source = str_replace( $tag["raw"]->asXML(), $htmlTag, $source );
         }
 
@@ -113,6 +111,9 @@ class FormUtils {
                 break;
             case "reference-list":
                 $fieldType = ReferenceListFieldType::getInstance();
+                break;
+            default:
+                $fieldType = TextFieldType::getInstance();
                 break;
         }
 
