@@ -18,12 +18,12 @@ abstract class AbstractFieldType {
     /**
      * @var array $validatorList List of default validators that the system can use
      */
-    private $validatorList = array ( "notempty" );
+    private $validatorList = array ();
 
     /**
      * @var array $customValidatorList Specific validators for the current field
      */
-    private $customValidatorList = array ( "notempty" );
+    private $customValidatorList = array ();
 
     /**
      * @var Object $_instance Object instance, mustn't be called directly, please use getInstance static method.
