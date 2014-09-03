@@ -1,0 +1,73 @@
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <hgroup id="main-title" class="thin">
+        <h1>Administration des scopes de l'application</h1>
+    </hgroup>
+
+    <div class="columns">
+
+        <div class="eight-columns with-padding">
+
+            <h3 class="thin underline">Liste des scopes</h3>
+
+
+            <table id="sorting-advanced" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Identifiant</th>
+                    <th>Code</th>
+                    <th>Libellé</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for item in entities %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.code }}</td>
+                        <td>{{ item.name }}</td>
+                        <td style="text-align:center">
+                            <center>
+                                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_scope_edit', {'id': item.id}) }}'">Edit</button>
+                                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_scope_delete', {'id': item.id}) }}'">Delete</button>
+                            </center>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="three-columns with-padding">
+
+            <h3 class="thin underline">Actions</h3>
+
+            <p class="button-height">
+                <a href="{{ path ('_scope_new') }}" class="button huge full-width green-gradient glossy">Ajouter un scope</a>
+            </p>
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script>
+        // Table sort - DataTables
+        var table = $('#sorting-advanced');
+        table.dataTable({
+
+            'sPaginationType': 'full_numbers',
+            'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
+            'fnInitComplete': function( oSettings )
+            {
+                // Style length select
+                table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
+                tableStyled = true;
+            }
+        });
+    </script>
+{% endblock %}

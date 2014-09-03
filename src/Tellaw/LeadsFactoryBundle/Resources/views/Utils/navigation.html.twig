@@ -47,6 +47,7 @@
             <ul class="big-menu">
 
                 <li {% if ( route == '_users_list' or route == '_users_edit'  or route == '_users_new') %}class="navigable-current"{% endif %}><a href="{{ path ('_users_list') }}">Gestion des utilisateurs</a></li>
+                <li {% if ( route == '_scope_list' or route == '_scope_edit'  or route == '_scope_new') %}class="navigable-current"{% endif %}><a href="{{ path ('_scope_list') }}">Gestion des scopes</a></li>
 
             </ul>
         </li>

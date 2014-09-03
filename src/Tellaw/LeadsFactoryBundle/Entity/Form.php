@@ -59,6 +59,12 @@ class Form {
     protected $formType;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     */
+    protected $scope;
+
+    /**
      * @param mixed $formType
      */
     public function setFormType($formType)
