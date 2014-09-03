@@ -1,7 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
 /**

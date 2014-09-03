@@ -3,7 +3,9 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 
@@ -119,6 +121,12 @@ class FormUtils {
                 break;
             case "reference-list":
                 $fieldType = ReferenceListFieldType::getInstance();
+                break;
+            case "textarea":
+                $fieldType = TextareaFieldType::getInstance();
+                break;
+            case "checkbox":
+                $fieldType = CheckboxFieldType::getInstance();
                 break;
             default:
                 $fieldType = TextFieldType::getInstance();

@@ -32,32 +32,20 @@
             <h3 class="underline">Actions</h3>
             ...........
             <h3 class="underline">Documentation</h3>
+            <h4>1- Listes de référence</h4>
+            <p><field type="reference-list" id="salutation" data-list="salutation" display="checkbox"/></p>
+            <p>display : mode d'affichage <br />select(par défaut)|checkbox|radio</p>
             <h4>1- Règles de validation des champs</h4>
             <p>Il faut utiliser l'attribut "validator". Quelques exemples:</p>
-                <ul>
-                    <li>validator="required"</li>
-                    <li>validator="required,custom[email]"</li>
-                    <li>validator="required,custom[phone]"</li>
-                    <li>validator="required,custom[date]"</li>
-                    <li>validator="required,custom[number]"</li>
-                </ul>
-                <p>voir <a href="https://github.com/posabsolute/jQuery-Validation-Engine#validators">doc du plugin</a></p>
+            <ul>
+                <li>validator="required"</li>
+                <li>validator="required,custom[email]"</li>
+                <li>validator="required,custom[phone]"</li>
+                <li>validator="required,custom[date]"</li>
+                <li>validator="required,custom[number]"</li>
+            </ul>
+            <p>voir <a href="https://github.com/posabsolute/jQuery-Validation-Engine#validators">doc du plugin</a></p>
 
-            <h4 class="thin">2- Configuration des exports</h4>
-            <pre class="thin">
-                {
-                    "export": {
-                        "csv": {
-                            "gap": "60",
-                            "cron": "0 * * * *"
-                        }
-                    },
-                    "configuration": {
-                        "firstname": "prenom",
-                        "lastname": "nom"
-                    }
-                }
-            </pre>
         </div>
     </div>
 
