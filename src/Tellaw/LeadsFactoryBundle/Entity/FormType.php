@@ -209,4 +209,9 @@ class FormType {
     {
         return $this->scope;
     }
+
+    public function getRules () {
+        return json_decode(trim($this->getAlertRules()), true);
+    }
+
 }

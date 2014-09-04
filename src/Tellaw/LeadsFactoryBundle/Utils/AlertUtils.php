@@ -21,7 +21,7 @@ class AlertUtils {
     /**
      * @param integer $valueNow actual value
      * @param integer $valueOld Value for period -1
-     * @param json $rules of alerts
+     * @param Array $rules of alerts (use getRules from Form and FormType)
      * @return int status of the values
      */
     public function checkWarningStatus ( $valueNow, $valueOld, $rules ) {
@@ -54,6 +54,11 @@ class AlertUtils {
 
     }
 
+    /**
+     * This method will return an Array containing formated rules of Warning
+     * @param Array $rules.
+     * @return Array formatted
+     */
     public function getWarningRules ( $rules ) {
 
         $warningRules = $rules["warning"];
@@ -71,6 +76,11 @@ class AlertUtils {
 
     }
 
+    /**
+     * This method will return an Array containing formated rules of Alerts
+     * @param Array $rules.
+     * @return Array formatted
+     */
     public function getAlertRules ( $rules ) {
 
         $alertRules = $rules["warning"];
@@ -88,6 +98,12 @@ class AlertUtils {
 
     }
 
+    /**
+     * Return the pourcent of variation for the values
+     * @param $oldValue
+     * @param $currentValue
+     * @return float|string
+     */
     public function getDeltaPourcent ( $oldValue, $currentValue ) {
 
         if ( $currentValue == 0 ) return "-";
