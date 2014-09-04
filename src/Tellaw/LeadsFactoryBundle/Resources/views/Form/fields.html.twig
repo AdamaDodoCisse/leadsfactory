@@ -87,6 +87,40 @@
     {% endspaceless %}
 {% endblock %}
 
+{% block rules_widget %}
+
+    <div id="ruleseditor-{{ id }}"></div>
+
+    <script type="text/javascript" >
+        // create the editor
+        var container = document.getElementById('ruleseditor-{{ id }}');
+
+
+        var options = {
+            mode: 'code',
+            modes: ['code', 'form', 'text', 'tree', 'view'], // allowed modes
+            error: function (err) {
+                alert(err.toString());
+            }
+        };
+
+        {% if value == "" %}
+        var json = "";
+        {% else %}
+        var json = {{ value|raw }};
+        {% endif %}
+
+
+        var editorRules = new JSONEditor(container, options, json);
+
+
+    </script>
+
+    {% spaceless %}
+        <textarea {{ block('widget_attributes') }} rows="3" style="display:none" class="">{{ value|raw }}</textarea>
+    {% endspaceless %}
+{% endblock %}
+
 {% block script_widget %}
 
     {% spaceless %}

@@ -57,6 +57,28 @@ class FormType {
     protected $scope;
 
     /**
+     * @var longtext $alertRules
+     * @ORM\Column(type="text", nullable=true, name="alert_rules")
+     */
+    protected $alertRules;
+
+    /**
+     * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $alertRules
+     */
+    public function setAlertRules($alertRules)
+    {
+        $this->alertRules = $alertRules;
+    }
+
+    /**
+     * @return \Tellaw\LeadsFactoryBundle\Entity\longtext
+     */
+    public function getAlertRules()
+    {
+        return $this->alertRules;
+    }
+
+    /**
      * @param mixed $leads
      */
     public function setLeads($leads)

@@ -91,7 +91,7 @@ form {
 	text-align: center;
 	}
 	#login-title h1 {
-		font-size: 48px;
+		font-size: 39px;
 		line-height: 55px;
 		margin: 0;
 		color: white;
@@ -99,13 +99,13 @@ form {
 		-moz-text-shadow: 0 2px 7px rgba(0, 0, 0, 0.5);
 		text-shadow: 0 2px 7px rgba(0, 0, 0, 0.5);
 		}
-		#login-title h1.login-title-image {
+		/*#login-title h1.login-title-image {
 			background: url(../img/login-title.png) no-repeat center center;
 			overflow: hidden;
 			height: 55px;
 			text-align: left;
 			text-indent: -3000px;
-		}
+		}*/
 	#login-title h5 {
 		color: #c8cfd5;
 		margin-top: -6px;

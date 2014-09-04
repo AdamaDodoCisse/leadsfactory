@@ -53,6 +53,12 @@ class Form {
     protected $exportConfig;
 
     /**
+     * @var longtext $alertRules
+     * @ORM\Column(type="text", nullable=true, name="alert_rules")
+     */
+    protected $alertRules;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\FormType")
      * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
      */
@@ -187,6 +193,26 @@ class Form {
     public function getConfig()
     {
         return json_decode(trim($this->getExportConfig()), true);
+    }
+
+    public function getRules () {
+        return json_decode(trim($this->getAlertRules()), true);
+    }
+
+    /**
+     * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $alertRules
+     */
+    public function setAlertRules($alertRules)
+    {
+        $this->alertRules = $alertRules;
+    }
+
+    /**
+     * @return \Tellaw\LeadsFactoryBundle\Entity\longtext
+     */
+    public function getAlertRules()
+    {
+        return $this->alertRules;
     }
 
 }

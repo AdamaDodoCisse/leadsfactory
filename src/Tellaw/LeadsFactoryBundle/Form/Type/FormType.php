@@ -38,10 +38,11 @@ class FormType extends AbstractType
 
         $builder->add ( 'formType' );
 
-        $builder->add('source', new SourceType(), array('label' => 'Source'));
-        $builder->add('script', new ScriptType(), array('label' => 'Javascript'));
-        $builder->add('exportConfig', new JsonType(), array('label' => 'Export config'));
+        $builder->add('source', new SourceType(), array('label' => 'Source', 'required' => false));
+        $builder->add('script', new ScriptType(), array('label' => 'Javascript', 'required' => false));
 
+        $builder->add('exportConfig', new JsonType(), array('label' => 'Export config', 'required' => false));
+        $builder->add('alertRules', new RulesType(), array('label' => 'Alertes', 'required' => false));
 
 
         $builder->add('save', 'submit');

@@ -33,6 +33,8 @@ class FormTypeType extends AbstractType
         $builder->add('description');
         $builder->add ('scope');
 
+        $builder->add('alertRules', new RulesType(), array('label' => 'Alertes', 'required' => false));
+
         $builder->add('save', 'submit');
 
     }
