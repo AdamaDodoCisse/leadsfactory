@@ -18,7 +18,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
- * @Cache(expires="tomorrow")
  */
 class EntityUsersController extends Controller
 {
@@ -29,14 +28,12 @@ class EntityUsersController extends Controller
      */
     public function indexAction(Request $request)
     {
-
         $elements = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findAll();
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Users:list.html.twig',
             array(  'elements' => $elements )
         );
-
     }
 
     /**

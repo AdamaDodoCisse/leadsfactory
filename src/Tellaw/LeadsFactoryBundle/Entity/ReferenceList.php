@@ -132,5 +132,26 @@ class ReferenceList {
         return $this->elements;
     }
 
+    /**
+     * Add elements
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $elements
+     * @return ReferenceList
+     */
+    public function addElement(\Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $elements)
+    {
+        $this->elements[] = $elements;
 
+        return $this;
+    }
+
+    /**
+     * Remove elements
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $elements
+     */
+    public function removeElement(\Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $elements)
+    {
+        $this->elements->removeElement($elements);
+    }
 }

@@ -27,6 +27,7 @@ class UsersType extends AbstractType
         );
 
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
@@ -34,6 +35,8 @@ class UsersType extends AbstractType
         $builder->add('lastname');
         $builder->add('login');
         $builder->add('password', 'password');
+
+        $builder->add('scope');
 
         $builder->add('save', 'submit');
 

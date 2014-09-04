@@ -17,7 +17,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
- * @Cache(expires="tomorrow")
  */
 class EntityFormController extends Controller
 {

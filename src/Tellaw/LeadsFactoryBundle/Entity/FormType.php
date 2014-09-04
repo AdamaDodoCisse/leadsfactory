@@ -51,6 +51,12 @@ class FormType {
     private $leads;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     */
+    protected $scope;
+
+    /**
      * @param mixed $leads
      */
     public function setLeads($leads)
@@ -136,4 +142,49 @@ class FormType {
         return $this->name;
     }
 
+    /**
+     * Add leads
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
+     * @return FormType
+     */
+    public function addLead(\Tellaw\LeadsFactoryBundle\Entity\Leads $leads)
+    {
+        $this->leads[] = $leads;
+
+        return $this;
+    }
+
+    /**
+     * Remove leads
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
+     */
+    public function removeLead(\Tellaw\LeadsFactoryBundle\Entity\Leads $leads)
+    {
+        $this->leads->removeElement($leads);
+    }
+
+    /**
+     * Set scope
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Scope $scope
+     * @return FormType
+     */
+    public function setScope(\Tellaw\LeadsFactoryBundle\Entity\Scope $scope = null)
+    {
+        $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * Get scope
+     *
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Scope 
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
 }

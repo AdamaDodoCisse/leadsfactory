@@ -47,6 +47,12 @@ class Users implements UserInterface {
     protected $password;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     */
+    protected $scope;
+
+    /**
      * @param string $fistname
      */
     public function setFirstname($firstname)
@@ -152,4 +158,26 @@ class Users implements UserInterface {
 
     }
 
+    /**
+     * Set scope
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Scope $scope
+     * @return Users
+     */
+    public function setScope(\Tellaw\LeadsFactoryBundle\Entity\Scope $scope = null)
+    {
+        $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * Get scope
+     *
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Scope 
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
 }

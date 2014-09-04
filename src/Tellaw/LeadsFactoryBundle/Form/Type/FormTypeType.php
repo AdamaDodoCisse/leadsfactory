@@ -31,6 +31,7 @@ class FormTypeType extends AbstractType
     {
         $builder->add('name');
         $builder->add('description');
+        $builder->add ('scope');
 
         $builder->add('save', 'submit');
 

@@ -20,7 +20,7 @@ class Scope {
 
     /**
      * @var string $code
-     * @ORM\Column(type="string", nullable=true, name="code")
+     * @ORM\Column(type="string", nullable=false, name="code")
      */
     protected $code;
 
@@ -82,6 +82,11 @@ class Scope {
      * @return string 
      */
     public function getName()
+    {
+        return $this->name;
+    }
+
+    public function __toString()
     {
         return $this->name;
     }
