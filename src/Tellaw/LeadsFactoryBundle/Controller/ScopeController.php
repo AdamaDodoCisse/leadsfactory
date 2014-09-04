@@ -46,6 +46,7 @@ class ScopeController extends Controller
      * Creates a new Scope entity.
      *
      * @Route("/scope/new", name="_scope_new")
+     * @Secure(roles="ROLE_USER")
      * @Template("TellawLeadsFactoryBundle:entity:Scope/edit.html.twig")
      */
     public function newAction(Request $request)

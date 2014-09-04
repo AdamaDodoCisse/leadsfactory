@@ -51,5 +51,14 @@
 
             </ul>
         </li>
+        <li class="with-right-arrow">
+            <span>Statistiques</span>
+            <ul class="big-menu">
+
+                <li {% if ( route == '_monitoring_dashboard') %}class="navigable-current"{% endif %}><a href="{{ path ('_monitoring_dashboard') }}">Tableau de bord</a></li>
+                <li {% if ( route == '_monitoring_index') %}class="navigable-current"{% endif %}><a href="{{ path ('_monitoring_index') }}">Tous les suivis</a></li>
+
+            </ul>
+        </li>
     </ul>
 </section>
