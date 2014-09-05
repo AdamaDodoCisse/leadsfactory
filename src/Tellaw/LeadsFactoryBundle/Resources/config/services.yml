@@ -3,6 +3,11 @@ parameters:
 
 services:
 
+  chart:
+    class:        Tellaw\LeadsFactoryBundle\Utils\Chart
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   export.logger:
     class:        Symfony\Bridge\Monolog\Logger
     arguments:    [app]
