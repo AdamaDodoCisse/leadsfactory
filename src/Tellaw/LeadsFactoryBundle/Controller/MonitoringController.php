@@ -38,7 +38,7 @@ class MonitoringController extends Controller{
      * @Secure(roles="ROLE_USER")
      * @template("TellawLeadsFactoryBundle:monitoring:chart.html.twig")
      */
-    public function chartAction($period='year', $formType=null)
+    public function chartAction($period='year', $formType=array('1'))
     {
         $chart = $this->get('chart');
         $chart->setPeriod($period);

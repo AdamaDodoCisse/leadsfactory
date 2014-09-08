@@ -85,10 +85,7 @@ class Chart {
     }
 
     /**
-     * Fetch leads grouped by form type
-     *
-     * @todo MAJ SQL pour regrouper par mois ou par jour afin d'avoir 0 plutôt que BLANK lorsqu'aucun enregistrement
-     * n'est trouvé pour un mois|jour donné.
+     * Fetch leads counts grouped by form type
      *
      * @return array
      */
@@ -99,7 +96,11 @@ class Chart {
         $data = array();
         foreach($this->formType as $formType){
 
-            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,"%Y%m") as month, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate GROUP BY MONTH(createdAt)');
+            if(!is_object($formType))
+                $formType = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findOneById($formType);
+
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+            $query->bindValue('format', $this->_getSqlDateFormat());
             $query->bindValue('minDate', $minDate);
             $query->bindValue('formType', $formType->getId());
             $query->execute();
@@ -164,21 +165,23 @@ class Chart {
             $d = array();
 
             foreach($formTypeData as $c){
-                if(array_key_exists('month', $c)){
-                    $d[$c['month']] = (int) $c['count'];
+                if(array_key_exists('date', $c)){
+                    $d[$c['date']] = (int) $c['count'];
                 }
             }
-            $now = (int) date('Ym');
+            $dateFormat = $this->_getDateFormat();
+            $now = date($dateFormat);
             $date = new \DateTime();
-            for($i=0; $i<=12; $i++){
+            for($i=0; $i<$this->_getIndexNumber($date); $i++){
 
-                if(!array_key_exists($date->format('Ym'), $d)){
-                    $d[$date->format('Ym')]= 0;
+                if(!array_key_exists($date->format($dateFormat), $d)){
+                    $d[(int) $date->format($dateFormat)]= 0;
                 }
-                $date->modify('-1 month');
+                $date->modify('-1 '.$this->_getDateIncrement());
             }
             ksort($d);
-            array_unshift($d,$type);
+            array_unshift($d, $type);
+            $d = array_values($d);
             $chartData[] = $d;
         }
         return $chartData;
@@ -245,29 +248,74 @@ class Chart {
             case self::PERIOD_MONTH:
                 $title = "Nombre de DI sur le mois";
                 break;
-            default:
-                $title = "Nombre de DI sur l\'année";
         }
         return $title;
     }
 
-    /**
-     * Return padding value for completing leads data array with 0
-     *
-     * @return int
-     */
-    private function _getRangePaddingValue()
+    private function _getSqlDateFormat()
     {
         switch($this->period){
             case self::PERIOD_YEAR:
-                $pad = -13;
-                break;
+                return '%Y%m';
             case self::PERIOD_MONTH:
-                $pad = -32;
-                break;
-            default:
-                $pad = -13;
+                return '%m%d';
         }
-        return $pad;
     }
+
+    /**
+     * @return string
+     */
+    private function _getDateFormat()
+    {
+        switch($this->period){
+            case self::PERIOD_YEAR:
+                return 'Ym';
+            case self::PERIOD_MONTH:
+                return 'md';
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function _getDateIncrement()
+    {
+        switch($this->period){
+            case self::PERIOD_YEAR:
+                return 'month';
+            case self::PERIOD_MONTH:
+                return 'day';
+        }
+    }
+
+    /**
+     * Return number of records to display
+     *
+     * @param Datetime $date
+     * @return int
+     */
+    private function _getIndexNumber($date)
+    {
+        switch($this->period){
+            case self::PERIOD_YEAR:
+                return 13;
+            case self::PERIOD_MONTH:
+                $minDate = $this->_getRangeMinDate();
+                return (cal_days_in_month(CAL_GREGORIAN, $minDate->format('m'), $minDate->format('Y')) +1);
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function _getSqlGroupByClause()
+    {
+        switch($this->period){
+            case self::PERIOD_YEAR:
+                return 'GROUP BY MONTH(createdAt)';
+            case self::PERIOD_MONTH:
+                return 'GROUP BY DAY(createdAt)';
+        }
+    }
+
 } 
