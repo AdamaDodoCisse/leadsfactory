@@ -99,7 +99,7 @@ class Chart {
         $data = array();
         foreach($this->formType as $formType){
 
-            $query = $em->getConnection()->prepare('SELECT MONTH(createdAt) as month, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate GROUP BY MONTH(createdAt)');
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,"%Y%m") as month, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate GROUP BY MONTH(createdAt)');
             $query->bindValue('minDate', $minDate);
             $query->bindValue('formType', $formType->getId());
             $query->execute();
@@ -159,38 +159,29 @@ class Chart {
     private function _formatChartData($data)
     {
         $chartData = array();
-        foreach($data as $formType => $formTypeData){
-            $formTypeArray = array($formTypeData[0]);
-            for($i=1; $i<=13; $i++){
-                if(isset($formTypeData[$i])){
-                    $key = $formTypeData[$i]['month'];
-                    $formTypeArray[$key]=$formTypeData[$i]['count'];
+        foreach($data as $formTypeData){
+            $type = array_shift($formTypeData);
+            $d = array();
+
+            foreach($formTypeData as $c){
+                if(array_key_exists('month', $c)){
+                    $d[$c['month']] = (int) $c['count'];
                 }
             }
-            $chartData[] = $formTypeArray;
-        }
+            $now = (int) date('Ym');
+            $date = new \DateTime();
+            for($i=0; $i<=12; $i++){
 
-        //complete empty month with 0 an reorder array
-        $now=(int)date('m');
-        $delta = 13-$now;
-        $cleanChartData=array();
-        foreach($chartData as &$cd){
-            $tmp=array();
-            for($i=1; $i<=13; $i++){
-                $index = ($i+$delta <= 13)? $i+$delta : ($i+$delta)-13;
-                if(!isset($cd[$i])){
-                    $tmp[$index]='0';
-                    continue;
+                if(!array_key_exists($date->format('Ym'), $d)){
+                    $d[$date->format('Ym')]= 0;
                 }
-                $tmp[$index]=$cd[$i];
+                $date->modify('-1 month');
             }
-            ksort($tmp);
-            array_unshift($tmp, $cd[0]);
-            $cleanChartData[]=$tmp;
+            ksort($d);
+            array_unshift($d,$type);
+            $chartData[] = $d;
         }
-
-
-        return $cleanChartData;
+        return $chartData;
     }
 
     /**
