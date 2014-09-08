@@ -99,12 +99,12 @@ class Chart {
         $data = array();
         foreach($this->formType as $formType){
 
-            $query = $em->getConnection()->prepare('SELECT count(1) FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate GROUP BY MONTH(createdAt)');
+            $query = $em->getConnection()->prepare('SELECT MONTH(createdAt) as month, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate GROUP BY MONTH(createdAt)');
             $query->bindValue('minDate', $minDate);
             $query->bindValue('formType', $formType->getId());
             $query->execute();
             $results = $query->fetchAll();
-
+            array_unshift($results,$formType->getName());
             $data[$formType->getName()] = $results;
         }
         return $data;
@@ -160,17 +160,37 @@ class Chart {
     {
         $chartData = array();
         foreach($data as $formType => $formTypeData){
-
-            $formTypeArray = array();
-
-            foreach($formTypeData as $d){
-                $formTypeArray[] = (int) array_pop($d);
+            $formTypeArray = array($formTypeData[0]);
+            for($i=1; $i<=13; $i++){
+                if(isset($formTypeData[$i])){
+                    $key = $formTypeData[$i]['month'];
+                    $formTypeArray[$key]=$formTypeData[$i]['count'];
+                }
             }
-            $formTypeArray = array_pad($formTypeArray, $this->_getRangePaddingValue(), 0);
-            array_unshift($formTypeArray, $formType);
             $chartData[] = $formTypeArray;
         }
-        return $chartData;
+
+        //complete empty month with 0 an reorder array
+        $now=(int)date('m');
+        $delta = 13-$now;
+        $cleanChartData=array();
+        foreach($chartData as &$cd){
+            $tmp=array();
+            for($i=1; $i<=13; $i++){
+                $index = ($i+$delta <= 13)? $i+$delta : ($i+$delta)-13;
+                if(!isset($cd[$i])){
+                    $tmp[$index]='0';
+                    continue;
+                }
+                $tmp[$index]=$cd[$i];
+            }
+            ksort($tmp);
+            array_unshift($tmp, $cd[0]);
+            $cleanChartData[]=$tmp;
+        }
+
+
+        return $cleanChartData;
     }
 
     /**
