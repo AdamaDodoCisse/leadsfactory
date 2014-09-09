@@ -55,8 +55,9 @@
                 new google.visualization.LineChart(div.get(0)).draw(data, {
                     title: '{{ chart_title|raw }}',
                     width: divWidth,
-                    height: $.template.mediaQuery.is('mobile') ? 180 : 265,
+                    height: $.template.mediaQuery.is('mobile') ? 180 : 365,
                     legend: 'right',
+                    //curveType: 'function',
                     yAxis: {title: '(thousands)'},
                     backgroundColor: ($.template.ie7 || $.template.ie8) ? '#494C50' : 'transparent',	// IE8 and lower do not support transparency
                     legendTextStyle: { color: 'white' },
@@ -66,7 +67,9 @@
                     },
                     vAxis: {
                         textStyle: { color: 'white' },
-                        baselineColor: '#666666'
+                        baselineColor: '#666666',
+                        gridlines: {count: 10},
+                        format: '#'
                     },
                     chartArea: {
                         top: 35,
@@ -90,7 +93,7 @@
 
     // Load the Visualization API and the piechart package.
     google.load('visualization', '1', {
-        'packages': ['corechart']
+        'packages': ['corechart'], 'language': 'fr'
     });
 
     // Set a callback to run when the Google Visualization API is loaded.
