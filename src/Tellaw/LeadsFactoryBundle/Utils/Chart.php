@@ -30,6 +30,11 @@ class Chart {
     private $formType;
 
     /**
+     * @var Form
+     */
+    private $form;
+
+    /**
      * @param string $period
      */
     public function setPeriod($period)
@@ -54,7 +59,7 @@ class Chart {
         if(empty($formType)){
             $this->formType = $this->_getAllFormTypes();
         }else{
-            $this->formType = $formType;
+            $this->formType = (empty($formType) || is_array($formType)) ? $formType : array($formType);
         }
     }
 
@@ -64,6 +69,23 @@ class Chart {
     public function getFormType()
     {
         return $this->formType;
+    }
+
+    /**
+     * @param $formType
+     * @internal param array $formTypes
+     */
+    public function setForm($form)
+    {
+        $this->form = (is_numeric($form)) ? $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Form')->findOneById($form) : $form;
+    }
+
+    /**
+     * @return array
+     */
+    public function getForm()
+    {
+        return $this->form;
     }
 
     /**
@@ -89,7 +111,7 @@ class Chart {
      *
      * @return array
      */
-    private function _loadLeadsData()
+    private function _loadLeadsDataByType()
     {
         $minDate = $this->_getRangeMinDate()->format('Y-m-d H:i:s');
         $em = $this->container->get('doctrine')->getManager();
@@ -112,13 +134,36 @@ class Chart {
     }
 
     /**
+     * Fetch leads counts grouped by form type
+     *
+     * @return array
+     */
+    private function _loadLeadsDataByForm()
+    {
+        $minDate = $this->_getRangeMinDate()->format('Y-m-d H:i:s');
+        $em = $this->container->get('doctrine')->getManager();
+        $data = array();
+
+        $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+        $query->bindValue('format', $this->_getSqlDateFormat());
+        $query->bindValue('minDate', $minDate);
+        $query->bindValue('form_id', $this->form->getId());
+        $query->execute();
+        $results = $query->fetchAll();
+        array_unshift($results, $this->form->getName());
+        $data[$this->form->getName()] = $results;
+
+        return $data;
+    }
+
+    /**
      * Load chart data
      *
      * @return array
      */
     public function loadChartData()
     {
-        $data = $this->_loadLeadsData();
+        $data = (is_null($this->form)) ? $this->_loadLeadsDataByType() : $this->_loadLeadsDataByForm();
         $chartData = $this->_formatChartData($data);
         $chartData = json_encode($chartData);
 

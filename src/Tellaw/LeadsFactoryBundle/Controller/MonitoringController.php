@@ -43,18 +43,28 @@ class MonitoringController extends Controller{
                         'year'  => 'Année',
                         'month' => 'Mois'
                     ),
-                    'label' => 'Période'
-                    //'attr' => array('onchange'  => 'javascript:alert("xxxx")')
+                    'label' => 'Période',
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             )
             ->add('form_type', 'choice',
                 array(
                     'choices'   => $this->getFormTypesOptions(),
                     'label'     => 'Type',
-                    'required'  => false
+                    'required'  => false,
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             )
-            ->add('ok', 'submit');
+            ->add('form', 'choice',
+                array(
+                    'choices'   => $this->getFormOptions($request),
+                    'label'     => 'Formulaire',
+                    'required'  => false,
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            )
+            //->add('ok', 'submit')
+            ;
 
         $form = $formBuilder->getForm();
 
@@ -69,14 +79,17 @@ class MonitoringController extends Controller{
      * @route("/chart", name="_monitoring_chart")
      * @Secure(roles="ROLE_USER")
      * @template("TellawLeadsFactoryBundle:monitoring:chart.html.twig")
+     *
+     * @var string period
+     * @var mixed formType
+     * @var mixed form
      */
-    public function chartAction($period='month', $formType=null)
+    public function chartAction($period='month', $formType=null, $form=null)
     {
-        $formType = (empty($formType) || is_array($formType)) ? $formType : array($formType);
-
         $chart = $this->get('chart');
         $chart->setPeriod($period);
         $chart->setFormType($formType);
+        $chart->setForm($form);
 
         return array(
             'chart_data'    => $chart->loadChartData(),
@@ -94,6 +107,23 @@ class MonitoringController extends Controller{
         }
 
         return $array;
+    }
+
+    private function getFormOptions($request)
+    {
+        $form = $request->request->get('form');
+        $form_type = $form['form_type'];
+
+        if(empty($form_type))
+            return array('' => 'Choisissez d\'abord un type');
+
+        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($form_type);
+
+        $options = array('' => 'Sélectionnez');
+        foreach($forms as $form){
+            $options[$form->getId()] = $form->getName();
+        }
+        return $options;
     }
 
 } 
