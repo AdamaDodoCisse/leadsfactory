@@ -7,8 +7,13 @@
     </hgroup>
 
     <div class="dashboard">
+        {{ form(form) }}
         <!-- Chart -->
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart')) }}
+        {% if(app.request.get('form')) %}
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart', { "period" : app.request.get('form')['period'], "formType":  app.request.get('form')['form_type'] } )) }}
+        {% else %}
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart')) }}
+        {% endif %}
     </div>
 
 {% endblock %}

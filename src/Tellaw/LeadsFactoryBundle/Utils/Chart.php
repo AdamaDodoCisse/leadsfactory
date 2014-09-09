@@ -51,7 +51,7 @@ class Chart {
      */
     public function setFormType($formType)
     {
-        if(is_null($formType)){
+        if(empty($formType)){
             $this->formType = $this->_getAllFormTypes();
         }else{
             $this->formType = $formType;
