@@ -9,8 +9,8 @@ namespace Tellaw\LeadsFactoryBundle\Entity;
 
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 
-class FormDao {
+class DataDao {
 
-    
+
 
 }
