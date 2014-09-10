@@ -35,6 +35,32 @@ class Chart {
     private $form;
 
     /**
+     * @var int
+     */
+    private $graph_count;
+
+    /**
+     * @var array
+     */
+    private $specialGraphIndexes;
+
+    /**
+     * @return array
+     */
+    public function getSpecialGraphIndexes()
+    {
+        return $this->specialGraphIndexes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGraphCount()
+    {
+        return $this->graph_count;
+    }
+
+    /**
      * @param string $period
      */
     public function setPeriod($period)
@@ -111,7 +137,7 @@ class Chart {
      *
      * @return array
      */
-    private function _loadLeadsDataByType()
+    private function _loadLeadsDataByTypes()
     {
         $minDate = $this->_getRangeMinDate()->format('Y-m-d H:i:s');
         $em = $this->container->get('doctrine')->getManager();
@@ -134,7 +160,36 @@ class Chart {
     }
 
     /**
-     * Fetch leads counts grouped by form type
+     * Fetch leads counts grouped by forms
+     *
+     * @return array
+     */
+    private function _loadLeadsDataByFormsType()
+    {
+        $minDate = $this->_getRangeMinDate()->format('Y-m-d H:i:s');
+        $em = $this->container->get('doctrine')->getManager();
+        $data = array();
+
+        $formTypeId = $this->formType[0];
+
+        $forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($formTypeId);
+
+        foreach($forms as $form){
+
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+            $query->bindValue('format', $this->_getSqlDateFormat());
+            $query->bindValue('minDate', $minDate);
+            $query->bindValue('form_id', $form->getId());
+            $query->execute();
+            $results = $query->fetchAll();
+            array_unshift($results, $form->getName());
+            $data[$form->getId()] = $results;
+        }
+        return $data;
+    }
+
+    /**
+     * Fetch leads counts for a form
      *
      * @return array
      */
@@ -163,8 +218,13 @@ class Chart {
      */
     public function loadChartData()
     {
-        $data = (is_null($this->form)) ? $this->_loadLeadsDataByType() : $this->_loadLeadsDataByForm();
+        if(!empty($this->form)){
+            $data = $this->_loadLeadsDataByForm();
+        }else{
+            $data = (empty($this->formType) || count($this->formType) > 1) ? $this->_loadLeadsDataByTypes() : $this->_loadLeadsDataByFormsType();
+        }
         $chartData = $this->_formatChartData($data);
+        $chartData = $this->_addAdditionalGraphs($chartData);
         $chartData = json_encode($chartData);
 
         return $chartData;
@@ -229,7 +289,76 @@ class Chart {
             $d = array_values($d);
             $chartData[] = $d;
         }
+
+        $this->graph_count = count($chartData);
+
         return $chartData;
+    }
+
+    /**
+     * Add average and total graphs if necessary
+     *
+     * @param array $chartData
+     * @return array
+     */
+    private function _addAdditionalGraphs($chartData)
+    {
+        // En mode d'affichage d'un formulaire ou d'un type unique on ajoute la courbe moyenne
+        if(count($chartData) <= 1 || count($this->formType) == 1 )
+            $chartData[] = $this->_addAverageGraph($chartData);
+
+        //En mode d'affichage d'un type, on ajoute la courbe qui totalise les valeurs de chacun des formulaires
+        if(count($this->formType) == 1 && $this->graph_count > 1){
+            $chartData[] = $this->_addTotalGraph($chartData);
+        }
+
+        //Set les courbes "spéciales" pour distinction dans le template
+        if(count($chartData) != $this->graph_count)
+            $this->setSpecialGraphIndexes($chartData);
+
+        return $chartData;
+    }
+
+    /**
+     * Add total graph
+     *
+     * @param array $chartData
+     * @return array
+     */
+    private function _addTotalGraph($chartData)
+    {
+        $graphLength = count($chartData[0]);
+        $total = array('Total');
+        for($i=1; $i<$graphLength; $i++){
+            $value = 0;
+            for($j=0; $j<$this->graph_count; $j++){
+                $value += $chartData[$j][$i];
+            }
+            $total[$i] = $value;
+        }
+        return $total;
+    }
+
+    /**
+     * Add average graph
+     *
+     * @param $chartData
+     * @return array
+     */
+    private function _addAverageGraph($chartData)
+    {
+        $graphLength = count($chartData[0]);
+        $value = 0;
+        for($i=1; $i<$graphLength; $i++){
+            foreach($chartData as $graphData){
+                $value += $graphData[$i];
+            }
+        }
+        $value = round($value/($graphLength -1), 1);
+        $average = array_fill(1, $graphLength-1, $value);
+        array_unshift($average, 'Moyenne');
+
+        return $average;
     }
 
     /**
@@ -361,6 +490,19 @@ class Chart {
             case self::PERIOD_MONTH:
                 return 'GROUP BY DAY(createdAt)';
         }
+    }
+
+    /**
+     * @param $chartData
+     */
+    public function setSpecialGraphIndexes($chartData)
+    {
+        $specials = array();
+        foreach($chartData as $key=>$data){
+            if($key >= (count($chartData) - $this->graph_count))
+                $specials[] = $key;
+        }
+        $this->specialGraphIndexes = $specials;
     }
 
 } 

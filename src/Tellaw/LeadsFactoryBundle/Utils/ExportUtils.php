@@ -65,14 +65,12 @@ class ExportUtils{
     }
 
     /**
-     * Check if form is configured for export
-     *
-     * @param string $exportConfig
+     * @param $config
      * @return bool
      */
-    public function hasScheduledExport($exportConfig)
+    public function hasScheduledExport($config)
     {
-        return (is_array($exportConfig)) ? true : false;
+        return (isset($config['export']) && is_array($config['export'])) ? true : false;
     }
 
     /**

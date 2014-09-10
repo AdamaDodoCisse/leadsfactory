@@ -78,24 +78,32 @@ class MonitoringController extends Controller{
     /**
      * @route("/chart", name="_monitoring_chart")
      * @Secure(roles="ROLE_USER")
-     * @template("TellawLeadsFactoryBundle:monitoring:chart.html.twig")
      *
      * @var string period
      * @var mixed formType
      * @var mixed form
      */
-    public function chartAction($period='month', $formType=null, $form=null)
+    public function chartAction($period='year', $formType=null, $form=null)
     {
         $chart = $this->get('chart');
         $chart->setPeriod($period);
         $chart->setFormType($formType);
         $chart->setForm($form);
 
-        return array(
-            'chart_data'    => $chart->loadChartData(),
-            'time_range'    => $chart->getTimeRange(),
-            'chart_title'   => $chart->getChartTitle()
+        $chartData = $chart->loadChartData();
+
+        //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
+        $template = (empty($formType) || !empty($form)) ? "TellawLeadsFactoryBundle:monitoring:chart.html.twig" : "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
+
+        $data = array(
+            'chart_data'        => $chartData,
+            'time_range'        => $chart->getTimeRange(),
+            'chart_title'       => $chart->getChartTitle(),
+            'special_graphs'    => $chart->getSpecialGraphIndexes($chartData) //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
         );
+
+        return $this->render($template, $data);
+
     }
 
     private function getFormTypesOptions()

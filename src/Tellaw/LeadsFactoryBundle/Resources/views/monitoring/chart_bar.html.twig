@@ -1,4 +1,4 @@
-chart1<div id="demo-chart">
+chart2<div id="demo-chart">
     <!-- This div will hold the chart generated in the footer -->
 </div>
 <!-- Charts library -->
@@ -52,7 +52,7 @@ chart1<div id="demo-chart">
                 // Learn more on configuration for the LineChart: http://code.google.com/apis/chart/interactive/docs/gallery/linechart.html
                 var div = $('#demo-chart'),
                         divWidth = div.width();
-                new google.visualization.LineChart(div.get(0)).draw(data, {
+                new google.visualization.ComboChart(div.get(0)).draw(data, {
                     title: '{{ chart_title|raw }}',
                     width: divWidth,
                     height: $.template.mediaQuery.is('mobile') ? 180 : 365,
@@ -70,14 +70,21 @@ chart1<div id="demo-chart">
                         baselineColor: '#666666',
                         gridlines: {count: 10},
                         viewWindowMode: 'maximized'
-                        //format: '#'
+                        //format: '#,#'
                     },
                     chartArea: {
                         top: 35,
                         left: 50,
                         width: divWidth-40
                     },
-                    legend: 'bottom'
+                    legend: 'bottom',
+                    seriesType: "bars",
+                    isStacked: true,
+                    series: {
+                        {% for graph in special_graphs %}
+                            '{{ graph }}': {type: "line"},
+                        {% endfor %}
+                    }
                 });
 
                 // Message only when resizing

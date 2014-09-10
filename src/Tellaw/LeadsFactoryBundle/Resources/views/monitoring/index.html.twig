@@ -10,7 +10,12 @@
         {{ form(form) }}
         <!-- Chart -->
         {% if(app.request.get('form')) %}
-            {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart', { "period" : app.request.get('form')['period'], "formType":  app.request.get('form')['form_type'] } )) }}
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart', {
+                                                            "period" : app.request.get('form')['period'],
+                                                            "formType":  app.request.get('form')['form_type'],
+                                                            "form":  app.request.get('form')['form']
+                                                         }
+            )) }}
         {% else %}
             {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart')) }}
         {% endif %}

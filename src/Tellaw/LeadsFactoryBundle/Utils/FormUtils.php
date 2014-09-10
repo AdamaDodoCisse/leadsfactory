@@ -212,7 +212,7 @@ class FormUtils {
     }
 
     /**
-     * Set Attribute class. Merge default and user defined value
+     * Set Attribute class. Merge default and user defined values
      *
      * @param array $attributes
      */
