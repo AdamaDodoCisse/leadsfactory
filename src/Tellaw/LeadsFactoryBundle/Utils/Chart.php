@@ -140,7 +140,7 @@ class Chart {
      */
     private function _loadLeadsDataByTypes()
     {
-        $minDate = $this->_getRangeMinDate()->format('Y-m-d H:i:s');
+        $minDate = $this->_getRangeMinDate()->format('Y-m-d');
         $em = $this->container->get('doctrine')->getManager();
         $data = array();
         foreach($this->formType as $formType){
@@ -241,6 +241,10 @@ class Chart {
         $minDate = new \DateTime();
         $minDate->sub(new \DateInterval($this->period_interval[$this->period]));
 
+        if($this->period == self::PERIOD_YEAR){
+            $minDate->modify('first day of this month');
+        }
+
         return $minDate;
     }
 
@@ -276,7 +280,6 @@ class Chart {
                 }
             }
             $dateFormat = $this->_getDateFormat();
-            $now = date($dateFormat);
             $date = new \DateTime();
             for($i=0; $i<$this->_getIndexNumber($date); $i++){
 
@@ -487,9 +490,9 @@ class Chart {
     {
         switch($this->period){
             case self::PERIOD_YEAR:
-                return 'GROUP BY MONTH(createdAt)';
+                return 'GROUP BY MONTH(createdAt), YEAR(createdAt)';
             case self::PERIOD_MONTH:
-                return 'GROUP BY DAY(createdAt)';
+                return 'GROUP BY DAY(createdAt), MONTH(createdAt)';
         }
     }
 
@@ -500,7 +503,7 @@ class Chart {
     {
         $specials = array();
         foreach($chartData as $key=>$data){
-            if($key > (count($chartData) - $this->graph_count))
+            if($key >= (count($chartData) - $this->graph_count))
                 $specials[] = $key;
         }
         $this->specialGraphIndexes = $specials;
@@ -524,9 +527,9 @@ class Chart {
                 echo ("--> Deleting leads\r\n");
 
                 // Is not, delete anyleads for 2 years
-                $query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
+                /*$query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
                 $query->bindValue('form_id', $form->getId());
-                $query->execute();
+                $query->execute();*/
 
                 // Reload leads for two years
                 for ( $i=0; $i<365; $i++ ) {
