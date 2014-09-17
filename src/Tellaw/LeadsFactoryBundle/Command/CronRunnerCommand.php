@@ -12,44 +12,69 @@ class CronRunnerCommand extends ContainerAwareCommand {
 	
 	private $cronjobs = array();
 	
-	protected function configure()
-	{
+	protected function configure() {
 		$this
-		->setName('leadsfactory:cronjobs:alerts')
+		->setName('leadsfactory:cronjobs:alertsByMail')
 		->setDescription('Cron Job ALERT LeadsFactorty')
 		->addArgument('mode', InputArgument::OPTIONAL, 'set to true to force cronjob execution')
 		;
 	}
 
-    protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$isForced = $input->getArgument("mode");
-		if ($isForced) echo ("Force mode activated\r\n");
+    protected function execute(InputInterface $input, OutputInterface $output) {
 
-		// First Iterate over Types
+        $dayToTest = new \DateTime();
+        $dayToTest->sub(new \DateInterval('P1D'));
 
+        $dayForPeriodBefore = new \DateTime();
+        $dayToTest->sub(new \DateInterval('P9D'));
 
-        // Second iterate over Forms
+		// First Iterate over Scopes
+        $scopes = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Scope')->findAll();
+
+        foreach ( $scopes as $scope ) {
+
+            //$currentScope = return $this->get('security.context')->getToken()->getUser()->getScope()->getId();
+
+            $typesInError = array();
+            $typesInWarning = array();
+
+            // Second iterate over Types
+            $types = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:FormType')->findByScope($scope->getId());
+            foreach ( $types as $type ) {
+
+                $yesterdayLeads = $this->getTypeLeadsForDay( $dayToTest, $type->getId() );
+                echo ("Number of leads : ".$yesterdayLeads);
+
+            }
+
+            $formsInError = array();
+            $formsInWarning = array();
+
+            // Third, iterate over forms
+            $forms = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Form')->findByScope($scope->getId());
+            foreach ( $forms as $form ) {
+
+                
+
+            }
+
+        }
 
         // Done
 
+
 	}
 
-    public function addCronjob ( $cronjobService, $alias ) {
-		$this->cronjobs[$alias] = $cronjobService;
-	}
+    private function getTypeLeadsForDay ( $date, $type ) {
 
-    private function getTypes () {
-        $types = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
-    }
+        $query = $this->getContainer()->get("doctrine")->getManager()->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt = :minDate GROUP BY DAY(createdAt)');
+        $query->bindValue('minDate', $date);
+        $query->bindValue('formType', $type);
+        $query->execute();
+        $results = $query->fetchAll();
 
-    private function getForms () {
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
-    }
-
-    private function getDayValueForType ( $offset = 0 ) {
+        return $query->getResult();
 
     }
-
 
 }

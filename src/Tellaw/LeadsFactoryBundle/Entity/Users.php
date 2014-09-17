@@ -180,4 +180,5 @@ class Users implements UserInterface {
     {
         return $this->scope;
     }
+
 }

@@ -35,10 +35,7 @@ class MonitoringController extends Controller{
 
         $formBuilder = $this->createFormBuilder($data);
 
-        $formBuilder
-            ->setMethod('POST')
-            ->add('period', 'choice',
-                array(
+        $formBuilder->setMethod('POST')->add('period', 'choice',array(
                     'choices' => array(
                         'year'  => 'Année',
                         'month' => 'Mois'
@@ -93,7 +90,7 @@ class MonitoringController extends Controller{
         $chartData = $chart->loadChartData();
 
         //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
-        $template = (empty($formType) || !empty($form)) ? "TellawLeadsFactoryBundle:monitoring:chart.html.twig" : "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
+        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
 
         $data = array(
             'chart_data'        => $chartData,

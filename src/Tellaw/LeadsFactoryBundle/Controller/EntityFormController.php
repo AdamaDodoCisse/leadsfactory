@@ -20,7 +20,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  */
 class EntityFormController extends Controller
 {
-
     /**
      *
      * @Route("/form/list", name="_form_list")

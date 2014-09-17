@@ -11,6 +11,12 @@ use Tellaw\LeadsFactoryBundle\Entity\Form;
 
 class DataDao {
 
+    private function getDayValueForType ( $offset = 0 ) {
+
+
+
+    }
+
 
 
 }

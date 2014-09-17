@@ -63,6 +63,15 @@
  * 999600 : open selects over modals and notifications
  */
 
+.dashboard .columns #form div {
+    float:left;
+    margin-right:25px;
+}
+
+.dashboard .columns #form div label {
+    margin-right:10px;
+}
+
 /********************************************************/
 /*                       1. Global                      */
 /********************************************************/

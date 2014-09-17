@@ -19,6 +19,19 @@ class AlertUtils {
     public static $_STATUS_DATA_PROBLEM = 4; // Not used yet
 
     /**
+     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     */
+    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
      * @param integer $valueNow actual value
      * @param integer $valueOld Value for period -1
      * @param Array $rules of alerts (use getRules from Form and FormType)

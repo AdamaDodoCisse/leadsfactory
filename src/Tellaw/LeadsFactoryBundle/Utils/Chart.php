@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
 
 class Chart {
 
@@ -499,10 +500,65 @@ class Chart {
     {
         $specials = array();
         foreach($chartData as $key=>$data){
-            if($key >= (count($chartData) - $this->graph_count))
+            if($key > (count($chartData) - $this->graph_count))
                 $specials[] = $key;
         }
         $this->specialGraphIndexes = $specials;
     }
+
+    public function loadDemoData () {
+
+        echo ("Loading demo data\r\n");
+
+        $em = $this->container->get('doctrine')->getManager();
+        $forms = $this->container->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+
+        // Loop over forms
+        foreach ($forms as $form) {
+
+            $day = new \DateTime();
+            $dateInterval = new \DateInterval('P1D');
+
+            echo ("Processing form (".$form->getId()." -> ".$form->getName().")\r\n");
+
+                echo ("--> Deleting leads\r\n");
+
+                // Is not, delete anyleads for 2 years
+                $query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
+                $query->bindValue('form_id', $form->getId());
+                $query->execute();
+
+                // Reload leads for two years
+                for ( $i=0; $i<365; $i++ ) {
+
+                    // Random a number of leads for that day beetween 0 and 20
+                    $leadsNumberForDay = rand (0, 5);
+
+                    echo ("--> Creating Lead DAY : ".$i."/365 (form : ".$form->getId()." / number of leads to create : ".$leadsNumberForDay.")\r\n");
+
+                    $day->sub( $dateInterval );
+
+                    for ($j=0; $j<=$leadsNumberForDay; $j++) {
+
+                        $lead = new Leads();
+                        $lead->setFirstname("firstname-(".$j."/".$leadsNumberForDay.")-".rand());
+                        $lead->setLastname( "lastname-".rand() );
+                        $lead->setStatus( 1 );
+                        $lead->setFormType( $form->getFormType() );
+                        $lead->setForm( $form );
+                        $lead->setCreatedAt( $day );
+                        $em->persist($lead);
+                        $em->flush();
+                        unset ($lead);
+                    }
+
+                }
+
+
+            }
+
+
+    }
+
 
 } 

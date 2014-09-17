@@ -124,4 +124,10 @@ abstract class AbstractFieldType {
 
     }
 
+
+    public function getDemoValue ( $id ){
+        return "field-".$id."-autofill";
+    }
+
+
 }
