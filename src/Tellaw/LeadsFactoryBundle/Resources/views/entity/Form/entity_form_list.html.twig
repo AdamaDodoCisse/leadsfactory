@@ -20,13 +20,14 @@
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
                 <th scope="col">Actions</th>
+                <th scope="col"></th>
             </tr>
         </thead>
 
         <tbody>
 
             {% for item in forms %}
-                <tr onclick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">
+                <tr>
                     <td>{{ item.id }}</td>
                     <td>{{ item.name }}</td>
                     <td>{{ item.description }}</td>
@@ -37,7 +38,9 @@
                             <button type="button" class="button compact anthracite-gradient" style="margin:0px 0px 0px 5px" onClick="window.open('{{ path('_client_get_form', {'id': item.id}) }}');">Preview</button>
                             <button type="button" class="button compact orange-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_entity_leads_export', {'id': item.id}) }}'">Exporter</button>
                         </center>
+
                     </td>
+                    <td align="center"><a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.bookmark %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a></td>
                 </tr>
             {% endfor %}
 
@@ -74,6 +77,26 @@
             table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
             tableStyled = true;
         }
+    });
+
+    $(document).ready(function(){
+
+        //Bookmark
+        $('.bookmark-link').click(function(){
+            var el = this;
+            var form_id = $(this).attr('data-form-id');
+            var url = "{{ path('_monitoring_bookmark') }}";
+
+            var status = $(this).hasClass('starred') ? false : true;
+
+            $.post(url, {'entity':'Form', 'id': form_id, 'status':status}, function(){
+                if($(el).hasClass('starred')){
+                    $(el).removeClass('starred').addClass('unstarred');
+                }else{
+                    $(el).removeClass('unstarred').addClass('starred');
+                }
+            })
+        });
     });
 </script>
 {% endblock %}

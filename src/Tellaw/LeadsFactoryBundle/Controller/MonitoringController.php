@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Tellaw\LeadsFactoryBundle\Entity\Bookmark;
 use Tellaw\LeadsFactoryBundle\Utils\Chart;
 
 /**
@@ -129,6 +131,65 @@ class MonitoringController extends Controller{
             $options[$form->getId()] = $form->getName();
         }
         return $options;
+    }
+
+    /**
+     * @route("/bookmark", name="_monitoring_bookmark")
+     * @Secure(roles="ROLE_USER")
+     *
+     * @param string $entity Form|FormType
+     * @param int $id
+     * @param bool $status
+     */
+    public function bookmarkAction(Request $request)
+    {
+        $bookmarked = (bool) $request->request->get('status');
+
+        if($bookmarked){
+            $this->createBookmark($request);
+        }else{
+            $this->deleteBookmark($request);
+        }
+
+        return new Response('Done !');
+    }
+
+    /**
+     * @param $request
+     */
+    private function createBookmark($request)
+    {
+        $user = $this->getUser();
+        $entity = $request->request->get('entity');
+        $id = (int) $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $bookmark = new Bookmark();
+        $bookmark->setUser($user);
+        $bookmark->setEntityName($entity);
+        $bookmark->setEntityId($id);
+
+        $em->persist($bookmark);
+        $em->flush();
+    }
+
+    private function deleteBookmark($request)
+    {
+        $user = $this->getUser();
+        $entity = $request->request->get('entity');
+        $id = $request->request->get('id');
+
+        $em = $this->getDoctrine()->getManager();
+
+        $bookmark = $em->getRepository('TellawLeadsFactoryBundle:Bookmark')->findOneBy(array(
+           'user_id'       => $user,
+           'entity_name'   => $entity,
+           'entity_id'     => $id
+        ));
+
+        $em->remove($bookmark);
+        $em->flush();
     }
 
 } 

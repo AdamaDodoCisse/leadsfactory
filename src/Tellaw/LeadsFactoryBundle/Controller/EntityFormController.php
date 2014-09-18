@@ -29,13 +29,17 @@ class EntityFormController extends Controller
     public function indexAction(Request $request)
     {
 
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare('SELECT f.*, (b.id > 0) as bookmark FROM Form f LEFT JOIN bookmark b ON f.id = b.entity_id ');
+        $query->execute();
+        $forms = $query->fetchAll();
+
+        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Form:entity_form_list.html.twig',
             array(  'forms' => $forms )
         );
-
     }
 
     /**
