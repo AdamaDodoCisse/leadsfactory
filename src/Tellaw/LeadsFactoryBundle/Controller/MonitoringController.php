@@ -143,9 +143,9 @@ class MonitoringController extends Controller{
      */
     public function bookmarkAction(Request $request)
     {
-        $bookmarked = (bool) $request->request->get('status');
+        $bookmarked = $request->request->get('status');
 
-        if($bookmarked){
+        if($bookmarked == 'true'){
             $this->createBookmark($request);
         }else{
             $this->deleteBookmark($request);
@@ -183,7 +183,7 @@ class MonitoringController extends Controller{
         $em = $this->getDoctrine()->getManager();
 
         $bookmark = $em->getRepository('TellawLeadsFactoryBundle:Bookmark')->findOneBy(array(
-           'user_id'       => $user,
+           'user'       => $user,
            'entity_name'   => $entity,
            'entity_id'     => $id
         ));
