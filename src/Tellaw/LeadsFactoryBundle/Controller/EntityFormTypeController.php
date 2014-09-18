@@ -29,14 +29,23 @@ class EntityFormTypeController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $user = $this->getUser();
 
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare('
+            SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM FormType f
+            LEFT JOIN (SELECT * FROM bookmark WHERE user_id= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
+        ');
+        $query->bindValue('user_id', $user->getId());
+        $query->execute();
+        $forms = $query->fetchAll();
+
+        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/FormType:entity_formType_list.html.twig',
             array(  'forms' => $forms )
         );
-
     }
 
     /**

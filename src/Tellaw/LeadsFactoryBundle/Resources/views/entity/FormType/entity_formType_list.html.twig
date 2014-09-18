@@ -20,6 +20,7 @@
                             <th>Name</th>
                             <th>Description</th>
                             <th>Actions</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -36,6 +37,8 @@
                                     <button type="button" class="btns  green  m-sml-btn " style="margin:0px 0px 0px 5px">Preview</button>
                                     </center>
                                 </td>
+
+                                <td align="center"><a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.bookmark %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a></td>
                             </tr>
                         {% endfor %}
 
@@ -74,5 +77,26 @@
                 tableStyled = true;
             }
         });
+
+        $(document).ready(function(){
+
+            //Bookmark
+            $('.bookmark-link').click(function(){
+                var el = this;
+                var form_id = $(this).attr('data-form-id');
+                var url = "{{ path('_monitoring_bookmark') }}";
+
+                var status = $(this).hasClass('starred') ? false : true;
+
+                $.post(url, {'entity':'FormType', 'id': form_id, 'status':status}, function(){
+                    if($(el).hasClass('starred')){
+                        $(el).removeClass('starred').addClass('unstarred');
+                    }else{
+                        $(el).removeClass('unstarred').addClass('starred');
+                    }
+                })
+            });
+        });
+
     </script>
 {% endblock %}
