@@ -23,7 +23,7 @@ class MonitoringController extends Controller{
      */
     public function dashboardAction()
     {
-
+        return new Response('Dashboard');
     }
 
     /**

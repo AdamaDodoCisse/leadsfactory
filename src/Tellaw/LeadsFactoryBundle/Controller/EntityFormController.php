@@ -28,9 +28,14 @@ class EntityFormController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare('SELECT f.*, (b.id > 0) as bookmark FROM Form f LEFT JOIN bookmark b ON f.id = b.entity_id ');
+        $query = $em->getConnection()->prepare('
+            SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM Form f
+            LEFT JOIN (SELECT * FROM bookmark WHERE user_id= :user_id) AS b ON f.id = b.entity_id
+        ');
+        $query->bindValue('user_id', $user->getId());
         $query->execute();
         $forms = $query->fetchAll();
 
