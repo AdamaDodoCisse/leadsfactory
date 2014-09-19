@@ -1,0 +1,221 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <hgroup id="main-title" class="thin">
+        <h1>Tableau de bord</h1>
+    </hgroup>
+
+    <div class="dashboard">
+
+        <div class="columns">
+
+            {{ form(form) }}
+
+        </div>
+
+        <div class="columns">
+
+
+
+            <div class="nine-columns twelve-columns-mobile" id="demo-chart">
+                <!-- This div will hold the chart generated in the footer -->
+            </div>
+
+            <div class="three-columns twelve-columns-mobile new-row-mobile">
+                <ul class="stats split-on-mobile">
+                    <li><a href="#">
+                            <strong>XX</strong> max <br>accounts
+                        </a></li>
+                    <li><a href="#">
+                            <strong>35</strong> leads <br>en moyenne
+                        </a></li>
+                    <li>
+                        <strong>5</strong> Erreur(s)<br/>&nbsp;
+                    </li>
+                    <li>
+                        <strong>256</strong> Alerte(s)<br/>&nbsp;
+                    </li>
+                </ul>
+            </div>
+
+            </div>
+
+    </div>
+
+
+    </div>
+
+
+    <!-- Chart -->
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chartDashboard', {
+            "period" : app.request.get('form')['period'],
+            "type":  app.request.get('form')['type']
+        }
+        )) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chartDashboard')) }}
+    {% endif %}
+
+    <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
+
+    <!-- ==== DASHBOARD === -->
+
+    <div class="with-padding">
+
+        <h2 class="relative thin">
+            Mes Types favoris
+						<span class="info-spot">
+							<span class="icon-info-round"></span>
+							<span class="info-bubble">
+								Cette zone vous présente sur le dashboard les types de formulaires que vous avez ajoutés en 'bookmark'
+							</span>
+						</span>
+        </h2>
+
+        <div class="columns">
+
+            <div class="four-columns six-columns-tablet twelve-columns-mobile">
+                <div class="block large-margin-bottom">
+                    <div class="block-title">
+                        <h3>Type de test</h3>
+                        <span class="ribbon"><span class="ribbon-inner">Status OK</span></span>
+                    </div>
+                    <ul class="events">
+                        <li>
+                            <span class="event-date orange">8</span>
+                            Mouvement depuis la valeur de référence:<br>
+                            <span class="fact-progress green">-5% ▼</span>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+                <div class="block large-margin-bottom">
+                    <div class="block-title">
+                        <h3>Type de test</h3>
+                        <span class="ribbon"><span class="ribbon-inner red-gradient">Erreur</span></span>
+                    </div>
+                    <ul class="events">
+                        <li>
+                            <span class="event-date orange">8</span>
+                            Mouvement depuis la valeur de référence:<br>
+                            <span class="fact-progress red">-5% ▼</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="new-row-tablet four-columns twelve-columns-tablet">
+                <div class="block large-margin-bottom">
+                    <div class="block-title">
+                        <h3>Type de test</h3>
+                        <span class="ribbon"><span class="ribbon-inner orange-gradient">ALERTE!</span></span>
+                    </div>
+                    <ul class="events">
+                        <li>
+                            <span class="event-date orange">8</span>
+                            Mouvement depuis la valeur de référence:<br>
+                            <span class="fact-progress orange">-5% ▼</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="with-padding">
+
+        <h2 class="relative thin">
+            Mes Formulaires favoris
+						<span class="info-spot">
+							<span class="icon-info-round"></span>
+							<span class="info-bubble">
+								Cette zone vous présente sur le dashboard les formulaires que vous avez ajoutés en 'bookmark'
+							</span>
+						</span>
+        </h2>
+
+        <div class="columns">
+
+            <div class="four-columns six-columns-tablet twelve-columns-mobile">
+                <div class="block large-margin-bottom">
+                    <div class="block-title">
+                        <h3 onclick="window.location.href='/'">Formulaire de test</h3>
+                        <span class="ribbon"><span class="ribbon-inner">OK</span></span>
+                    </div>
+                    <ul class="events">
+                        <li>
+                            <span class="event-date orange">8</span>
+                            Mouvement depuis la valeur de référence:<br>
+                            <span class="fact-progress green">-5% ▼</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
+
+                <div class="block large-margin-bottom">
+                    <div class="block-title">
+                        <h3>Formulaire de test</h3>
+                        <span class="ribbon"><span class="ribbon-inner red-gradient">Erreur</span></span>
+                    </div>
+                    <ul class="events">
+                        <li>
+                            <span class="event-date orange">8</span>
+                            Mouvement depuis la valeur de référence:<br>
+                            <span class="fact-progress red">-5% ▼</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="new-row-tablet four-columns twelve-columns-tablet">
+                <div class="block large-margin-bottom">
+                    <div class="block-title">
+                        <h3>Formulaire de test</h3>
+                        <span class="ribbon"><span class="ribbon-inner orange-gradient">ALERTE!</span></span>
+                    </div>
+                    <ul class="events">
+                        <li>
+                            <span class="event-date orange">8</span>
+                            Mouvement depuis la valeur de référence:<br>
+                            <span class="fact-progress orange">-5% ▼</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+    // Table sort - DataTables
+    var table = $('#sorting-advanced');
+    table.dataTable({
+
+        'sPaginationType': 'full_numbers',
+        'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
+        'fnInitComplete': function( oSettings )
+        {
+            // Style length select
+            table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
+            tableStyled = true;
+        }
+    });
+</script>
+{% endblock %}

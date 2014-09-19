@@ -19,11 +19,74 @@ class MonitoringController extends Controller{
     /**
      * @route("/dashboard", name="_monitoring_dashboard")
      * @Secure(roles="ROLE_USER")
-     * @template()
+     * @template("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig")
      */
-    public function dashboardAction()
+    public function dashboardAction(Request $request)
     {
-        return new Response('Dashboard');
+        $data = array();
+
+        $formBuilder = $this->createFormBuilder($data);
+        $formBuilder->setMethod('POST')
+            ->add('period', 'choice',array(
+                    'choices' => array(
+                        'year'  => 'Année',
+                        'month' => 'Mois'
+                    ),
+                    'label' => 'Période',
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            )
+            ->add('type', 'choice',
+                array(
+                    'choices'   => array('' => 'Tous', 'type' => 'Types de formulaire', 'form' => 'Formulaires'),
+                    'label'     => 'Données',
+                    'required'  => false,
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            );
+
+        $form = $formBuilder->getForm();
+
+        $form->handleRequest($request);
+
+        return array(
+            'form'  => $form->createView()
+        );
+    }
+
+    public function chartDashboardAction($period=Chart::PERIOD_YEAR, $mode='FormType')
+    {
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare('
+            SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM FormType f
+            LEFT JOIN (SELECT * FROM bookmark WHERE user_id= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
+        ');
+        $query->bindValue('user_id', $user->getId());
+        $query->execute();
+        $formTypes = $query->fetchAll();
+
+        //$em->createQuery('SELECT f,b FROM TellawLeadsFactoryBundle:FormType f JOIN f.bookmark b WHERE b.user='.$user);
+
+        $chart = $this->get('chart');
+        $chart->setPeriod($period);
+        //$chart->setFormTypes($formTypes);
+
+        $chartData = $chart->loadChartData();
+
+        //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
+        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
+
+        $data = array(
+            'chart_data'        => $chartData,
+            'time_range'        => $chart->getTimeRange(),
+            'chart_title'       => $chart->getChartTitle(),
+            'special_graphs'    => $chart->getSpecialGraphIndexes($chartData) //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
+        );
+
+        return $this->render($template, $data);
+        $x=0;
     }
 
     /**
@@ -37,7 +100,8 @@ class MonitoringController extends Controller{
 
         $formBuilder = $this->createFormBuilder($data);
 
-        $formBuilder->setMethod('POST')->add('period', 'choice',array(
+        $formBuilder->setMethod('POST')
+            ->add('period', 'choice',array(
                     'choices' => array(
                         'year'  => 'Année',
                         'month' => 'Mois'
@@ -105,6 +169,9 @@ class MonitoringController extends Controller{
 
     }
 
+    /**
+     * @return array
+     */
     private function getFormTypesOptions()
     {
         $formTypes = $this->get('doctrine')->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
@@ -116,6 +183,10 @@ class MonitoringController extends Controller{
         return $array;
     }
 
+    /**
+     * @param $request
+     * @return array
+     */
     private function getFormOptions($request)
     {
         $form = $request->request->get('form');
@@ -160,15 +231,21 @@ class MonitoringController extends Controller{
     private function createBookmark($request)
     {
         $user = $this->getUser();
-        $entity = $request->request->get('entity');
+        $entity_type = $request->request->get('entity');
         $id = (int) $request->request->get('id');
 
         $em = $this->getDoctrine()->getManager();
 
+        $entity = $em->getRepository('TellawLeadsFactoryBundle:'.$entity_type)->find($id);
+
+        $entitySetter = 'set'.$entity_type;
+
         $bookmark = new Bookmark();
         $bookmark->setUser($user);
-        $bookmark->setEntityName($entity);
+        $bookmark->setEntityName($entity_type);
         $bookmark->setEntityId($id);
+        $bookmark->$entitySetter($entity);
+
 
         $em->persist($bookmark);
         $em->flush();

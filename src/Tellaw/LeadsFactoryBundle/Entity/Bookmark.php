@@ -39,6 +39,18 @@ class Bookmark {
     protected $entity_id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form")
+     * @ORM\JoinColumn(name="form", referencedColumnName="id")
+     */
+    protected $form;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\FormType")
+     * @ORM\JoinColumn(name="formType", referencedColumnName="id")
+     */
+    protected $formType;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -115,5 +127,51 @@ class Bookmark {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Set form
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
+     * @return Bookmark
+     */
+    public function setForm(\Tellaw\LeadsFactoryBundle\Entity\Form $form = null)
+    {
+        $this->form = $form;
+
+        return $this;
+    }
+
+    /**
+     * Get form
+     *
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
+     * Set formType
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\FormType $formType
+     * @return Bookmark
+     */
+    public function setFormType(\Tellaw\LeadsFactoryBundle\Entity\FormType $formType = null)
+    {
+        $this->formType = $formType;
+
+        return $this;
+    }
+
+    /**
+     * Get formType
+     *
+     * @return \Tellaw\LeadsFactoryBundle\Entity\FormType 
+     */
+    public function getFormType()
+    {
+        return $this->formType;
     }
 }
