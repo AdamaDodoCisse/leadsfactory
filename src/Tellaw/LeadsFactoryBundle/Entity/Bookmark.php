@@ -21,7 +21,7 @@ class Bookmark {
 
     /**
      * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Users")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     protected $user;
 
@@ -109,7 +109,7 @@ class Bookmark {
     /**
      * Set user
      *
-     * @param \Tellaw\LeadsFactoryBundle\Entity\User $user
+     * @param \Tellaw\LeadsFactoryBundle\Entity\User $users
      * @return Bookmark
      */
     public function setUser(\Tellaw\LeadsFactoryBundle\Entity\Users $user = null)
@@ -122,7 +122,7 @@ class Bookmark {
     /**
      * Get user
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\User 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Users
      */
     public function getUser()
     {

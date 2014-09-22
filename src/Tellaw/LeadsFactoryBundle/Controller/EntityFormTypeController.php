@@ -34,7 +34,7 @@ class EntityFormTypeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('
             SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM FormType f
-            LEFT JOIN (SELECT * FROM bookmark WHERE user_id= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
+            LEFT JOIN (SELECT * FROM bookmark WHERE user= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
         ');
         $query->bindValue('user_id', $user->getId());
         $query->execute();

@@ -27,20 +27,23 @@ class MonitoringController extends Controller{
 
         $formBuilder = $this->createFormBuilder($data);
         $formBuilder->setMethod('POST')
-            ->add('period', 'choice',array(
+            ->add('period', 'choice', array(
                     'choices' => array(
-                        'year'  => 'Année',
-                        'month' => 'Mois'
+                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_MONTH => 'Mois'
                     ),
                     'label' => 'Période',
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             )
-            ->add('type', 'choice',
-                array(
-                    'choices'   => array('' => 'Tous', 'type' => 'Types de formulaire', 'form' => 'Formulaires'),
+            ->add('mode', 'choice', array(
+                    'choices'   => array(
+                        'FormType' => 'Types de formulaire',
+                        'Form' => 'Formulaires'
+                    ),
+                    'data'      => 'FormType',
                     'label'     => 'Données',
-                    'required'  => false,
+                    /*'required'  => false,*/
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             );
@@ -59,19 +62,26 @@ class MonitoringController extends Controller{
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare('
+        /*$query = $em->getConnection()->prepare('
             SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM FormType f
             LEFT JOIN (SELECT * FROM bookmark WHERE user_id= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
         ');
         $query->bindValue('user_id', $user->getId());
         $query->execute();
-        $formTypes = $query->fetchAll();
-
-        //$em->createQuery('SELECT f,b FROM TellawLeadsFactoryBundle:FormType f JOIN f.bookmark b WHERE b.user='.$user);
+        $formTypes = $query->fetchAll();*/
 
         $chart = $this->get('chart');
         $chart->setPeriod($period);
-        //$chart->setFormTypes($formTypes);
+
+        if($mode == 'FormType'){
+            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b WHERE b.formType = f.id AND b.user ='.$user->getId());
+            $formTypes = $query->getResult();
+            $chart->setFormType($formTypes);
+        }else{
+            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:Bookmark b WHERE b.form = f.id AND b.user ='.$user->getId());
+            $forms = $query->getResult();
+            $chart->setForm($forms);
+        }
 
         $chartData = $chart->loadChartData();
 
@@ -148,6 +158,9 @@ class MonitoringController extends Controller{
      */
     public function chartAction($period='year', $formType=null, $form=null)
     {
+        if(!empty($form))
+            $form = array($form);
+
         $chart = $this->get('chart');
         $chart->setPeriod($period);
         $chart->setFormType($formType);

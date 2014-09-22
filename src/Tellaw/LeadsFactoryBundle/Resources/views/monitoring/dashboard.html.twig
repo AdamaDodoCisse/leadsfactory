@@ -51,7 +51,7 @@
     {% if(app.request.get('form')) %}
         {{ render(controller('TellawLeadsFactoryBundle:monitoring:chartDashboard', {
             "period" : app.request.get('form')['period'],
-            "type":  app.request.get('form')['type']
+            "mode":  app.request.get('form')['mode']
         }
         )) }}
     {% else %}

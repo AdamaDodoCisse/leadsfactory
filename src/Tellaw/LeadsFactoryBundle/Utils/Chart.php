@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 
 class Chart {
@@ -31,7 +32,7 @@ class Chart {
     private $formType;
 
     /**
-     * @var Form
+     * @var array
      */
     private $form;
 
@@ -104,7 +105,7 @@ class Chart {
      */
     public function setForm($form)
     {
-        $this->form = (is_numeric($form)) ? $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Form')->findOneById($form) : $form;
+        $this->form = $form;
     }
 
     /**
@@ -200,14 +201,20 @@ class Chart {
         $em = $this->container->get('doctrine')->getManager();
         $data = array();
 
-        $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
-        $query->bindValue('format', $this->_getSqlDateFormat());
-        $query->bindValue('minDate', $minDate);
-        $query->bindValue('form_id', $this->form->getId());
-        $query->execute();
-        $results = $query->fetchAll();
-        array_unshift($results, $this->form->getName());
-        $data[$this->form->getName()] = $results;
+        foreach($this->form as $form){
+
+            if(!($form instanceof Form))
+                $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->findOneById($form);
+
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+            $query->bindValue('format', $this->_getSqlDateFormat());
+            $query->bindValue('minDate', $minDate);
+            $query->bindValue('form_id', $form->getId());
+            $query->execute();
+            $results = $query->fetchAll();
+            array_unshift($results, $form->getName());
+            $data[$form->getName()] = $results;
+        }
 
         return $data;
     }
@@ -308,13 +315,13 @@ class Chart {
     private function _addAdditionalGraphs($chartData)
     {
         // En mode d'affichage d'un formulaire ou d'un type unique on ajoute la courbe moyenne
-        if(count($chartData) <= 1 || count($this->formType) == 1 )
+        //if(count($chartData) <= 1 || count($this->formType) == 1 )
             $chartData[] = $this->_addAverageGraph($chartData);
 
         //En mode d'affichage d'un type, on ajoute la courbe qui totalise les valeurs de chacun des formulaires
-        if(count($this->formType) == 1 && $this->graph_count > 1){
+        //if(count($this->formType) == 1 && $this->graph_count > 1)
             $chartData[] = $this->_addTotalGraph($chartData);
-        }
+
 
         //Set les courbes "spéciales" pour distinction dans le template
         if(count($chartData) != $this->graph_count)
@@ -503,8 +510,9 @@ class Chart {
     {
         $specials = array();
         foreach($chartData as $key=>$data){
-            if($key >= (count($chartData) - $this->graph_count))
+            if($key >= ($this->graph_count)){
                 $specials[] = $key;
+            }
         }
         $this->specialGraphIndexes = $specials;
     }
