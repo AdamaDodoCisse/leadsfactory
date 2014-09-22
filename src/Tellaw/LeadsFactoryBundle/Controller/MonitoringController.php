@@ -62,13 +62,6 @@ class MonitoringController extends Controller{
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        /*$query = $em->getConnection()->prepare('
-            SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM FormType f
-            LEFT JOIN (SELECT * FROM bookmark WHERE user_id= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
-        ');
-        $query->bindValue('user_id', $user->getId());
-        $query->execute();
-        $formTypes = $query->fetchAll();*/
 
         $chart = $this->get('chart');
         $chart->setPeriod($period);
@@ -96,7 +89,23 @@ class MonitoringController extends Controller{
         );
 
         return $this->render($template, $data);
-        $x=0;
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     * @template("TellawLeadsFactoryBundle:monitoring:measure.html.twig")
+     */
+    public function measureDashboardAction($mode = 'FormType')
+    {
+        $user = $this->getUser();
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:'.$mode.' f, TellawLeadsFactoryBundle:Bookmark b WHERE b.'.lcfirst($mode).' = f.id AND b.user ='.$user->getId());
+        $entities = $query->getResult();
+
+        return array(
+            'entities'  => $entities
+        );
     }
 
     /**
@@ -136,7 +145,6 @@ class MonitoringController extends Controller{
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             )
-            //->add('ok', 'submit')
             ;
 
         $form = $formBuilder->getForm();

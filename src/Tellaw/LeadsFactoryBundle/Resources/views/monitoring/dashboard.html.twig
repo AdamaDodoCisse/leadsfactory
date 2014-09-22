@@ -69,12 +69,22 @@
 						<span class="info-spot">
 							<span class="icon-info-round"></span>
 							<span class="info-bubble">
-								Cette zone vous présente sur le dashboard les types de formulaires que vous avez ajoutés en 'bookmark'
+								Cette zone vous présente sur le tableau de bord vos types de formulaires favoris.
 							</span>
 						</span>
         </h2>
 
         <div class="columns">
+
+            <!-- Chart -->
+            {% if(app.request.get('form')) %}
+                {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard', {
+                        "mode":  app.request.get('form')['mode']
+                    }
+                )) }}
+            {% else %}
+                {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard')) }}
+            {% endif %}
 
             <div class="four-columns six-columns-tablet twelve-columns-mobile">
                 <div class="block large-margin-bottom">
