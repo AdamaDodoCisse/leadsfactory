@@ -6,9 +6,9 @@
         <h1>Administration des formulaires</h1>
     </hgroup>
 
-    <div class="columns">
+<div class="with-padding">
 
-    <div class="eight-columns with-padding">
+    <div class="twelves-columns">
 
         <h3 class="thin underline">Liste des formulaires</h3>
 
@@ -51,17 +51,17 @@
 </div>
 
 
-<div class="three-columns with-padding">
+    <div class="four-columns">
 
-    <h3 class="thin underline">Actions</h3>
+        <h3 class="thin underline">Actions</h3>
 
-    <p class="button-height">
-        <a href="{{ path ('_form_new') }}" class="button huge full-width green-gradient glossy">Créer un formulaire</a>
-    </p>
+        <p class="button-height">
+            <a href="{{ path ('_form_new') }}" class="button huge full-width green-gradient glossy">Créer un formulaire</a>
+        </p>
+
+    </div>
 
 </div>
-</div>
-
 {% endblock %}
 {% block javascript %}
 <script>

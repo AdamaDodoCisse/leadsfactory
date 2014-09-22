@@ -24,7 +24,6 @@ class DemoModeCommand extends ContainerAwareCommand {
 
         $this->getContainer()->get("chart")->loadDemoData();
 
-
 	}
 
 }

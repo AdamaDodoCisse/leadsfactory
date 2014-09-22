@@ -103,8 +103,10 @@ class MonitoringController extends Controller{
         $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:'.$mode.' f, TellawLeadsFactoryBundle:Bookmark b WHERE b.'.lcfirst($mode).' = f.id AND b.user ='.$user->getId());
         $entities = $query->getResult();
 
+
         return array(
-            'entities'  => $entities
+            'entities'  => $entities,
+	        'alerteutil' => $this->get("alertes_utils")
         );
     }
 

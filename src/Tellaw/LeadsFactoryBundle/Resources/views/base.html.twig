@@ -123,16 +123,7 @@
 <!-- Prompt IE 6 users to install Chrome Frame -->
 <!--[if lt IE 7]><p class="message red-gradient simpler">Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
 
-<!-- Title bar -->
-<header role="banner" id="title-bar">
-    <h2>LEAD'S FACTORY</h2>
-</header>
 
-<!-- Button to open/hide menu -->
-<a href="#" id="open-menu"><span>Menu</span></a>
-
-<!-- Button to open/hide shortcuts -->
-<a href="#" id="open-shortcuts"><span class="icon-thumbs"></span></a>
 
 <!-- Main content -->
 <section role="main" id="main">
@@ -141,10 +132,22 @@
 
 </section>
 <!-- End main content -->
-
+<!--
 <ul id="shortcuts" role="complementary" class="children-tooltip tooltip-right">
     <li class="current"><a href="./" class="shortcut-dashboard" title="Dashboard">Dashboard</a></li>
+</ul>-->
+<!-- Side tabs shortcuts -->
+<ul class="children-tooltip tooltip-left" role="complementary" id="shortcuts">
+    <li class="current"><a title="Dashboard" class="shortcut-dashboard" href="./">Dashboard</a></li>
+    <li class=""><a title="Messages" class="shortcut-messages" href="inbox.html">Messages</a></li>
+    <li class=""><a title="Agenda" class="shortcut-agenda" href="agenda.html">Agenda</a></li>
+    <li><a title="Contacts" class="shortcut-contacts" href="tables.html">Contacts</a></li>
+    <li><a title="Medias" class="shortcut-medias" href="explorer.html">Medias</a></li>
+    <li><a title="Stats" class="shortcut-stats" href="sliders.html">Stats</a></li>
+    <li class="at-bottom"><a title="Settings" class="shortcut-settings" href="form.html">Settings</a></li>
+    <li><span title="Notes" class="shortcut-notes">Notes</span></li>
 </ul>
+
 <!-- Sidebar/drop-down menu -->
 <section id="menu" role="complementary">
 
@@ -198,60 +201,6 @@
 // Call template init (optional, but faster if called manually)
 $.template.init();
 
-// Favicon count
-Tinycon.setBubble(2);
-
-// If the browser support the Notification API, ask user for permission (with a little delay)
-if (notify.hasNotificationAPI() && !notify.isNotificationPermissionSet())
-{
-    setTimeout(function()
-    {
-        notify.showNotificationPermission('Your browser supports desktop notification, click here to enable them.', function()
-        {
-            // Confirmation message
-            if (notify.hasNotificationPermission())
-            {
-                notify('Notifications API enabled!', 'You can now see notifications even when the application is in background', {
-                    icon: 'img/demo/icon.png',
-                    system: true
-                });
-            }
-            else
-            {
-                notify('Notifications API disabled!', 'Desktop notifications will not be used.', {
-                    icon: 'img/demo/icon.png'
-                });
-            }
-        });
-
-    }, 2000);
-}
-
-/*
- * Handling of 'other actions' menu
- */
-
-var otherActions = $('#otherActions'),
-        current = false;
-
-// Other actions
-$('.list .button-group a:nth-child(2)').menuTooltip('Loading...', {
-
-    classes: ['with-mid-padding'],
-    ajax: 'ajax-demo/tooltip-content.html',
-
-    onShow: function(target)
-    {
-        // Remove auto-hide class
-        target.parent().removeClass('show-on-parent-hover');
-    },
-
-    onRemove: function(target)
-    {
-        // Restore auto-hide class
-        target.parent().addClass('show-on-parent-hover');
-    }
-});
 
 
 </script>

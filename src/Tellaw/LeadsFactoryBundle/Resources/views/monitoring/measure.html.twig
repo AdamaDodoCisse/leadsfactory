@@ -1,17 +1,18 @@
 
 {% for item in entities %}
+{{ alerteutil.setTypeValuesForAlerts(item) }}
 
 <div class="four-columns six-columns-tablet twelve-columns-mobile">
     <div class="block large-margin-bottom">
         <div class="block-title">
             <h3>{{ item.name }}</h3>
-            <span class="ribbon"><span class="ribbon-inner">Status OK</span></span>
+            <span class="ribbon"><span class="ribbon-inner  {{ item.yesterdayStatusColor }}-gradient">{{ item.yesterdayStatusText }}</span></span>
         </div>
         <ul class="events">
             <li>
-                <span class="event-date orange">8</span>
+                <span class="event-date  {{ item.yesterdayStatusColor }}">{{ item.yesterdayValue }}</span>
                 Mouvement depuis la valeur de référence:<br>
-                <span class="fact-progress green">-5% ▼</span>
+                <span class="fact-progress  {{ item.yesterdayStatusColor }}">{{ item.yesterdayVariation }} % (ancienne valeur : {{ item.weekBeforeValue }})</span>
 
             </li>
         </ul>

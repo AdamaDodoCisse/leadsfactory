@@ -214,4 +214,10 @@ class FormType {
         return json_decode(trim($this->getAlertRules()), true);
     }
 
+	public $yesterdayValue = null;
+	public $weekBeforeValue = null;
+	public $yesterdayStatusColor = null;
+	public $yesterdayStatusText = null;
+	public $yesterdayVariation = null;
+
 }

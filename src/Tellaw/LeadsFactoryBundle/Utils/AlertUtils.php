@@ -42,26 +42,33 @@ class AlertUtils {
         $warningRules = $this->getWarningRules( $rules );
         $alertRules = $this->getAlertRules( $rules );
 
-        // Alert Detection
-        if ($alertRules["min"] != null && $valueNow <= $alertRules["min"] )
-            return AlertUtils::$_STATUS_ERROR;
+	    if ( count ($alertRules) > 0 ) {
 
-        if ($alertRules["max"] != null && $valueNow >= $alertRules["max"] )
-            return AlertUtils::$_STATUS_ERROR;
+	        // Alert Detection
+	        if ($alertRules["min"] != null && $valueNow <= $alertRules["min"] )
+	            return AlertUtils::$_STATUS_ERROR;
 
-        if ($alertRules["delta"] != null && $this->getDeltaPourcent( $valueOld, $valueNow ) > $alertRules["delta"] )
-            return AlertUtils::$_STATUS_ERROR;
+	        if ($alertRules["max"] != null && $valueNow >= $alertRules["max"] )
+	            return AlertUtils::$_STATUS_ERROR;
 
-        // Warning detection
-        if ($warningRules["min"] != null && $valueNow <= $warningRules["min"] )
-            return AlertUtils::$_STATUS_WARNING;
+	        if ($alertRules["delta"] != null && $this->getDeltaPourcent( $valueOld, $valueNow ) > $alertRules["delta"] )
+	            return AlertUtils::$_STATUS_ERROR;
 
-        if ($warningRules["max"] != null && $valueNow >= $warningRules["max"] )
-            return AlertUtils::$_STATUS_WARNING;
+	    }
 
-        if ($warningRules["delta"] != null && $this->getDeltaPourcent( $valueOld, $valueNow ) > $warningRules["delta"] )
-            return AlertUtils::$_STATUS_WARNING;
+	    if ( count ($warningRules) > 0 ) {
 
+	        // Warning detection
+	        if ($warningRules["min"] != null && $valueNow <= $warningRules["min"] )
+	            return AlertUtils::$_STATUS_WARNING;
+
+	        if ($warningRules["max"] != null && $valueNow >= $warningRules["max"] )
+	            return AlertUtils::$_STATUS_WARNING;
+
+	        if ($warningRules["delta"] != null && $this->getDeltaPourcent( $valueOld, $valueNow ) > $warningRules["delta"] )
+	            return AlertUtils::$_STATUS_WARNING;
+
+	    }
 
         return AlertUtils::$_STATUS_OK;
 
@@ -76,16 +83,22 @@ class AlertUtils {
 
         $warningRules = $rules["warning"];
 
-        if ( !array_key_exists( "min", $warningRules ) )
-            $warningRules["min"]=null;
+	    if ( trim($warningRules) != "" ) {
 
-        if ( !array_key_exists( "max", $warningRules ) )
-            $warningRules["min"]=null;
+	        if ( !array_key_exists( "min", $warningRules ) )
+	            $warningRules["min"]=null;
 
-        if ( !array_key_exists( "delta", $warningRules ) )
-            $warningRules["min"]=null;
+	        if ( !array_key_exists( "max", $warningRules ) )
+	            $warningRules["min"]=null;
 
-        return $warningRules;
+	        if ( !array_key_exists( "delta", $warningRules ) )
+	            $warningRules["min"]=null;
+
+	        return $warningRules;
+
+	    }
+
+		return array();
 
     }
 
@@ -96,18 +109,24 @@ class AlertUtils {
      */
     public function getAlertRules ( $rules ) {
 
-        $alertRules = $rules["warning"];
+        $alertRules = $rules["alerts"];
 
-        if ( !array_key_exists( "min", $alertRules ) )
-            $alertRules["min"]=null;
+	    if ( trim($alertRules) != "" ) {
 
-        if ( !array_key_exists( "max", $alertRules ) )
-            $alertRules["min"]=null;
+	        if ( !array_key_exists( "min", $alertRules ) )
+	            $alertRules["min"]=null;
 
-        if ( !array_key_exists( "delta", $alertRules ) )
-            $alertRules["min"]=null;
+	        if ( !array_key_exists( "max", $alertRules ) )
+	            $alertRules["min"]=null;
 
-        return $alertRules;
+	        if ( !array_key_exists( "delta", $alertRules ) )
+	            $alertRules["min"]=null;
+
+	        return $alertRules;
+
+	    }
+
+	    return array();
 
     }
 
@@ -125,5 +144,73 @@ class AlertUtils {
         return $pourcent;
 
     }
+
+	public function setTypeValuesForAlerts ( $item ) {
+
+		$em = $this->container->get("doctrine")->getManager();
+
+		$minDate = new \DateTime();
+		$minDate = $minDate->sub(new \DateInterval("P01D"))->format('Y-m-d');
+
+		$forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($item->getId());
+
+		$value = 0;
+
+		foreach($forms as $form){
+
+			$query = $em->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate GROUP BY DAY(createdAt)');
+			$query->bindValue('minDate', $minDate);
+			$query->bindValue('form_id', $form->getId());
+			$query->execute();
+			$results = $query->fetchAll();
+
+			if (count ($results>0))
+				$value = $results[0]["count"] + $value;
+		}
+
+		// Set the value
+		$item->yesterdayValue = $value;
+
+		// Get the value for week before
+		$minDate = new \DateTime();
+		$minDate = $minDate->sub(new \DateInterval("P09D"))->format('Y-m-d');
+
+		$value = 0;
+
+		foreach($forms as $form){
+
+			$query = $em->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate GROUP BY DAY(createdAt)');
+			$query->bindValue('minDate', $minDate);
+			$query->bindValue('form_id', $form->getId());
+			$query->execute();
+			$results = $query->fetchAll();
+
+			if (count ($results>0))
+				$value = $results[0]["count"] + $value;
+		}
+
+		// Set the value
+		$item->weekBeforeValue = $value;
+
+		$item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
+
+		$status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getAlertRules() );
+
+		if ( $status == AlertUtils::$_STATUS_ERROR ) {
+
+			$item->yesterdayStatusColor = "red";
+			$item->yesterdayStatusText = "Erreur";
+
+		} else if ( $status == AlertUtils::$_STATUS_WARNING ) {
+
+			$item->yesterdayStatusColor = "orange";
+			$item->yesterdayStatusText = "Attention!";
+
+		} else {
+			$item->yesterdayStatusColor = "green";
+			$item->yesterdayStatusText = "Status OK";
+		}
+
+	}
 
 }
