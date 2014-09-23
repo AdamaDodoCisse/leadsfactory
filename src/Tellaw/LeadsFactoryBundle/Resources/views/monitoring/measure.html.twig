@@ -1,22 +1,36 @@
 
-{% for item in entities %}
-{{ alerteutil.setTypeValuesForAlerts(item) }}
 
-<div class="four-columns six-columns-tablet twelve-columns-mobile">
-    <div class="block large-margin-bottom">
-        <div class="block-title">
-            <h3>{{ item.name }}</h3>
-            <span class="ribbon"><span class="ribbon-inner  {{ item.yesterdayStatusColor }}-gradient">{{ item.yesterdayStatusText }}</span></span>
+<h2 class="relative thin">
+    {{ title }}
+    <span class="info-spot">
+        <span class="icon-info-round"></span>
+        <span class="info-bubble">Cette zone vous présente sur le tableau de bord vos favoris.</span>
+    </span>
+</h2>
+
+<div class="columns">
+
+    {% for item in entities %}
+
+    {{ alerteutil.setValuesForAlerts(item) }}
+
+    <div class="four-columns six-columns-tablet twelve-columns-mobile">
+        <div class="block large-margin-bottom">
+            <div class="block-title">
+                <h3>{{ item.name }}</h3>
+                <span class="ribbon"><span class="ribbon-inner  {{ item.yesterdayStatusColor }}-gradient">{{ item.yesterdayStatusText }}</span></span>
+            </div>
+            <ul class="events">
+                <li>
+                    <span class="event-date  {{ item.yesterdayStatusColor }}">{{ item.yesterdayValue }}</span>
+                    Mouvement depuis la valeur de référence:<br>
+                    <span class="fact-progress  {{ item.yesterdayStatusColor }}">{{ item.yesterdayVariation|raw }} % (ancienne valeur : {{ item.weekBeforeValue }})</span>
+
+                </li>
+            </ul>
         </div>
-        <ul class="events">
-            <li>
-                <span class="event-date  {{ item.yesterdayStatusColor }}">{{ item.yesterdayValue }}</span>
-                Mouvement depuis la valeur de référence:<br>
-                <span class="fact-progress  {{ item.yesterdayStatusColor }}">{{ item.yesterdayVariation }} % (ancienne valeur : {{ item.weekBeforeValue }})</span>
-
-            </li>
-        </ul>
     </div>
-</div>
 
-{% endfor %}
+    {% endfor %}
+
+</div>

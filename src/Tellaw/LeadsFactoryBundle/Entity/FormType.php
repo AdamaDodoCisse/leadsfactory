@@ -211,7 +211,8 @@ class FormType {
     }
 
     public function getRules () {
-        return json_decode(trim($this->getAlertRules()), true);
+        $alertRules = json_decode(trim($this->getAlertRules()), true);
+        return $alertRules;
     }
 
 	public $yesterdayValue = null;

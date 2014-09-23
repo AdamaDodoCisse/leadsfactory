@@ -39,7 +39,7 @@ class AlertUtils {
      */
     public function checkWarningStatus ( $valueNow, $valueOld, $rules ) {
 
-        $warningRules = $this->getWarningRules( $rules );
+        $warningRules = $this->getWarningRules( $rules['rules'] );
         $alertRules = $this->getAlertRules( $rules );
 
 	    if ( count ($alertRules) > 0 ) {
@@ -81,9 +81,9 @@ class AlertUtils {
      */
     public function getWarningRules ( $rules ) {
 
-        $warningRules = $rules["warning"];
+        $warningRules = isset($rules['warning']) ? $rules['warning'] : false;
 
-	    if ( trim($warningRules) != "" ) {
+	    if ( is_array($warningRules) ) {
 
 	        if ( !array_key_exists( "min", $warningRules ) )
 	            $warningRules["min"]=null;
@@ -109,9 +109,9 @@ class AlertUtils {
      */
     public function getAlertRules ( $rules ) {
 
-        $alertRules = $rules["alerts"];
+        $alertRules = isset($rules['error']) ? $rules['error'] : false;
 
-	    if ( trim($alertRules) != "" ) {
+	    if ( is_array($alertRules) ) {
 
 	        if ( !array_key_exists( "min", $alertRules ) )
 	            $alertRules["min"]=null;
@@ -145,14 +145,21 @@ class AlertUtils {
 
     }
 
-	public function setTypeValuesForAlerts ( $item ) {
+	public function setValuesForAlerts ( $item ) {
 
-		$em = $this->container->get("doctrine")->getManager();
+        $itemClass = get_class($item);
 
-		$minDate = new \DateTime();
-		$minDate = $minDate->sub(new \DateInterval("P01D"))->format('Y-m-d');
+        $em = $this->container->get("doctrine")->getManager();
 
-		$forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($item->getId());
+        if($itemClass == 'Tellaw\LeadsFactoryBundle\Entity\FormType'){
+            $forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($item->getId());
+        }else{
+            $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->find($item->getId());
+            $forms = array($form);
+        }
+
+        $minDate = new \DateTime();
+        $minDate = $minDate->sub(new \DateInterval("P01D"))->format('Y-m-d');
 
 		$value = 0;
 
@@ -164,7 +171,7 @@ class AlertUtils {
 			$query->execute();
 			$results = $query->fetchAll();
 
-			if (count ($results>0))
+			if (count ($results)>0)
 				$value = $results[0]["count"] + $value;
 		}
 
@@ -194,7 +201,13 @@ class AlertUtils {
 
 		$item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
 
-		$status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getAlertRules() );
+        $rules = $item->getRules();
+
+        if(empty($rules)){
+            $status = AlertUtils::$_STATUS_ERROR;
+        }else{
+		    $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
+        }
 
 		if ( $status == AlertUtils::$_STATUS_ERROR ) {
 

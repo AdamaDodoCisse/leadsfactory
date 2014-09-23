@@ -16,8 +16,6 @@
 
         <div class="columns">
 
-
-
             <div class="nine-columns twelve-columns-mobile" id="demo-chart">
                 <!-- This div will hold the chart generated in the footer -->
             </div>
@@ -39,12 +37,12 @@
                 </ul>
             </div>
 
-            </div>
+        </div>
 
     </div>
 
 
-    </div>
+
 
 
     <!-- Chart -->
@@ -64,95 +62,11 @@
 
     <div class="with-padding">
 
-        <h2 class="relative thin">
-            Mes Types favoris
-						<span class="info-spot">
-							<span class="icon-info-round"></span>
-							<span class="info-bubble">
-								Cette zone vous présente sur le tableau de bord vos types de formulaires favoris.
-							</span>
-						</span>
-        </h2>
-
-        <div class="columns">
-
-            <!-- Chart -->
-            {% if(app.request.get('form')) %}
-                {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard', {
-                        "mode":  app.request.get('form')['mode']
-                    }
-                )) }}
-            {% else %}
-                {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard')) }}
-            {% endif %}
-
-    </div>
-
-    <div class="with-padding">
-
-        <h2 class="relative thin">
-            Mes Formulaires favoris
-						<span class="info-spot">
-							<span class="icon-info-round"></span>
-							<span class="info-bubble">
-								Cette zone vous présente sur le dashboard les formulaires que vous avez ajoutés en 'bookmark'
-							</span>
-						</span>
-        </h2>
-
-        <div class="columns">
-
-            <div class="four-columns six-columns-tablet twelve-columns-mobile">
-                <div class="block large-margin-bottom">
-                    <div class="block-title">
-                        <h3 onclick="window.location.href='/'">Formulaire de test</h3>
-                        <span class="ribbon"><span class="ribbon-inner">OK</span></span>
-                    </div>
-                    <ul class="events">
-                        <li>
-                            <span class="event-date orange">8</span>
-                            Mouvement depuis la valeur de référence:<br>
-                            <span class="fact-progress green">-5% ▼</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="new-row-mobile four-columns six-columns-tablet twelve-columns-mobile">
-
-                <div class="block large-margin-bottom">
-                    <div class="block-title">
-                        <h3>Formulaire de test</h3>
-                        <span class="ribbon"><span class="ribbon-inner red-gradient">Erreur</span></span>
-                    </div>
-                    <ul class="events">
-                        <li>
-                            <span class="event-date orange">8</span>
-                            Mouvement depuis la valeur de référence:<br>
-                            <span class="fact-progress red">-5% ▼</span>
-                        </li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <div class="new-row-tablet four-columns twelve-columns-tablet">
-                <div class="block large-margin-bottom">
-                    <div class="block-title">
-                        <h3>Formulaire de test</h3>
-                        <span class="ribbon"><span class="ribbon-inner orange-gradient">ALERTE!</span></span>
-                    </div>
-                    <ul class="events">
-                        <li>
-                            <span class="event-date orange">8</span>
-                            Mouvement depuis la valeur de référence:<br>
-                            <span class="fact-progress orange">-5% ▼</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard', {"mode":  app.request.get('form')['mode']})) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard')) }}
+    {% endif %}
 
     </div>
 

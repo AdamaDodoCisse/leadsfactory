@@ -103,10 +103,17 @@ class MonitoringController extends Controller{
         $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:'.$mode.' f, TellawLeadsFactoryBundle:Bookmark b WHERE b.'.lcfirst($mode).' = f.id AND b.user ='.$user->getId());
         $entities = $query->getResult();
 
+        if($mode == 'FormType'){
+            $title = 'Mes types favoris';
+        }else{
+            $title = 'Mes formulaires favoris';
+        }
+
 
         return array(
             'entities'  => $entities,
-	        'alerteutil' => $this->get("alertes_utils")
+	        'alerteutil' => $this->get("alertes_utils"),
+            'title'  => $title
         );
     }
 
