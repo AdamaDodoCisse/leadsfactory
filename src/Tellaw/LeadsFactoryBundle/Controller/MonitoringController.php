@@ -118,6 +118,33 @@ class MonitoringController extends Controller{
     }
 
     /**
+     * @Secure(roles="ROLE_USER")
+     * @template("TellawLeadsFactoryBundle:monitoring:measure.html.twig")
+     */
+    public function measureAction($formType=null, $form=null)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        if(!empty($form)){
+            $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->find($form);
+            $entities = array($form);
+            $title = 'Formulaire '.$form->getName();
+        }elseif(!empty($formType)){
+            $entities = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($formType);
+            $title = "Tous les formulaires du type sélectionné";
+        }else{
+            $entities = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
+            $title = "Tous les types de formulaires";
+        }
+
+        return array(
+            'entities'  => $entities,
+            'alerteutil' => $this->get("alertes_utils"),
+            'title'  => $title
+        );
+    }
+
+    /**
      * @route("/index", name="_monitoring_index")
      * @Secure(roles="ROLE_USER")
      * @template("TellawLeadsFactoryBundle:monitoring:index.html.twig")

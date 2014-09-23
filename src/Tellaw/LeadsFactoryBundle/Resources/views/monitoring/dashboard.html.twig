@@ -62,11 +62,11 @@
 
     <div class="with-padding">
 
-    {% if(app.request.get('form')) %}
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard', {"mode":  app.request.get('form')['mode']})) }}
-    {% else %}
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard')) }}
-    {% endif %}
+        {% if(app.request.get('form')) %}
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard', {"mode":  app.request.get('form')['mode']})) }}
+        {% else %}
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:measureDashboard')) }}
+        {% endif %}
 
     </div>
 
