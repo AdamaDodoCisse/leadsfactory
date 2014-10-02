@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityReferenceListController extends Controller
+class EntityReferenceListController extends AbstractLeadsController
 {
 
     /**
@@ -36,7 +36,7 @@ class EntityReferenceListController extends Controller
         $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_list.html.twig',
+            $this->getBaseTheme().':entity/ReferenceList:entity_referenceList_list.html.twig',
             array(  'forms' => $forms )
         );
 
@@ -71,7 +71,7 @@ class EntityReferenceListController extends Controller
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/ReferenceList:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'une liste de référence",
                                                                                                     'refernceListId' => '-1'));
     }
@@ -119,7 +119,7 @@ class EntityReferenceListController extends Controller
 
         $form->get('json')->setData("Test");
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig',
+        return $this->render($this->getBaseTheme().':entity/ReferenceList:entity_referenceList_edit.html.twig',
                                 array(  'form' => $form->createView(),
                                         'elements'=> $formData->getElements(),
                                         'title' => "Edition d'une liste de référence",
@@ -184,7 +184,7 @@ class EntityReferenceListController extends Controller
      * @Template()
      */
     public function addElementWidgetAction (Request $request, $referenceListId) {
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:modal.html.twig', array ("referenceListId" => $referenceListId));
+        return $this->render($this->getBaseTheme().':entity/ReferenceList:modal.html.twig', array ("referenceListId" => $referenceListId));
     }
 
     /**

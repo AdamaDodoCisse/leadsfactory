@@ -20,7 +20,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class ExportController extends Controller
+class ExportController extends AbstractLeadsController
 {
 
     /**
@@ -63,7 +63,7 @@ class ExportController extends Controller
     {
         $jobs = $this->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Export')->findAll();
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
+            $this->getBaseTheme().':entity/Export:list.html.twig',
             array('jobs' => $jobs)
         );
     }

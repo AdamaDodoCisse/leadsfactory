@@ -1,0 +1,92 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
+{% block body %}
+
+    <hgroup id="main-title" class="thin">
+        <h1>Tableau de bord</h1>
+    </hgroup>
+
+    <div class="dashboard">
+
+        <div class="columns">
+
+            {{ form(form) }}
+
+        </div>
+
+        <div class="columns">
+
+            <div class="nine-columns twelve-columns-mobile" id="demo-chart">
+                <!-- This div will hold the chart generated in the footer -->
+            </div>
+
+            <div class="three-columns twelve-columns-mobile new-row-mobile">
+                <ul class="stats split-on-mobile">
+                    <li><a href="#">
+                            <strong>XX</strong> max <br>accounts
+                        </a></li>
+                    <li><a href="#">
+                            <strong>35</strong> leads <br>en moyenne
+                        </a></li>
+                    <li>
+                        <strong>5</strong> Erreur(s)<br/>&nbsp;
+                    </li>
+                    <li>
+                        <strong>256</strong> Alerte(s)<br/>&nbsp;
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+    <!-- Chart -->
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:chartDashboard', {
+            "period" : app.request.get('form')['period'],
+            "mode":  app.request.get('form')['mode']
+        }
+        )) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:chartDashboard')) }}
+    {% endif %}
+
+    <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
+
+    <!-- ==== DASHBOARD === -->
+
+    <div class="with-padding">
+
+        {% if(app.request.get('form')) %}
+            {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:measureDashboard', {"mode":  app.request.get('form')['mode']})) }}
+        {% else %}
+            {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:measureDashboard')) }}
+        {% endif %}
+
+    </div>
+
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+    // Table sort - DataTables
+    var table = $('#sorting-advanced');
+    table.dataTable({
+
+        'sPaginationType': 'full_numbers',
+        'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
+        'fnInitComplete': function( oSettings )
+        {
+            // Style length select
+            table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
+            tableStyled = true;
+        }
+    });
+</script>
+{% endblock %}

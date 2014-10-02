@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Front End</title>
+
+
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=PT+Sans:700,400' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+
+
+<!-- Styles -->
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" /><!-- Bootstrap -->
+<link rel="stylesheet" href="font-awesome-4.0.3/css/font-awesome.css" type="text/css" /><!-- Font Awesome -->
+
+<link rel="stylesheet" href="css/front-end.css" type="text/css" /><!-- Style -->	
+<link rel="stylesheet" href="css/responsive.css" type="text/css" /><!-- Responsive -->	
+<link href="css/owl.carousal.css" rel="stylesheet">
+<link rel="stylesheet" href="css/nv.d3.css" type="text/css" /><!-- VISITOR CHART -->
+
+
+
+ 
+<!-- Script -->
+<script src="js/jquery-1.10.2.js"></script><!-- Jquery -->
+<script src="js/bootstrap.min.js"></script><!-- Bootstrap -->
+<script src="js/front-end.js"></script><!-- Script -->
+<script src="js/carousal-plugins.js"></script><!-- Carousal Plugin -->
+<script src="js/html5lightbox.js" type="text/javascript"></script><!-- HTML5 Lightbox -->
+<script src="js/owl.carousel.min.js" type="text/javascript"></script>
+<script type="text/javascript"  src="js/d3.v2.js"></script><!-- VISITOR CHART -->
+<script type="text/javascript"  src="js/nv.d3.js"></script><!-- VISITOR CHART -->
+<script type="text/javascript"  src="js/live-updating-chart.js"></script><!-- VISITOR CHART -->
+<script src="js/enscroll-0.5.2.min.js"></script> <!-- Custom Scroll bar -->
+<script src="js/jquery.easypiechart.min.js"></script> <!-- Easy Pie Chart -->
+<script src="js/front-end2.js"></script> <!-- Easy Pie Chart -->
+
+
+
+	<script type="text/javascript">
+	jQuery(document).ready(function(){
+	jQuery('#viewport').carousel('#simplePrevious', '#simpleNext');  
+	});
+	</script>
+
+</head>
+<body>
+
+				
+	<div class="header-sec">
+		<div class="light-blue">
+			<div class="fixed-img sec-bg1"></div>
+			
+				<header id="home">
+				
+				<div class="header2">
+					<div class="logo">
+						<img src="images/logo2.png" alt="" />
+					</div>
+					
+					<ul>
+						<li><a href="#" title=""><i class="fa fa-facebook"></i></a></li>
+						<li><a href="#" title=""><i class="fa fa-twitter"></i></a></li>
+						<li><a href="#" title=""><i class="fa fa-google-plus"></i></a></li>
+						<li><a href="#" title=""><i class="fa fa-linkedin"></i></a></li>
+					</ul>
+
+					<div class="header-btns">
+						<A href="#" class="sign-in-btn">SIGN IN</a>
+						<A href="#" class="sign-up-btn">SIGN UP</a>
+						
+					</div>					
+				</div>	
+				
+				
+					<h1><i>Awesome</i> template for any purpose</h1>
+					<h3><i>HiFy</i> is a beautiful responsive template with a focus on readability</h3>
+					
+				</header>
+						<div class="header-mock-up">
+							<img src="images/mock-up1.png" alt="" />
+							<ul>
+								<li><a href="#" title="">Download Now</a></li>
+								<li><a href="#" title="">Live Preview</a></li>
+							
+							</ul>
+							
+						</div>
+
+		</div>
+	</div><!--  Header Sec -->
+
+<div class="headline">
+	<h2>Create the <i>impossible</i>, We’ve designed everything beyond...</h2>
+</div>
+
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8">
+				<div class="left-column">
+	
+				<div class="notifications">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+					<p><i>Jonathan George</i> Lorem ipsum dolor sit amet, conse adipiscing. dolor sit amet,</p>
+				</div>
+				
+					<div class="visitor-stats">
+						<h6>
+							WEDNESDAY
+							<i>APRIL / 2013</i>
+						</h6>
+						<span>24
+						<i>VISITOR</i>
+						</span>
+						<div id="chart">
+							<svg />
+						</div>
+						<p>+ 16,582,00</p>
+					</div>
+						<div class="chart-tab">
+							<div id="tabs-container">
+								<div class="tab">
+									<div id="tab-1" class="tab-content">
+										<p>NEW </p>
+										<div class="progress small-progress">
+											<div style="width: 70%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+											</div>
+										</div>	
+
+										<p>LAST WEEK </p>
+										<div class="progress small-progress">
+											<div style="width: 30%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+											</div>
+										</div>	
+									</div>
+									<div id="tab-2" class="tab-content">
+																			<p>NEW </p>
+										<div class="progress small-progress">
+											<div style="width: 20%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+											</div>
+										</div>	
+
+										<p>LAST WEEK </p>
+										<div class="progress small-progress">
+											<div style="width: 90%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+											</div>
+										</div>	
+									
+									</div>
+									<div id="tab-3" class="tab-content">
+																			<p>NEW </p>
+										<div class="progress small-progress">
+											<div style="width: 50%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+											</div>
+										</div>	
+
+										<p>LAST WEEK </p>
+										<div class="progress small-progress">
+											<div style="width: 80%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+											</div>
+										</div>	
+									</div>
+								</div>
+							</div>
+								<ul class="tabs-menu">
+									<li class="current"><a href="#tab-1">NEW VISITORS</a></li>
+									<li><a href="#tab-2">RETURNING</a></li>
+									<li><a href="#tab-3">LAST WEEK</a></li>
+								</ul>
+				</div><!-- Widget Visitor -->
+			
+			<section id="user-registered">
+				<h2 class="fancy-heading"> NEW <i>USERS</i></h2>
+					<Div class="col-md-3">
+						<div class="user-confirm">
+							<img src="http://placehold.it/117x117" alt="" />
+							<h3>JONATHAN <i>ROE</i></h3>
+							<p><i class="fa fa-clock-o"></i> 2 min ago</p>
+							<ul>
+								<li><a href="#" title="" class="reject-btn">REJECT</a></li>
+								<li><a href="#" title="" class="approve-btn">APPROVE</a></li>
+							</ul>
+						</div>
+					</div>
+					
+					<Div class="col-md-3">
+						<div class="user-confirm">
+							<img src="http://placehold.it/117x117" alt="" />
+							<h3>BRIAN <i>KELLY</i></h3>
+							<p><i class="fa fa-clock-o"></i> 2 min ago</p>
+							<ul>
+								<li><a href="#" title="" class="reject-btn">REJECT</a></li>
+								<li><a href="#" title="" class="approve-btn">APPROVE</a></li>
+							</ul>
+						</div>
+					</div>
+					
+					<Div class="col-md-3">
+						<div class="user-confirm">
+							<img src="http://placehold.it/117x117" alt="" />
+							<h3>YAHMUA <i>DAKA</i></h3>
+							<p><i class="fa fa-clock-o"></i> 2 min ago</p>
+							<ul>
+								<li><a href="#" title="" class="reject-btn">REJECT</a></li>
+								<li><a href="#" title="" class="approve-btn">APPROVE</a></li>
+							</ul>
+						</div>
+					</div>
+					
+					<Div class="col-md-3">
+						<div class="user-confirm">
+							<img src="http://placehold.it/117x117" alt="" />
+							<h3>FLLORA <i>COL</i></h3>
+							<p><i class="fa fa-clock-o"></i> 2 min ago</p>
+							<ul>
+								<li><a href="#" title="" class="reject-btn">REJECT</a></li>
+								<li><a href="#" title="" class="approve-btn">APPROVE</a></li>
+							</ul>
+						</div>
+					</div>
+			</section>
+			
+			
+			
+				<div class="timeline-sec">
+					<div class="timeline-head">
+						<span>Time line
+							<i>27 - Oct - 2013</i>
+						</span>
+						<div class="add-btn">
+							<a href="#" title=""><i class="fa fa-plus blue"></i>ADD USER</a>
+						</div>
+					</div>
+					<div id="scrollbox3" class="timeline">
+						<ul>
+							<li>
+								<div class="timeline-title gray">
+									<h6>John Smith</h6>
+									<i>2 min ago</i>
+									<a href="#" title=""><i class="fa fa-thumbs-o-up"></i>LIKE</a><a href="#" title=""><i class="fa fa-comment-o"></i>REPLY</a>
+								</div>
+								<div class="timeline-content">
+									<p>Dnim eiusmod high life accusamus terry richardson ado squid. 3 wolfmoon officia aute, non cupidatat</p>
+								</div>
+							</li>
+							<li>
+								<div class="timeline-title gray">
+									<h6>John Smith</h6>
+									<i>2 min ago</i>
+									<a href="#" title=""><i class="fa fa-thumbs-o-up"></i>LIKE</a><a href="#" title=""><i class="fa fa-comment-o"></i>REPLY</a>
+								</div>
+								<div class="timeline-content">
+									<p>Dnim eiusmod high life accusamus eiusmod high life accusamus terry terry. <i>ADMIN</i></p>
+									<a href="#" title=""><i class="fa fa-search"></i><img src="http://placehold.it/46x46" alt="" /></a>
+									<a href="#" title=""><i class="fa fa-search"></i><img src="http://placehold.it/46x46" alt="" /></a>
+									<a href="#" title=""><i class="fa fa-search"></i><img src="http://placehold.it/46x46" alt="" /></a>
+								</div>
+							</li>
+							<li>
+								<div class="timeline-title gray">
+									<h6>John Smith</h6>
+									<i>2 min ago</i>
+									<a href="#" title=""><i class="fa fa-thumbs-o-up"></i>LIKE</a><a href="#" title=""><i class="fa fa-comment-o"></i>REPLY</a>
+								</div>
+								<div class="timeline-content">
+									<p>Dnim eiusmod high life accusamus terry richardson ado squid. 3 wolfmoon officia aute, non cupidatat</p>
+								</div>
+							</li>
+							<li>
+								<div class="timeline-title gray">
+									<h6>John Smith</h6>
+									<i>2 min ago</i>
+									<a href="#" title=""><i class="fa fa-thumbs-o-up"></i>LIKE</a><a href="#" title=""><i class="fa fa-comment-o"></i>REPLY</a>
+								</div>
+								<div class="timeline-content">
+									<p>Dnim eiusmod high life accusamus terry. <i>ADMIN</i></p>
+									<a href="#" title=""><i class="fa fa-search"></i><img src="http://placehold.it/46x46" alt="" /></a>
+									<a href="#" title=""><i class="fa fa-search"></i><img src="http://placehold.it/46x46" alt="" /></a>
+									<a href="#" title=""><i class="fa fa-search"></i><img src="http://placehold.it/46x46" alt="" /></a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>	<!-- TIME LINE -->
+			
+			
+			
+				</div>
+			</div>
+			
+			
+			
+			<div class="col-md-4">
+				<Div class="new-visitors">
+					<h2 class="fancy-heading"> NEW <i>VISITORS</i></h2>
+					
+					<ul>
+						<li><p>9,580</p>
+						
+							<div class="progress small-progress">
+								<div style="width: 87%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+								</div>
+							</div>	
+						<span>87 % First Time Visitors</span>
+						
+						</li>
+						
+						<li><p>10,361</p>
+						
+							<div class="progress small-progress">
+								<div style="width: 47%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="40" role="progressbar" class="progress-bar">
+								</div>
+							</div>	
+						<span>47 % Last Month Visitors</span>
+						
+						</li>
+					</ul>
+				</div>
+				
+				
+				
+				<Div class="today-tasks">
+					<h2 class="fancy-heading"> TODAY <i>TASKS</i></h2>
+						<div class="circle-sta" >
+							<div class="earning chart-bg" data-percent="73">
+								<span></span>
+							</div>
+							
+							<div class="task-detals">
+								<span>JAVASCRIPT BUGS</span>
+								<i>13 Aug 2013</i>
+								<h5 class="bugs"><i></i>23 Bugs fixes</h5>
+								<h5 class="fixes"><i></i>83 Remaining</h5>
+								
+							</div>
+						</div>	
+
+
+						<div class="circle-sta" >
+							<div class="returning chart-bg pull-right" data-percent="73">
+								<span></span>
+							</div>
+							
+							<div class="task-detals">
+								<span>JAVASCRIPT BUGS</span>
+								<i>13 Aug 2013</i>
+								<h5 class="bugs"><i></i>23 Bugs fixes</h5>
+								<h5 class="fixes"><i></i>83 Remaining</h5>
+								
+							</div>
+						</div>
+					
+				</div>
+				
+				<div class="check-balance">
+					<p>BALANCE</p>
+					<h3>$2,51,230.0</h3>
+					<i>THIS MONTH EARNING</i>
+					
+					<div class="progress small-progress">
+						<div class="progress-bar" style="width: 35%">
+						<span class="sr-only">35% Complete (success)</span>
+						</div>
+						<div class="progress-bar" style="width: 20%">
+						<span class="sr-only">20% Complete (warning)</span>
+						</div>
+						<div class="progress-bar" style="width: 10%">
+						<span class="sr-only">10% Complete (danger)</span>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+			
+			
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+<section id="newsletter">
+	<div class="block">
+		<div class="black">
+			<div class="fixed-img sec-bg4"></div>
+				<div class="container">
+					<div class="row">
+						<div class="newsletter">
+							<h3><i>Our</i> Newsletter</h3>
+							<p>Do not want to miss anything? Subscribe to our newsletter box</p>
+							<form>
+								<input type="text" placeholder="YOUR EMAIL" />
+								<a href="#" title="" >SUBSCRIBE</a>
+							</form>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+</section>
+
+
+<section id="clients">
+	<div class="block">
+		<div class="container">
+			<div class="row">
+				<div class="clients owl-carousel" id="owl-demo">
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+					<A href="#" title=""><img src="http://placehold.it/175x53" alt="" /></a>
+				
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="contact">
+	<div class="contact-sec">
+		<iframe src="https://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=London,+United+Kingdom&amp;aq=0&amp;oq=London+&amp;sll=51.511214,-0.119824&amp;sspn=0.481182,1.352692&amp;ie=UTF8&amp;hq=&amp;hnear=London,+United+Kingdom&amp;ll=51.511214,-0.119824&amp;spn=0.003759,0.010568&amp;t=m&amp;z=14&amp;output=embed"></iframe>
+	<div class="contact-details">
+		<span><i class="fa fa-globe"></i>MAIN STREET</span>
+		
+		<p>000 Street </p>
+		<p>City, Country 0000 </p>
+		<p>0-000-000000  </p>
+		<p>(0-000-000-0000)</p>
+		<p>000 Street </p>
+		<p>Headquarters Staff Directory </p>
+	</div>
+	
+	</div>
+	
+</section>
+
+<section id="contact">
+	<div class="block">
+		<div class="container">
+			<div class="contact-head">
+				<h2 class="fancy-heading"> FEEL FREE TO <i>CONTACT US</i></h2>
+				<p>Working AJAX contact form. Give it a try..</p>
+			</div>
+		
+			<div class="col-md-6">
+				<div class="contact-form">
+					<form><input type="text" placeholder="YOUR NAME" /><i class="fa fa-asterisk"></i></form>
+					<form><input type="password" placeholder="YOUR PASSWORD" /><i class="fa fa-asterisk"></i></form>
+					<form><textarea placeholder="YOUR MESSAGE" ></textarea><i class="fa fa-asterisk"></i>
+						<a href="#" title=""><i class="fa fa-plane"></i></a>
+					</form>
+				
+				</div>
+			</div>
+
+
+			<div class="col-md-6">
+				<div class="contact-widget">
+					<h3>ABOUT HYFY PANEL</h3>
+					<p>Aliquam ac sem hendrerit, blandit ante eleifend, aliquam dolor. Sed eu ultricies nisl, eu tincidunt nulla. Sed eu risus et ipsum elementum vehicula.</p>
+
+					<p>Nunc iaculis leo augue, a ultricies odio faucibus sed. Cras pulvinar nibh quis purus hendrerit lobortis. Maecenas vitae nulla vitae nisl commodo suscipit.</p>
+					
+					<div class="flickr-widget">
+						<h3>FLICKR PHOTOS</h3>
+						
+						<div class="row">
+							<div class="col-md-2">
+								<a href="#" title=""><img src="http://placehold.it/94x90" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="http://placehold.it/94x90" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="http://placehold.it/94x90" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="http://placehold.it/94x90" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="http://placehold.it/94x90" alt="" /></a>
+							</div>
+							<div class="col-md-2">
+								<a href="#" title=""><img src="http://placehold.it/94x90" alt="" /></a>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+</section>
+
+
+</body>
+</html>

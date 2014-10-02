@@ -1,0 +1,17 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryThemeBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
+{% block body %}
+
+    <hgroup id="main-title" class="thin">
+        <h1>{{ title }}</h1>
+    </hgroup>
+
+    <div class="with-padding">
+
+        {{ form(form) }}
+
+    </div>
+
+{% endblock %}

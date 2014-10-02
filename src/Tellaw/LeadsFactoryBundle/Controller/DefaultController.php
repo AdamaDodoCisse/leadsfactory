@@ -18,7 +18,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Cache(expires="tomorrow")
  */
-class DefaultController extends Controller
+class DefaultController extends AbstractLeadsController
 {
 
     /**
@@ -64,7 +64,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render( $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'un formulaire"));
     }
 
@@ -104,7 +104,7 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render( $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Edition d'un formulaire"));
 
     }

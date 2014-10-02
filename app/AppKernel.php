@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Tellaw\LeadsFactoryBundle\TellawLeadsFactoryBundle(),
             new Weka\LeadsExportBundle\WekaLeadsExportBundle(),
+            new Tellaw\LeadsFactoryThemeBundle\TellawLeadsFactoryThemeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

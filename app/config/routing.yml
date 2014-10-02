@@ -1,3 +1,8 @@
+tellaw_leads_factory_theme:
+    resource: "@TellawLeadsFactoryThemeBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 weka_leads_export:
     resource: "@WekaLeadsExportBundle/Resources/config/routing.yml"
     prefix:   /

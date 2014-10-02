@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  *
  * @Route("/entity")
  */
-class ScopeController extends Controller
+class ScopeController extends AbstractLeadsController
 {
 
     /**
@@ -47,7 +47,7 @@ class ScopeController extends Controller
      *
      * @Route("/scope/new", name="_scope_new")
      * @Secure(roles="ROLE_USER")
-     * @Template("TellawLeadsFactoryBundle:entity:Scope/edit.html.twig")
+     * @Template()
      */
     public function newAction(Request $request)
     {
@@ -67,16 +67,16 @@ class ScopeController extends Controller
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        return array(
+        $this->render( "TellawLeadsFactoryBundle:entity:Scope/edit.html.twig", array(
             'title' => 'Ajouter un scope',
             'form'   => $form->createView(),
-        );
+        ));
     }
 
     /**
      * @Route("/scope/edit/{id}", name="_scope_edit")
      * @Secure(roles="ROLE_USER")
-     * @Template("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig")
+     * @Template()
      */
     public function editAction( Request $request, $id )
     {
@@ -106,9 +106,9 @@ class ScopeController extends Controller
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        return array(  'form' => $form->createView(),
+        $this->render("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
                        'title' => "Edition d'un scope"
-        );
+        ));
 
     }
 

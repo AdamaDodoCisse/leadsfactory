@@ -7,7 +7,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-class SecurityController extends Controller
+class SecurityController extends AbstractLeadsController
 {
 	/**
 	 * @Route("/login", name="_security_login")

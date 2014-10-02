@@ -1,0 +1,68 @@
+
+<ul>
+    <li id="intro4"><a href="{{ path ('_monitoring_dashboard') }}" title="" ><i class="fa fa-desktop"></i>Dashboard</a></li>
+    <li id="intro4"><a href="#" title="" ><i class="fa fa-rocket"></i>Formulaires</a>
+        <ul>
+            <li><a href="{{ path ('_form_list') }}" title="">Formulaires</a></li>
+            <li><a href="{{ path ('_formType_list') }}" title="">Types</a></li>
+            <li><a href="{{ path ('_referenceList_list') }}" title="">Listes de références</a></li>
+        </ul>
+    </li>
+    <li id="intro5"><a href="#" title="" ><i class="fa fa-heart-o"></i>Données</a>
+    <ul>
+        <li><a href="{{ path ('_leads_list') }}" title="">Leads</a></li>
+        <li><a href="{{ path ('_export_history') }}" title="">Exports</a></li>
+    </ul></li>
+    <li><a href="{{ path ('_monitoring_index') }}" title="" ><i class="fa fa-tint"></i>Stats</a>
+
+    </li>
+    <li><a href="form.html" title="" ><i class="fa fa-paperclip"></i>Config</a>    <ul>
+            <li><a href="{{ path ('_users_list') }}" title="">Utilisateurs</a></li>
+            <li><a href="{{ path ('_scope_list') }}" title="">Scopes</a></li>
+        </ul></li>
+
+</ul>
+
+<!--
+<section class="navigable">
+    <ul class="big-menu">
+        <li class="with-right-arrow">
+            <span>Formulaires</span>
+            <ul class="big-menu">
+
+                <li {% if ( route == '_form_list' or route == '_form_new'  or route == '_form_edit') %}class="navigable-current"{% endif %}><a href="{{ path ('_form_list') }}">Gestion des formulaires</a></li>
+                <li {% if ( route == '_formType_list' or route == '_formType_new'  or route == '_formType_edit') %}class="navigable-current"{% endif %}><a href="{{ path ('_formType_list') }}">Types de formulaires</a></li>
+                <li {% if ( route == '_referenceList_list' or route == '_referenceList_new'  or route == '_referenceList_edit') %}class="navigable-current"{% endif %}><a href="{{ path ('_referenceList_list') }}">Listes de références</a></li>
+
+            </ul>
+        </li>
+        <li class="with-right-arrow">
+            <span>Données</span>
+            <ul class="big-menu">
+
+                <li {% if ( route == '_leads_list' or route == '_leads_edit') %}class="navigable-current"{% endif %}><a href="{{ path ('_leads_list') }}">Gestion des leads</a></li>
+                <li {% if ( route == '_leads_list' or route == '_export_history') %}class="navigable-current"{% endif %}><a href="{{ path ('_export_history') }}">Exports</a></li>
+
+            </ul>
+        </li>
+        <li class="with-right-arrow">
+            <span>Configuration</span>
+            <ul class="big-menu">
+
+                <li {% if ( route == '_users_list' or route == '_users_edit'  or route == '_users_new') %}class="navigable-current"{% endif %}><a href="{{ path ('_users_list') }}">Gestion des utilisateurs</a></li>
+                <li {% if ( route == '_scope_list' or route == '_scope_edit'  or route == '_scope_new') %}class="navigable-current"{% endif %}><a href="{{ path ('_scope_list') }}">Gestion des scopes</a></li>
+
+            </ul>
+        </li>
+        <li class="with-right-arrow">
+            <span>Statistiques</span>
+            <ul class="big-menu">
+
+                <li {% if ( route == '_monitoring_dashboard') %}class="navigable-current"{% endif %}><a href="{{ path ('_monitoring_dashboard') }}">Tableau de bord</a></li>
+                <li {% if ( route == '_monitoring_index') %}class="navigable-current"{% endif %}><a href="{{ path ('_monitoring_index') }}">Tous les suivis</a></li>
+
+            </ul>
+        </li>
+    </ul>
+</section>
+-->

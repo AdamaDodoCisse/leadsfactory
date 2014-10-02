@@ -14,12 +14,12 @@ use Tellaw\LeadsFactoryBundle\Utils\Chart;
 /**
  * @Route("/monitoring")
  */
-class MonitoringController extends Controller{
+class MonitoringController extends AbstractLeadsController{
 
     /**
      * @route("/dashboard", name="_monitoring_dashboard")
      * @Secure(roles="ROLE_USER")
-     * @template("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig")
+     * @template()
      */
     public function dashboardAction(Request $request)
     {
@@ -52,9 +52,9 @@ class MonitoringController extends Controller{
 
         $form->handleRequest($request);
 
-        return array(
+        $this->render ($this->getBaseTheme().":monitoring:dashboard.html.twig", array(
             'form'  => $form->createView()
-        );
+        ));
     }
 
     public function chartDashboardAction($period=Chart::PERIOD_YEAR, $mode='FormType')
@@ -79,7 +79,7 @@ class MonitoringController extends Controller{
         $chartData = $chart->loadChartData();
 
         //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
-        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
+        $template = $this->getBaseTheme().":monitoring:chart_bar.html.twig";
 
         $data = array(
             'chart_data'        => $chartData,
@@ -93,7 +93,7 @@ class MonitoringController extends Controller{
 
     /**
      * @Secure(roles="ROLE_USER")
-     * @template("TellawLeadsFactoryBundle:monitoring:measure.html.twig")
+     * @template()
      */
     public function measureDashboardAction($mode = 'FormType')
     {
@@ -110,16 +110,16 @@ class MonitoringController extends Controller{
         }
 
 
-        return array(
+        $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
             'entities'  => $entities,
 	        'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
-        );
+        ));
     }
 
     /**
      * @Secure(roles="ROLE_USER")
-     * @template("TellawLeadsFactoryBundle:monitoring:measure.html.twig")
+     * @template()
      */
     public function measureAction($formType=null, $form=null)
     {
@@ -137,17 +137,17 @@ class MonitoringController extends Controller{
             $title = "Tous les types de formulaires";
         }
 
-        return array(
+        $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
             'entities'  => $entities,
             'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
-        );
+        ));
     }
 
     /**
      * @route("/index", name="_monitoring_index")
      * @Secure(roles="ROLE_USER")
-     * @template("TellawLeadsFactoryBundle:monitoring:index.html.twig")
+     * @template()
      */
     public function indexAction(Request $request)
     {
@@ -187,9 +187,9 @@ class MonitoringController extends Controller{
 
         $form->handleRequest($request);
 
-        return array(
+        $this->render($this->getBaseTheme().":monitoring:index.html.twig", array(
             'form'       => $form->createView()
-        );
+        ));
     }
 
     /**
@@ -213,7 +213,7 @@ class MonitoringController extends Controller{
         $chartData = $chart->loadChartData();
 
         //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
-        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
+        $template = $this->getBaseTheme().":monitoring:chart_bar.html.twig";
 
         $data = array(
             'chart_data'        => $chartData,

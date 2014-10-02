@@ -18,7 +18,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityLeadsController extends Controller
+class EntityLeadsController extends AbstractLeadsController
 {
 
     /**
@@ -31,7 +31,7 @@ class EntityLeadsController extends Controller
         $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findAll();
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Leads:list.html.twig',
+            $this->getBaseTheme().':entity/Leads:list.html.twig',
             array(  'elements' => $forms )
         );
 
@@ -73,7 +73,7 @@ class EntityLeadsController extends Controller
             return $this->redirect($this->generateUrl('_leads_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/Leads:edit.html.twig', array(  'form' => $form->createView(),
                                                                                              'title' => "Edition d'un leads"));
 
     }

@@ -1,0 +1,39 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryThemeBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
+{% block body %}
+
+    <script>
+
+        function validateFormAction() {
+
+            document.getElementById("form_exportConfig").value = JSON.stringify(editor.get());
+            //alert (document.getElementById("form_exportConfig").value);
+
+            document.getElementById("sourceWidget").value = editor1.getValue();
+            document.getElementById("scriptWidget").value = editor2.getValue();
+            document.getElementById("form_alertRules").value = JSON.stringify(editorRules.get());
+
+            alert ("ok");
+        }
+
+    </script>
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        Aide contextuelle
+    </div>
+
+{% endblock %}

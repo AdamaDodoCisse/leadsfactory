@@ -19,7 +19,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityUsersController extends Controller
+class EntityUsersController extends AbstractLeadsController
 {
 
     /**
@@ -31,7 +31,7 @@ class EntityUsersController extends Controller
         $elements = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findAll();
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Users:list.html.twig',
+            $this->getBaseTheme().':entity/Users:list.html.twig',
             array(  'elements' => $elements )
         );
     }
@@ -65,7 +65,7 @@ class EntityUsersController extends Controller
             return $this->redirect($this->generateUrl('_users_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/Users:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'un utilisateur"));
     }
 
@@ -105,7 +105,7 @@ class EntityUsersController extends Controller
             return $this->redirect($this->generateUrl('_users_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/Users:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Edition d'un profil utilisateur"));
 
     }

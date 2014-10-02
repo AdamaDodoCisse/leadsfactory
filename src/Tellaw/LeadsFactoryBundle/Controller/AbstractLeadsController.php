@@ -23,5 +23,13 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 abstract class AbstractLeadsController extends Controller {
 
 
+    protected function getBaseTheme () {
+
+        return "TellawLeadsFactoryBundle";
+
+        //return "TellawLeadsFactoryThemeBundle";
+
+    }
+
 
 }

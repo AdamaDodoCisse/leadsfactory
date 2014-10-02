@@ -1,0 +1,90 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryThemeBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        Aide contextuelle
+    </div>
+
+    <div class="col-md-12">
+        <h3 class="custom-heading">Elements de la liste de référence:</h3>
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                        <th><center>Actions</center></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="summary">
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% raw %}
+    <script id="template" type="text/html">
+        <tr>
+            <td>{{record.name}}</td>
+            <td>{{record.value}}</td>
+            <td>{{{record.action}}}</td>
+        </tr>
+    </script>
+    {% endraw %}
+
+    <script type="text/javascript">
+
+
+        var template = Mustache.compile($.trim($("#template").html()));
+
+        var view = function(record, index){
+            return template({record: record, index: index});
+        };
+
+        var datas = [
+            {% for item in elements %}
+            {
+                name: '{{ item.name }}',
+                value: '{{ item.value }}',
+                action: '<center><button type="button" class="btns  blue  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_referenceList_deleteElement', {'id': item.id , 'referenceListId': referenceListId}) }}\'">Edit</button><button type="button" class="btns  pink  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_formType_delete', {'id': item.id}) }}\'">Delete</button></center>'
+            }{% if loop.last==false %},{% endif %}
+            {% endfor %}
+        ];
+
+        var options = {
+            view: view,                  //View function to render table rows.
+            fetch_data_limit: 500,       //Streaming data in batch of 500
+            pagination: {span: 5, next_text: 'Suivant &rarr;', prev_text: '&larr; Précédent'}
+        }
+
+        var st = StreamTable('#stream_table', options, datas);
+    </script>
+
+
+
+{% endblock %}
+{% block javascript %}
+
+{% endblock %}

@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/utils")
  */
-class UtilsController extends Controller
+class UtilsController extends AbstractLeadsController
 {
 
     /**
@@ -28,7 +28,6 @@ class UtilsController extends Controller
      */
     public function navigationAction(Request $request, $parentRoute)
     {
-
 
         $sections = array(  "formulaires" => '0', "donnees" => '0', "users" => 0 );
 
@@ -50,7 +49,7 @@ class UtilsController extends Controller
 
         }
 
-        return $this->render('TellawLeadsFactoryBundle:Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
+        return $this->render($this->getBaseTheme().':Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
 
     }
 

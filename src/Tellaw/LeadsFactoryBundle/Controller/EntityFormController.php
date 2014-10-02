@@ -18,7 +18,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityFormController extends Controller
+class EntityFormController extends AbstractLeadsController
 {
     /**
      *
@@ -42,7 +42,7 @@ class EntityFormController extends Controller
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Form:entity_form_list.html.twig',
+            $this->getBaseTheme().':entity/Form:entity_form_list.html.twig',
             array(  'forms' => $forms )
         );
     }
@@ -76,7 +76,7 @@ class EntityFormController extends Controller
             return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'un formulaire"));
     }
 
@@ -116,7 +116,7 @@ class EntityFormController extends Controller
             return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Edition d'un formulaire"));
 
     }

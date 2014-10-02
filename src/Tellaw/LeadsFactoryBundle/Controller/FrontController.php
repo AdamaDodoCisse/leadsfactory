@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/client")
  * @Cache(expires="tomorrow")
  */
-class FrontController extends Controller
+class FrontController extends AbstractLeadsController
 {
 
     /**
@@ -42,7 +42,7 @@ class FrontController extends Controller
         $html = $formUtils->buildHtmlForm( $source, $id, $object );
 
         return $this->render(
-            'TellawLeadsFactoryBundle:Front:display_form.html.twig',
+            $this->getBaseTheme().':Front:display_form.html.twig',
             array(  'formHtmlObject' => $html )
         );
 

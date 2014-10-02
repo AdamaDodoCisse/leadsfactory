@@ -1,0 +1,169 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Administration <i>des formulaires</i></h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <h3 class="custom-heading">Formulaires disponibles:</h3>
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="summary">
+                    <div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% raw %}
+    <script id="template" type="text/html">
+        <tr>
+            <td>{{record.identifiant}}</td>
+            <td>{{record.name}}</td>
+            <td>{{record.description}}</td>
+            <td>{{{record.action}}}</td>
+        </tr>
+    </script>
+{% endraw %}
+
+    <script type="text/javascript">
+
+
+        var template = Mustache.compile($.trim($("#template").html()));
+
+        var view = function(record, index){
+            return template({record: record, index: index});
+        };
+
+        var datas = [
+            {% for item in forms %}
+            {   identifiant: '{{ item.id }}',
+                name: '{{ item.name }}',
+                description: '{{ item.description }}',
+                action: '<center><button type="button" class="btns  blue  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_form_edit', {'id': item.id}) }}\'">Edit</button><button type="button" class="btns  pink  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_form_delete', {'id': item.id}) }}\'">Delete</button><button type="button" class="btns  gray  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.open(\'{{ path('_client_get_form', {'id': item.id}) }}\');">Preview</button><button type="button" class="btns  yellow  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_entity_leads_export', {'id': item.id}) }}\'">Exporter</button></center>'
+            }{% if loop.last==false %},{% endif %}
+            {% endfor %}
+        ];
+
+        var options = {
+            view: view,                  //View function to render table rows.
+            fetch_data_limit: 500,       //Streaming data in batch of 500
+            pagination: {span: 5, next_text: 'Suivant &rarr;', prev_text: '&larr; Précédent'}
+        }
+
+        var st = StreamTable('#stream_table', options, datas);
+    </script>
+
+<!--
+    <div class="with-padding">
+
+    <div class="twelves-columns">
+
+        <h3 class="thin underline">Liste des formulaires</h3>
+
+        <table class="table responsive-table" id="sorting-advanced">
+
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Actions</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for item in forms %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td style="text-align:center">
+                        <center>
+                            <button type="button" class="button compact blue-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Edit</button>
+                            <button type="button" class="button compact red-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Delete</button>
+                            <button type="button" class="button compact anthracite-gradient" style="margin:0px 0px 0px 5px" onClick="window.open('{{ path('_client_get_form', {'id': item.id}) }}');">Preview</button>
+                            <button type="button" class="button compact orange-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_entity_leads_export', {'id': item.id}) }}'">Exporter</button>
+                        </center>
+
+                    </td>
+                    <td align="center"><a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.bookmark %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a></td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+
+</div>
+-->
+
+    <div class="col-md-4">
+
+        <h3 class="custom-heading">Actions:</h3>
+
+        <div class="btn-group btn-group-justified">
+            <a class="btn blue" href="{{ path ('_form_new') }}">Créer un formulaire</a>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <h3 class="custom-heading">Information:</h3>
+
+        <p>Un formulaire permet la description d'un nouveau type de leads. C'est à l'aide de sa description dans le "formulaire" que vous indiquerez :
+            <ul>
+            <li>Les contraintes de validation des champs</li>
+            <li>Les contraintes de monitoring.</li>
+            </ul>
+        </p>
+
+    </div>
+
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+
+    $(document).ready(function(){
+
+        //Bookmark
+        $('.bookmark-link').click(function(){
+            var el = this;
+            var form_id = $(this).attr('data-form-id');
+            var url = "{{ path('_monitoring_bookmark') }}";
+
+            var status = $(this).hasClass('starred') ? false : true;
+
+            $.post(url, {'entity':'Form', 'id': form_id, 'status':status}, function(){
+                if($(el).hasClass('starred')){
+                    $(el).removeClass('starred').addClass('unstarred');
+                }else{
+                    $(el).removeClass('unstarred').addClass('starred');
+                }
+            })
+        });
+    });
+</script>
+{% endblock %}

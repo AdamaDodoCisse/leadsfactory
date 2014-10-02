@@ -19,7 +19,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityReferenceListElementController extends Controller
+class EntityReferenceListElementController extends AbstractLeadsController
 {
 
     /**
@@ -40,7 +40,7 @@ class EntityReferenceListElementController extends Controller
         //$criteria = Criteria::create()->where(Criteria::expr()->eq("birthday", "1982-02-17"))->orderBy(array("username" => Criteria::ASC));
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/ReferenceListElement:list.html.twig',
+            $this->getBaseTheme().':entity/ReferenceListElement:list.html.twig',
             array(      'elements' => $collection )
         );
 
@@ -75,7 +75,7 @@ class EntityReferenceListElementController extends Controller
 
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceListElement:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/ReferenceListElement:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'une liste de référence"));
     }
 
@@ -122,7 +122,7 @@ class EntityReferenceListElementController extends Controller
 
         $form->get('json')->setData("Test");
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceListElement:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().':entity/ReferenceListElement:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Edition des valeurs d'une liste de référence"));
 
     }

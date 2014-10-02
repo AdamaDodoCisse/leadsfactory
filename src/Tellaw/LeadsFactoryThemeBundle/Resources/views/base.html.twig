@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:700,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactorytheme/css/bootstrap.min.css') }}" type="text/css" /><!-- Bootstrap -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactorytheme/font-awesome-4.0.3/css/font-awesome.css') }}" type="text/css" /><!-- Font Awesome -->
+
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactorytheme/css/nv.d3.css') }}" type="text/css" /><!-- VISITOR CHART -->
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('bundles/tellawleadsfactorytheme/css/daterangepicker-bs3.css') }}" /><!-- Date Range Picker -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactorytheme/css/style.css') }}" type="text/css" /><!-- Style -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactorytheme/css/responsive.css') }}" type="text/css" /><!-- Responsive -->
+
+    <!-- Script -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/jquery-1.10.2.js') }}"></script><!-- Jquery -->
+    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactorytheme/js/d3.v2.js') }}"></script><!-- VISITOR CHART -->
+    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactorytheme/js/nv.d3.js') }}"></script><!-- VISITOR CHART -->
+    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactorytheme/js/live-updating-chart.js') }}"></script><!-- VISITOR CHART -->
+    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactorytheme/js/bootstrap.min.js') }}"></script><!-- Bootstrap -->
+    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactorytheme/js/script.js') }}"></script><!-- Script -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/skycons.js') }}"></script> <!-- Skycons -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/enscroll-0.5.2.min.js') }}"></script> <!-- Custom Scroll bar -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/moment.js') }}"></script> <!-- Date Range Picker -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/daterangepicker.js') }}"></script><!-- Date Range Picker -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/carousal-plugins.js') }}"></script><!-- Carousal Widget -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/ticker.js') }}"></script><!-- Ticker -->
+
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/streaming-mustache.js') }}" type="text/javascript"></script><!-- Streaming Table -->
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/stream_table.js') }}" type="text/javascript"></script><!-- Streaming Table -->
+
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/jsoneditor.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactorytheme/css/jsoneditor.css?v=1') }}">
+    <script type="text/javascript" src="{{ asset('bundles/tellawleadsfactorytheme/ace/ace.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/tellawleadsfactorytheme/asset/jsonlint/jsonlint.js') }}"></script>
+
+
+</head>
+<body>
+<div class="responsive-menu">
+    <div class="responsive-menu-dropdown blue">
+        <a title="" class="blue">MENU <i class="fa fa-align-justify" ></i></a>
+    </div>
+
+    {{ render(controller('TellawLeadsFactoryBundle:Utils:navigation', { "parentRoute" : app.request.attributes.get('_route') } )) }}
+
+</div>
+<header>
+<div class="logo">
+    <img src="{{ asset('bundles/tellawleadsfactorytheme/images/logo.png') }}" alt="" />
+</div>
+
+<div aria-hidden="true" role="dialog" tabindex="-1" class="modal fade" id="add-post-title" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header blue">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                <h4 class="modal-title">Setting Section</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" placeholder="TITLE" />
+                <textarea placeholder="DESCRIPTION" rows="5"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button data-dismiss="modal" class="btn btn-default black" type="button">Close</button>
+                <button class="btn btn-primary blue" type="button">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div>
+</div>
+
+
+</header><!-- Header -->
+
+<div class="menu">
+    <div class="menu-profile" id="intro3">
+        <img src="http://placehold.it/57x57" alt="" />
+        <span><i class="fa fa-plus"></i></span>
+        <div class="menu-profile-hover">
+            <h1><i>{{ app.user.firstname }}</i> {{ app.user.lastname }}</h1>
+            <a href="index.html" title=""><i class="fa fa-power-off"></i></a>
+            <div class="menu-profile-btns">
+
+                <h3>
+                    <i class="fa fa-user blue"></i>
+                    <a href="profile.html" title="">Logout</a>
+                </h3>
+            </div>
+        </div>
+    </div>
+    {{ render(controller('TellawLeadsFactoryBundle:Utils:navigation', { "parentRoute" : app.request.attributes.get('_route') } )) }}
+
+</div><!-- Right Menu -->
+
+<div class="wrapper">
+<div class="container">
+        {% block body %}{% endblock %}
+</div><!-- Container -->
+</div><!-- Wrapper -->
+
+<!-- RAIn ANIMATED ICON-->
+<script>
+    var icons = new Skycons();
+    icons.set("rain", Skycons.RAIN);
+    icons.play();
+</script>
+
+{% block javascript %}{% endblock %}
+
+</body>
+</html>

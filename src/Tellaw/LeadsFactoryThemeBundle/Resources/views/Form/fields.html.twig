@@ -1,0 +1,178 @@
+{% block form_widget_simple %}
+    {% spaceless %}
+        {% set type = type|default('text') %}
+        <input type="{{ type }}" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock form_widget_simple %}
+{% block choice_widget_collapsed -%}
+    {% if required and empty_value is none and not empty_value_in_choices and not multiple -%}
+        {% set required = false %}
+    {%- endif -%}
+    <select class="form-control" {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none -%}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {%- endif %}
+        {%- if preferred_choices|length > 0 -%}
+            {% set options = preferred_choices %}
+            {{- block('choice_widget_options') -}}
+            {% if choices|length > 0 and separator is not none -%}
+                <option disabled="disabled">{{ separator }}</option>
+            {%- endif %}
+        {%- endif -%}
+        {% set options = choices -%}
+        {{- block('choice_widget_options') -}}
+    </select>
+{%- endblock choice_widget_collapsed %}
+{# src/Acme/TaskBundle/Resources/views/Form/fields.html.twig #}
+{% block form_row %}
+    {% spaceless %}
+        <div class="form-group">
+            <label for="{{ id }}">{{ form_label(form) }}</label>
+            {{ form_widget(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block textarea_widget %}
+    {% spaceless %}
+        <textarea {{ block('widget_attributes') }} rows="3" class="form-control">{{ value }}</textarea>
+    {% endspaceless %}
+{% endblock textarea_widget %}
+
+{% block submit_widget %}
+    {% spaceless %}
+        <input type="submit" class="btn green btn-default" {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {% endspaceless %}
+{% endblock submit_widget %}
+
+{% block button_row %}
+    {% spaceless %}
+        <div class="form-actions row-fluid">
+            <div class="span3 visible-desktop"></div>
+            <div class="span7 ">
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock button_row %}
+
+{% block form_start %}
+    {% spaceless %}
+        {% set method = method|upper %}
+        {% if method in ["GET", "POST"] %}
+            {% set form_method = method %}
+        {% else %}
+            {% set form_method = "POST" %}
+        {% endif %}
+        <form class="form-horizontal row-fluid" name="{{ form.vars.name }}" method="{{ form_method|lower }}" action="{{ action }}"{% for attrname, attrvalue in attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}{% if multipart %} enctype="multipart/form-data"{% endif %}>
+        {% if form_method != method %}
+            <input type="hidden" name="_method" value="{{ method }}" />
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_start %}
+
+{% block json_widget %}
+
+    <div id="jsoneditor-{{ id }}"></div>
+
+    <script type="text/javascript" >
+        // create the editor
+        var container = document.getElementById('jsoneditor-{{ id }}');
+
+
+        var options = {
+            mode: 'code',
+            modes: ['code', 'form', 'text', 'tree', 'view'], // allowed modes
+            error: function (err) {
+                alert(err.toString());
+            }
+        };
+
+        {% if value == "" %}
+        var json = "";
+        {% else %}
+        var json = {{ value|raw }};
+        {% endif %}
+
+
+        var editor = new JSONEditor(container, options, json);
+
+
+    </script>
+
+    {% spaceless %}
+        <textarea {{ block('widget_attributes') }} rows="3" style="display:none" class="json input full-width">{{ value|raw }}</textarea>
+    {% endspaceless %}
+{% endblock %}
+
+{% block rules_widget %}
+
+    <div id="ruleseditor-{{ id }}"></div>
+
+    <script type="text/javascript" >
+        // create the editor
+        var container = document.getElementById('ruleseditor-{{ id }}');
+
+
+        var options = {
+            mode: 'code',
+            modes: ['code', 'form', 'text', 'tree', 'view'], // allowed modes
+            error: function (err) {
+                alert(err.toString());
+            }
+        };
+
+        {% if value == "" %}
+        var json = "";
+        {% else %}
+        var json = {{ value|raw }};
+        {% endif %}
+
+
+        var editorRules = new JSONEditor(container, options, json);
+
+
+    </script>
+
+    {% spaceless %}
+        <textarea {{ block('widget_attributes') }} rows="3" style="display:none" class="">{{ value|raw }}</textarea>
+    {% endspaceless %}
+{% endblock %}
+
+{% block script_widget %}
+
+    {% spaceless %}
+        <textarea name="form[{{ name }}]" id="scriptWidget" rows="3" style="display:none" class="json input full-width">{{ value }}</textarea>
+    {% endspaceless %}
+
+    <pre id="scriptEditor1" style="height:250px;border: 1px solid #EFEFEF;">&nbsp;</pre>
+
+    <script type="text/javascript" >
+        ace.require("ace/ext/language_tools");
+        var editor2 = ace.edit("scriptEditor1");
+        editor2.setTheme("ace/theme/chrome");
+        editor2.getSession().setMode("ace/mode/javascript");
+        //editor1.getSession().setUseWrapMode(true);
+        editor2.setValue(document.getElementById('scriptWidget').value);
+    </script>
+
+{% endblock %}
+
+{% block source_widget %}
+
+    {% spaceless %}
+        <textarea name="form[{{ name }}]" id="sourceWidget" rows="3" style="display:none" class="json input full-width">{{ value }}</textarea>
+    {% endspaceless %}
+
+    <pre id="sourceEditor1" style="height:250px;border: 1px solid #EFEFEF;">&nbsp;</pre>
+
+    <script type="text/javascript" >
+        ace.require("ace/ext/language_tools");
+        var editor1 = ace.edit("sourceEditor1");
+        editor1.setTheme("ace/theme/chrome");
+        editor1.getSession().setMode("ace/mode/xml");
+        //editor1.getSession().setUseWrapMode(true);
+        editor1.setValue(document.getElementById('sourceWidget').value);
+    </script>
+
+{% endblock %}
