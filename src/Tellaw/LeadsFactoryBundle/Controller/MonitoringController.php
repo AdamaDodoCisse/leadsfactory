@@ -19,7 +19,6 @@ class MonitoringController extends AbstractLeadsController{
     /**
      * @route("/dashboard", name="_monitoring_dashboard")
      * @Secure(roles="ROLE_USER")
-     * @template()
      */
     public function dashboardAction(Request $request)
     {
@@ -52,7 +51,7 @@ class MonitoringController extends AbstractLeadsController{
 
         $form->handleRequest($request);
 
-        $this->render ($this->getBaseTheme().":monitoring:dashboard.html.twig", array(
+        return $this->render ($this->getBaseTheme().":monitoring:dashboard.html.twig", array(
             'form'  => $form->createView()
         ));
     }
@@ -93,7 +92,6 @@ class MonitoringController extends AbstractLeadsController{
 
     /**
      * @Secure(roles="ROLE_USER")
-     * @template()
      */
     public function measureDashboardAction($mode = 'FormType')
     {
@@ -109,8 +107,7 @@ class MonitoringController extends AbstractLeadsController{
             $title = 'Mes formulaires favoris';
         }
 
-
-        $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
+        return $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
             'entities'  => $entities,
 	        'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
@@ -119,7 +116,6 @@ class MonitoringController extends AbstractLeadsController{
 
     /**
      * @Secure(roles="ROLE_USER")
-     * @template()
      */
     public function measureAction($formType=null, $form=null)
     {
@@ -137,7 +133,7 @@ class MonitoringController extends AbstractLeadsController{
             $title = "Tous les types de formulaires";
         }
 
-        $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
+        return $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
             'entities'  => $entities,
             'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
@@ -147,7 +143,6 @@ class MonitoringController extends AbstractLeadsController{
     /**
      * @route("/index", name="_monitoring_index")
      * @Secure(roles="ROLE_USER")
-     * @template()
      */
     public function indexAction(Request $request)
     {
@@ -187,7 +182,7 @@ class MonitoringController extends AbstractLeadsController{
 
         $form->handleRequest($request);
 
-        $this->render($this->getBaseTheme().":monitoring:index.html.twig", array(
+        return $this->render($this->getBaseTheme().":monitoring:index.html.twig", array(
             'form'       => $form->createView()
         ));
     }

@@ -192,7 +192,7 @@ class AlertUtils {
 			$query->execute();
 			$results = $query->fetchAll();
 
-			if (count ($results>0))
+			if (count ($results) > 0)
 				$value = $results[0]["count"] + $value;
 		}
 
