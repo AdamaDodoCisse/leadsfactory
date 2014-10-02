@@ -9,9 +9,7 @@
     <div class="dashboard">
 
         <div class="columns">
-
             {{ form(form) }}
-
         </div>
 
         <div class="columns">
@@ -56,7 +54,7 @@
         }
         )) }}
     {% else %}
-        {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:chart')) }}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart')) }}
     {% endif %}
 
     <!-- ==== Monitoring Tous type = Dashboard avec les types affichés === -->
@@ -64,12 +62,12 @@
     <div class="with-padding">
 
         {% if(app.request.get('form')) %}
-            {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:measure', {
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure', {
                 "formType":  app.request.get('form')['form_type'],
                 "form":  app.request.get('form')['form']
             })) }}
         {% else %}
-            {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:measure')) }}
+            {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure')) }}
         {% endif %}
 
     </div>

@@ -28,7 +28,6 @@ class ScopeController extends AbstractLeadsController
      * Lists all Scope entities.
      *
      * @Route("/scope/list", name="_scope_list")
-     * @Template("TellawLeadsFactoryBundle:entity/Scope:index.html.twig")
      *
      * @Secure(roles="ROLE_USER")
      */
@@ -38,16 +37,16 @@ class ScopeController extends AbstractLeadsController
 
         $entities = $em->getRepository('TellawLeadsFactoryBundle:Scope')->findAll();
 
-        return array(
+        return $this->render( $this->getBaseTheme().":entity/Scope:index.html.twig", array(
             'entities' => $entities,
-        );
+        ));
+
     }
     /**
      * Creates a new Scope entity.
      *
      * @Route("/scope/new", name="_scope_new")
      * @Secure(roles="ROLE_USER")
-     * @Template()
      */
     public function newAction(Request $request)
     {
@@ -67,7 +66,7 @@ class ScopeController extends AbstractLeadsController
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        $this->render( "TellawLeadsFactoryBundle:entity:Scope/edit.html.twig", array(
+        return $this->render( $this->getBaseTheme().":entity:Scope/edit.html.twig", array(
             'title' => 'Ajouter un scope',
             'form'   => $form->createView(),
         ));
@@ -76,7 +75,6 @@ class ScopeController extends AbstractLeadsController
     /**
      * @Route("/scope/edit/{id}", name="_scope_edit")
      * @Secure(roles="ROLE_USER")
-     * @Template()
      */
     public function editAction( Request $request, $id )
     {
@@ -106,7 +104,7 @@ class ScopeController extends AbstractLeadsController
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        $this->render("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
+        return $this->render($this->getBaseTheme().":entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
                        'title' => "Edition d'un scope"
         ));
 

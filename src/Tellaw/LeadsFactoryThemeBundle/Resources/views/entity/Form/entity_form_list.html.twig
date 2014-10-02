@@ -72,51 +72,6 @@
         var st = StreamTable('#stream_table', options, datas);
     </script>
 
-<!--
-    <div class="with-padding">
-
-    <div class="twelves-columns">
-
-        <h3 class="thin underline">Liste des formulaires</h3>
-
-        <table class="table responsive-table" id="sorting-advanced">
-
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Actions</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-
-        <tbody>
-
-            {% for item in forms %}
-                <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.description }}</td>
-                    <td style="text-align:center">
-                        <center>
-                            <button type="button" class="button compact blue-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Edit</button>
-                            <button type="button" class="button compact red-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Delete</button>
-                            <button type="button" class="button compact anthracite-gradient" style="margin:0px 0px 0px 5px" onClick="window.open('{{ path('_client_get_form', {'id': item.id}) }}');">Preview</button>
-                            <button type="button" class="button compact orange-gradient" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_entity_leads_export', {'id': item.id}) }}'">Exporter</button>
-                        </center>
-
-                    </td>
-                    <td align="center"><a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.bookmark %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a></td>
-                </tr>
-            {% endfor %}
-
-        </tbody>
-    </table>
-
-
-</div>
--->
 
     <div class="col-md-4">
 
