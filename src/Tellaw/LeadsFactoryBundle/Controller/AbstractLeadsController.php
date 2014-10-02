@@ -25,9 +25,8 @@ abstract class AbstractLeadsController extends Controller {
 
     protected function getBaseTheme () {
 
-        return "TellawLeadsFactoryBundle";
+        return $this->container->getParameter("theme.bundle");
 
-        //return "TellawLeadsFactoryThemeBundle";
 
     }
 
