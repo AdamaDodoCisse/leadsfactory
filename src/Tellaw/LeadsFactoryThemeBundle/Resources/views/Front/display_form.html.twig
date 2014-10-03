@@ -4,17 +4,20 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
     <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/js/libs/formValidator/developr.validationEngine.css?v=1') }}">
-</head>
-<body>
-    {{ formHtmlObject|raw }}
-
     <script src="{{ asset('bundles/tellawleadsfactory/js/libs/jquery-1.10.2.min.js') }}"></script>
     <script src="{{ asset('bundles/tellawleadsfactory/js/libs/formValidator/jquery.validationEngine.js') }}"></script>
     <script src="{{ asset('bundles/tellawleadsfactory/js/libs/formValidator/languages/jquery.validationEngine-fr.js') }}"></script>
+    <script src="{{ asset('bundles/tellawleadsfactory/js/lf.js') }}"></script>
+</head>
+<body>
+
     <script>
         $(document).ready(function(){
             $('form').validationEngine('attach', {promptPosition : "bottomLeft", scroll: false});
         });
     </script>
+
+    {{ formHtmlObject|raw }}
+
 </body>
 </html>

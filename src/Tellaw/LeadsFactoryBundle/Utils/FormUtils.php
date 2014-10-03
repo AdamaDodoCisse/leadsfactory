@@ -225,10 +225,17 @@ class FormUtils {
      */
     private function _setClassAttribute(&$attributes)
     {
+
+
         $class = 'input input-'.$attributes['type'];
         if(isset($attributes['class'])){
             $class = $attributes['class'] . ' '. $class;
         }
+
+        if(!empty($attributes['data-parent'])){
+            $class = 'child-list ' . $class;
+        }
+
         $attributes['class'] = $class;
     }
 

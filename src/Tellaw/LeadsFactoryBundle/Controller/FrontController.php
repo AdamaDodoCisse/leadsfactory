@@ -152,4 +152,15 @@ class FrontController extends AbstractLeadsController
         die();
     }
 
+    /**
+     * @Route("/form/ajax/list_options", name="_ajax_child_list_options")
+     */
+    public function getChildListOptionsAction(Request $request)
+    {
+        $parentValue = $request->query->get('parent_value');
+        $listCode = $request->query->get('liste_code');
+        //$options =
+        $x=0;
+    }
+
 }
