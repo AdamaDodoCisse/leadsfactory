@@ -50,14 +50,14 @@
                 // Learn more on configuration for the LineChart: http://code.google.com/apis/chart/interactive/docs/gallery/linechart.html
                 var div = $('#demo-chart'),
                         divWidth = div.width();
+
                 new google.visualization.ComboChart(div.get(0)).draw(data, {
                     title: '{{ chart_title|raw }}',
+                    height: '400',
                     width: divWidth,
-                    height: $.template.mediaQuery.is('mobile') ? 180 : 365,
                     legend: 'right',
-                    //curveType: 'function',
                     yAxis: {title: '(thousands)'},
-                    backgroundColor: ($.template.ie7 || $.template.ie8) ? '#494C50' : 'transparent',	// IE8 and lower do not support transparency
+                    backgroundColor: 'transparent',	// IE8 and lower do not support transparency
                     legendTextStyle: { color: 'white' },
                     titleTextStyle: { color: 'white' },
                     hAxis: {
@@ -73,7 +73,7 @@
                     chartArea: {
                         top: 35,
                         left: 50,
-                        width: divWidth-40
+                        width: divWidth-100
                     },
                     legend: 'bottom',
                     seriesType: "bars",
@@ -106,7 +106,7 @@
     google.setOnLoadCallback(drawVisitorsChart);
 
     // Watch for block resizing
-    $('#demo-chart').widthchange(drawVisitorsChart);
+    //$('#demo-chart').widthchange(drawVisitorsChart);
 
     // Respond.js hook (media query polyfill)
     $(document).on('respond-ready', drawVisitorsChart);

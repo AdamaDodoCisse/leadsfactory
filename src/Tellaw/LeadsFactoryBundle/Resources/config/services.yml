@@ -1,7 +1,8 @@
 parameters:
 #    tellaw_leads_factory.example.class: Tellaw\LeadsFactoryBundle\Example
-#    theme.bundle: TellawLeadsFactoryBundle
-     theme.bundle: TellawLeadsFactoryThemeBundle
+#
+#   theme.bundle: TellawLeadsFactoryBundle
+    theme.bundle: TellawLeadsFactoryThemeBundle
 
 services:
 

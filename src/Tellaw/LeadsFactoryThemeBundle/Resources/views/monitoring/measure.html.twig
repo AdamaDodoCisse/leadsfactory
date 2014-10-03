@@ -1,14 +1,29 @@
+<div class="col-md-12"></div>
+<div class="col-md-12">
+    <div class="heading-sec" id="intro6">
+        <h1>{{ title }}</h1>
+    </div>
+</div>
 
+<div class="col-md-12">
 
-<h2 class="relative thin">
-    {{ title }}
-    <span class="info-spot">
-        <span class="icon-info-round"></span>
-        <span class="info-bubble">Cette zone vous présente sur le tableau de bord vos favoris.</span>
-    </span>
-</h2>
+    <div class="col-md-3">
+        <div class="weather-box widget-body  yellow">
+            <div class="weather-day">
+                <span>21</span>
+                <p>THURSDAY</p>
+            </div>
 
-<div class="columns">
+            <div>
+                <canvas id="rain" width="64" height="64"></canvas>
+                <p>ABU DHABI</p>
+            </div>
+            <div >
+                <canvas id="rain" width="64" height="64"></canvas>
+                <p>Plouf</p>
+            </div>
+        </div>
+    </div>
 
     {% for item in entities %}
 
