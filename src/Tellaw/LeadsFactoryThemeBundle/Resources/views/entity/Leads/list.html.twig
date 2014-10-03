@@ -2,83 +2,92 @@
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
 
-    <hgroup id="main-title" class="thin">
-        <h1>Administration des leads enregistrés</h1>
-    </hgroup>
-
-    <div class="columns">
-
-        <div class="eight-columns with-padding">
-
-            <h3 class="thin underline">Liste des leads</h3>
-
-
-                    <table id="sorting-advanced" class="table table-striped table-bordered">
-                        <thead>
-                        <tr>
-                            <th>Identifiant</th>
-                            <th>Lastname</th>
-                            <th>Firstname</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        {% for item in elements %}
-                            <tr onclick="window.location.href='{{ path('_leads_edit', {'id': item.id}) }}'">
-                                <td>{{ item.id }}</td>
-                                <td>{{ item.lastname }}</td>
-                                <td>{{ item.firstname }}</td>
-                                <td>{{ item.status }}</td>
-                                <td style="text-align:center">
-                                    <center>
-                                    <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_leads_edit', {'id': item.id}) }}'">Edit</button>
-                                    </center>
-                                </td>
-                            </tr>
-
-                        {% else %}
-
-                            <tr>
-                                <td colspan="5">Aucun élément dans cette liste</td>
-
-                            </tr>
-
-                        {% endfor %}
-
-                        </tbody>
-                    </table>
-
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Administration <i>des leads</i></h1>
         </div>
+    </div>
 
-
-        <div class="three-columns with-padding">
-
-            <h3 class="thin underline">Actions</h3>
-
-            <p class="button-height">
-                Explication des leads....
-            </p>
-
+    <div class="col-md-8">
+        <h3 class="custom-heading">Leads enregistrés:</h3>
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>Identifiant</th>
+                        <th>Lastname</th>
+                        <th>Firstname</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                <div id="summary">
+                    <div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+
+    {% raw %}
+    <script id="template" type="text/html">
+        <tr>
+            <td>{{record.identifiant}}</td>
+            <td>{{record.firstname}}</td>
+            <td>{{record.lastname}}</td>
+            <td>{{record.status}}</td>
+            <td>{{{record.action}}}</td>
+        </tr>
+    </script>
+    {% endraw %}
+
+    <script type="text/javascript">
+
+
+        var template = Mustache.compile($.trim($("#template").html()));
+
+        var view = function(record, index){
+            return template({record: record, index: index});
+        };
+
+        var datas = [
+            {% for item in elements %}
+            {   identifiant: '{{ item.id }}',
+                firstname: '{{ item.firstname }}',
+                lastname: '{{ item.lastname }}',
+                status: '{{ item.status }}',
+                action: '<center><button type="button" class="btns  blue  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_leads_edit', {'id': item.id}) }}\'">Edit</button></center>'
+            }{% if loop.last==false %},{% endif %}
+            {% endfor %}
+        ];
+
+        var options = {
+            view: view,                  //View function to render table rows.
+            fetch_data_limit: 500,       //Streaming data in batch of 500
+            pagination: {span: 5, next_text: 'Suivant &rarr;', prev_text: '&larr; Précédent'}
+        }
+
+        var st = StreamTable('#stream_table', options, datas);
+    </script>
+
+    <div class="col-md-4">
+
+        <h3 class="custom-heading">Informations:</h3>
+
+        <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at semper arcu. Nulla lobortis tempus convallis. Curabitur pharetra ipsum sit amet rutrum aliquam. Aliquam gravida metus urna, consectetur consequat eros molestie eu. Etiam porta facilisis vulputate. Sed non sodales nisi. Nulla convallis mauris et libero hendrerit, sed fringilla turpis gravida. Phasellus ultricies orci tortor, sed rhoncus dui imperdiet vitae. Nam molestie justo eu blandit ultricies. Proin quis rutrum lorem. Curabitur tortor turpis, pulvinar a purus vel, rhoncus rhoncus ex. Integer hendrerit imperdiet sodales.
+
+            Pellentesque a varius ex. Duis nec magna id ligula luctus vehicula nec ut urna. Nullam odio mauris, tincidunt ut viverra eget, ornare in ex. Nulla facilisi. Sed venenatis finibus tincidunt. Nulla vitae neque et sapien euismod venenatis quis vel leo. Sed vitae dui vel tortor posuere vehicula.
+        </p>
+
     </div>
 
 {% endblock %}
 {% block javascript %}
-    <script>
-        // Table sort - DataTables
-        var table = $('#sorting-advanced');
-        table.dataTable({
 
-            'sPaginationType': 'full_numbers',
-            'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
-            'fnInitComplete': function( oSettings )
-            {
-                // Style length select
-                table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
-                tableStyled = true;
-            }
-        });
-    </script>
 {% endblock %}

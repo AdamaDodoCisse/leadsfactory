@@ -79,7 +79,7 @@ class ReferenceListFieldType extends AbstractFieldType {
                         <input class="input input-checkbox" name="lffield['.$id.'][]" id="lffield['.$option->getValue().'-'.$option->getId().']" type="checkbox" value="'.$option->getValue().'"/>
                       </li>';
         }
-        return '<ul id="'.$id.'">'.$html.'<ul>';
+        return '<ul id="'.$id.'">'.$html.'</ul>';
     }
 
     /**
@@ -98,7 +98,7 @@ class ReferenceListFieldType extends AbstractFieldType {
                         <input class="input input-radio" name="lffield['.$id.']" id="lffield['.$option->getValue().'-'.$option->getId().']" type="radio" value="'.$option->getValue().'"/>
                       </li>';
         }
-        return '<ul id="'.$id.'">'.$html.'<ul>';
+        return '<ul id="'.$id.'">'.$html.'</ul>';
     }
 
 }

@@ -1,51 +1,30 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryThemeBundle:Form:fields.html.twig' %}
+
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
 
-    <hgroup id="main-title" class="thin">
-        <h1>Tous les suivis</h1>
-    </hgroup>
 
-    <div class="dashboard">
-
-        <div class="columns">
-
-            {{ form(form) }}
-
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Statistiques : <i>Monitoring des leads</i></h1>
         </div>
-
-        <div class="columns">
-
-
-
-            <div class="nine-columns twelve-columns-mobile" id="demo-chart">
-                <!-- This div will hold the chart generated in the footer -->
-            </div>
-
-            <div class="three-columns twelve-columns-mobile new-row-mobile">
-                <ul class="stats split-on-mobile">
-                    <li><a href="#">
-                            <strong>XX</strong> max <br>accounts
-                        </a></li>
-                    <li><a href="#">
-                            <strong>35</strong> leads <br>en moyenne
-                        </a></li>
-                    <li>
-                        <strong>5</strong> Erreur(s)<br/>&nbsp;
-                    </li>
-                    <li>
-                        <strong>256</strong> Alerte(s)<br/>&nbsp;
-                    </li>
-                </ul>
-            </div>
-
-            </div>
-
     </div>
 
 
+
+
+    <div class="col-md-8" style="margin-bottom:25px;">
+        <div id="demo-chart" class="widget-body blue">
+            <!-- This div will hold the chart generated in the footer -->
+        </div>
     </div>
 
+    <div class="col-md-4">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
 
     <!-- Chart -->
     {% if(app.request.get('form')) %}
@@ -56,41 +35,24 @@
         }
         )) }}
     {% else %}
-        {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:chart')) }}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart')) }}
     {% endif %}
 
     <!-- ==== Monitoring Tous type = Dashboard avec les types affichés === -->
 
-    <div class="with-padding">
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure', {
+            "formType":  app.request.get('form')['form_type'],
+            "form":  app.request.get('form')['form']
+        })) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure')) }}
+    {% endif %}
 
-        {% if(app.request.get('form')) %}
-            {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:measure', {
-                "formType":  app.request.get('form')['form_type'],
-                "form":  app.request.get('form')['form']
-            })) }}
-        {% else %}
-            {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:measure')) }}
-        {% endif %}
-
-    </div>
 
 
 
 {% endblock %}
 {% block javascript %}
-<script>
-    // Table sort - DataTables
-    var table = $('#sorting-advanced');
-    table.dataTable({
 
-        'sPaginationType': 'full_numbers',
-        'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
-        'fnInitComplete': function( oSettings )
-        {
-            // Style length select
-            table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
-            tableStyled = true;
-        }
-    });
-</script>
 {% endblock %}
