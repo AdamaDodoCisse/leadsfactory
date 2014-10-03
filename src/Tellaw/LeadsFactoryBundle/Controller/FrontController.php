@@ -49,14 +49,14 @@ class FrontController extends AbstractLeadsController
     }
 
     /**
-     * @Route("/form/js/{id}", name="_client_get_form_js")
+     * @Route("/form/js/{codes}", name="_client_get_form_js")
      */
-    public function getFormAsJsAction ( Request $request, $id ) {
+    public function getFormAsJsAction ( Request $request, $code ) {
 
         //$formUtils = new FormUtils();
         $formUtils = $this->get("js_utils");
 
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findByCode($code);
 
         $source = $object->getSource();
 

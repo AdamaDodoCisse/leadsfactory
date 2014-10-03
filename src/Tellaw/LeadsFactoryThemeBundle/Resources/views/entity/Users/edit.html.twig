@@ -3,12 +3,24 @@
 
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
-    <hgroup id="main-title" class="thin">
-        <h1>{{ title }}</h1>
-    </hgroup>
 
-    <div class="with-padding">
-        {{ form(form) }}
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
     </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at semper arcu. Nulla lobortis tempus convallis. Curabitur pharetra ipsum sit amet rutrum aliquam. Aliquam gravida metus urna, consectetur consequat eros molestie eu. Etiam porta facilisis vulputate. Sed non sodales nisi. Nulla convallis mauris et libero hendrerit, sed fringilla turpis gravida. Phasellus ultricies orci tortor, sed rhoncus dui imperdiet vitae. Nam molestie justo eu blandit ultricies. Proin quis rutrum lorem. Curabitur tortor turpis, pulvinar a purus vel, rhoncus rhoncus ex. Integer hendrerit imperdiet sodales.
+
+        Pellentesque a varius ex. Duis nec magna id ligula luctus vehicula nec ut urna. Nullam odio mauris, tincidunt ut viverra eget, ornare in ex. Nulla facilisi. Sed venenatis finibus tincidunt. Nulla vitae neque et sapien euismod venenatis quis vel leo. Sed vitae dui vel tortor posuere vehicula.
+    </div>
+
 
 {% endblock %}

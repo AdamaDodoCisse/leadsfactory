@@ -191,6 +191,7 @@ class FormUtils {
     private function setHiddenTags ( $source, $formId, $formObject ) {
 
         $tags="
+            <input type='hidden' name=\"lffield['utmcampaign']\" id=\"lffield['utmcampaign']\" value='".$formObject->getUtmcampaign()."'/>
             <input type='hidden' name='lfFormId' id='lfFormId' value='".$formId."'/>
             <input type='hidden' name='lfForwardSuccess' id='lfForwardSuccess' value='' />
             <input type='hidden' name='lfForwardError' id='lfForwardError' value='' />

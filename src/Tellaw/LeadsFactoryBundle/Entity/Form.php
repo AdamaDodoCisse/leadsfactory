@@ -33,6 +33,17 @@ class Form {
      */
     protected $description;
 
+    /**
+     * @var string $code
+     * @ORM\Column(type="string", nullable=true, name="code")
+     */
+    protected $code;
+
+    /**
+     * @var string $utmcampaign
+     * @ORM\Column(type="string", nullable=true, name="utmcampaign")
+     */
+    protected $utmcampaign;
 
     /**
      * @var longtext $source
@@ -215,4 +226,39 @@ class Form {
     {
         return $this->alertRules;
     }
+
+    /**
+     * @return string
+     */
+    public function getUtmcampaign()
+    {
+        return $this->utmcampaign;
+    }
+
+    /**
+     * @param string $utmcampaign
+     */
+    public function setUtmcampaign($utmcampaign)
+    {
+        $this->utmcampaign = $utmcampaign;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * @param string $code
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+    }
+
+
+
 }

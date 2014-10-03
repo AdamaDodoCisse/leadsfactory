@@ -36,9 +36,13 @@ class FormType extends AbstractType
         $builder->add('name');
         $builder->add('description');
 
-        $builder->add ( 'formType' );
+        $builder->add('code',null, array('label' => 'Code (identifiant technique) du formulaire'));
 
-        $builder->add('source', new SourceType(), array('label' => 'Source', 'required' => false));
+        $builder->add('utmcampaign',null, array('label' => 'Code action par défaut'));
+
+        $builder->add ( 'formType',null, array('label' => 'Type du formulaire') );
+
+        $builder->add('source', new SourceType(), array('label' => 'Source Pseudo HTML', 'required' => false));
         $builder->add('script', new ScriptType(), array('label' => 'Javascript', 'required' => false));
 
         $builder->add('exportConfig', new JsonType(), array('label' => 'Export config', 'required' => false));

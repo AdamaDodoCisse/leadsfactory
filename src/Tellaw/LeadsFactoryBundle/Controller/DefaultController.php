@@ -31,7 +31,7 @@ class DefaultController extends AbstractLeadsController
     public function indexAction(Request $request)
     {
 
-        return $this->redirect($this->generateUrl('_form_list'));
+        return $this->redirect($this->generateUrl('_monitoring_dashboard'));
 
     }
 

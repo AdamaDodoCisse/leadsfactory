@@ -92,16 +92,20 @@
 
 <div class="menu">
     <div class="menu-profile" id="intro3">
-        <img src="http://placehold.it/57x57" alt="" />
+        <img src="{{ asset('bundles/tellawleadsfactorytheme/images/avatar.jpg') }}" alt="" />
         <span><i class="fa fa-plus"></i></span>
         <div class="menu-profile-hover">
             <h1><i>{{ app.user.firstname }}</i> {{ app.user.lastname }}</h1>
-            <a href="index.html" title=""><i class="fa fa-power-off"></i></a>
+            <a href="{{ path('_security_logout') }}" title=""><i class="fa fa-power-off"></i></a>
             <div class="menu-profile-btns">
 
                 <h3>
                     <i class="fa fa-user blue"></i>
-                    <a href="profile.html" title="">Logout</a>
+                    <a href="{{ path('_security_logout') }}" title="">Se deconnecter</a>
+                </h3>
+                <h3>
+                    <i class="fa fa-inbox pink"></i>
+                    <a href="{{ path('_users_edit', {'id': app.user.id}) }}" title="">Mon profile</a>
                 </h3>
             </div>
         </div>
