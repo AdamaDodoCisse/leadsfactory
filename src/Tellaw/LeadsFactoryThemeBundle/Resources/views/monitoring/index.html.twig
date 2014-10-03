@@ -11,9 +11,6 @@
         </div>
     </div>
 
-
-
-
     <div class="col-md-8" style="margin-bottom:25px;">
         <div id="demo-chart" class="widget-body blue">
             <!-- This div will hold the chart generated in the footer -->
@@ -28,7 +25,7 @@
 
     <!-- Chart -->
     {% if(app.request.get('form')) %}
-        {{ render(controller('TellawLeadsFactoryThemeBundle:monitoring:chart', {
+        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart', {
         "period" : app.request.get('form')['period'],
         "formType":  app.request.get('form')['form_type'],
         "form":  app.request.get('form')['form']
@@ -48,8 +45,6 @@
     {% else %}
         {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure')) }}
     {% endif %}
-
-
 
 
 {% endblock %}

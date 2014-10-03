@@ -3536,7 +3536,6 @@ a[data-tooltip][data-placement="bottom"]::after {
     border-radius: 2px;
 }
 .weather-day {
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
     float: left;
     width: 50%;
     position: relative;
@@ -3553,7 +3552,7 @@ a[data-tooltip][data-placement="bottom"]::after {
     text-align: center;
     width: 100%;
 }
-
+/*
 .weather-day > span:before {
     background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
     border: 3px solid #FFFFFF;
@@ -3570,7 +3569,7 @@ a[data-tooltip][data-placement="bottom"]::after {
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
     border-radius: 50%;
-}
+}*/
 .weather-day > p {
     color: #FFFFFF;
     float: left;
@@ -3583,7 +3582,7 @@ a[data-tooltip][data-placement="bottom"]::after {
     text-align: center;
     width: 100%;
 }
-
+/*
 .weather-day:before {
     background: none repeat scroll 0 0 #FFFFFF;
     color: #F3D447;
@@ -3608,7 +3607,7 @@ a[data-tooltip][data-placement="bottom"]::after {
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
     border-radius: 50%;
-}
+}*/
 .weather-icon {
     float: left;
     width: 50%;

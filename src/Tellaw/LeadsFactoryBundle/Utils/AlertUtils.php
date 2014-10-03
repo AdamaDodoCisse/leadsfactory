@@ -138,7 +138,7 @@ class AlertUtils {
      */
     public function getDeltaPourcent ( $oldValue, $currentValue ) {
 
-        if ( $currentValue == 0 ) return "-";
+        if ( $currentValue == 0 ) return "&laquo;NAN&raquo;";
 
         $pourcent = ($currentValue - $oldValue) / $currentValue * 100;
         return $pourcent;
@@ -202,6 +202,7 @@ class AlertUtils {
 
 		$item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
 
+
         $rules = $item->getRules();
 
         if(empty($rules)){
@@ -212,12 +213,12 @@ class AlertUtils {
 
 		if ( $status == AlertUtils::$_STATUS_ERROR ) {
 
-			$item->yesterdayStatusColor = "red";
+			$item->yesterdayStatusColor = "pink";
 			$item->yesterdayStatusText = "Erreur";
 
 		} else if ( $status == AlertUtils::$_STATUS_WARNING ) {
 
-			$item->yesterdayStatusColor = "orange";
+			$item->yesterdayStatusColor = "yellow";
 			$item->yesterdayStatusText = "Attention!";
 
 		} else {

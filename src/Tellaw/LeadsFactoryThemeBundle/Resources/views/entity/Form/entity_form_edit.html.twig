@@ -33,7 +33,17 @@
     </div>
 
     <div class="col-md-4">
-        Aide contextuelle
+        <h3 class="custom-heading">Actions:</h3>
+
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  yellow  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_client_get_form', {'id': id}) }}'">Apercu du formulaire</button>
+            <button type="button" class="btns  yellow  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_entity_leads_export', {'id': id}) }}'">Export des leads du formulaire</button>
+        </div>
+
+        <h3 class="custom-heading">Aide:</h3>
+<p>L'apercu du formulaire va vous presenter une version HTML du formulaire 'enregistré'.</p>
+<p>L'export va declencher les modules d'exports des leads enregistrés depuis ce formulaire. L'export ne prendra en charge que les leads non exportés ou actuellement en erreur.</p>
+
     </div>
 
 {% endblock %}

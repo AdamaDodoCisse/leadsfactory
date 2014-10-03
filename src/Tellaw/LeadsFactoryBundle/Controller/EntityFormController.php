@@ -116,8 +116,9 @@ class EntityFormController extends AbstractLeadsController
             return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Edition d'un formulaire"));
+        return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(    'id' => $id,
+                                                                                                        'form' => $form->createView(),
+                                                                                                        'title' => "Edition d'un formulaire"));
 
     }
 
