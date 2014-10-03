@@ -119,6 +119,8 @@ class EntityReferenceListController extends AbstractLeadsController
 
         $form->get('json')->setData("Test");
 
+        $x=$formData->getElements();
+
         return $this->render($this->getBaseTheme().':entity/ReferenceList:entity_referenceList_edit.html.twig',
                                 array(  'form' => $form->createView(),
                                         'elements'=> $formData->getElements(),

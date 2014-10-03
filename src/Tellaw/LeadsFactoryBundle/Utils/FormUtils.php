@@ -5,6 +5,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
@@ -88,16 +89,19 @@ class FormUtils {
             $items[(string)$result['id']] = array ( "type"=>(string)$result['type'],
                                                     "attributes" => $attributes,
                                                     "raw" => $result);
-            //if element has options
-            if(isset($result->attributes()['data-list'])){
+
+            //List case
+            //if is parent
+            if(isset($result->attributes()['data-parent']) && isset($result->attributes()['data-list'])){
+
                 $listCode = $result->attributes()['data-list']->__toString();
                 $options = $this->getElementOptions($listCode);
                 $items[(string)$result['id']]['options'] = $options;
-            }
+            }elseif(isset($result->attributes()['data-list'])){
 
-            //if validation is needed
-            if(isset($result->attributes()['data-list'])){
-
+                $listCode = $result->attributes()['data-list']->__toString();
+                $options = $this->getElementOptions($listCode);
+                $items[(string)$result['id']]['options'] = $options;
             }
         }
         return $items;
@@ -127,6 +131,9 @@ class FormUtils {
                 break;
             case "checkbox":
                 $fieldType = CheckboxFieldType::getInstance();
+                break;
+            case "linked-reference-list":
+                $fieldType = LinkedReferenceListFieldType::getInstance();
                 break;
             default:
                 $fieldType = TextFieldType::getInstance();

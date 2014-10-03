@@ -31,6 +31,7 @@ class ReferenceListElementType extends AbstractType
     {
         $builder->add('name');
         $builder->add('value');
+        $builder->add('parent');
 
         $builder->add('save', 'submit');
 

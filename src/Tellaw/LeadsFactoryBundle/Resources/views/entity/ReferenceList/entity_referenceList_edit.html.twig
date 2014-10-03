@@ -34,6 +34,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Value</th>
+                    <th>Parent</th>
                     <th><center>Actions</center></th>
                 </tr>
                 </thead>
@@ -43,6 +44,7 @@
                     <tr>
                         <td>{{ item.name }}</td>
                         <td>{{ item.value }}</td>
+                        <td>{{ item.parent.id }}</td>
                         <td style="text-align:center">
                             <center>
                                 <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_referenceList_deleteElement', {'id': item.id , 'referenceListId': referenceListId}) }}'">Delete</button>
@@ -82,7 +84,10 @@
                        <td>Valeur</td>
                        <td><input type="text" name="value" style="border:1px solid #e0e0e0;width:250px;"/></td>
                    </tr>
-
+                   <tr>
+                       <td>Parent</td>
+                       <td><input type="text" name="parent" style="border:1px solid #e0e0e0;width:250px;"/></td>
+                   </tr>
                </table>
 
            </form>

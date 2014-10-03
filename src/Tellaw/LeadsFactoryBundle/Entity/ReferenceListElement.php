@@ -29,15 +29,33 @@ class ReferenceListElement {
 
     /**
      * @var string $value
-     * @ORM\Column(type="text", nullable=true, name="description")
+     * @ORM\Column(type="text", nullable=true, name="value")
      */
     protected $value;
+
+    /**
+     * @var string $children
+     * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", mappedBy="parent")
+     */
+    protected $children;
+
+    /**
+     * @var string $parent
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", inversedBy="children")
+     * @ORM\JoinColumn(name="parent_id", referencedColumnName="id")
+     */
+    protected $parent;
 
     /**
      * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceList", inversedBy="elements")
      * @ORM\JoinColumn(name="referencelist_id", referencedColumnName="id")
      */
     protected $referenceList;
+
+    public function __construct()
+    {
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * @param mixed $referenceList
@@ -104,5 +122,59 @@ class ReferenceListElement {
         return $this->name;
     }
 
+    /**
+     * Set parent
+     *
+     * @param string $parent
+     * @return ReferenceListElement
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
 
+        return $this;
+    }
+
+    /**
+     * Get parent
+     *
+     * @return string 
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    /**
+     * Add children
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $children
+     * @return ReferenceListElement
+     */
+    public function addChild(\Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $children)
+    {
+        $this->children[] = $children;
+
+        return $this;
+    }
+
+    /**
+     * Remove children
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $children
+     */
+    public function removeChild(\Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement $children)
+    {
+        $this->children->removeElement($children);
+    }
+
+    /**
+     * Get children
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
 }

@@ -5,12 +5,12 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
 /**
  * Field of type ReferenceList will be identified by the type <b>reference-list</b> and will be used to display content of a reference list.
- *  *
- * <b>multiple</b> : "multiple" or "single" will switch from Select field to checkbox field<br/>
+ *
+ * <b>multiple</b> : "multiple"<br/>
  * <b>display</b> :   display mode : select|checkbox|radio
  * <b>data-list</b> : list alias in database
  *
- * Exemple : &lt;field type="reference-list" selection="single" display="options" data-list="salutation" />
+ * Exemple : &lt;field type="reference-list" display="options" data-list="salutation" />
  *
  * @package Tellaw\LeadsFactoryBundle\Utils\Fields
  */
