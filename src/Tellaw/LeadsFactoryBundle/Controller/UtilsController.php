@@ -2,6 +2,7 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
@@ -50,6 +51,26 @@ class UtilsController extends AbstractLeadsController
         }
 
         return $this->render($this->getBaseTheme().':Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
+
+    }
+
+    /**
+     * @Route("/streamtable/form/", name="_utils_streamtables")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function streamTableFormAction (Request $request) {
+
+        // check parameters
+        $q = $request->get("q");
+        $limit = $request->get("limit",1000);
+        $offset = $request->get("offset");
+
+        $q = $this->getDoctrine()->getManager()
+        ->createQueryBuilder()
+            ->select('form')
+            ->from('TellawLeadsFactoryBundle:Form','form')->setFirstResult($offset)->setMaxResults($limit);
+
+        return $this->render($this->getBaseTheme().':Utils:streamtables.html.twig', array ( 'items' => new Paginator ($q) ));
 
     }
 

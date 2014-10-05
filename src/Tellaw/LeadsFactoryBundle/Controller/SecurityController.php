@@ -11,7 +11,6 @@ class SecurityController extends AbstractLeadsController
 {
 	/**
 	 * @Route("/login", name="_security_login")
-	 * @Template
 	 */
     public function loginAction()
     {
@@ -26,10 +25,10 @@ class SecurityController extends AbstractLeadsController
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        return array(
+        return $this->render($this->getBaseTheme().':Security:login.html.twig', array(
             // last username entered by the user
             'last_username' => $session->get(SecurityContext::LAST_USERNAME),
             'error'         => $error,
-        );
+        ));
     }
 }

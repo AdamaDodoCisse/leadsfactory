@@ -53,23 +53,20 @@
             return template({record: record, index: index});
         };
 
-        var datas = [
-            {% for item in forms %}
-            {   identifiant: '{{ item.id }}',
-                name: '{{ item.name }}',
-                description: '{{ item.description }}',
-                action: '<center><button type="button" class="btns  blue  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_form_edit', {'id': item.id}) }}\'">Edit</button><button type="button" class="btns  pink  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_form_delete', {'id': item.id}) }}\'">Delete</button><button type="button" class="btns  gray  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.open(\'{{ path('_client_get_form', {'id': item.id}) }}\');">Preview</button><button type="button" class="btns  yellow  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onClick="window.location.href=\'{{ path('_entity_leads_export', {'id': item.id}) }}\'">Exporter</button></center>'
-            }{% if loop.last==false %},{% endif %}
-            {% endfor %}
-        ];
+        var callbacks = {
 
-        var options = {
-            view: view,                  //View function to render table rows.
-            fetch_data_limit: 500,       //Streaming data in batch of 500
-            pagination: {span: 5, next_text: 'Suivant &rarr;', prev_text: '&larr; Précédent'}
         }
 
-        var st = StreamTable('#stream_table', options, datas);
+        var options = {
+            callbacks: callbacks,
+            per_page: 10,
+            view: view,                  //View function to render table rows.
+            data_url: '{{ path ('_utils_streamtables') }}',
+            stream_after: 0,
+            fetch_data_limit: 100
+        }
+
+        var st = StreamTable('#stream_table', options, []);
     </script>
 
 
