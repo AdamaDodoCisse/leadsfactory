@@ -21,14 +21,21 @@ $.fn.lfList = function(options){
         if(parent){
             var parent_id = 'lffield\\['+parent+'\\]';
             $('#'+parent_id).change(function(){
-                getChildOptions(parent, $(this).val(), child, defaultLbl);
+                updateChildOptions(parent, $(this).val(), child, defaultLbl);
             })
         }
     })
 
-    getChildOptions = function(parent, parentValue, child, defaultLbl){
+    updateChildOptions = function(parent, parentValue, child, defaultLbl){
         $.get(settings.ajax_url, {'parent_code': parent, 'parent_value': parentValue, 'default': defaultLbl}, function(data, textStatus){
-            child.html(data)
+            child.html(data);
+            /** Mise à jour de l'enfant de l'enfant si besoin **/
+            var child_id = child.attr('id');
+            var child_code = child_id.replace(/lffield\[(\w+)\]/, "$1");
+            var childChild = $('select[data-parent='+child_code+']');
+            if(childChild.length){
+                updateChildOptions(child_code, child.val(), childChild, childChild.data('default'));
+            }
         });
     }
 };
