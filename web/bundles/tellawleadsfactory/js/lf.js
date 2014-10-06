@@ -1,26 +1,34 @@
 
 jQuery(document).ready(function($){
 
-    $('select.child-list').each(function(i){
+    $('select.child-list').lfList();
+});
+
+
+/**
+ * Listes hiérarchiques
+ *
+ * @param string options URL
+ */
+$.fn.lfList = function(options){
+
+    var settings = $.extend({ajax_url: 'ajax/list_options'}, options);
+
+    this.each(function(i){
         var parent = $(this).data('parent');
-        var child_id = $(this).attr('id');
+        var child = $(this);
+        var defaultLbl = $(this).data('default');
         if(parent){
             var parent_id = 'lffield\\['+parent+'\\]';
             $('#'+parent_id).change(function(){
-                getChildOptions($(this).val(), child_id);
+                getChildOptions(parent, $(this).val(), child, defaultLbl);
             })
         }
     })
 
-});
-
-
-function getChildOptions(parentValue, child_id)
-{
-    //alert(parentValue + ' ' + child_id);
-    $.get('ajax/list_options', {'parent_value': parentValue, 'list_code': child_id}, updateOptions);
-}
-
-function updateOptions(){
-    alert('success');
-}
+    getChildOptions = function(parent, parentValue, child, defaultLbl){
+        $.get(settings.ajax_url, {'parent_code': parent, 'parent_value': parentValue, 'default': defaultLbl}, function(data, textStatus){
+            child.html(data)
+        });
+    }
+};

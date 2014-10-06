@@ -91,15 +91,11 @@ class FormUtils {
                                                     "raw" => $result);
 
             //List case
-            //if is parent
-            if(isset($result->attributes()['data-parent']) && isset($result->attributes()['data-list'])){
-
-                $listCode = $result->attributes()['data-list']->__toString();
-                $options = $this->getElementOptions($listCode);
-                $items[(string)$result['id']]['options'] = $options;
-            }elseif(isset($result->attributes()['data-list'])){
-
-                $listCode = $result->attributes()['data-list']->__toString();
+            //if list is slave
+            if(isset($attributes['data-parent']) && isset($attributes['data-list'])){
+                $items[(string)$result['id']]['options'] = false;
+            }elseif(isset($attributes['data-list'])){
+                $listCode = $attributes['data-list'];
                 $options = $this->getElementOptions($listCode);
                 $items[(string)$result['id']]['options'] = $options;
             }

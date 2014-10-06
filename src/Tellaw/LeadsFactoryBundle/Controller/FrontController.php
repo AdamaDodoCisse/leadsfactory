@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
@@ -19,7 +20,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/client")
- * @Cache(expires="tomorrow")
  */
 class FrontController extends AbstractLeadsController
 {
@@ -157,10 +157,29 @@ class FrontController extends AbstractLeadsController
      */
     public function getChildListOptionsAction(Request $request)
     {
+        $parentCode = $request->query->get('parent_code');
         $parentValue = $request->query->get('parent_value');
-        $listCode = $request->query->get('liste_code');
-        //$options =
-        $x=0;
+        $default  = $request->query->get('default');
+
+        if(empty($parentValue)){
+            $optionsHtml = '<option value="">'.$default.'</option>';
+
+        }else{
+            $parentList = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findByCode($parentCode);
+            $parentItem = $this->getdoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->findOneBy(array(
+                'value'         => $parentValue,
+                'referenceList' => $parentList
+            ));
+
+            $children = (!empty($parentItem)) ? $parentItem->getChildren()->getValues() : array();
+
+            $optionsHtml = '<option value="">Sélectionnez</option>';
+            foreach($children as $child){
+                $optionsHtml .= '<option value="'.$child->getValue().'">'.$child->getName().'</option>';
+            }
+        }
+
+        return new Response($optionsHtml);
     }
 
 }

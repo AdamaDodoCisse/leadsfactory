@@ -29,12 +29,19 @@ class LinkedReferenceListFieldType extends AbstractFieldType {
     {
         $id = $tag['attributes']['id'];
         $name = isset($tag['attributes']['multiple']) ? 'lffield['.$id.'][]' : 'lffield['.$id.']';
-        $isParent = empty($tag['attributes']['data-parent']);
 
+        $options = $tag['options'];
         $optionsHtml = '';
-        foreach($tag['options'] as $option){
-            $optionsHtml .= '<option value="'.$option->getValue().'">'.$option->getName().'</option>';
+
+        if(isset($tag['attributes']['data-default']))
+            $optionsHtml = '<option value="">'.$tag['attributes']['data-default'].'</option>';
+
+        if($options !== false){
+            foreach($options as $option){
+                $optionsHtml .= '<option value="'.$option->getValue().'">'.$option->getName().'</option>';
+            }
         }
+
         $html = '<select id="lffield['.$id.']" name="'.$name.'" '.$this->getAttributes( $tag ).'>'.$optionsHtml.'</select>';
 
         return $html;
