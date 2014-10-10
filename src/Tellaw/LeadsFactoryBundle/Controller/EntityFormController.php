@@ -143,4 +143,22 @@ class EntityFormController extends AbstractLeadsController
 
     }
 
+    /**
+     * @Route("/form/duplicate/id/{id}", name="_form_duplicate")
+     * @Secure(roles="ROLE_USER")
+     * @Method("GET")
+     * @Template()
+     */
+    public function duplicateAction ($id)
+    {
+        $old = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+
+        $em = $this->getDoctrine()->getManager();
+        $new = clone $old;
+        $new->setCode('');
+        $em->persist($new);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('_form_edit', array('id' => $new->getId())));
+    }
 }
