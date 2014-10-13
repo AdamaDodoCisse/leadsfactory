@@ -113,7 +113,7 @@ class EntityFormController extends AbstractLeadsController
             $em->persist($form->getData());
             $em->flush();
 
-            return $this->redirect($this->generateUrl('_form_list'));
+//            return $this->redirect($this->generateUrl('_form_list'));
         }
 
         return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(    'id' => $id,
