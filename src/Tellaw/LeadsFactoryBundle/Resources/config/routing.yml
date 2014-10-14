@@ -1,5 +1,10 @@
 tellaw_leads_factory_homepage:
-    resource: "@TellawLeadsFactoryBundle/Controller/"
+    resource: "@TellawLeadsFactoryBundle/Controller/Admin/"
+    type:     annotation
+    prefix:   /admin
+
+tellaw_leads_factory_front:
+    resource: "@TellawLeadsFactoryBundle/Controller/FrontController.php"
     type:     annotation
     prefix:   /
 
@@ -14,6 +19,6 @@ _security_logout:
 #   resource: "@FrameworkBundle/Resources/config/routing/internal.xml"
 #   prefix:   /_internal
 
-_assetic:
-    resource: .
-    type:     assetic
+#_assetic:
+#    resource: .
+#    type:     assetic

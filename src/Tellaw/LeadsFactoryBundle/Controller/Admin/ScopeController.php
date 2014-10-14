@@ -1,6 +1,6 @@
 <?php
 
-namespace Tellaw\LeadsFactoryBundle\Controller;
+namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

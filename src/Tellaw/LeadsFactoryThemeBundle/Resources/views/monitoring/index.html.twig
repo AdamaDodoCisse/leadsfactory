@@ -25,25 +25,25 @@
 
     <!-- Chart -->
     {% if(app.request.get('form')) %}
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart', {
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chart', {
         "period" : app.request.get('form')['period'],
         "formType":  app.request.get('form')['form_type'],
         "form":  app.request.get('form')['form']
         }
         )) }}
     {% else %}
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:chart')) }}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chart')) }}
     {% endif %}
 
     <!-- ==== Monitoring Tous type = Dashboard avec les types affichés === -->
 
     {% if(app.request.get('form')) %}
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure', {
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measure', {
             "formType":  app.request.get('form')['form_type'],
             "form":  app.request.get('form')['form']
         })) }}
     {% else %}
-        {{ render(controller('TellawLeadsFactoryBundle:monitoring:measure')) }}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measure')) }}
     {% endif %}
 
 

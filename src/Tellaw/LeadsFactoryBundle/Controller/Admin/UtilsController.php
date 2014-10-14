@@ -1,6 +1,6 @@
 <?php
 
-namespace Tellaw\LeadsFactoryBundle\Controller;
+namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

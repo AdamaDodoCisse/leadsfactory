@@ -1,5 +1,5 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Controller;
+namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
