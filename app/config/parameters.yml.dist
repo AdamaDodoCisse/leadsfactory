@@ -13,3 +13,7 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    edeal_wsdl:         ~
+    edeal_user:         ~
+    edeal_password:     ~
