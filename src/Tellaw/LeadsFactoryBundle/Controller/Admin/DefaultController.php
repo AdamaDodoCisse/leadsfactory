@@ -1,11 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tellaw
- * Date: 15/09/2014
- * Time: 10:47
- */
-namespace Tellaw\LeadsFactoryBundle\Controller;
+
+namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,15 +15,26 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
-abstract class AbstractLeadsController extends Controller {
+/**
+ *
+ */
+class DefaultController extends AbstractLeadsController
+{
 
+    /**
+     *
+     * @Route("/index.html", name="_index")
+     * @Route("/")
+     * @Template()
+     *
+     */
+    public function indexAction(Request $request)
+    {
 
-    protected function getBaseTheme () {
-
-        return $this->container->getParameter("theme.bundle");
-
+        return $this->redirect($this->generateUrl('_monitoring_dashboard'));
 
     }
+
 
 
 }

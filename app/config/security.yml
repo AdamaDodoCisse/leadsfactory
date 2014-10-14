@@ -12,20 +12,21 @@ security:
 
     firewalls:
         secured_area:
-            pattern:    ^/
+            pattern:    ^/admin
             anonymous: ~
             form_login:
-                check_path: /login_check
-                login_path: /login
+                check_path: /admin/login_check
+                login_path: /admin/login
+                default_target_path: /admin/monitoring/dashboard
             logout:
-                path:   /logout
+                path:   /admin/logout
 
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
 
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_ADMIN }
+        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
         #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

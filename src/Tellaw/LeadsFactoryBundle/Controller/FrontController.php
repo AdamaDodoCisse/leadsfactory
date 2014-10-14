@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/client")
  */
-class FrontController extends AbstractLeadsController
+class FrontController extends Admin\AbstractLeadsController
 {
 
     /**
