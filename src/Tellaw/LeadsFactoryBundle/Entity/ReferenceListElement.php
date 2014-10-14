@@ -12,6 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ReferenceListElement {
 
+
+    public function __construct()
+    {
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 	/**
 	 * @var integer $id
 	 *
@@ -52,10 +58,6 @@ class ReferenceListElement {
      */
     protected $referenceList;
 
-    public function __construct()
-    {
-        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * @param mixed $referenceList

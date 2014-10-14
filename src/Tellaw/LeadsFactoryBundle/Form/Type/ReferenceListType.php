@@ -3,6 +3,8 @@ namespace Tellaw\LeadsFactoryBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ReferenceListType extends AbstractType
@@ -23,6 +25,9 @@ class ReferenceListType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'Tellaw\LeadsFactoryBundle\Entity\ReferenceList',
+                'attr' => ['id' => 'form-form',
+                    'onSubmit' => 'validateFormAction();'
+                ]
             )
         );
 
@@ -33,7 +38,7 @@ class ReferenceListType extends AbstractType
         $builder->add('name');
         $builder->add('description');
 
-        $builder->add('json', "textarea", array('mapped' => false));
+        $builder->add('json', new JsonType(), array('mapped' => false, 'label' => 'Elements de la liste', 'required' => false));
 
         $builder->add('save', 'submit');
 
@@ -43,5 +48,7 @@ class ReferenceListType extends AbstractType
     {
         return 'referenceList';
     }
+
+
 
 }

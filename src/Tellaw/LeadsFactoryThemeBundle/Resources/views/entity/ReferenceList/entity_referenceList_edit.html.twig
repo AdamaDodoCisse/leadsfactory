@@ -4,6 +4,18 @@
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
 
+    <script>
+
+        function validateFormAction() {
+
+            document.getElementById("referenceList_json").value = JSON.stringify(editor.get());
+
+            alert (document.getElementById("referenceList_json").value);
+
+        }
+
+    </script>
+
     <div class="col-md-12">
         <div class="heading-sec" id="intro6">
             <h1>{{ title }}</h1>

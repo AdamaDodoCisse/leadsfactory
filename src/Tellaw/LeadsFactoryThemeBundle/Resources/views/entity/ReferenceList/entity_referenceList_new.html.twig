@@ -3,45 +3,38 @@
 
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
-    <hgroup id="main-title" class="thin">
-        <h1>{{ title }}</h1>
-    </hgroup>
-    <div class="columns">
 
-        <div class="with-padding eight-columns">
+    <script>
 
-            <h3 class="thin underline">Edition de la liste de référence</h3>
-            {{ form(form) }}
+        function validateFormAction() {
 
+            document.getElementById("referenceList_json").value = JSON.stringify(editor.get());
+
+            alert (document.getElementById("referenceList_json").value);
+
+        }
+
+    </script>
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
         </div>
-
-        <div class="with-padding three-columns">
-
-            <h3 class="thin underline">Actions</h3>
-
-                <p class="button-height">
-                    blabla explication
-                </p>
-
-        </div>
-
     </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        Aide contextuelle
+    </div>
+
+
 
 {% endblock %}
 {% block javascript %}
-    <script>
-        // Table sort - DataTables
-        var table = $('#sorting-advanced');
-        table.dataTable({
 
-            'sPaginationType': 'full_numbers',
-            'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
-            'fnInitComplete': function( oSettings )
-            {
-                // Style length select
-                table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
-                tableStyled = true;
-            }
-        });
-    </script>
 {% endblock %}

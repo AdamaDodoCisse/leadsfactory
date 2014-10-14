@@ -55,7 +55,7 @@ class UtilsController extends AbstractLeadsController
     }
 
     /**
-     * @Route("/streamtable/form/", name="_utils_streamtables")
+     * @Route("/streamtable/form/", name="_utils_streamtables_form")
      * @Secure(roles="ROLE_USER")
      */
     public function streamTableFormAction (Request $request) {
@@ -70,7 +70,27 @@ class UtilsController extends AbstractLeadsController
             ->select('form')
             ->from('TellawLeadsFactoryBundle:Form','form')->setFirstResult($offset)->setMaxResults($limit);
 
-        return $this->render($this->getBaseTheme().':Utils:streamtables.html.twig', array ( 'items' => new Paginator ($q) ));
+        return $this->render($this->getBaseTheme().':Utils:streamtables_form.html.twig', array ( 'items' => new Paginator ($q) ));
+
+    }
+
+    /**
+     * @Route("/streamtable/leads/", name="_utils_streamtables_leads")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function streamTableLeadsAction (Request $request) {
+
+        // check parameters
+        $q = $request->get("q");
+        $limit = $request->get("limit",10);
+        $offset = $request->get("offset");
+
+        $q = $this->getDoctrine()->getManager()
+            ->createQueryBuilder()
+            ->select('leads')
+            ->from('TellawLeadsFactoryBundle:Leads','leads')->setFirstResult($offset)->setMaxResults($limit);
+
+        return $this->render($this->getBaseTheme().':Utils:streamtables_leads.html.twig', array ( 'items' => new Paginator ($q) ));
 
     }
 

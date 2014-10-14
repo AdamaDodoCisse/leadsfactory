@@ -6,6 +6,11 @@ parameters:
 
 services:
 
+  lf.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\LFUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   chart:
     class:        Tellaw\LeadsFactoryBundle\Utils\Chart
     calls:

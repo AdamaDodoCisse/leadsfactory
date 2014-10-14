@@ -316,8 +316,11 @@
                 _self.setStreamInterval();
             }
 
-        }).fail(function(e){
-            alert ("Erreur fetching");
+        }).fail(function(e, textStatus, error){
+
+            var err = textStatus + ", " + error;
+            console.log( "Request Failed: " + err );
+            alert ("Erreur fetching : "+err);
             _self.stopStreaming();
         });
     };

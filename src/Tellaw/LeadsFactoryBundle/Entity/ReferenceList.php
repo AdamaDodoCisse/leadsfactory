@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class ReferenceList {
 
     /**
-     * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", mappedBy="referenceList")
+     * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", mappedBy="referenceList", cascade={"persist"})
      */
     protected $elements;
 
@@ -154,4 +154,67 @@ class ReferenceList {
     {
         $this->elements->removeElement($elements);
     }
+
+    public function getJson () {
+
+        $data = array();
+
+        $elements = $this->getElements ();
+        $data["lists"] = array( 0 => "l1", 1 => "l2", 3=>"l3" );
+        $data["elements"] = $this->getChilds( $elements );
+
+        //var_dump(($elements));
+        //die();
+        $json = json_encode( $data );
+
+        return $json;
+    }
+
+    public function getChilds ( $elements ) {
+
+        $dataChilds = array();
+
+        foreach ($elements as $element) {
+
+
+            if ( $element->getChildren()->count() ) {
+
+                $dataChilds[] = array (
+                    "id"=>$element->getId(),
+                    "name"=>$element->getName(),
+                    "value"=>$element->getValue(),
+                    "childrens" => $this->getChilds( $element->getChildren() )
+
+                );
+
+            } else {
+
+                $dataChilds[] = array (
+                    "id"=>$element->getId(),
+                    "name"=>$element->getName(),
+                    "value"=>$element->getValue()
+
+                );
+
+
+            }
+//var_dump ($element->getChildren());
+            //if ( count($element->getChildren()) ) {
+
+
+
+            //}
+
+        }
+
+        return $dataChilds;
+
+    }
+
+    public function setJson ( $json ) {
+
+
+
+    }
+
 }
