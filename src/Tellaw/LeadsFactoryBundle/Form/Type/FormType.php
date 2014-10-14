@@ -23,9 +23,9 @@ class FormType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'Tellaw\LeadsFactoryBundle\Entity\Form',
-                'attr' => ['id' => 'form-form',
+                'attr' => array('id' => 'form-form',
                             'onSubmit' => 'validateFormAction();'
-                            ]
+                )
             )
         );
 
