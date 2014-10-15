@@ -9,6 +9,7 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
+use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 
 class FormUtils {
 
@@ -38,22 +39,25 @@ class FormUtils {
      * @param $formId Id of the form in LF backend
      * @return String HTML of the generated form.
      */
-    public function buildHtmlForm ( $source, $formId, $formObject ) {
+    public function buildHtmlForm (FormEntity $form)
+    {
+        $html = $form->getSource();
 
-        $tags = $this->parseTags( $source );
+        $tags = $this->parseTags($html);
 
         foreach ($tags as $id => $tag) {
             $htmlTag = $this->renderTag( $id, $tag );
-            $source = str_replace( $tag["raw"]->asXML(), $htmlTag, $source );
+            $raw = $tag["raw"]->asXML();
+            $html = str_replace( $tag["raw"]->asXML(), $htmlTag, $html );
         }
 
-        $source = $this->setFormTag ( $source, $formId );
-        $source = $this->setHiddenTags ( $source, $formId, $formObject );
+        $html = $this->setFormTag ($html);
+        $html = $this->setHiddenTags ($form, $html);
 
-        list ($isValid, $error_msg) = $this->checkFormValidity( $source );
+        list ($isValid, $error_msg) = $this->checkFormValidity( $html );
 
         if ( $isValid )
-            return $source;
+            return $html;
         else
             return "form has errors";
     }
@@ -156,13 +160,12 @@ class FormUtils {
      *
      * Method used to replace the form tag
      *
-     * @param $source Source of the form to generate
+     * @param $html Source of the form to generate
      * @param $formId Id of the form in the LF
      * @return String modified form including the form tag
      */
-    private function setFormTag ( $source, $formId ) {
-
-        $request = Request::createFromGlobals();
+    private function setFormTag($html)
+    {
         $currentUrl = $this->container->get('router')->generate("_client_post_form", array(), true);
 
         $action = $currentUrl;
@@ -170,36 +173,33 @@ class FormUtils {
 
         $tag = "<form action='".$action."' method='".$method."'>";
 
-        $source = str_replace ("<form>", $tag, $source);
+        $html = str_replace ("<form>", $tag, $html);
 
-        return $source;
-
+        return $html;
     }
 
     /**
      *
      * Method used to add hidden tags, used to save informations of context to LF
      *
-     * @param $source Source of the form to generate
+     * @param $html Source of the form to generate
      * @param $formId Id of the form in the LF
      * @return String modified form including the form tag
      */
-    private function setHiddenTags ( $source, $formId, $formObject ) {
-
+    private function setHiddenTags($form, $html)
+    {
         $tags="
-            <input type='hidden' name=\"lffield['utmcampaign']\" id=\"lffield['utmcampaign']\" value='".$formObject->getUtmcampaign()."'/>
-            <input type='hidden' name='lfFormId' id='lfFormId' value='".$formId."'/>
+            <input type='hidden' name=\"lffield['utmcampaign']\" id=\"lffield['utmcampaign']\" value='".$form->getUtmcampaign()."'/>
+            <input type='hidden' name='lfFormId' id='lfFormId' value='".$form->getId()."'/>
             <input type='hidden' name='lfForwardSuccess' id='lfForwardSuccess' value='' />
             <input type='hidden' name='lfForwardError' id='lfForwardError' value='' />
-            <input type='hidden' name='lfFormType' id='lfFormType' value='".$formObject->getFormType()->getId()."'/>
-            <input type='hidden' name='lfFormKey' id='lfFormKey' value='".$this->getFormKey($formId)."'/>
+            <input type='hidden' name='lfFormType' id='lfFormType' value='".$form->getFormType()->getId()."'/>
+            <input type='hidden' name='lfFormKey' id='lfFormKey' value='".$this->getFormKey($form->getId())."'/>
             </form>
         ";
 
-        $source = str_replace ( "</form>", $tags, $source );
-
-        return $source;
-
+        $html = str_replace ( "</form>", $tags, $html );
+        return $html;
     }
 
     /**

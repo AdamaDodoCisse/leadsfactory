@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
+use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 
 class JsUtils {
 
@@ -16,17 +17,17 @@ class JsUtils {
     }
 
 
-    public function buildAndWrapForm ( $source, $formId, $formObject ) {
-
+    public function buildAndWrapForm(FormEntity $formObject)
+    {
+        /** @var \Tellaw\LeadsFactoryBundle\Utils\FormUtils $formUtils */
         $formUtils = $this->container->get ("form_utils");
-        $formHtml = $formUtils->buildHtmlForm ( $source, $formId, $formObject );
+        $formHtml = $formUtils->buildHtmlForm ( $formObject );
 
         $jsForm = $this->wrapHtml( $formHtml );
 
-        $jsForm .= $this->generateGetterAndSetters( $source );
+        $jsForm .= $this->generateGetterAndSetters( $formObject->getSource() );
 
         return $jsForm;
-
     }
 
     private function wrapHtml ( $html ) {

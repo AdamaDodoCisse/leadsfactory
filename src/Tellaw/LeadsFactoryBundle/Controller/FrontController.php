@@ -51,24 +51,16 @@ class FrontController extends Admin\AbstractLeadsController
     /**
      * @Route("/form/js/{code}", name="_client_get_form_js")
      */
-    public function getFormAsJsAction ( Request $request, $code ) {
-
-        //$formUtils = new FormUtils();
+    public function getFormAsJsAction($code)
+    {
         /** @var \Tellaw\LeadsFactoryBundle\Utils\JsUtils $formUtils */
         $formUtils = $this->get("js_utils");
 
-        /** @var \Tellaw\LeadsFactoryBundle\Entity\Form $object */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($code);
+        /** @var \Tellaw\LeadsFactoryBundle\Entity\Form $form */
+        $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($code);
+        $jsForm = $formUtils->buildAndWrapForm ($form);
 
-        $source = $object->getSource();
-
-        //$tags = $formUtils->parseTags( $source );
-
-        $jsForm = $formUtils->buildAndWrapForm ( $source, $object->getId(), $object );
-
-        echo ($jsForm);
-        die();
-
+        return new Response($jsForm);
     }
 
     /**

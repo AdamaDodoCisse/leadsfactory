@@ -54,30 +54,34 @@ class EntityFormController extends AbstractLeadsController
      */
     public function newAction( Request $request )
     {
-
-        $type = new FormType();
-
-        $form = $this->createForm(  $type,
+        $form = $this->createForm(
+            new FormType(),
             null,
-            array(
-                'method' => 'POST'
-            )
+            array('method' => 'POST')
         );
 
         $form->handleRequest($request);
-
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
-
-            return $this->redirect($this->generateUrl('_form_list'));
+//            return $this->redirect($this->generateUrl('_form_list'));
+            return $this->render(
+                $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
+                array(
+                    'id' => $form->getId(),
+                    'form' => $form->createView(),
+                    'title' => "Edition d'un formulaire"
+                )
+            );
         }
-
-        return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Création d'un formulaire"));
+        return $this->render(
+            $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
+            array(
+                'form' => $form->createView(),
+                'title' => "Création d'un formulaire"
+            )
+        );
     }
 
     /**
@@ -87,39 +91,29 @@ class EntityFormController extends AbstractLeadsController
      */
     public function editAction( Request $request, $id )
     {
-
-        /**
-         * This is the new / editing action
-         */
-
-        // crée une tâche et lui donne quelques données par défaut pour cet exemple
-        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
-
-        $type = new FormType();
-
-        $form = $this->createForm(  $type,
-                                    $formData,
-                                    array(
-                                        'method' => 'POST'
-                                    )
+        $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+        $form = $this->createForm(
+            new FormType(),
+            $formEntity,
+            array('method' => 'POST')
         );
 
         $form->handleRequest($request);
-
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
-
 //            return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/Form:entity_form_edit.html.twig', array(    'id' => $id,
-                                                                                                        'form' => $form->createView(),
-                                                                                                        'title' => "Edition d'un formulaire"));
-
+        return $this->render(
+            $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
+            array(
+                'id' => $id,
+                'form' => $form->createView(),
+                'title' => "Edition d'un formulaire"
+            )
+        );
     }
 
     /**
