@@ -1,16 +1,16 @@
 
-jQuery(document).ready(function($){
+//jQuery(document).ready(function($){
+//
+//    $('select.child-list').lfList();
+//});
 
-    $('select.child-list').lfList();
-});
-
-
-/**
- * Listes hiérarchiques
- *
- * @param string options URL
- */
-$.fn.lfList = function(options){
+(function ($) {
+    /**
+     * Listes hiérarchiques
+     *
+     * @param string options URL
+     */
+    $.fn.lfList = function(options){
 
     var settings = $.extend({ajax_url: 'ajax/list_options'}, options);
 
@@ -38,7 +38,7 @@ $.fn.lfList = function(options){
                 })
             }
         }
-    })
+        });
 
     updateChildOptions = function(parent_list_code, parentValue, child, defaultLbl){
         $.get(settings.ajax_url, {'parent_code': parent_list_code, 'parent_value': parentValue, 'default': defaultLbl}, function(data, textStatus){
@@ -59,3 +59,4 @@ $.fn.lfList = function(options){
         });
     }
 };
+}(jQuery));

@@ -57,7 +57,8 @@ class JsUtils {
     }
 
     private function buildGetterAndSetterForId ( $id ) {
-       return "leadsfactory.set".ucfirst($id)."= function (value){document.getElementById(\"lffield[".$id."]\").value=value;};\r\nleadsfactory.get".ucfirst($id)." = function(){return document.getElementById(\"lffield[".$id."]\").value;};\r\n";
+        $camelId = StringHelper::camelize($id);
+        return "leadsfactory.set".$camelId."= function (value){document.getElementById(\"lffield[".$id."]\").value=value;};\r\nleadsfactory.get".$camelId." = function(){return document.getElementById(\"lffield[".$id."]\").value;};\r\n";
     }
 
 }
