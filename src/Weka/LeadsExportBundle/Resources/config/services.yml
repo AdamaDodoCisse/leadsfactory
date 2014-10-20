@@ -1,17 +1,3 @@
 parameters:
     weka_leads_export.athena.class: Weka\LeadsExportBundle\Utils\Athena
     athena_url: http://athena.host-athena-dev1.captivea.net/index.php
-
-services:
-    athena_method:
-        class: %weka_leads_export.athena.class%
-        calls:
-          - [setContainer, [@service_container]]
-        tags:
-          - {name: export.method, alias: athena}
-        arguments: [%athena_url%]
-    weka_leads_export.soap_command:
-            class: Tellaw\LeadsFactoryBundle\Command\SoapCommand
-            arguments: [%edeal_wsdl%, %edeal_user%, %edeal_password%]
-            tags:
-                -  { name: console.command }

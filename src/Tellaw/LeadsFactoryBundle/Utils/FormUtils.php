@@ -3,6 +3,7 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
@@ -45,10 +46,28 @@ class FormUtils {
 
         $tags = $this->parseTags($html);
 
+        /**
+         * TODO:
+         * Should :
+         * 1) Find tag fields and get its ID
+         * 2) retrieve HTML with regular exp using tag and id
+         * 3) use html extracted with regexp to replace
+         */
+
         foreach ($tags as $id => $tag) {
+
+            $matches = null;
+
             $htmlTag = $this->renderTag( $id, $tag );
             $raw = $tag["raw"]->asXML();
-            $html = str_replace( $tag["raw"]->asXML(), $htmlTag, $html );
+
+            $pattern = "/<field (.*) id=\"".$id."\"( |)( |.*)\/>/";
+
+            preg_match ( $pattern, $html, $matches );
+
+            if ( !$matches ) throw new Exception ("Unable to replace TAG ID : ".$id);
+
+            $html = str_replace( $matches[0], $htmlTag, $html );
         }
 
         $html = $this->setFormTag ($html);
@@ -97,11 +116,15 @@ class FormUtils {
             //List case
             //if list is slave
             if(isset($attributes['data-parent']) && isset($attributes['data-list'])){
+
                 $items[(string)$result['id']]['options'] = false;
+
             }elseif(isset($attributes['data-list'])){
+
                 $listCode = $attributes['data-list'];
                 $options = $this->getElementOptions($listCode);
                 $items[(string)$result['id']]['options'] = $options;
+
             }
         }
         return $items;

@@ -39,7 +39,7 @@ class FrontController extends Admin\AbstractLeadsController
 
         //$tags = $formUtils->parseTags( $source );
 
-        $html = $formUtils->buildHtmlForm( $source, $id, $object );
+        $html = $formUtils->buildHtmlForm( $object );
 
         return $this->render(
             $this->getBaseTheme().':Front:display_form.html.twig',
