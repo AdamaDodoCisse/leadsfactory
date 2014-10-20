@@ -46,14 +46,6 @@ class FormUtils {
 
         $tags = $this->parseTags($html);
 
-        /**
-         * TODO:
-         * Should :
-         * 1) Find tag fields and get its ID
-         * 2) retrieve HTML with regular exp using tag and id
-         * 3) use html extracted with regexp to replace
-         */
-
         foreach ($tags as $id => $tag) {
 
             $matches = null;
