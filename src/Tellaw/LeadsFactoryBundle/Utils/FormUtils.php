@@ -62,9 +62,7 @@ class FormUtils {
             $raw = $tag["raw"]->asXML();
 
             $pattern = "/<field (.*) id=\"".$id."\"( |)( |.*)\/>/";
-
             preg_match ( $pattern, $html, $matches );
-
             if ( !$matches ) throw new Exception ("Unable to replace TAG ID : ".$id);
 
             $html = str_replace( $matches[0], $htmlTag, $html );
