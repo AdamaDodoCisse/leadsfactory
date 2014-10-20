@@ -51,7 +51,6 @@ class FormUtils {
             $matches = null;
 
             $htmlTag = $this->renderTag( $id, $tag );
-            $raw = $tag["raw"]->asXML();
 
             $pattern = "/<field (.*) id=\"".$id."\"( |)( |.*)\/>/";
             preg_match ( $pattern, $html, $matches );
