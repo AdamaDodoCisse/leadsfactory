@@ -155,12 +155,12 @@ class ReferenceList {
         $this->elements->removeElement($elements);
     }
 
-    public function getJson () {
+    public function getJson ( $referingLists ) {
 
         $data = array();
 
         $elements = $this->getElements ();
-        $data["lists"] = array( 0 => "l1", 1 => "l2", 3=>"l3" );
+        $data["lists"] = $referingLists;
         $data["elements"] = $this->getChilds( $elements );
 
         //var_dump(($elements));
