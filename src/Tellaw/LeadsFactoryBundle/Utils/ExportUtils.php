@@ -17,6 +17,13 @@ class ExportUtils{
     public static $_EXPORT_NOT_SCHEDULED = 4;
 
     /**
+     * Email notifications settings
+     */
+    const NOTIFICATION_DEFAULT_FROM = 'leadsfactory@domain.com';
+    const NOTIFICATION_DEFAULT_SUBJECT = 'New lead has been created';
+    const NOTIFICATION_DEFAULT_TEMPLATE = 'emails:notification_default.html.twig';
+
+    /**
      * @var array
      */
     private $_methods;

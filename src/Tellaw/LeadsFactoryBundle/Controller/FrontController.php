@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Swift_Message;
 
 /**
  * @Route("/client")
@@ -93,17 +94,17 @@ class FrontController extends Admin\AbstractLeadsController
             $formObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($request->get("lfFormId"));
 
             // Read configuration to map attributes correctly
-            $decodedJson = $formObject->getConfig();
+            $config = $formObject->getConfig();
 //print_r ($json);die();
 
-            if ( array_key_exists('configuration', $decodedJson) ) {
+            if ( array_key_exists('configuration', $config) ) {
 
-                if (array_key_exists(  'lastname' , $decodedJson["configuration"] )) {
-                    $fields["lastname"] = ucfirst ($fields[ $decodedJson["configuration"]["lastname"] ]);
+                if (array_key_exists(  'lastname' , $config["configuration"] )) {
+                    $fields["lastname"] = ucfirst ($fields[ $config["configuration"]["lastname"] ]);
                 }
 
-                if (array_key_exists(  'firstname' , $decodedJson["configuration"] )) {
-                    $fields["firstname"] = ucfirst( $fields[ $decodedJson["configuration"]["firstname"] ] );
+                if (array_key_exists(  'firstname' , $config["configuration"] )) {
+                    $fields["firstname"] = ucfirst( $fields[ $config["configuration"]["firstname"] ] );
                 }
             }
 
@@ -117,8 +118,6 @@ class FrontController extends Admin\AbstractLeadsController
             $leads->setFormType( $formTypeObject );
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
-
-
 
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
@@ -134,6 +133,12 @@ class FrontController extends Admin\AbstractLeadsController
                 $exportUtils->createJob($leads);
             }
 
+            //Send notification
+            if(isset($config['notification'])){
+                $this->sendNotification($config['notification'], $leads);
+            }
+
+            //Redirect to success page
             if ( trim ( $redirectUrlSuccess ) != "") {
                 return $this->redirect($redirectUrlSuccess);
             }
@@ -174,6 +179,36 @@ class FrontController extends Admin\AbstractLeadsController
         }
 
         return new Response($optionsHtml);
+    }
+
+    /**
+     * Send Form data by email depending on form export config
+     *
+     * @param $params
+     */
+    protected function sendNotification($params, $fields)
+    {
+        $logger = $this->get('logger');
+        $exportUtils = $this->get('export_utils');
+
+        if(!isset($params['to'])){
+            $logger->error('No recipient available, check form config');
+            return;
+        }
+
+        $to = $params['to'];
+        $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
+        $subject = isset($params['subject']) ? $params['subject'] : $exportUtils::NOTIFICATION_DEFAULT_SUBJECT;
+        $template = isset($params['template']) ? $this->getBaseTheme().$params['template'] : $this->getBaseTheme().$exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($this->renderView($template, array('fields' => $fields)));
+
+        $x=0;
+
     }
 
 }

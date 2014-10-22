@@ -1,6 +1,9 @@
 parameters:
     weka_leads_export.athena.class: Weka\LeadsExportBundle\Utils\Athena
     athena_url: http://athena.host-athena-dev1.captivea.net/index.php
+    edeal_wsdl:         ~
+    edeal_user:         ~
+    edeal_password:     ~
 
 services:
     athena_method:
