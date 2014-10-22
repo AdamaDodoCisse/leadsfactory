@@ -28,6 +28,16 @@ class ReferenceListElement {
     protected $id;
 
     /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $parent_id;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true,  name="referencelist_id")
+     */
+    protected $referencelist_id;
+
+    /**
      * @var string $name
      * @ORM\Column(type="string", nullable=true, name="name")
      */
@@ -179,4 +189,38 @@ class ReferenceListElement {
     {
         return $this->children;
     }
+
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
+    }
+
+    /**
+     * @param mixed $parent_id
+     */
+    public function setParentId($parent_id)
+    {
+        $this->parent_id = $parent_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferenceListId()
+    {
+        return $this->referencelist_id;
+    }
+
+    /**
+     * @param mixed $referenceList_id
+     */
+    public function setReferenceListId($referenceList_id)
+    {
+        $this->referencelist_id = $referenceList_id;
+    }
+
 }
