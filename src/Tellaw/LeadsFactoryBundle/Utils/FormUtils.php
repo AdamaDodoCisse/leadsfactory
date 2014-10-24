@@ -169,11 +169,9 @@ class FormUtils {
     }
 
     /**
-     *
      * Method used to replace the form tag
      *
-     * @param $html Source of the form to generate
-     * @param $formId Id of the form in the LF
+     * @param string $html
      * @return String modified form including the form tag
      */
     private function setFormTag($html)
@@ -183,9 +181,9 @@ class FormUtils {
         $action = $currentUrl;
         $method = "POST";
 
-        $tag = "<form action='".$action."' method='".$method."'>";
-
-        $html = str_replace ("<form>", $tag, $html);
+        $pattern = "/<form (.*)>/";
+        $tag = "<form action='".$action."' method='".$method."' $1>";
+        $html = preg_replace ( $pattern, $tag, $html );
 
         return $html;
     }
