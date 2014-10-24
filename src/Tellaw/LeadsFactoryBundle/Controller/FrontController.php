@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
@@ -147,8 +148,7 @@ class FrontController extends Admin\AbstractLeadsController
             return $this->redirect($redirectUrlError);
         }
 
-        echo ("Done");
-        die();
+        return new Response('Done');
     }
 
     /**
@@ -182,33 +182,43 @@ class FrontController extends Admin\AbstractLeadsController
     }
 
     /**
-     * Send Form data by email depending on form export config
+     * Send email notification
      *
-     * @param $params
+     * @param array $params
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
      */
-    protected function sendNotification($params, $fields)
+    protected function sendNotification($params, $leads)
     {
         $logger = $this->get('logger');
         $exportUtils = $this->get('export_utils');
 
+        $data = json_decode($leads->getData(), true);
+
         if(!isset($params['to'])){
-            $logger->error('No recipient available, check form config');
+            $logger->error('No recipient available, check JSON form config');
             return;
         }
 
         $to = $params['to'];
         $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
-        $subject = isset($params['subject']) ? $params['subject'] : $exportUtils::NOTIFICATION_DEFAULT_SUBJECT;
-        $template = isset($params['template']) ? $this->getBaseTheme().$params['template'] : $this->getBaseTheme().$exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
+        $subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName();
+        $template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
 
         $message = Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($this->renderView($template, array('fields' => $fields)));
+            ->setBody($this->renderView($this->getBaseTheme().':'.$template,
+                array(
+                    'fields' => $data,
+                    'intro' => 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName())), 'text/html'
+            );
 
-        $x=0;
-
+        try{
+            $result = $this->get('mailer')->send($message);
+        }catch(Exception $e){
+            $logger->error($e->getMessage());
+        }
     }
 
 }

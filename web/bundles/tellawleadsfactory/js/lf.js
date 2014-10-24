@@ -1,8 +1,8 @@
 
-//jQuery(document).ready(function($){
-//
-//    $('select.child-list').lfList();
-//});
+jQuery(document).ready(function($){
+
+    $('select.child-list').lfList();
+});
 
 (function ($) {
     /**
