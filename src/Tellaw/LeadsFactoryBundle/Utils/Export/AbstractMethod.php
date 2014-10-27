@@ -34,8 +34,8 @@ abstract class AbstractMethod {
     /**
      * Retourne le chemin du dossier d'export
      *
+     * @throws \Exception
      * @return string
-     * @throws Exception
      */
     protected function getExportPath()
     {

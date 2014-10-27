@@ -40,6 +40,7 @@ class ExportController extends AbstractLeadsController
             $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
         }else{
             $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($formId);
+            $forms = array($forms);
         }
 
         foreach($forms as $form){

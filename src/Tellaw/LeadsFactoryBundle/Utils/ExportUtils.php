@@ -97,6 +97,8 @@ class ExportUtils{
      */
     public function createJob($lead)
     {
+        $logger = $this->getContainer()->get('export.logger');
+
         $config = $lead->getForm()->getConfig();
         foreach($config['export'] as $method=>$methodConfig){
 
@@ -104,7 +106,7 @@ class ExportUtils{
 
             if(!$this->isValidExportMethod($method)){
                 $job->setLog('Méthode d\'export invalide');
-                $this->getContainer()->get('export.logger')->info('Méthode d\'export invalide (formulaire ID '.$lead->getForm()->getId().')');
+                $logger->info('Méthode d\'export invalide (formulaire ID '.$lead->getForm()->getId().')');
             }
 
             $job->setMethod($method);
@@ -118,10 +120,10 @@ class ExportUtils{
                 $em = $this->getContainer()->get('doctrine')->getManager();
                 $em->persist($job);
                 $em->flush();
-                $this->getContainer()->get('export.logger')->info('Job export (ID '.$job->getId().') créé avec succès');
+                $logger->info('Job export (ID '.$job->getId().') créé avec succès');
 
             }catch (Exception $e) {
-                $this->getContainer()->get('export.logger')->error($e->getMessage());
+                $logger->error($e->getMessage());
                 //Error
             }
         }
@@ -156,17 +158,19 @@ class ExportUtils{
     }
 
     /**
-     * Launches export for each configured export methods
+     * Launches export for all configured methods
      *
      * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      */
     public function export($form)
     {
+        $logger = $this->getContainer()->get('export.logger');
+
         $config = $form->getConfig();
         foreach($config['export'] as $method=>$methodConfig){
 
             if(!$this->isValidExportMethod($method)){
-                throw new \Exception('Méthode d\'export "'.$method.'" invalide');
+                $logger->error('Méthode d\'export "'.$method.'" invalide');
                 continue;
             }
             $jobs = $this->getExportableJobs($form, $method, $methodConfig);
