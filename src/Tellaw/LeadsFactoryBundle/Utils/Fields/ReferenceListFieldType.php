@@ -56,8 +56,14 @@ class ReferenceListFieldType extends AbstractFieldType {
         $id = $tag['attributes']['id'];
         $name = isset($tag['attributes']['multiple']) ? 'lffield['.$id.'][]' : 'lffield['.$id.']';
         $optionsHtml = '';
-        foreach($tag['options'] as $option){
-            $optionsHtml .= '<option value="'.$option->getValue().'">'.$option->getName().'</option>';
+
+        if(isset($tag['attributes']['data-default']))
+            $optionsHtml = '<option value="">'.$tag['attributes']['data-default'].'</option>';
+
+        if(isset($tag['options'])){
+            foreach($tag['options'] as $option){
+                $optionsHtml .= '<option value="'.$option->getValue().'">'.$option->getName().'</option>';
+            }
         }
         $html = '<select id="lffield['.$id.']" name="'.$name.'" '.$this->getAttributes( $tag ).'>'.$optionsHtml.'</select>';
         return $html;

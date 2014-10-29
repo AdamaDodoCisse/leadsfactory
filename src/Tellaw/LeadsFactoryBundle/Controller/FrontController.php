@@ -66,23 +66,24 @@ class FrontController extends Admin\AbstractLeadsController
     }
 
     /**
-     *
      * Method used to process actions.
      * 1) Log in file first request
      * 2) Save in DB
      *
      * @Route("/post", name="_client_post_form")
      * @param Request $request
-     * @param $id
+     *
+     * @throws \Exception
+     * @return Response
      */
     public function postLeadsAction ( Request $request ) {
+
+        $logger = $this->get('logger');
 
         $formUtils = $this->get("form_utils");
 
         $fields = $request->get ("lffield");
         $json = json_encode( $fields );
-        $redirectUrlSuccess = (string)$request->get ("successUrl");
-        $redirectUrlError = (string)$request->get ("errorUrl");
 
         $exportUtils = $this->get('export_utils');
 
@@ -96,7 +97,9 @@ class FrontController extends Admin\AbstractLeadsController
 
             // Read configuration to map attributes correctly
             $config = $formObject->getConfig();
-//print_r ($json);die();
+
+            $redirectUrlSuccess = isset($config['redirect']['url_success']) ? $config['redirect']['url_success'] : '';
+            $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
 
             if ( array_key_exists('configuration', $config) ) {
 
@@ -140,11 +143,12 @@ class FrontController extends Admin\AbstractLeadsController
             }
 
             //Redirect to success page
-            if ( trim ( $redirectUrlSuccess ) != "") {
+            if (!empty($redirectUrlSuccess)) {
                 return $this->redirect($redirectUrlSuccess);
             }
 
         } catch (Exception $e) {
+            $logger->error('postLeadsAction Error ');
             return $this->redirect($redirectUrlError);
         }
 
@@ -219,6 +223,11 @@ class FrontController extends Admin\AbstractLeadsController
         }catch(Exception $e){
             $logger->error($e->getMessage());
         }
+    }
+
+    protected function sendConfirmationEmail()
+    {
+
     }
 
 }

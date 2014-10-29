@@ -33,11 +33,10 @@ class FormUtils {
     }
 
     /**
-     *
      * Main method used to generate HTML Form based on the backend input
      *
-     * @param $source Sources of the form to generate
-     * @param $formId Id of the form in LF backend
+     * @param FormEntity $form
+     * @throws \Symfony\Component\Security\Acl\Exception\Exception
      * @return String HTML of the generated form.
      */
     public function buildHtmlForm (FormEntity $form)
@@ -71,12 +70,11 @@ class FormUtils {
     }
 
     /**
-     *
      * Required tags
-     * @id : Unique Id for a field in a form
-     * @type : Type of data expected for the field
-     * @validator : Type of data validation expected
      *
+     * @param $source
+     * @validator : Type of data validation expected
+     * @return array
      */
     public function parseTags ( $source ) {
 
@@ -189,20 +187,17 @@ class FormUtils {
     }
 
     /**
-     *
      * Method used to add hidden tags, used to save informations of context to LF
      *
      * @param $html Source of the form to generate
-     * @param $formId Id of the form in the LF
+     * @param FormEntity $form
      * @return String modified form including the form tag
      */
     private function setHiddenTags($form, $html)
     {
         $tags="
-            <input type='hidden' name=\"lffield['utmcampaign']\" id=\"lffield['utmcampaign']\" value='".$form->getUtmcampaign()."'/>
+            <input type='hidden' name=\"lffield[utmcampaign]\" id=\"lffield[utmcampaign]\" value='".$form->getUtmcampaign()."'/>
             <input type='hidden' name='lfFormId' id='lfFormId' value='".$form->getId()."'/>
-            <input type='hidden' name='lfForwardSuccess' id='lfForwardSuccess' value='' />
-            <input type='hidden' name='lfForwardError' id='lfForwardError' value='' />
             <input type='hidden' name='lfFormType' id='lfFormType' value='".$form->getFormType()->getId()."'/>
             <input type='hidden' name='lfFormKey' id='lfFormKey' value='".$this->getFormKey($form->getId())."'/>
             </form>
