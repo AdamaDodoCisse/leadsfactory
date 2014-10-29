@@ -1,3 +1,4 @@
+
 {% block form_widget_simple %}
     {% spaceless %}
         {% set type = type|default('text') %}
@@ -173,6 +174,25 @@
         editor1.getSession().setMode("ace/mode/xml");
         //editor1.getSession().setUseWrapMode(true);
         editor1.setValue(document.getElementById('sourceWidget').value);
+    </script>
+
+{% endblock %}
+
+{% block source2_widget %}
+
+    {% spaceless %}
+        <textarea name="form[{{ name }}]" id="source2Widget" rows="3" style="display:none" class="json input full-width">{{ value }}</textarea>
+    {% endspaceless %}
+
+    <pre id="sourceEditor3" style="height:250px;border: 1px solid #EFEFEF;">&nbsp;</pre>
+
+    <script type="text/javascript" >
+        ace.require("ace/ext/language_tools");
+        var editor3 = ace.edit("sourceEditor3");
+        editor3.setTheme("ace/theme/chrome");
+        editor3.getSession().setMode("ace/mode/xml");
+        //editor1.getSession().setUseWrapMode(true);
+        editor3.setValue(document.getElementById('source2Widget').value);
     </script>
 
 {% endblock %}

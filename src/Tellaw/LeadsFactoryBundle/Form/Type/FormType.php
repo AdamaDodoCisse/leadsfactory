@@ -48,6 +48,7 @@ class FormType extends AbstractType
         $builder->add('exportConfig', new JsonType(), array('label' => 'Export config', 'required' => false));
         $builder->add('alertRules', new RulesType(), array('label' => 'Alertes', 'required' => false));
 
+        $builder->add('confirmationEmailSource', new Source2Type(), array('label' => 'Confirmation email Source HTML', 'required' => false));
 
         $builder->add('save', 'submit');
 

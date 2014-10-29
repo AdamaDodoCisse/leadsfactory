@@ -76,6 +76,12 @@ class Form {
     protected $formType;
 
     /**
+     * @var longtext $source
+     * @ORM\Column(type="text", nullable=true, name="conf_email_source")
+     */
+    protected $confirmationEmailSource;
+
+    /**
      * @param mixed $formType
      */
     public function setFormType($formType)
@@ -259,6 +265,26 @@ class Form {
         $this->code = $code;
     }
 
+    /**
+     * Set confirmationEmailSource
+     *
+     * @param string $confirmationEmailSource
+     * @return Form
+     */
+    public function setConfirmationEmailSource($confirmationEmailSource)
+    {
+        $this->confirmationEmailSource = $confirmationEmailSource;
 
+        return $this;
+    }
 
+    /**
+     * Get confirmationEmailSource
+     *
+     * @return string 
+     */
+    public function getConfirmationEmailSource()
+    {
+        return $this->confirmationEmailSource;
+    }
 }

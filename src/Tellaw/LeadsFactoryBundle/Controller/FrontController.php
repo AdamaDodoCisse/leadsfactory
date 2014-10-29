@@ -142,6 +142,11 @@ class FrontController extends Admin\AbstractLeadsController
                 $this->sendNotification($config['notification'], $leads);
             }
 
+            //Send confirmation email
+            if(isset($config['confirmation_email'])){
+                $this->sendConfirmationEmail($config['confirmation_email'], $leads);
+            }
+
             //Redirect to success page
             if (!empty($redirectUrlSuccess)) {
                 return $this->redirect($redirectUrlSuccess);
@@ -225,9 +230,70 @@ class FrontController extends Admin\AbstractLeadsController
         }
     }
 
-    protected function sendConfirmationEmail()
+    /**
+     * Send confirmation email
+     *
+     * @param array $params
+     * @param $leads
+     */
+    protected function sendConfirmationEmail($params, $leads)
     {
+        $logger = $this->get('logger');
 
+        $form = $leads->getForm();
+
+        if(empty($params['to']['email_input_id']) || empty($params['to']['firstname_input_id']) || empty($params['to']['lastname_input_id'])){
+            $logger->error('bad confirmation email configuration (form '.$form->getName().')');
+            return;
+        }
+
+        $data = json_decode($leads->getData(), true);
+
+        $toEmail = $data[$params['to']['email_input_id']];
+        $toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+
+        $to = array($toEmail => $toName);
+        $from = $params['from'];
+        $subject = $this->renderTemplate($params['subject'], $data);
+
+        $template = $form->getConfirmationEmailSource();
+        $body = $this->renderTemplate($template, $data);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($body, 'text/html');
+
+        try{
+            $result = $this->get('mailer')->send($message);
+        }catch(Exception $e){
+            $logger->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Render template variables {{ var }}
+     *
+     * @param $str
+     * @param $data
+     * @return mixed
+     */
+    protected function renderTemplate($str, $data)
+    {
+        $hasVars = preg_match_all('/{{[\s]*([^\s{}]*)[\s]*}}/', $str, $matches);
+
+        if(!$hasVars)
+            return $str;
+
+        $replacement = array();
+        foreach($matches[1] as $key){
+            $replacement[] = isset($data[$key]) ? $data[$key] : '';
+        }
+
+        $str = str_replace($matches[0], $replacement, $str);
+
+        return $str;
     }
 
 }
