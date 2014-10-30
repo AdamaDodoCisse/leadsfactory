@@ -14,6 +14,8 @@ class Edeal extends AbstractMethod{
     private $_user;
     private $_password;
 
+    private $_mappingClass;
+
     public function __construct($wsdl, $user, $password)
     {
         $this->_wsdl = $wsdl;
@@ -32,6 +34,8 @@ class Edeal extends AbstractMethod{
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
+        $logger->info('Edeal export start');
+
         $client  = new \SoapClient($this->_wsdl, array('soap_version' => SOAP_1_2, 'trace' => true));
         $response = $client->authenticate($this->_user, $this->_password);
 
@@ -40,9 +44,9 @@ class Edeal extends AbstractMethod{
             $logger->error($error);
         }
 
-        $mappingClass = $this->_getMapping($form);
+        $this->_mappingClass = $this->_getMapping($form);
 
-        if(is_null($mappingClass)){
+        if(is_null($this->_mappingClass)){
             $error = 'Mapping inexistant FORM '.$form->getCode();
             $logger->error($error);
         }
@@ -62,25 +66,90 @@ class Edeal extends AbstractMethod{
 
             $data = json_decode($job->getLead()->getData(), true);
 
-            $enterprise = new \StdClass();
-            foreach($mappingClass->getEnterpriseMapping() as $edealKey => $formKey){
-                $enterprise->$edealKey = $data[$formKey];
-            }
-            //$client->createEnterprise($enterprise);
+            $enterprise = $this->_getEnterprise($data);
+            $entResponse = $client->createEnterprise($enterprise);
+            $logger->info('Edeal createPerson result : '.$entResponse);
 
-            $person = new \StdClass();
-            foreach($mappingClass->getPersonMapping() as $edealKey => $formKey){
-                $person->$edealKey = $data[$formKey];
-            }
-            //$client->createPerson($person);
+            $person = $this->_getPerson($data);
+            $personResponse = $client->createPerson($person);
+            $logger->info('Edeal createPerson result : '.$personResponse);
 
-            $couponsWeb = new \StdClass();
-            foreach($mappingClass->getCouponsWebMapping() as $edealKey => $formKey){
-                $couponsWeb->$edealKey = $data[$formKey];
-            }
-            //$client->createCouponsWeb_($couponsWeb);
+            $couponsWeb = $this->_getCouponsWeb($data);
+            $cpwResponse = $client->createCouponsWeb_($couponsWeb);
 
+            if($entResponse && $personResponse && $cpwResponse){
+                $log = "Exporté avec succès";
+                $status = $exportUtils::$_EXPORT_SUCCESS;
+            }else{
+                $log = 'Export échoué';
+                $status = $exportUtils->getErrorStatus($job);
+            }
+
+            $exportUtils->updateJob($job, $status, $log);
+            $exportUtils->updateLead($job->getLead(), $status, $log);
+            $logger->info($log);
         }
+    }
+
+    /**
+     * @param $data
+     * @return \StdClass
+     *
+     */
+    private function _getCouponsWeb($data)
+    {
+        $couponsWeb = new \StdClass();
+        foreach($this->_mappingClass->getCouponsWebMapping() as $edealKey => $formKey){
+            $couponsWeb->$edealKey = $data[$formKey];
+            if(empty($formKey)){
+                $getter = 'get'.ucfirst(strtolower($edealKey));
+                if (method_exists($this->_mappingClass, $getter)){
+                    $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
+                }
+            }
+        }
+
+        return $couponsWeb;
+    }
+
+    /**
+     * @param $data
+     * @return \StdClass
+     */
+    private function _getPerson($data)
+    {
+        $person = new \StdClass();
+        foreach($this->_mappingClass->getPersonMapping() as $edealKey => $formKey){
+            $person->$edealKey = $data[$formKey];
+            if(empty($formKey)){
+                $getter = 'get'.ucfirst(strtolower($edealKey));
+                if (method_exists($this->_mappingClass, $getter)){
+                    $person->$edealKey = $this->_mappingClass->$getter($data);
+                }
+            }
+        }
+
+        return $person;
+    }
+
+    /**
+     * @param $data
+     * @return \StdClass
+     */
+    private function _getEnterprise($data)
+    {
+        $enterprise = new \StdClass();
+        foreach($this->_mappingClass->getEnterpriseMapping() as $edealKey => $formKey){
+            $enterprise->$edealKey = $data[$formKey];
+            if(empty($formKey)){
+                $getter = 'get'.ucfirst(strtolower($edealKey));
+                if (method_exists($this->_mappingClass, $getter)){
+                    $enterprise->$edealKey = $this->_mappingClass->$getter($data);
+                }
+            }
+        }
+
+        return $enterprise;
     }
 
     /**

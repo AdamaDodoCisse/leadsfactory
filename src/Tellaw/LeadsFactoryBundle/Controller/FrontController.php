@@ -281,7 +281,7 @@ class FrontController extends Admin\AbstractLeadsController
      */
     protected function renderTemplate($str, $data)
     {
-        $hasVars = preg_match_all('/{{[\s]*([^\s{}]*)[\s]*}}/', $str, $matches);
+        $hasVars = preg_match_all('/{{\s*([\w]*)\s*}}/', $str, $matches);
 
         if(!$hasVars)
             return $str;

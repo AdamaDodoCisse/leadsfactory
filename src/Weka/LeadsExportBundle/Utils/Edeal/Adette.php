@@ -11,8 +11,8 @@ class Adette {
             "entAd1"		=> "address",
             "entCity"       => "ville",
             //"entCorpName"	=> "",
-            //"entCtrCode"  	=> "",
-            //"entPhone"      => "",
+            //"entCtrCode"  => "",
+            "entPhone"      => "phone",
             "entZip"		=> "zip",
         );
     }
@@ -22,7 +22,7 @@ class Adette {
         return array(
             //'perCity'           => '',
             'perCivilite'       => 'salutation',
-            //'perCtrCode'        => '',
+            'perCtrCode'        => '',
             'perFstName'        => 'firstName',
             'perMail'           => 'email',
             'perName'           => 'lastName',
@@ -32,12 +32,39 @@ class Adette {
         );
     }
 
+    public function getPerCtrCode($data)
+    {
+        return 'FR';
+    }
+
     public function getCouponsWebMapping()
     {
         return array(
-
+            'cpwAdresse1'       => 'address',
+            'cpwCity'           => 'ville',
+            'cpwCivilite'       => 'salutation',
+            'cpwCorpName'       => 'lastName',
+            'cpwEmail'          => 'email',
+            'cpwPhone'          => 'phone',
+            'cpwPrenom'         => 'firstName',
+            'cpwNom'            => 'lastName',
+            'cpwUtmCampaign'    => 'utmcampaign',
+            'cpwZip'            => 'zip',
+            'cpwPaysCode'       => '',
+            'cpwOriid'          => ''
         );
     }
+
+    public function getCpwPaysCode($data)
+    {
+        return 'FR';
+    }
+
+    public function getCpwOriid($data)
+    {
+        return 'WEBCALLBACK';
+    }
+
 
 
     /*
