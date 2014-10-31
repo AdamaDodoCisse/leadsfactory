@@ -68,7 +68,7 @@ class Edeal extends AbstractMethod{
 
             $enterprise = $this->_getEnterprise($data);
             $entResponse = $client->createEnterprise($enterprise);
-            $logger->info('Edeal createPerson result : '.$entResponse);
+            $logger->info('Edeal createEnterprise result : '.$entResponse);
 
             $person = $this->_getPerson($data);
             $personResponse = $client->createPerson($person);
@@ -76,6 +76,7 @@ class Edeal extends AbstractMethod{
 
             $couponsWeb = $this->_getCouponsWeb($data);
             $cpwResponse = $client->createCouponsWeb_($couponsWeb);
+            $logger->info('Edeal createPerson result : '.$cpwResponse);
 
             if($entResponse && $personResponse && $cpwResponse){
                 $log = "Exporté avec succès";
@@ -100,12 +101,13 @@ class Edeal extends AbstractMethod{
     {
         $couponsWeb = new \StdClass();
         foreach($this->_mappingClass->getCouponsWebMapping() as $edealKey => $formKey){
-            $couponsWeb->$edealKey = $data[$formKey];
             if(empty($formKey)){
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
                 }
+            }else{
+                $couponsWeb->$edealKey = $data[$formKey];
             }
         }
 
@@ -120,12 +122,13 @@ class Edeal extends AbstractMethod{
     {
         $person = new \StdClass();
         foreach($this->_mappingClass->getPersonMapping() as $edealKey => $formKey){
-            $person->$edealKey = $data[$formKey];
             if(empty($formKey)){
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $person->$edealKey = $this->_mappingClass->$getter($data);
                 }
+            }else{
+                $person->$edealKey = $data[$formKey];
             }
         }
 
@@ -140,12 +143,13 @@ class Edeal extends AbstractMethod{
     {
         $enterprise = new \StdClass();
         foreach($this->_mappingClass->getEnterpriseMapping() as $edealKey => $formKey){
-            $enterprise->$edealKey = $data[$formKey];
             if(empty($formKey)){
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $enterprise->$edealKey = $this->_mappingClass->$getter($data);
                 }
+            }else{
+                $enterprise->$edealKey = $data[$formKey];
             }
         }
 

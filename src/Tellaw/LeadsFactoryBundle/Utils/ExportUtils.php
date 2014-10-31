@@ -167,6 +167,10 @@ class ExportUtils{
         $logger = $this->getContainer()->get('export.logger');
 
         $config = $form->getConfig();
+
+        if(!isset($config['export']))
+            return;
+
         foreach($config['export'] as $method=>$methodConfig){
 
             if(!$this->isValidExportMethod($method)){
