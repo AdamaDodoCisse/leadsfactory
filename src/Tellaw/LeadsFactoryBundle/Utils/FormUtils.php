@@ -51,7 +51,7 @@ class FormUtils {
 
             $htmlTag = $this->renderTag( $id, $tag );
 
-            $pattern = "/<field (.*) id=\"".$id."\"( |)( |.*)\/>/";
+            $pattern = "#<field .*id=\"".$id."\".*/>#";
             preg_match ( $pattern, $html, $matches );
             if ( !$matches ) throw new Exception ("Unable to replace TAG ID : ".$id);
 
