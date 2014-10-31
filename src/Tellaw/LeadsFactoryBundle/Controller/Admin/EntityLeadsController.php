@@ -23,16 +23,31 @@ class EntityLeadsController extends AbstractLeadsController
 
     /**
      * @Secure(roles="ROLE_USER")
-     * @Route("/leads/list", name="_leads_list")
+     * @Route("/leads/list/{page}", name="_leads_list")
      */
-    public function indexAction(Request $request)
+    public function indexAction($page=1)
     {
 
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findAll();
+        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findAll();
+
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getList($page, 10);
+        $total = count($leads);
+        $pages_count = ceil($total/10);
+
+        $pagination = array(
+            'page'              => $page,
+            'pages_count'       => $pages_count,
+            'pagination_min'    => ($page>5) ? $page -5 : 1,
+            'pagination_max'    => ($pages_count - $page) > 5 ? $page +5 : $pages_count,
+            'route'             => '_leads_list'
+        );
 
         return $this->render(
             $this->getBaseTheme().':entity/Leads:list.html.twig',
-            array(  'elements' => $forms )
+            array(
+                'elements'      => $leads,
+                'pagination'    => $pagination
+            )
         );
 
     }

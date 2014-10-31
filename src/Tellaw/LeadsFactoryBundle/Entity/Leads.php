@@ -8,8 +8,7 @@ use Symfony\Component\Validator\Constraints\DateTime;
  *
  * Tellaw\LeadsFactoryBundle\Entity\Leads
  *
- * 
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\LeadsRepository")
  */
 class Leads {
 
