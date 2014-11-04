@@ -10,17 +10,22 @@ class Adette {
         return array(
             "entAd1"		=> "address",
             "entCity"       => "ville",
-            //"entCorpName"	=> "",
-            //"entCtrCode"  => "",
+            "entCorpName"	=> '',
+            "entCtrCode"    => "",
             "entPhone"      => "phone",
             "entZip"		=> "zip",
         );
     }
 
+    public function getEntCorpName($data)
+    {
+        return 'undefined';
+    }
+
     public function getPersonMapping()
     {
         return array(
-            //'perCity'           => '',
+            'perCity'           => '',
             'perCivilite'       => 'salutation',
             'perCtrCode'        => '',
             'perFstName'        => 'firstName',
@@ -28,7 +33,7 @@ class Adette {
             'perName'           => 'lastName',
             'perPhone'          => 'phone',
             'perServiceCode'    => 'service',
-            //'perZip'            => '',
+            'perZip'            => '',
         );
     }
 
@@ -40,18 +45,48 @@ class Adette {
     public function getCouponsWebMapping()
     {
         return array(
+            'cpwActIDCode'      => '',
             'cpwAdresse1'       => 'address',
+            'cpwAdresse2'       => '',
+            'cpwAutresCin'      => '',
+            'cpwCinTmp_'        => '',
             'cpwCity'           => 'ville',
             'cpwCivilite'       => 'salutation',
-            'cpwCorpName'       => 'lastName',
+            'cpwCodeGCM'        => '',
+            'cpwComment'        => '',
+            'cpwCorpName'       => '',
+            'cpwDate'           => '',
+            'cpwDejaClient'     => '',
+            'cpwDemandeRV'      => '',
             'cpwEmail'          => 'email',
+            'cpwEmailValide'    => '',
+            'cpwEntIDPhone'     => '',
+            'cpwEventIDCode'    => '',
+            'cpwFonctionLabel'  => '',
+            'cpwMbm'            => '',
+            'cpwNom'            => 'lastName',
+            'cpwOriDossier'     => '',
+            'cpwOriIDCode'      => '',
+            'cpwOrigine'        => '',
+            'cpwPaysCode'       => '',
+            'cpwPerIDMail'      => '',
             'cpwPhone'          => 'phone',
             'cpwPrenom'         => 'firstName',
-            'cpwNom'            => 'lastName',
+            'cpwProfilAutre'    => '',
+            'cpwProfilCode'     => '',
+            'cpwStatus_Code'    => '',
+            'cpwStatut'         => '',
+            'cpwStopMailETI'    => '',
+            'cpwStopPartenaires'=> '',
+            'cpwTitre'          => '',
+            'cpwTypePourImport_'=> '',
             'cpwUtmCampaign'    => 'utmcampaign',
+            'cpwUtmContent'     => '',
+            'cpwUtmMedium'      => '',
+            'cpwUtmSource'      => '',
+            'cpwUtmTerm'        => '',
             'cpwZip'            => 'zip',
-            'cpwPaysCode'       => '',
-            'cpwOriid'          => ''
+
         );
     }
 
@@ -60,12 +95,20 @@ class Adette {
         return 'FR';
     }
 
-    public function getCpwOriid($data)
+    public function getCpwOriIDCode($data)
     {
-        return 'WEBCALLBACK';
+        return 'CLASSIC';
     }
 
+    public function getCpwDate($data)
+    {
+        return date('m/d/Y');
+    }
 
+    public function getCpwStatus_Code($data)
+    {
+        return 'DIATRAITER';
+    }
 
     /*
      * $couponsWeb->cpwActIDCode = '';

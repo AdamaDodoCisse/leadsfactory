@@ -76,7 +76,7 @@ class Edeal extends AbstractMethod{
 
             $couponsWeb = $this->_getCouponsWeb($data);
             $cpwResponse = $client->createCouponsWeb_($couponsWeb);
-            $logger->info('Edeal createPerson result : '.$cpwResponse);
+            $logger->info('Edeal createCouponsWeb_ result : '.$cpwResponse);
 
             if($entResponse && $personResponse && $cpwResponse){
                 $log = "Exporté avec succès";
@@ -105,6 +105,8 @@ class Edeal extends AbstractMethod{
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
+                }else{
+                    $couponsWeb->$edealKey = null;
                 }
             }else{
                 $couponsWeb->$edealKey = $data[$formKey];
@@ -126,6 +128,8 @@ class Edeal extends AbstractMethod{
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $person->$edealKey = $this->_mappingClass->$getter($data);
+                }else{
+                    $person->$edealKey = null;
                 }
             }else{
                 $person->$edealKey = $data[$formKey];
@@ -147,6 +151,8 @@ class Edeal extends AbstractMethod{
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $enterprise->$edealKey = $this->_mappingClass->$getter($data);
+                }else{
+                    $enterprise->$edealKey = null;
                 }
             }else{
                 $enterprise->$edealKey = $data[$formKey];
