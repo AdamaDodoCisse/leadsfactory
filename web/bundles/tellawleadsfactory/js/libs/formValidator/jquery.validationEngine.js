@@ -1576,6 +1576,8 @@
 
 			// create the css arrow pointing at the field
 			// note that there is no triangle on max-checkbox and radio
+
+            /*
 			if (options.showArrow) {
 				var arrow = $('<div>').addClass("formErrorArrow");
 
@@ -1600,6 +1602,7 @@
 						break;
 				}
 			}
+			*/
 			// Add custom prompt class
 			if (options.addPromptClass)
 				prompt.addClass(options.addPromptClass);
@@ -1622,7 +1625,7 @@
 			prompt.css({
 				"opacity": 0
 			});
-			if(positionType === 'inline') {
+			if(positionType !== 'inline') {
 				prompt.addClass("inline");
 				if(typeof field.attr('data-prompt-target') !== 'undefined' && $('#'+field.attr('data-prompt-target')).length > 0) {
 					prompt.appendTo($('#'+field.attr('data-prompt-target')));
@@ -1635,7 +1638,7 @@
 			
 			var pos = methods._calculatePosition(field, prompt, options);
 			prompt.css({
-				'position': positionType === 'inline' ? 'relative' : 'absolute',
+				'position': 'relative',
 				"top": pos.callerTopPosition,
 				"left": pos.callerleftPosition,
 				"marginTop": pos.marginTopSize,
@@ -1843,7 +1846,7 @@
 					break;
 
 				case "bottomLeft":
-					promptTopPosition = fieldTop + field.height() + 5;
+					promptTopPosition = 0;
 					marginTopSize = 0;
 					promptleftPosition = fieldLeft;
 					break;
@@ -2022,7 +2025,7 @@
 		// true if you want to vind the input fields
 		binded: true,
 		// set to true, when the prompt arrow needs to be displayed
-		showArrow: true,
+		showArrow: false,
 		// did one of the validation fail ? kept global to stop further ajax validations
 		isError: false,
 		// Limit how many displayed errors a field can have

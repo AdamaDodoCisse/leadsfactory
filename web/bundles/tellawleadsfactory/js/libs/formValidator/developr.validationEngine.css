@@ -35,31 +35,21 @@
 }
 
 .formError .formErrorContent {
-	width: 100%;
-	position:relative;
-	width: 150px;
-	border: 1px solid #931a03;
-	padding: 6px 8px;
-	color: white;
-	background: #d52607 url(../img/old-browsers/colors/bg_red-gradient.png) repeat-x;
-	line-height: 18px;
-	-webkit-background-size: 100% 100%;
-	-moz-background-size: 100% 100%;
-	-o-background-size: 100% 100%;
-	background-size: 100% 100%;
-	background: -webkit-gradient(linear, left top, left bottom, from(#e24913), to(#d52607));
-	background: -webkit-linear-gradient(top, #e24913, #d52607);
-	background: -moz-linear-gradient(top, #e24913, #d52607);
-	background: -ms-linear-gradient(top, #e24913, #d52607);
-	background: -o-linear-gradient(top, #e24913, #d52607);
-	background: linear-gradient(top, #e24913, #d52607);
-	box-shadow: 0 0 6px #000;
-	-moz-box-shadow: 0 0 6px #000;
-	-webkit-box-shadow: 0 0 6px #000;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
+    clear: both;
+    min-height: 13px;
+    margin: 3px 0 0;
+    padding-left: 17px;
+    font-size: 10px;
+    line-height: 13px;
+    background: url(http://preprod.weka.fr/boutique/skin/frontend/bysoft/default/images/validation_advice_bg.gif) 2px 1px no-repeat;
+    color: #f00;
 }
+
+.input-error {
+    border: 1px dashed #f00 !important;
+    background: #faebe7 !important;
+}
+
 
 .greenPopup .formErrorContent {
 	color: white;
