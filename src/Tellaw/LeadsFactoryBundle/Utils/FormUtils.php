@@ -145,6 +145,9 @@ class FormUtils {
             case "linked-reference-list":
                 $fieldType = LinkedReferenceListFieldType::getInstance();
                 break;
+            case "hidden":
+                $fieldType = HiddenFieldType::getInstance();
+                break;
             default:
                 $fieldType = TextFieldType::getInstance();
 
