@@ -1,7 +1,6 @@
 parameters:
     weka_leads_export.athena.class: Weka\LeadsExportBundle\Utils\Athena
     athena_url: http://athena.host-athena-dev1.captivea.net/index.php
-
     weka_leads_export.edeal.class: Weka\LeadsExportBundle\Utils\Edeal
     edeal_wsdl: http://10.25.109.44:8080/edealwkCRM/ws/EDEALExternalServices?wsdl
     edeal_user: admin

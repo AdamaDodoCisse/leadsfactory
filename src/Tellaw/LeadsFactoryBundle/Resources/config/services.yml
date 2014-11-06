@@ -1,8 +1,6 @@
 parameters:
-#    tellaw_leads_factory.example.class: Tellaw\LeadsFactoryBundle\Example
-#
-#   theme.bundle: TellawLeadsFactoryBundle
     theme.bundle: TellawLeadsFactoryThemeBundle
+    list.per_page_options: 10;25;50
 
 services:
 

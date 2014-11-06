@@ -14,12 +14,32 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsRepository extends EntityRepository
 {
 
-    public function getList($p=1, $maxPerPage=10)
+    /**
+     * @param $keyword
+     * @param int $page
+     * @param int $limit
+     * @return Paginator
+     */
+    public function getList($keyword, $page=1, $limit=10)
     {
+        $dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l';
+
+        if(!empty($keyword)){
+            $where = ' WHERE';
+            $keywords = explode(' ', $keyword);
+            foreach($keywords as $key => $keyword){
+                if($key>0)
+                    $where .= ' AND';
+                $where .= " l.data LIKE '%".$keyword."%'";
+            }
+            $dql .= $where;
+        }
+
+
         $query = $this->getEntityManager()
-                    ->createQuery('SELECT l FROM TellawLeadsFactoryBundle:Leads l')
-                    ->setFirstResult(($p-1) * $maxPerPage)
-                    ->setMaxResults($maxPerPage);
+            ->createQuery($dql)
+            ->setFirstResult(($page-1) * $limit)
+            ->setMaxResults($limit);
 
         return new Paginator($query);
     }

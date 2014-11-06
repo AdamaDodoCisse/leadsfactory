@@ -16,40 +16,41 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
- * @Cache(expires="tomorrow")
  */
 class EntityLeadsController extends AbstractLeadsController
 {
 
     /**
      * @Secure(roles="ROLE_USER")
-     * @Route("/leads/list/{page}", name="_leads_list")
+     * @Route("/leads/list/{page}/{limit}/{keyword}", name="_leads_list")
      */
-    public function indexAction($page=1)
+    public function indexAction($keyword='', $page=1, $limit=10)
     {
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getList($keyword, $page, $limit);
 
-        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findAll();
-
-        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getList($page, 10);
         $total = count($leads);
-        $pages_count = ceil($total/10);
+        $pages_count = ceil($total/$limit);
 
         $pagination = array(
             'page'              => $page,
             'pages_count'       => $pages_count,
             'pagination_min'    => ($page>5) ? $page -5 : 1,
             'pagination_max'    => ($pages_count - $page) > 5 ? $page +5 : $pages_count,
-            'route'             => '_leads_list'
+            'route'             => '_leads_list',
+            'limit'             => $limit,
+            'keyword'           => $keyword
         );
+
+        $limitOptions = explode(';', $this->container->getParameter('list.per_page_options'));
 
         return $this->render(
             $this->getBaseTheme().':entity/Leads:list.html.twig',
             array(
                 'elements'      => $leads,
-                'pagination'    => $pagination
+                'pagination'    => $pagination,
+                'limit_options' => $limitOptions
             )
         );
-
     }
 
     /**
@@ -90,7 +91,6 @@ class EntityLeadsController extends AbstractLeadsController
 
         return $this->render($this->getBaseTheme().':entity/Leads:edit.html.twig', array(  'form' => $form->createView(),
                                                                                              'title' => "Edition d'un leads"));
-
     }
 
 }
