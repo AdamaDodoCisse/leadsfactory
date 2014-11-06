@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\HiddenFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
