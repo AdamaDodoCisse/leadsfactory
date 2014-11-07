@@ -116,7 +116,7 @@
 
         $('#st_per_page').change(function(){
             var route = '{{ path(pagination.route) }}';
-            var keyword = $('#st_search').val() != '' ? $('#st_search').val() : '';
+            var keyword = $('#st_search').val() != '' ? '/'+$('#st_search').val() : '';
             window.location.href = route + '/1/' + $(this).val() + keyword;
         });
     </script>
