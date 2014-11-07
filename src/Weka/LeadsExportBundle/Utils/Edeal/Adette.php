@@ -62,7 +62,7 @@ class Adette {
             'cpwEmailValide'    => '',
             'cpwEntIDPhone'     => '',
             'cpwEventIDCode'    => '',
-            'cpwFonctionLabel'  => '',
+            'cpwFonctionLabel'  => 'fonction',
             'cpwMbm'            => '',
             'cpwNom'            => 'lastName',
             'cpwOriDossier'     => '',
@@ -88,6 +88,22 @@ class Adette {
             'cpwZip'            => 'zip',
 
         );
+    }
+
+    public function getCpwComment($data)
+    {
+        $comment = 'Provient du formulaire ADETTE';
+
+        if(isset($data['type-etablissement']))
+            $comment .= "\nType d'établissement : ".$data['type-etablissement'];
+
+        if(isset($data['pack']))
+            $comment .= "\npack : ".$data['pack'];
+
+        if(isset($data['option']))
+            $comment .= "\noption : ".$data['option'];
+
+        return $comment;
     }
 
     public function getCpwPaysCode($data)

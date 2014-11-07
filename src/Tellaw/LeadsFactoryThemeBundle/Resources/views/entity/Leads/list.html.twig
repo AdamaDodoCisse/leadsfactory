@@ -13,13 +13,15 @@
         <div style="clear:both"></div>
         <div class="">
             <div class="streaming-tables">
-                <span id="found" class="label label-info"></span>
-                <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Search here...">
-                <select name="per_page" class="st_per_page" id="st_per_page">
-                    {% for limit in limit_options %}
-                        <option value="{{ limit }}">{{ limit }}</option>
-                    {% endfor %}
-                </select>
+                <div>
+                    <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Search here...">
+                    <select name="per_page" class="st_per_page" id="st_per_page">
+                        {% for limit in limit_options %}
+                            <option value="{{ limit }}">{{ limit }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
                     <tr>
@@ -58,7 +60,7 @@
                 <div class="st_pagination">
                     <ul class="pagination">
                         {% if pagination.page > 1 %}
-                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}" class="first">Début</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword|raw}) }}" class="first">Début</a></li>
                             <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">&larr; Précédent</a></li>
                         {% endif %}
                         {% for i in pagination.pagination_min..pagination.pagination_max %}
@@ -89,13 +91,15 @@
             if(event.which == 13){
                 event.preventDefault();
                 var route = '{{ path(pagination.route) }}';
-                window.location.href = route + '/1/' + {{ pagination.limit }} + '/'+$(this).val();
+                var keyword = $(this).val() != '' ? '/'+$(this).val() : ''
+                window.location.href = route + '/1/' + {{ pagination.limit }} + keyword;
             }
         });
 
         $('#st_per_page').change(function(){
             var route = '{{ path(pagination.route) }}';
-            window.location.href = route + '/1/' + $(this).val() + '/' + $('#st_search').val();
+            var keyword = $('#st_search').val() != '' ? $('#st_search').val() : '';
+            window.location.href = route + '/1/' + $(this).val() + keyword;
         });
     </script>
 

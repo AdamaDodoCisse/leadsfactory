@@ -17,7 +17,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityLeadsController extends AbstractLeadsController
+class EntityLeadsController extends AbstractEntityController
 {
 
     /**
@@ -26,29 +26,14 @@ class EntityLeadsController extends AbstractLeadsController
      */
     public function indexAction($keyword='', $page=1, $limit=10)
     {
-        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getList($keyword, $page, $limit);
-
-        $total = count($leads);
-        $pages_count = ceil($total/$limit);
-
-        $pagination = array(
-            'page'              => $page,
-            'pages_count'       => $pages_count,
-            'pagination_min'    => ($page>5) ? $page -5 : 1,
-            'pagination_max'    => ($pages_count - $page) > 5 ? $page +5 : $pages_count,
-            'route'             => '_leads_list',
-            'limit'             => $limit,
-            'keyword'           => $keyword
-        );
-
-        $limitOptions = explode(';', $this->container->getParameter('list.per_page_options'));
+        $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword);
 
         return $this->render(
             $this->getBaseTheme().':entity/Leads:list.html.twig',
             array(
-                'elements'      => $leads,
-                'pagination'    => $pagination,
-                'limit_options' => $limitOptions
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
             )
         );
     }
