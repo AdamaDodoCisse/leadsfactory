@@ -24,7 +24,7 @@ class EntityLeadsController extends AbstractEntityController
      * @Secure(roles="ROLE_USER")
      * @Route("/leads/list/{page}/{limit}/{keyword}", name="_leads_list")
      */
-    public function indexAction($keyword='', $page=1, $limit=10)
+    public function indexAction($page=1, $limit=10, $keyword='')
     {
         $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword);
 

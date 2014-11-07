@@ -5,7 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ExportRepository")
  */
 class Export {
 

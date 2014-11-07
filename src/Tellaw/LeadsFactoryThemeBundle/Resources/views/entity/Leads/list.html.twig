@@ -57,6 +57,7 @@
                     </tbody>
                 </table>
 
+                {% if pagination.pages_count > 1 %}
                 <div class="st_pagination">
                     <ul class="pagination">
                         {% if pagination.page > 1 %}
@@ -74,11 +75,8 @@
                         {% endif %}
                     </ul>
                 </div>
+                {% endif %}
 
-                <div id="summary">
-                    <div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>

@@ -18,9 +18,9 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 abstract class AbstractEntityController extends AbstractLeadsController {
 
 
-    public function getList($repository, $page, $limit, $keyword)
+    public function getList($repository, $page, $limit, $keyword='')
     {
-        $collection = $this->getDoctrine()->getRepository($repository)->getList($keyword, $page, $limit);
+        $collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $keyword);
 
         $total = $collection->count();
         $pages_count = ceil($total/$limit);

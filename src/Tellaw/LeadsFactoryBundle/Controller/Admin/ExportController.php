@@ -20,7 +20,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class ExportController extends AbstractLeadsController
+class ExportController extends AbstractEntityController
 {
 
     /**
@@ -57,15 +57,20 @@ class ExportController extends AbstractLeadsController
     /**
      * Display export jobs
      *
-     * @route("/export/history", name="_export_history")
+     * @route("/export/history/{page}/{limit}/{keyword}", name="_export_history")
      * @Secure(roles="ROLE_USER")
      */
-    public function showHistoryAction()
+    public function showHistoryAction($page=1, $limit=10, $keyword='')
     {
-        $jobs = $this->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Export')->findAll();
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword);
+
         return $this->render(
             $this->getBaseTheme().':entity/Export:list.html.twig',
-            array('jobs' => $jobs)
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
+            )
         );
     }
 

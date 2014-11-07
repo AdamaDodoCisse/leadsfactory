@@ -13,7 +13,16 @@
         <h3 class="custom-heading">Exports programmés:</h3>
         <div class="">
             <div class="streaming-tables">
-                <span id="found" class="label label-info"></span>
+                <div>
+                    <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Search by method...">
+                    <select name="per_page" class="st_per_page" id="st_per_page">
+                        {% for limit in limit_options %}
+                            <option value="{{ limit }}">{{ limit }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
                     <tr>
@@ -28,8 +37,48 @@
                     </tr>
                     </thead>
                     <tbody>
+                    {% for item in elements %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.form.name }}</td>
+                            <td>{{ item.form.formType }}</td>
+                            <td>{{ item.scheduledAt.date }}</td>
+                            <td>{% if item.executedAt != null %}{{ item.executedAt.date }}{% endif %}</td>
+                            <td>{{ item.lead.id }}</td>
+                            <td>{{ item.method }}</td>
+                            <td>{{ item.status }}</td>
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="8">Aucun élément dans cette liste</td>
+                        </tr>
+
+                    {% endfor %}
                     </tbody>
                 </table>
+
+                {% if pagination.pages_count > 1 %}
+                <div class="st_pagination">
+                    <ul class="pagination">
+                        {% if pagination.page > 1 %}
+                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword|raw}) }}" class="first">Début</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">&larr; Précédent</a></li>
+                        {% endif %}
+                        {% for i in pagination.pagination_min..pagination.pagination_max %}
+                            <li {% if pagination.page == i %}class="active" {% endif %}>
+                                <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if pagination.page < pagination.pages_count %}
+                            <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Suivant &rarr;</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Fin</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+
                 <div id="summary">
                     <div>
                     </div>
@@ -54,35 +103,22 @@
     {% endraw %}
 
     <script type="text/javascript">
+        $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
 
+        $('#st_search').keypress(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+                var route = '{{ path(pagination.route) }}';
+                var keyword = $(this).val() != '' ? '/'+$(this).val() : ''
+                window.location.href = route + '/1/' + {{ pagination.limit }} + keyword;
+            }
+        });
 
-        var template = Mustache.compile($.trim($("#template").html()));
-
-        var view = function(record, index){
-            return template({record: record, index: index});
-        };
-
-        var datas = [
-            {% for job in jobs %}
-            {   identifiant: '{{ job.id }}',
-                formulaire: '{{ job.form.name }}',
-                type: '{{ job.form.formType }}',
-                planifie: '{{ job.scheduledAt.date }}',
-                execute: '{% if job.executedAt != null %}{{ job.executedAt.date }}{% endif %}',
-                leadsid: '{{ job.lead.id }}',
-                methode: '{{ job.method }}',
-                status: '{{ job.status }}'
-            }{% if loop.last==false %},{% endif %}
-            {% endfor %}
-        ];
-
-        var options = {
-            view: view,                  //View function to render table rows.
-            fetch_data_limit: 500,       //Streaming data in batch of 500
-            pagination: {span: 5, next_text: 'Suivant &rarr;', prev_text: '&larr; Précédent'}
-        }
-
-        var st = StreamTable('#stream_table', options, datas);
+        $('#st_per_page').change(function(){
+            var route = '{{ path(pagination.route) }}';
+            var keyword = $('#st_search').val() != '' ? $('#st_search').val() : '';
+            window.location.href = route + '/1/' + $(this).val() + keyword;
+        });
     </script>
 
 
