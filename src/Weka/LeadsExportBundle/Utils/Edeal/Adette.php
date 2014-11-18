@@ -19,13 +19,20 @@ class Adette {
 
     public function getEntCorpName($data)
     {
-        return 'undefined';
+	    if(isset($data['type-etablissement']))
+		    return $data['type-etablissement'] . ' - ' . $data['zip'];
+	    return 'undefined';
     }
+
+	public function getEntCtrCode($data)
+	{
+		return 'FR';
+	}
 
     public function getPersonMapping()
     {
         return array(
-            'perCity'           => '',
+            'perCity'           => 'ville',
             'perCivilite'       => 'salutation',
             'perCtrCode'        => '',
             'perFstName'        => 'firstName',
@@ -33,7 +40,7 @@ class Adette {
             'perName'           => 'lastName',
             'perPhone'          => 'phone',
             'perServiceCode'    => 'service',
-            'perZip'            => '',
+            'perZip'            => 'zip',
         );
     }
 
@@ -60,7 +67,7 @@ class Adette {
             'cpwDemandeRV'      => '',
             'cpwEmail'          => 'email',
             'cpwEmailValide'    => '',
-            'cpwEntIDPhone'     => '',
+            'cpwEntIDPhone'     => 'phone',
             'cpwEventIDCode'    => '',
             'cpwFonctionLabel'  => 'fonction',
             'cpwMbm'            => '',
@@ -100,9 +107,6 @@ class Adette {
         if(isset($data['pack']))
             $comment .= "\npack : ".$data['pack'];
 
-        if(isset($data['option']))
-            $comment .= "\noption : ".$data['option'];
-
         return $comment;
     }
 
@@ -125,6 +129,13 @@ class Adette {
     {
         return 'DIATRAITER';
     }
+
+	public function getCpwCorpName($data)
+	{
+		if(isset($data['type-etablissement']))
+			return $data['type-etablissement'] . ' - ' . $data['zip'];
+		return 'undefined';
+	}
 
     /*
      * $couponsWeb->cpwActIDCode = '';
