@@ -44,8 +44,6 @@ class Edeal extends AbstractMethod{
             $logger->error($error);
         }
 
-	    $config = $form->getConfig();
-
         $this->_mappingClass = $this->_getMapping($form);
 
         if(is_null($this->_mappingClass)){
@@ -174,8 +172,11 @@ class Edeal extends AbstractMethod{
     {
 	    $config = $form->getConfig();
 
+	    $logger = $this->getContainer()->get('export.logger');
+	    $logger->info($config['export']['edeal']['mapping_class']);
+
 	    if(isset($config['export']['edeal']['mapping_class'])){
-		    $className = $config['export']['edeal']['mapping_class'];
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $config['export']['edeal']['mapping_class'];
 	    }else{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . ucfirst($form->getCode());
 	    }

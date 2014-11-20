@@ -143,8 +143,8 @@ class Athena extends AbstractMethod{
     {
 	    $config = $form->getConfig();
 
-	    if(isset($config['export']['edeal']['mapping_class'])){
-		    $className = $config['export']['edeal']['mapping_class'];
+	    if(isset($config['export']['athena']['mapping_class'])){
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Athena\\" . $config['export']['athena']['mapping_class'];
 	    }else{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Athena\\" . ucfirst($form->getCode());
 	    }
