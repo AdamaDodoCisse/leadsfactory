@@ -32,7 +32,7 @@ class Athena extends AbstractMethod{
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
-        $mappingClass = $this->_getAthenaMapping($form->getFormType());
+        $mappingClass = $this->_getAthenaMapping($form);
 
         foreach($jobs as $job){
 
@@ -136,14 +136,22 @@ class Athena extends AbstractMethod{
     /**
      * Retrieve mapping class depending on form type
      *
-     * @param \Tellaw\LeadsFactoryBundle\Entity\FormType $formType
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      * @return mixed
      */
-    private function _getAthenaMapping($formType)
+    private function _getAthenaMapping($form)
     {
-        $className = "\\Weka\\LeadsExportBundle\\Utils\\Athena\\" . $formType->getName();
+	    $config = $form->getConfig();
+
+	    if(isset($config['export']['edeal']['mapping_class'])){
+		    $className = $config['export']['edeal']['mapping_class'];
+	    }else{
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Athena\\" . ucfirst($form->getCode());
+	    }
+
         return (class_exists($className)) ? new $className : null;
     }
+
 
     private function _hasError($result)
     {

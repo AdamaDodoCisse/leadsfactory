@@ -44,6 +44,8 @@ class Edeal extends AbstractMethod{
             $logger->error($error);
         }
 
+	    $config = $form->getConfig();
+
         $this->_mappingClass = $this->_getMapping($form);
 
         if(is_null($this->_mappingClass)){
@@ -163,14 +165,21 @@ class Edeal extends AbstractMethod{
     }
 
     /**
-     * Retrieve mapping class depending on form type
+     * Retrieve mapping class
      *
      * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      * @return mixed
      */
     private function _getMapping($form)
     {
-        $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . ucfirst($form->getCode());
+	    $config = $form->getConfig();
+
+	    if(isset($config['export']['edeal']['mapping_class'])){
+		    $className = $config['export']['edeal']['mapping_class'];
+	    }else{
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . ucfirst($form->getCode());
+	    }
+
         return (class_exists($className)) ? new $className : null;
     }
 
