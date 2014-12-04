@@ -22,25 +22,28 @@ class FormRepository extends EntityRepository
      */
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
-/*
-        $dql = 'SELECT DISTINCT f, (b.id > 0) as bookmark FROM TellawLeadsFactoryBundle:Form f LEFT JOIN (SELECT * FROM TellawLeadsFactoryBundle:Bookmark WHERE user= :user_id AND entity_name="Form") AS b ON f.id = b.entity_id';
+
+        // $dql = 'SELECT DISTINCT f, (b.id > 0) as bookmark FROM TellawLeadsFactoryBundle:Form f LEFT JOIN (SELECT * FROM TellawLeadsFactoryBundle:Bookmark WHERE user= :user_id AND entity_name="Form") AS b ON f.id = b.entity_id';
         //$dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
+        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Form f';
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameter('user_id', $params ["user_id"])
+            //->setParameter('user_id', $params ["user_id"])
             ->setFirstResult(($page-1) * $limit)
             ->setMaxResults($limit);
-*/
 
-        $query = $this->getEntityManager()->prepare('
+
+
+/*
+        $query = $this->getEntityManager()->getConnection()->prepare('
             SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM Form f
             LEFT JOIN (SELECT * FROM bookmark WHERE user= :user_id AND entity_name="Form") AS b ON f.id = b.entity_id
         ');
-        $query->bindValue('user_id', $user->getId())
-        ->setParameter('user_id', $params ["user_id"])
-        ->setFirstResult(($page-1) * $limit)
-        ->setMaxResults($limit);
-
+        $query->bindValue('user_id', $params ["user_id"]);
+        $query->execute();
+        $query->setFirstResult(($page-1) * $limit);
+        $query->setMaxResults($limit);
+*/
         return new Paginator($query);
     }
 

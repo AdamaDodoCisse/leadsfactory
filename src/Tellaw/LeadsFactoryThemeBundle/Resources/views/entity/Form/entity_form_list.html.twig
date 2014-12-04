@@ -20,7 +20,7 @@
             <div class="streaming-tables">
                 <div>
                     <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
-                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Search here...">
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez...">
                     <select name="per_page" class="st_per_page" id="st_per_page">
                         {% for limit in limit_options %}
                             <option value="{{ limit }}">{{ limit }}</option>
@@ -30,8 +30,8 @@
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
+                        <th>id</th>
+                        <th>Nom</th>
                         <th>Description</th>
                         <th>Actions</th>
                     </tr>
@@ -42,7 +42,10 @@
                             <td>{{ item.id }}</td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.description }}</td>
-                            <td>{{ item.action }}</td>
+                            <td style="text-align:center">
+                                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Editer</button>
+                                <button type="button" class="btns  red  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
+                            </td>
                         </tr>
 
                     {% else %}
