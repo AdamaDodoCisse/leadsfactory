@@ -18,33 +18,29 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityFormController extends AbstractLeadsController
-{
+class EntityFormController extends AbstractEntityController {
     /**
      *
-     * @Route("/form/list", name="_form_list")
+     * @Route("/form/list/{page}/{limit}/{keyword}", name="_form_list")
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction(Request $request)
+    public function indexAction($page=1, $limit=10, $keyword='')
     {
-        $user = $this->getUser();
 
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare('
-            SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM Form f
-            LEFT JOIN (SELECT * FROM bookmark WHERE user= :user_id AND entity_name="Form") AS b ON f.id = b.entity_id
-        ');
-        $query->bindValue('user_id', $user->getId());
-        $query->execute();
-        $forms = $query->fetchAll();
-
+        $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
+        
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
 
         return $this->render(
-            $this->getBaseTheme().':entity/Form:entity_form_list.html.twig',
-            array(  'forms' => $forms )
+        		$this->getBaseTheme().':entity/Form:entity_form_list.html.twig',
+        		array(
+        				'elements'      => $list['collection'],
+        				'pagination'    => $list['pagination'],
+        				'limit_options' => $list['limit_options']
+        		)
         );
+
     }
 
     /**

@@ -17,36 +17,34 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 abstract class AbstractEntityController extends AbstractLeadsController {
 
+    public function getList($repository, $page, $limit, $keyword='', $params=array()) {
+        $collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $keyword, $params);
 
-    public function getList($repository, $page, $limit, $keyword='')
-    {
-        $collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $keyword);
+    	$total = $collection->count();
+    	$pages_count = ceil($total/$limit);
 
-        $total = $collection->count();
-        $pages_count = ceil($total/$limit);
+    	$pagination = array(
+    			'page'              => $page,
+    			'total'             => $total,
+    			'pages_count'       => $pages_count,
+    			'pagination_min'    => ($page>5) ? $page -5 : 1,
+    			'pagination_max'    => ($pages_count - $page) > 5 ? $page +5 : $pages_count,
+    			'route'             => $this->container->get('request')->get('_route'),
+    			'limit'             => $limit,
+    			'keyword'           => $keyword
+    	);
 
-        $pagination = array(
-            'page'              => $page,
-            'total'             => $total,
-            'pages_count'       => $pages_count,
-            'pagination_min'    => ($page>5) ? $page -5 : 1,
-            'pagination_max'    => ($pages_count - $page) > 5 ? $page +5 : $pages_count,
-            'route'             => $this->container->get('request')->get('_route'),
-            'limit'             => $limit,
-            'keyword'           => $keyword
-        );
+    	$limitOptions = explode(';', $this->container->getParameter('list.per_page_options'));
 
-        $limitOptions = explode(';', $this->container->getParameter('list.per_page_options'));
+    	$list = array(
+    			'collection'    => $collection,
+    			'pagination'    => $pagination,
+    			'limit_options' => $limitOptions
+    	);
 
-        $list = array(
-            'collection'    => $collection,
-            'pagination'    => $pagination,
-            'limit_options' => $limitOptions
-        );
+    	return $list;
 
-        return $list;
-    }
-
+	}
 
 
 }

@@ -20,7 +20,7 @@ class ExportRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='')
+    public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
         $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e';
 
