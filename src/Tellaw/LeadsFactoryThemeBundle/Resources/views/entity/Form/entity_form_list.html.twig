@@ -6,6 +6,8 @@
         <div class="col-md-8">
         <div class="heading-sec" id="intro6">
             <h1>Administration <i>des formulaires</i></h1>
+            <div style="clear:both"></div>
+            <div class="titleDescription"><em>Un &laquo;formulaire&raquo; permet de décrire un processus complet de récéption des données. Dans cette zone vous indiquerez le detail du formulaire client, la façon dont il doit etre monitoré, et la façon dont il doit etre exporté ver des système du SI. </em></div>
         </div>
         </div>
         <div class="col-md-4">
@@ -30,32 +32,32 @@
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
                     <tr>
-                        <th>&nbsp;</th>
                         <th>id</th>
                         <th>Nom</th>
                         <th>Description</th>
                         <th>Actions</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for item in elements %}
                         <tr>
-                            <td>
-                                <a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.id in bookmarks|keys %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a>
-                            </td>
                             <td>{{ item.id }}</td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.description }}</td>
                             <td style="text-align:center">
                                 <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Editer</button>
-                                <button type="button" class="btns  red  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
+                                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.id in bookmarks|keys %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a>
                             </td>
                         </tr>
 
                     {% else %}
 
                         <tr>
-                            <td colspan="4">Aucun élément dans cette liste</td>
+                            <td colspan="5">Aucun élément dans cette liste</td>
 
                         </tr>
 

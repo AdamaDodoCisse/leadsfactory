@@ -1,3 +1,7 @@
+.titleDescription {
+    color:#a0a0a0;
+    margin-top:10px;
+}
 .starred, .unstarred, .new-message, .attach {
     display: block;
     overflow: hidden;
