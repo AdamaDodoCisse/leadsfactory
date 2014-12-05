@@ -29,15 +29,20 @@ class EntityFormController extends AbstractEntityController {
     {
 
         $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
-        
-        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+        $bookmarks = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->getBookmarkedFormsForUser( $this->getUser()->getId() );
+
+        $formatedBookmarks = array();
+        foreach ($bookmarks as $bookmark) {
+            $formatedBookmarks[ $bookmark->getForm()->getId() ] = true;
+        }
 
         return $this->render(
         		$this->getBaseTheme().':entity/Form:entity_form_list.html.twig',
         		array(
         				'elements'      => $list['collection'],
         				'pagination'    => $list['pagination'],
-        				'limit_options' => $list['limit_options']
+        				'limit_options' => $list['limit_options'],
+                        'bookmarks'     => $formatedBookmarks
         		)
         );
 

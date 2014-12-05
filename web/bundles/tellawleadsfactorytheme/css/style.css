@@ -1,3 +1,16 @@
+.starred, .unstarred, .new-message, .attach {
+    display: block;
+    overflow: hidden;
+    text-indent: -9999px;
+    text-align: left;
+    width: 16px;
+    white-space: nowrap;
+}
+.starred		{ height: 16px;display: inline-block;background: url(../img/standard/sprites.png) no-repeat 0 -34px; }
+a.starred:hover		{ background: url(../img/standard/sprites.png) no-repeat 0 -50px; }
+.unstarred		{ height: 16px;display: inline-block;background: url(../img/standard/sprites.png) no-repeat -16px -34px; }
+a.unstarred:hover	{ background: url(../img/standard/sprites.png) no-repeat -16px -50px; }
+
 body {
     margin: 0;
     padding: 0;
