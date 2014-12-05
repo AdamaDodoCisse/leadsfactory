@@ -48,7 +48,7 @@
                             <td>{{ item.description }}</td>
                             <td style="text-align:center">
                                 <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Editer</button>
-                                <button type="button" class="btns  red  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
+                                <button type="button" class="btns  red  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
                             </td>
                         </tr>
 
