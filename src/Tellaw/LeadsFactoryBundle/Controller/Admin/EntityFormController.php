@@ -66,15 +66,17 @@ class EntityFormController extends AbstractEntityController {
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
-//            return $this->redirect($this->generateUrl('_form_list'));
-            return $this->render(
+
+            return $this->redirect($this->generateUrl('_form_list'));
+
+            /*return $this->render(
                 $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
                 array(
-                    'id' => $form->getId(),
+                  //  'id' => $form->getId(),
                     'form' => $form->createView(),
                     'title' => "Edition d'un formulaire"
                 )
-            );
+            );*/
         }
         return $this->render(
             $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
