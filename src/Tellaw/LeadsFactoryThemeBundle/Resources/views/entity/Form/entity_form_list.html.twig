@@ -47,6 +47,8 @@
                             <td>{{ item.description }}</td>
                             <td style="text-align:center">
                                 <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Editer</button>
+                                <button type="button" class="btns  green  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_form_duplicate', {'id': item.id}) }}'">Dupliquer</button>
+                                <button type="button" class="btns  yellow  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_entity_leads_export', {'id': item.id}) }}'">Exporter</button>
                                 <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
                             </td>
                             <td>

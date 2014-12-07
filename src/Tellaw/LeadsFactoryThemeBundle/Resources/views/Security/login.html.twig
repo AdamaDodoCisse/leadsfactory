@@ -32,9 +32,9 @@
     <div class="sign-in-form" style="padding-top:20px;">
         <!--<h5><a href="#" title="">Forgot your password?</a></h5>-->
         <form method="post" action="{{ path('login_check') }}" id="form-login">
-            <i class="fa fa-user"></i><input type="text" name="_username" placeholder="USER NAME" class="sign-in-form-input" />
+            <i class="fa fa-user"></i><input type="text" name="_username" placeholder="IDENTIFIANT" class="sign-in-form-input" style="margin-bottom:10px;"/>
 
-            <i class="fa fa-lock"></i><input type="password" name="_password" placeholder="PASSWORD" class="sign-in-form-input"/>
+            <i class="fa fa-lock"></i><input type="password" name="_password" placeholder="MOT DE PASSE" class="sign-in-form-input"/>
 			<div style="clear:both"></div>
         	<input style="margin-top:20px;clear:both" type="submit" onClick="document.getElementById('form-login').submit();" title="" class="black loginsubmit" value="Se connecter"/>
         
