@@ -18,15 +18,51 @@
         </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-8">
         <div class="widget-body custom-form">
             {{ form(form) }}
         </div>
     </div>
 
-
+    <div class="col-md-4">
+        <div class="btn-group btn-group-justified">
+            <a class="btn blue" id="jsonBuild" href="#">Générer le JSON sur le serveur</a>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="btn-group btn-group-justified">
+            <a class="btn blue" id="jsonImport" href="#">Importer le JSON du serveur</a></div>
+        </div>
+    </div>
 
 {% endblock %}
 {% block javascript %}
+<script type="text/javascript" language="javascript">
+    $('#jsonBuild').click(function() {
 
+        $.loader({
+            className:"blue-with-image-2",
+            content:''
+        });
+
+        $.ajax({
+            url: "{{ path ('_referenceList_build_file', {'id': referenceListId}) }}"
+        }).done(function() {
+            location.reload();
+        });
+    });
+    $('#jsonImport').click(function() {
+
+        $.loader({
+            className:"blue-with-image-2",
+            content:''
+        });
+
+        $.ajax({
+            url: "{{ path ('_referenceList_import_file', {'id': referenceListId}) }}"
+        }).done(function() {
+            location.reload();
+        });
+    });
+</script>
 {% endblock %}

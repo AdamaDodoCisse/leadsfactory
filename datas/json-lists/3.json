@@ -1,0 +1,1380 @@
+{
+    "lists": {
+        "0": "3",
+        "1": "2"
+    },
+    "elements": {
+        "0": {
+            "id": 54,
+            "name": "Direction administrative",
+            "value": "direction_administrative",
+            "childrens": {
+                "0": {
+                    "id": 203,
+                    "name": "Adjoint au Maire",
+                    "value": "adjoint_au_maire"
+                },
+                "1": {
+                    "id": 204,
+                    "name": "Chargé de mission",
+                    "value": "charg_de_mission"
+                },
+                "2": {
+                    "id": 205,
+                    "name": "Chef d&#039;état major",
+                    "value": "chef_dtat_major"
+                },
+                "3": {
+                    "id": 206,
+                    "name": "DGS Dir Général des Services",
+                    "value": "dgs_dir_gnral_des_services"
+                },
+                "4": {
+                    "id": 207,
+                    "name": "Directeur",
+                    "value": "directeur"
+                },
+                "5": {
+                    "id": 208,
+                    "name": "Directeur de Cabinet",
+                    "value": "directeur_de_cabinet"
+                },
+                "6": {
+                    "id": 209,
+                    "name": "Directeur Général Adjoint",
+                    "value": "directeur_gnral_adjoint"
+                },
+                "7": {
+                    "id": 210,
+                    "name": "Maire",
+                    "value": "maire"
+                },
+                "8": {
+                    "id": 211,
+                    "name": "PDG Président Directeur Général",
+                    "value": "pdg_prsident_directeur_gnral"
+                },
+                "9": {
+                    "id": 212,
+                    "name": "Préfet",
+                    "value": "prfet"
+                },
+                "10": {
+                    "id": 213,
+                    "name": "Président",
+                    "value": "prsident"
+                },
+                "11": {
+                    "id": 214,
+                    "name": "Président de club",
+                    "value": "prsident_de_club"
+                },
+                "12": {
+                    "id": 215,
+                    "name": "Secrétaire de mairie",
+                    "value": "secrtaire_de_mairie"
+                },
+                "13": {
+                    "id": 216,
+                    "name": "Secrétaire Général",
+                    "value": "secrtaire_gnral"
+                },
+                "14": {
+                    "id": 217,
+                    "name": "Secrétaire\/Assistant",
+                    "value": "secrtaireassistant"
+                },
+                "15": {
+                    "id": 218,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "1": {
+            "id": 55,
+            "name": "Culture",
+            "value": "culture",
+            "childrens": {
+                "0": {
+                    "id": 219,
+                    "name": "Administrateur\/Régisseur",
+                    "value": "administrateurrgisseur"
+                },
+                "1": {
+                    "id": 220,
+                    "name": "Dir Artistique",
+                    "value": "dir_artistique   "
+                },
+                "2": {
+                    "id": 221,
+                    "name": "Dir\/Resp Affaires culturelles",
+                    "value": "dirresp_affaires_culturelles"
+                },
+                "3": {
+                    "id": 222,
+                    "name": "Elu\/Adjoint Affaires culturelles",
+                    "value": "eluadjoint_affaires_culturelles"
+                },
+                "4": {
+                    "id": 223,
+                    "name": "Gérant \/ co-gérant",
+                    "value": "grant__cogrant"
+                },
+                "5": {
+                    "id": 224,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "6": {
+                    "id": 225,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "2": {
+            "id": 56,
+            "name": "Achats\/Marchés publics",
+            "value": "achats_marches_publics",
+            "childrens": {
+                "0": {
+                    "id": 226,
+                    "name": "Elu\/Adjoint Marchés Publics",
+                    "value": "eluadjoint_marchs_publics"
+                },
+                "1": {
+                    "id": 227,
+                    "name": "Dir\/Resp Affaires Economiques",
+                    "value": "dirresp_affaires_economiques"
+                },
+                "2": {
+                    "id": 228,
+                    "name": "Dir\/Resp de la logistique",
+                    "value": "dirresp_de_la_logistique"
+                },
+                "3": {
+                    "id": 229,
+                    "name": "Dir\/Resp des Achats",
+                    "value": "dirresp_des_achats"
+                },
+                "4": {
+                    "id": 230,
+                    "name": "Dir\/Resp Marchés Publics",
+                    "value": "dirresp_marchs_publics"
+                },
+                "5": {
+                    "id": 231,
+                    "name": "Dir\/Resp Services Généraux",
+                    "value": "dirresp_services_gnraux"
+                },
+                "6": {
+                    "id": 232,
+                    "name": "Econome",
+                    "value": "econome"
+                },
+                "7": {
+                    "id": 233,
+                    "name": "Elu\/Adjoint Affaires Economiques",
+                    "value": "eluadjoint_affaires_economiques"
+                },
+                "8": {
+                    "id": 234,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "3": {
+            "id": 57,
+            "name": "Affaires scolaires",
+            "value": "affaires_scolaires",
+            "childrens": {
+                "0": {
+                    "id": 235,
+                    "name": "Dir\/Resp Education",
+                    "value": "dirresp_education"
+                },
+                "1": {
+                    "id": 236,
+                    "name": "Elu\/Adjoint Education",
+                    "value": "eluadjoint_education"
+                },
+                "2": {
+                    "id": 237,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "3": {
+                    "id": 238,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "4": {
+            "id": 58,
+            "name": "Education nationale",
+            "value": "education_nationale",
+            "childrens": {
+                "0": {
+                    "id": 239,
+                    "name": "Agent comptable",
+                    "value": "agent_comptable"
+                },
+                "1": {
+                    "id": 240,
+                    "name": "Chef de travaux\/Resp pédagogique",
+                    "value": "chef_de_travauxresp_pdagogique"
+                },
+                "2": {
+                    "id": 241,
+                    "name": "CPE Conseiller Princ Education",
+                    "value": "cpe_conseiller_princ_education"
+                },
+                "3": {
+                    "id": 242,
+                    "name": "Directeur d&#039;Etablissement",
+                    "value": "directeur_detablissement"
+                },
+                "4": {
+                    "id": 243,
+                    "name": "Gestionnaire",
+                    "value": "gestionnaire"
+                },
+                "5": {
+                    "id": 244,
+                    "name": "Infirmière Scolaire",
+                    "value": "infirmire_scolaire"
+                },
+                "6": {
+                    "id": 245,
+                    "name": "Inspecteur Académique",
+                    "value": "inspecteur_acadmique"
+                },
+                "7": {
+                    "id": 246,
+                    "name": "Intendant",
+                    "value": "intendant"
+                },
+                "8": {
+                    "id": 247,
+                    "name": "Maitre de Recherche",
+                    "value": "maitre_de_recherche"
+                },
+                "9": {
+                    "id": 248,
+                    "name": "Principal (Collège)",
+                    "value": "principal_collge"
+                },
+                "10": {
+                    "id": 249,
+                    "name": "Principal Adjoint",
+                    "value": "principal_adjoint"
+                },
+                "11": {
+                    "id": 250,
+                    "name": "Professeur",
+                    "value": "professeur"
+                },
+                "12": {
+                    "id": 251,
+                    "name": "Professeur d&#039;Université",
+                    "value": "professeur_duniversit"
+                },
+                "13": {
+                    "id": 252,
+                    "name": "Proviseur (Lycées)",
+                    "value": "proviseur_lyces"
+                },
+                "14": {
+                    "id": 253,
+                    "name": "Proviseur adjoint",
+                    "value": "proviseur_adjoint"
+                },
+                "15": {
+                    "id": 254,
+                    "name": "psychologue scolaire",
+                    "value": "psychologue_scolaire"
+                },
+                "16": {
+                    "id": 255,
+                    "name": "Recteur",
+                    "value": "recteur"
+                },
+                "17": {
+                    "id": 256,
+                    "name": "Responsable CDI",
+                    "value": "responsable_cdi"
+                },
+                "18": {
+                    "id": 257,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "5": {
+            "id": 59,
+            "name": "Communication",
+            "value": "communication",
+            "childrens": {
+                "0": {
+                    "id": 258,
+                    "name": "Dir\/Resp Communication",
+                    "value": "dirresp_communication"
+                },
+                "1": {
+                    "id": 259,
+                    "name": "Elu\/Adjoint Communication",
+                    "value": "eluadjoint_communication"
+                },
+                "2": {
+                    "id": 260,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "3": {
+                    "id": 261,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "6": {
+            "id": 60,
+            "name": "Affaires sociales \/ CCAS",
+            "value": "affaires_sociales_ccas",
+            "childrens": {
+                "0": {
+                    "id": 262,
+                    "name": "Aide à domicile",
+                    "value": "aide__domicile"
+                },
+                "1": {
+                    "id": 263,
+                    "name": "Cadre socio éducatif",
+                    "value": "cadre_socio_ducatif"
+                },
+                "2": {
+                    "id": 264,
+                    "name": "Coordonateur Petite Enfance",
+                    "value": "coordonateur_petite_enfance"
+                },
+                "3": {
+                    "id": 265,
+                    "name": "Dir\/Resp Affaires Sociales",
+                    "value": "dirresp_affaires_sociales"
+                },
+                "4": {
+                    "id": 266,
+                    "name": "Dir\/Resp CCAS",
+                    "value": "dirresp_ccas"
+                },
+                "5": {
+                    "id": 267,
+                    "name": "Dir\/Resp Emploi",
+                    "value": "dirresp_emploi"
+                },
+                "6": {
+                    "id": 268,
+                    "name": "Dir\/Resp Famille",
+                    "value": "dirresp_famille"
+                },
+                "7": {
+                    "id": 269,
+                    "name": "Dir\/Resp Insertion",
+                    "value": "dirresp_insertion"
+                },
+                "8": {
+                    "id": 270,
+                    "name": "Dir\/Resp Logement",
+                    "value": "dirresp_logement"
+                },
+                "9": {
+                    "id": 271,
+                    "name": "Dir\/Resp Personnes Agées",
+                    "value": "dirresp_personnes_ages"
+                },
+                "10": {
+                    "id": 272,
+                    "name": "Dir\/Resp Personnes Handicapées",
+                    "value": "dirresp_personnes_handicapes"
+                },
+                "11": {
+                    "id": 273,
+                    "name": "Dir\/Resp Petite Enfance",
+                    "value": "dirresp_petite_enfance"
+                },
+                "12": {
+                    "id": 274,
+                    "name": "Elu\/Adjoint Affaires Sociales",
+                    "value": "eluadjoint_affaires_sociales"
+                },
+                "13": {
+                    "id": 275,
+                    "name": "Elu\/Adjoint aux Handicapées",
+                    "value": "eluadjoint_aux_handicapes"
+                },
+                "14": {
+                    "id": 276,
+                    "name": "Elu\/Adjoint Emploi",
+                    "value": "eluadjoint_emploi"
+                },
+                "15": {
+                    "id": 277,
+                    "name": "Elu\/Adjoint Famille",
+                    "value": "eluadjoint_famille"
+                },
+                "16": {
+                    "id": 278,
+                    "name": "Elu\/Adjoint Insertion",
+                    "value": "eluadjoint_insertion"
+                },
+                "17": {
+                    "id": 279,
+                    "name": "Elu\/Adjoint Logement",
+                    "value": "eluadjoint_logement"
+                },
+                "18": {
+                    "id": 280,
+                    "name": "Elu\/Adjoint Personnes Agées",
+                    "value": "eluadjoint_personnes_ages"
+                },
+                "19": {
+                    "id": 281,
+                    "name": "Elu\/Adjoint Petite Enfance",
+                    "value": "eluadjoint_petite_enfance"
+                },
+                "20": {
+                    "id": 282,
+                    "name": "Médiateur familial",
+                    "value": "mdiateur_familial"
+                },
+                "21": {
+                    "id": 283,
+                    "name": "Travailleur social",
+                    "value": "travailleur_social"
+                },
+                "22": {
+                    "id": 284,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "23": {
+                    "id": 285,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "7": {
+            "id": 61,
+            "name": "Protection de l'enfance",
+            "value": "protection_de_lenfance",
+            "childrens": {
+                "0": {
+                    "id": 286,
+                    "name": "Educateur \/ Animateur socio éducatif",
+                    "value": "educateur__animateur_socio_ducatif"
+                },
+                "1": {
+                    "id": 287,
+                    "name": "Juge pour enfant",
+                    "value": "juge_pour_enfant"
+                },
+                "2": {
+                    "id": 288,
+                    "name": "Médecin",
+                    "value": "mdecin"
+                },
+                "3": {
+                    "id": 289,
+                    "name": "Médiateur familial",
+                    "value": "mdiateur_familial"
+                },
+                "4": {
+                    "id": 290,
+                    "name": "Pédopsychiatre \/ Psychologue",
+                    "value": "pdopsychiatre__psychologue"
+                },
+                "5": {
+                    "id": 291,
+                    "name": "Puériculteur \/ Auxiliaire de puériculture",
+                    "value": "puriculteur__auxiliaire_de_puriculture"
+                },
+                "6": {
+                    "id": 292,
+                    "name": "Référent ASE",
+                    "value": "rfrent_ase"
+                },
+                "7": {
+                    "id": 293,
+                    "name": "Référent service enfance famille",
+                    "value": "rfrent_service_enfance_famille"
+                },
+                "8": {
+                    "id": 294,
+                    "name": "Responsable protection enfance",
+                    "value": "responsable_protection_enfance"
+                },
+                "9": {
+                    "id": 295,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "10": {
+                    "id": 296,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "8": {
+            "id": 62,
+            "name": "Documentation & Archivage",
+            "value": "documentation_archivage",
+            "childrens": {
+                "0": {
+                    "id": 297,
+                    "name": "Dir\/Resp centre de documentation",
+                    "value": "dirresp_centre_de_documentation"
+                },
+                "1": {
+                    "id": 298,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "2": {
+                    "id": 299,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "9": {
+            "id": 63,
+            "name": "Elections & Etat civil",
+            "value": "elections_etat_civil",
+            "childrens": {
+                "0": {
+                    "id": 300,
+                    "name": "Dir\/Resp Etat Civil",
+                    "value": "dirresp_etat_civil"
+                },
+                "1": {
+                    "id": 301,
+                    "name": "Responsbale bureau des élections",
+                    "value": "responsbale_bureau_des_lections"
+                },
+                "2": {
+                    "id": 302,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "3": {
+                    "id": 303,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "10": {
+            "id": 64,
+            "name": "Elus",
+            "value": "elus",
+            "childrens": {
+                "0": {
+                    "id": 304,
+                    "name": "1er adjoint au Maire",
+                    "value": "1er_adjoint_au_maire"
+                },
+                "1": {
+                    "id": 305,
+                    "name": "Dir de cabinet",
+                    "value": "dir_de_cabinet"
+                },
+                "2": {
+                    "id": 306,
+                    "name": "Elu\/Adjoint Affaires Juridiques",
+                    "value": "eluadjoint_affaires_juridiques"
+                },
+                "3": {
+                    "id": 307,
+                    "name": "Elu\/Adjoint Finances",
+                    "value": "eluadjoint_finances"
+                },
+                "4": {
+                    "id": 308,
+                    "name": "Elu\/Adjoint Environnement",
+                    "value": "eluadjoint_environnement"
+                },
+                "5": {
+                    "id": 309,
+                    "name": "Elu\/Adjoint Urbanisme",
+                    "value": "eluadjoint_urbanisme"
+                },
+                "6": {
+                    "id": 310,
+                    "name": "Elu\/Adjoint Jeunesse & sport",
+                    "value": "eluadjoint_jeunesse__sport"
+                },
+                "7": {
+                    "id": 311,
+                    "name": "Elu\/Adjoint Services Techniques",
+                    "value": "eluadjoint_services_techniques"
+                },
+                "8": {
+                    "id": 312,
+                    "name": "Elu\/Adjoint aux Handicapées",
+                    "value": "eluadjoint_aux_handicapes"
+                },
+                "9": {
+                    "id": 313,
+                    "name": "Elu\/Adjoint Logement",
+                    "value": "eluadjoint_logement"
+                },
+                "10": {
+                    "id": 314,
+                    "name": "Elu\/Adjoint Famille",
+                    "value": "eluadjoint_famille"
+                },
+                "11": {
+                    "id": 315,
+                    "name": "Elu\/Adjoint Insertion",
+                    "value": "eluadjoint_insertion"
+                },
+                "12": {
+                    "id": 316,
+                    "name": "Elu\/Adjoint Affaires Sociales",
+                    "value": "eluadjoint_affaires_sociales"
+                },
+                "13": {
+                    "id": 317,
+                    "name": "Elu\/Adjoint Education",
+                    "value": "eluadjoint_education"
+                },
+                "14": {
+                    "id": 318,
+                    "name": "Elu\/Adjoint Communication",
+                    "value": "eluadjoint_communication"
+                },
+                "15": {
+                    "id": 319,
+                    "name": "Elu\/Adjoint Affaires Economiques",
+                    "value": "eluadjoint_affaires_economiques"
+                },
+                "16": {
+                    "id": 320,
+                    "name": "Elu\/Adjoint Affaires culturelles",
+                    "value": "eluadjoint_affaires_culturelles"
+                },
+                "17": {
+                    "id": 321,
+                    "name": "Elu\/Adjoint Petite Enfance",
+                    "value": "eluadjoint_petite_enfance"
+                },
+                "18": {
+                    "id": 322,
+                    "name": "Elu\/Adjoint Marchés Publics",
+                    "value": "eluadjoint_marchs_publics"
+                },
+                "19": {
+                    "id": 323,
+                    "name": "Elu\/Adjoint Personnes Agées",
+                    "value": "eluadjoint_personnes_ages"
+                },
+                "20": {
+                    "id": 324,
+                    "name": "Maire",
+                    "value": "maire"
+                },
+                "21": {
+                    "id": 325,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "22": {
+                    "id": 326,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "11": {
+            "id": 65,
+            "name": "Environnement",
+            "value": "environnement",
+            "childrens": {
+                "0": {
+                    "id": 327,
+                    "name": "Dir\/Resp Environnement",
+                    "value": "dirresp_environnement"
+                },
+                "1": {
+                    "id": 328,
+                    "name": "Elu\/Adjoint Environnement",
+                    "value": "eluadjoint_environnement"
+                },
+                "2": {
+                    "id": 329,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "3": {
+                    "id": 330,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "12": {
+            "id": 66,
+            "name": "Finance",
+            "value": "finances",
+            "childrens": {
+                "0": {
+                    "id": 331,
+                    "name": "Elu\/Adjoint Finances",
+                    "value": "eluadjoint_finances"
+                },
+                "1": {
+                    "id": 332,
+                    "name": "DAF \/ Resp administratif et financier",
+                    "value": "daf__resp_administratif_et_financier"
+                },
+                "2": {
+                    "id": 333,
+                    "name": "Resp comptabilité gestion",
+                    "value": "resp_comptabilit_gestion"
+                },
+                "3": {
+                    "id": 334,
+                    "name": "Contrôleur de gestion",
+                    "value": "contrleur_de_gestion"
+                },
+                "4": {
+                    "id": 335,
+                    "name": "Resp affaires économiques",
+                    "value": "resp_affaires_conomiques"
+                },
+                "5": {
+                    "id": 336,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "6": {
+                    "id": 337,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "13": {
+            "id": 67,
+            "name": "Jeunesse & Sport",
+            "value": "jeunesse_sport",
+            "childrens": {
+                "0": {
+                    "id": 338,
+                    "name": "Elu\/Adjoint Jeunesse & sport",
+                    "value": "eluadjoint_jeunesse__sport"
+                },
+                "1": {
+                    "id": 339,
+                    "name": "Dir\/Resp Jeunesse & sport",
+                    "value": "dirresp_jeunesse__sport"
+                },
+                "2": {
+                    "id": 340,
+                    "name": "Dir Centre de vacances",
+                    "value": "dir_centre_de_vacances"
+                },
+                "3": {
+                    "id": 341,
+                    "name": "Dir Centre de loisirs",
+                    "value": "dir_centre_de_loisirs"
+                },
+                "4": {
+                    "id": 342,
+                    "name": "Educateur \/ Animateur socio éducatif",
+                    "value": "educateur__animateur_socio_ducatif"
+                },
+                "5": {
+                    "id": 343,
+                    "name": "Président de club",
+                    "value": "prsident_de_club"
+                },
+                "6": {
+                    "id": 344,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "7": {
+                    "id": 345,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "14": {
+            "id": 68,
+            "name": "Juridique",
+            "value": "juridique",
+            "childrens": {
+                "0": {
+                    "id": 346,
+                    "name": "Elu\/Adjoint Affaires Juridiques",
+                    "value": "eluadjoint_affaires_juridiques"
+                },
+                "1": {
+                    "id": 347,
+                    "name": "Juriste",
+                    "value": "juriste"
+                },
+                "2": {
+                    "id": 348,
+                    "name": "Resp service juridique",
+                    "value": "resp_service_juridique"
+                },
+                "3": {
+                    "id": 349,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "4": {
+                    "id": 350,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "15": {
+            "id": 69,
+            "name": "Santé",
+            "value": "sante",
+            "childrens": {
+                "0": {
+                    "id": 351,
+                    "name": "Dir\/Resp hémato-Vigilance",
+                    "value": "dirresp_hmatovigilance"
+                },
+                "1": {
+                    "id": 352,
+                    "name": "Dir\/Resp Hygiène-Qualité",
+                    "value": "dirresp_hyginequalit"
+                },
+                "2": {
+                    "id": 353,
+                    "name": "Dir\/Resp matério-Vigilance",
+                    "value": "dirresp_matriovigilance"
+                },
+                "3": {
+                    "id": 354,
+                    "name": "Dir\/Resp Pharmaco-Vigilance",
+                    "value": "dirresp_pharmacovigilance"
+                },
+                "4": {
+                    "id": 355,
+                    "name": "Dir\/Resp Vigilance",
+                    "value": "dirresp_vigilance"
+                },
+                "5": {
+                    "id": 356,
+                    "name": "Directeur d&#039;établissement",
+                    "value": "directeur_dtablissement"
+                },
+                "6": {
+                    "id": 357,
+                    "name": "Infirmier chef de service\/Cadre supérieur de santé",
+                    "value": "infirmier_chef_de_servicecadre_suprieur_de_sant"
+                },
+                "7": {
+                    "id": 358,
+                    "name": "Infirmier coordonateur",
+                    "value": "infirmier_coordonateur"
+                },
+                "8": {
+                    "id": 359,
+                    "name": "Infirmier(e) général(e)",
+                    "value": "infirmiere_gnrale"
+                },
+                "9": {
+                    "id": 360,
+                    "name": "Médecin Chef de Service\/responsable de pôle",
+                    "value": "mdecin_chef_de_serviceresponsable_de_ple"
+                },
+                "10": {
+                    "id": 361,
+                    "name": "Médecin Coordonateur",
+                    "value": "mdecin_coordonateur"
+                },
+                "11": {
+                    "id": 362,
+                    "name": "Médecin praticien hospitalier",
+                    "value": "mdecin_praticien_hospitalier"
+                },
+                "12": {
+                    "id": 363,
+                    "name": "Orthophoniste",
+                    "value": "orthophoniste"
+                },
+                "13": {
+                    "id": 364,
+                    "name": "Pédopsychiatre",
+                    "value": "pdopsychiatre"
+                },
+                "14": {
+                    "id": 365,
+                    "name": "Psychologue",
+                    "value": "psychologue"
+                },
+                "15": {
+                    "id": 366,
+                    "name": "Psychomotricien",
+                    "value": "psychomotricien"
+                },
+                "16": {
+                    "id": 367,
+                    "name": "Psychothérapeute",
+                    "value": "psychothrapeute"
+                },
+                "17": {
+                    "id": 368,
+                    "name": "secrétaire médicale",
+                    "value": "secrtaire_mdicale"
+                },
+                "18": {
+                    "id": 369,
+                    "name": "Surveillante générale",
+                    "value": "surveillante_gnrale"
+                },
+                "19": {
+                    "id": 370,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "16": {
+            "id": 70,
+            "name": "Services techniques",
+            "value": "services_techniques",
+            "childrens": {
+                "0": {
+                    "id": 371,
+                    "name": "Dir\/Resp de l&#039;Urbanisme",
+                    "value": "dirresp_de_lurbanisme"
+                },
+                "1": {
+                    "id": 372,
+                    "name": "Dir\/Resp Eaux et Sources ",
+                    "value": "dirresp_eaux_et_sources"
+                },
+                "2": {
+                    "id": 373,
+                    "name": "Dir\/Resp Feux de Forets",
+                    "value": "dirresp_feux_de_forets"
+                },
+                "3": {
+                    "id": 374,
+                    "name": "Dir\/Resp Parcs Jardins",
+                    "value": "dirresp_parcs_jardins"
+                },
+                "4": {
+                    "id": 375,
+                    "name": "Dir\/Resp Voirie",
+                    "value": "dirresp_voirie"
+                },
+                "5": {
+                    "id": 376,
+                    "name": "DST Dir\/Resp Services Techniques",
+                    "value": "dst_dirresp_services_techniques"
+                },
+                "6": {
+                    "id": 377,
+                    "name": "Elu\/Adjoint à l&#039;Urbanisme",
+                    "value": "eluadjoint__lurbanisme"
+                },
+                "7": {
+                    "id": 378,
+                    "name": "Elu\/Adjoint Services Techniques",
+                    "value": "eluadjoint_services_techniques"
+                },
+                "8": {
+                    "id": 379,
+                    "name": "Elu\/Adjoint Voirie",
+                    "value": "eluadjoint_voirie"
+                },
+                "9": {
+                    "id": 380,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "10": {
+                    "id": 381,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "17": {
+            "id": 71,
+            "name": "Santé au travail & Prévention",
+            "value": "sante_au_travail_prevention",
+            "childrens": {
+                "0": {
+                    "id": 382,
+                    "name": "ACFI",
+                    "value": "acfi"
+                },
+                "1": {
+                    "id": 383,
+                    "name": "assistant prévention",
+                    "value": "assistant_prvention"
+                },
+                "2": {
+                    "id": 384,
+                    "name": "conseiller prévention",
+                    "value": "conseiller_prvention"
+                },
+                "3": {
+                    "id": 385,
+                    "name": "Délégué du Personnel",
+                    "value": "dlgu_du_personnel"
+                },
+                "4": {
+                    "id": 386,
+                    "name": "Délégué Syndical",
+                    "value": "dlgu_syndical"
+                },
+                "5": {
+                    "id": 387,
+                    "name": "Dir\/Resp CHSCT",
+                    "value": "dirresp_chsct"
+                },
+                "6": {
+                    "id": 388,
+                    "name": "Dir\/Resp du Comité d&#039;Entreprise",
+                    "value": "dirresp_du_comit_dentreprise"
+                },
+                "7": {
+                    "id": 389,
+                    "name": "Dir\/Resp Santé\/Prévention",
+                    "value": "dirresp_santprvention"
+                },
+                "8": {
+                    "id": 390,
+                    "name": "Elu\/Adjoint Santé\/Prévention",
+                    "value": "eluadjoint_santprvention"
+                },
+                "9": {
+                    "id": 391,
+                    "name": "Médecin du travail",
+                    "value": "mdecin_du_travail"
+                },
+                "10": {
+                    "id": 392,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "11": {
+                    "id": 393,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "18": {
+            "id": 72,
+            "name": "Ressources humaines",
+            "value": "ressources_humaines",
+            "childrens": {
+                "0": {
+                    "id": 394,
+                    "name": "DRH",
+                    "value": "drh"
+                },
+                "1": {
+                    "id": 395,
+                    "name": "Dir\/Resp Formation",
+                    "value": "dirresp_formation"
+                },
+                "2": {
+                    "id": 396,
+                    "name": "Resp\/Gestionnaire du personnel",
+                    "value": "respgestionnaire_du_personnel"
+                },
+                "3": {
+                    "id": 397,
+                    "name": "Resp\/Gestionnaire Paie",
+                    "value": "respgestionnaire_paie"
+                },
+                "4": {
+                    "id": 398,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "5": {
+                    "id": 399,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "19": {
+            "id": 73,
+            "name": "Professions indépendantes",
+            "value": "professions_independants",
+            "childrens": {
+                "0": {
+                    "id": 400,
+                    "name": "Avocat",
+                    "value": "avocat"
+                },
+                "1": {
+                    "id": 401,
+                    "name": "Coach",
+                    "value": "coach"
+                },
+                "2": {
+                    "id": 402,
+                    "name": "Consultant",
+                    "value": "consultant"
+                },
+                "3": {
+                    "id": 403,
+                    "name": "Graphiste",
+                    "value": "graphiste"
+                },
+                "4": {
+                    "id": 404,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "20": {
+            "id": 74,
+            "name": "Politique de la ville & Intégration",
+            "value": "politique_de_la_ville_integration",
+            "childrens": {
+                "0": {
+                    "id": 405,
+                    "name": "Dir\/Resp Ville Intégration",
+                    "value": "dirresp_ville_intgration"
+                },
+                "1": {
+                    "id": 406,
+                    "name": "Elu\/Adjoint Ville Intégration",
+                    "value": "eluadjoint_ville_intgration"
+                },
+                "2": {
+                    "id": 407,
+                    "name": "Secrétaire \/ assistant",
+                    "value": "secrtaire__assistant"
+                },
+                "3": {
+                    "id": 408,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "21": {
+            "id": 75,
+            "name": "Police & Pompiers",
+            "value": "police_pompiers",
+            "childrens": {
+                "0": {
+                    "id": 409,
+                    "name": "Dir\/Resp de la Police",
+                    "value": "dirresp_de_la_police"
+                },
+                "1": {
+                    "id": 410,
+                    "name": "Commandant de gendarmerie",
+                    "value": "commandant_de_gendarmerie"
+                },
+                "2": {
+                    "id": 411,
+                    "name": "gardien de la paix",
+                    "value": "gardien_de_la_paix"
+                },
+                "3": {
+                    "id": 412,
+                    "name": "Pompiers",
+                    "value": "pompiers"
+                },
+                "4": {
+                    "id": 413,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "22": {
+            "id": 76,
+            "name": "Personnes âgées",
+            "value": "personnes_agees",
+            "childrens": {
+                "0": {
+                    "id": 414,
+                    "name": "Aide à domicile",
+                    "value": "aide__domicile"
+                },
+                "1": {
+                    "id": 415,
+                    "name": "Aide personnes âgées",
+                    "value": "aide_personnes_ges"
+                },
+                "2": {
+                    "id": 416,
+                    "name": "Auxilliaire de vie sociale",
+                    "value": "auxilliaire_de_vie_sociale"
+                },
+                "3": {
+                    "id": 417,
+                    "name": "Auxilliaire gériatrie",
+                    "value": "auxilliaire_griatrie"
+                },
+                "4": {
+                    "id": 418,
+                    "name": "Auxilliaire gérontologie",
+                    "value": "auxilliaire_grontologie"
+                },
+                "5": {
+                    "id": 419,
+                    "name": "Dir\/Resp Personnes Agées",
+                    "value": "dirresp_personnes_ages"
+                },
+                "6": {
+                    "id": 420,
+                    "name": "Directeur d&#039;Etablissement",
+                    "value": "directeur_detablissement"
+                },
+                "7": {
+                    "id": 421,
+                    "name": "Elu\/Adjoint Personnes Agées",
+                    "value": "eluadjoint_personnes_ages"
+                },
+                "8": {
+                    "id": 422,
+                    "name": "Infirmier coordonateur",
+                    "value": "infirmier_coordonateur"
+                },
+                "9": {
+                    "id": 423,
+                    "name": "Médecin Coordonateur",
+                    "value": "mdecin_coordonateur"
+                },
+                "10": {
+                    "id": 424,
+                    "name": "Travailleur social",
+                    "value": "travailleur_social"
+                },
+                "11": {
+                    "id": 425,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "23": {
+            "id": 77,
+            "name": "Personnes handicapées",
+            "value": "personnes_handicapees",
+            "childrens": {
+                "0": {
+                    "id": 426,
+                    "name": "Directeur d&#039;Etablissement",
+                    "value": "directeur_detablissement"
+                },
+                "1": {
+                    "id": 427,
+                    "name": "Dir\/Resp Personnes Handicapées",
+                    "value": "dirresp_personnes_handicapes"
+                },
+                "2": {
+                    "id": 428,
+                    "name": "Elu\/Adjoint aux Handicapées",
+                    "value": "eluadjoint_aux_handicapes"
+                },
+                "3": {
+                    "id": 429,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "24": {
+            "id": 78,
+            "name": "Insertion",
+            "value": "insertion",
+            "childrens": {
+                "0": {
+                    "id": 430,
+                    "name": "Directeur d&#039;Etablissement",
+                    "value": "directeur_detablissement"
+                },
+                "1": {
+                    "id": 431,
+                    "name": "Travailleur social",
+                    "value": "travailleur_social"
+                },
+                "2": {
+                    "id": 432,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        },
+        "25": {
+            "id": 79,
+            "name": "Petite enfance",
+            "value": "petite_enfance",
+            "childrens": {
+                "0": {
+                    "id": 433,
+                    "name": "Animateur de relais assistantes maternelles",
+                    "value": "animateur_de_relais_assistantes_maternelles"
+                },
+                "1": {
+                    "id": 434,
+                    "name": "Assistant Maternel",
+                    "value": "assistant_maternel"
+                },
+                "2": {
+                    "id": 435,
+                    "name": "Assistant Social",
+                    "value": "assistant_social"
+                },
+                "3": {
+                    "id": 436,
+                    "name": "Directeur d&#039;Etablissement",
+                    "value": "directeur_detablissement"
+                },
+                "4": {
+                    "id": 437,
+                    "name": "Médecin de PMI",
+                    "value": "mdecin_de_pmi"
+                },
+                "5": {
+                    "id": 438,
+                    "name": "Pédopsychiatre \/ Psychologue",
+                    "value": "pdopsychiatre__psychologue"
+                },
+                "6": {
+                    "id": 439,
+                    "name": "Puériculteur \/ Auxiliaire de puériculture",
+                    "value": "puriculteur__auxiliaire_de_puriculture"
+                },
+                "7": {
+                    "id": 440,
+                    "name": "non renseigné",
+                    "value": "non_renseign"
+                }
+            }
+        }
+    }
+}

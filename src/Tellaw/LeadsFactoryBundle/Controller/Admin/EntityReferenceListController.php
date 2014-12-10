@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListType;
@@ -16,6 +17,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Utils\Messages;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/entity")
@@ -82,6 +85,49 @@ class EntityReferenceListController extends AbstractEntityController
     }
 
     /**
+     * @Route("/referenceList/buildfile/id/{id}", name="_referenceList_build_file")
+     * @Secure(roles="ROLE_USER")
+     * @Method("GET")
+     */
+    public function buildfileAction ( $id ) {
+
+        $fileName = '../datas/json-lists/'.$id.'.json';
+
+        $fs = new Filesystem();
+        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find($id);
+        $referingLists = $this->get("lf.utils")->getListOfLists( $id );
+        $json = $formData->getJson($referingLists);
+
+        $fs->dumpFile( $fileName , $json);
+
+        $messagesUtils = $this->container->get("messages.utils");
+        $messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été généré avec succès : ".$fileName );
+
+        return new Response("ok",200,array('Content-Type'=>'text/plain'));
+
+    }
+
+    /**
+     * @Route("/referenceList/importfile/id/{id}", name="_referenceList_import_file")
+     * @Secure(roles="ROLE_USER")
+     * @Method("GET")
+     */
+    public function importfileAction ( $id ) {
+
+        $fileName = '../datas/json-lists/'.$id.'.json';
+
+        $content = implode ('', file ( $fileName ));
+
+        $this->get("lf.utils")->updateListElements( $jsonElements );
+
+        $messagesUtils = $this->container->get("messages.utils");
+        $messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été importé avec succès : ".$fileName );
+
+        return new Response("ok",200,array('Content-Type'=>'text/plain'));
+
+    }
+
+    /**
      * @Route("/referenceList/edit/{id}", name="_referenceList_edit")
      * @Secure(roles="ROLE_USER")
      * @Template()
@@ -117,14 +163,26 @@ class EntityReferenceListController extends AbstractEntityController
             $em->flush();
 
             // Traitement des éléments de la liste
-            $jsonElements = $form->get('json')->getData();
+            //$jsonElements = $form->get('json')->getData();
+            //$this->get("lf.utils")->updateListElements( $jsonElements );
+
+            $file = $form->get('attachment')->getData()->openFile('r');
+            $jsonElements = "";
+            while (!$file->eof()) {
+                $jsonElements .= $file->current();
+                //do what you have to do with $line...
+                $file->next();
+            }
+
             $this->get("lf.utils")->updateListElements( $jsonElements );
 
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
+        /*
         $referingLists = $this->get("lf.utils")->getListOfLists( $id );
         $form->get('json')->setData( $formData->getJson($referingLists) );
+        */
         $formData->getElements();
 
         return $this->render($this->getBaseTheme().':entity/ReferenceList:entity_referenceList_edit.html.twig',

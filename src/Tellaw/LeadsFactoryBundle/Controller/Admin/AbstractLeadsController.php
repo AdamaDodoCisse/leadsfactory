@@ -22,6 +22,9 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 abstract class AbstractLeadsController extends Controller {
 
+    public function __construct () {
+
+    }
 
     protected function getBaseTheme () {
 
