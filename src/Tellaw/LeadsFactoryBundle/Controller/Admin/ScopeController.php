@@ -21,25 +21,28 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  *
  * @Route("/entity")
  */
-class ScopeController extends AbstractLeadsController
+class ScopeController extends AbstractEntityController
 {
 
     /**
      * Lists all Scope entities.
      *
-     * @Route("/scope/list", name="_scope_list")
+     * @Route("/scope/list/{page}/{limit}/{keyword}", name="_scope_list")
      *
      * @Secure(roles="ROLE_USER")
      */
-    public function indexAction()
+    public function indexAction($page=1, $limit=10, $keyword='')
     {
-        $em = $this->getDoctrine()->getManager();
+        $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
 
-        $entities = $em->getRepository('TellawLeadsFactoryBundle:Scope')->findAll();
-
-        return $this->render( $this->getBaseTheme().":entity/Scope:index.html.twig", array(
-            'entities' => $entities,
-        ));
+        return $this->render(
+            $this->getBaseTheme().':entity/Scope:index.html.twig',
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
+            )
+        );
 
     }
     /**

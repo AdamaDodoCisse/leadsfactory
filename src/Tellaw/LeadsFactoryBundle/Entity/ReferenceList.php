@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceList
  *
  * 
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository")
  */
 class ReferenceList {
 

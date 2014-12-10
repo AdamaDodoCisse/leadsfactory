@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Tellaw\LeadsFactoryBundle\Entity\Users
  *
  * 
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\UsersRepository")
  */
 class Users implements UserInterface {
 

@@ -21,23 +21,28 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityReferenceListController extends AbstractLeadsController
+class EntityReferenceListController extends AbstractEntityController
 {
 
     /**
      *
-     * @Route("/referenceList/list", name="_referenceList_list")
+     * @Route("/referenceList/list/{page}/{limit}/{keyword}", name="_referenceList_list")
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction(Request $request)
+    public function indexAction($page=1, $limit=10, $keyword='')
     {
 
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
+        $list = $this->getList ('TellawLeadsFactoryBundle:ReferenceList', $page, $limit, $keyword, array () );
+        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
 
         return $this->render(
             $this->getBaseTheme().':entity/ReferenceList:entity_referenceList_list.html.twig',
-            array(  'forms' => $forms )
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
+            )
         );
 
     }
