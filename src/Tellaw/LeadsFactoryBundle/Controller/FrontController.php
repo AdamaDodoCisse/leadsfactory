@@ -8,6 +8,7 @@ use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Tellaw\LeadsFactoryBundle\Utils\FormUtils;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 
@@ -51,9 +52,9 @@ class FrontController extends Admin\AbstractLeadsController
     }
 
     /**
-     * @Route("/form/js/{code}", name="_client_get_form_js")
+     * @Route("/form/js/{code}/{utm_campaign}", name="_client_get_form_js")
      */
-    public function getFormAsJsAction($code)
+    public function getFormAsJsAction($code, $utm_campaign = '')
     {
         /** @var \Tellaw\LeadsFactoryBundle\Utils\JsUtils $formUtils */
         $formUtils = $this->get("js_utils");
@@ -61,6 +62,18 @@ class FrontController extends Admin\AbstractLeadsController
         /** @var \Tellaw\LeadsFactoryBundle\Entity\Form $form */
         $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($code);
         $jsForm = $formUtils->buildAndWrapForm ($form);
+
+        // Track call request
+        /** @var \Tellaw\LeadsFactoryBundle\Entity\Tracking $tracking */
+        $tracking = new Tracking();
+        if (trim($utm_campaign) == '') $utm_campaign =  $form->getUtmcampaign();
+        $tracking->setUtmCampaign( $utm_campaign );
+        $tracking->setForm( $form );
+        $tracking->setCreatedAt( new \DateTime() );
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($tracking);
+        $em->flush();
 
         return new Response($jsForm);
     }
