@@ -1,0 +1,27 @@
+<table id="country-list" class="sortable-table">
+    <thead>
+    <tr class="country-table-head">
+        <th class="sort-down">Code UTM <span>▼</span></th>
+        <th>Vues <span>&nbsp;</span></th>
+        <th>Leads <span>&nbsp;</span></th>
+        <th class="date-sort" data-date-format="m d Y">Tr <span>&nbsp;</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for utm in utmsObjects %}
+        <tr>
+            <td>{{ utm.utm }}</td>
+            <td>{{ utm.nbViews }}</td>
+            <td>{{ utm.nbLeads }}</td>
+            <td>{{ utm.transformRate }} %</td>
+        </tr>
+    {% else %}
+
+        <tr>
+            <td colspan="4">Aucun élément dans cette liste</td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody></table>

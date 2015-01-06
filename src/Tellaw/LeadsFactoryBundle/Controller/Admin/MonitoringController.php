@@ -31,10 +31,11 @@ class MonitoringController extends AbstractLeadsController{
                         Chart::PERIOD_YEAR  => 'Année',
                         Chart::PERIOD_MONTH => 'Mois'
                     ),
-                    'label' => 'Période',
+                    'label' => 'Période du graphique',
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
-            )
+            );
+            /*
             ->add('mode', 'choice', array(
                     'choices'   => array(
                         'FormType' => 'Types de formulaire',
@@ -42,37 +43,255 @@ class MonitoringController extends AbstractLeadsController{
                     ),
                     'data'      => 'FormType',
                     'label'     => 'Données',
-                    /*'required'  => false,*/
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            );*/
+
+        // Create the form used for grap configuration
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        // Logged User
+        $user_id = $this->get('security.context')->getToken()->getUser()->getId();
+
+        // Load bookmarked types for user
+        $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getTypesForUser( $user_id );
+
+        return $this->render ($this->getBaseTheme().":monitoring:dashboard.html.twig", array(
+            'form'  => $form->createView(),
+            'bookmarks' => $bookmarks
+        ));
+    }
+
+    /**
+     * @route("/dashboard_forms", name="_monitoring_dashboard_forms")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function dashboardFormsAction(Request $request)
+    {
+        $data = array();
+
+        $formBuilder = $this->createFormBuilder($data);
+        $formBuilder->setMethod('POST')
+            ->add('period', 'choice', array(
+                    'choices' => array(
+                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_MONTH => 'Mois'
+                    ),
+                    'label' => 'Période du graphique',
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             );
 
+        // Create the form used for grap configuration
         $form = $formBuilder->getForm();
-
         $form->handleRequest($request);
 
-        return $this->render ($this->getBaseTheme().":monitoring:dashboard.html.twig", array(
-            'form'  => $form->createView()
+        // Logged User
+        $user_id = $this->get('security.context')->getToken()->getUser()->getId();
+
+        // Load bookmarked forms for user
+        $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getFormsForUser( $user_id );
+
+        return $this->render ($this->getBaseTheme().":monitoring:dashboard_forms.html.twig", array(
+            'form'  => $form->createView(),
+            'bookmarks' => $bookmarks
         ));
     }
 
-    public function chartDashboardAction($period=Chart::PERIOD_YEAR, $mode='FormType')
+    /**
+     * @route("/dashboard_type_page/{type_id}", name="_monitoring_dashboard_type_page")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function dashboardTypePageAction( Request $request, $type_id )
+    {
+
+        $entity = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->find( $type_id );
+
+        $data = array();
+
+        $formBuilder = $this->createFormBuilder($data);
+        $formBuilder->setMethod('POST')
+            ->add('period', 'choice', array(
+                    'choices' => array(
+                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_MONTH => 'Mois'
+                    ),
+                    'label' => 'Période du graphique',
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            );
+
+        // Create the form used for grap configuration
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        return $this->render ($this->getBaseTheme().":monitoring:dashboard_type_page.html.twig", array(
+            'form'  => $form->createView(),
+            'entity' => $entity
+        ));
+
+    }
+
+    /**
+     * @route("/dashboard_forms_page/{form_id}", name="_monitoring_dashboard_form_page")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function dashboardFormPageAction( Request $request, $form_id )
+    {
+        $entity = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->find( $form_id );
+
+        $data = array();
+
+        $formBuilder = $this->createFormBuilder($data);
+        $formBuilder->setMethod('POST')
+            ->add('period', 'choice', array(
+                    'choices' => array(
+                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_MONTH => 'Mois'
+                    ),
+                    'label' => 'Période du graphique',
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            );
+
+        // Create the form used for grap configuration
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        return $this->render($this->getBaseTheme().":monitoring:dashboard_form_page.html.twig", array(
+            'form'  => $form->createView(),
+            'entity'   => $entity,
+            'alerteutil' => $this->get("alertes_utils"),
+        ));
+    }
+
+    /**
+     * @route("/dashboard_utm_page/{utm}", name="_monitoring_dashboard_utm_page")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function dashboardUtmPageAction( Request $request, $utm )
+    {
+
+        $data = array();
+
+        $formBuilder = $this->createFormBuilder($data);
+        $formBuilder->setMethod('POST')
+            ->add('period', 'choice', array(
+                    'choices' => array(
+                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_MONTH => 'Mois'
+                    ),
+                    'label' => 'Période du graphique',
+                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                )
+            );
+
+        // Create the form used for grap configuration
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        return $this->render($this->getBaseTheme().":monitoring:dashboard_utm_page.html.twig", array(
+            'form'  => $form->createView(),
+            'alerteutil' => $this->get("alertes_utils"),
+        ));
+
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getUtmLinkedToFormAction ( $form_id ) {
+
+        $entity = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->find( $form_id );
+        $utms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getUtmLinkedToForm( $form_id );
+
+        $utmsObjects = array();
+
+        foreach ( $utms as $item ) {
+            $result = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForUtmInForm( $item["utm"], $form_id );
+            $utmsObjects[$result["transformRate"]] = $result;
+        }
+
+        krsort( $utmsObjects );
+
+        return $this->render($this->getBaseTheme().":monitoring:utmsLinkedToFormWidget.html.twig", array(
+            'entity'   => $entity,
+            'utmsObjects' => $utmsObjects,
+            'alerteutil' => $this->get("alertes_utils"),
+        ));
+
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getFormsInTypeWidgetAction ( $type_id ) {
+
+        $entities = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsInFormType( $type_id );
+
+        $forms = array();
+
+        foreach ( $entities as $form ) {
+            $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->setStatisticsForId($form->getId());
+            $forms[$form->transformRate] = $form;
+        }
+
+        krsort( $forms );
+
+        return $this->render($this->getBaseTheme().":monitoring:formsInTypeWidget.html.twig", array(
+            'forms'   => $forms,
+            'alerteutil' => $this->get("alertes_utils"),
+        ));
+    }
+
+    /**
+     *
+     * Controlleur dédié à la création des graphiques.
+     * Il doit prendre en paramètres :
+     * 1 ) $mode => FormType ou Form : Définit le type d'objet à afficher sur le graph.
+     * 2 ) $objects => array : Tableau d'elements à afficher sur le graph. Attention si le mode est sur Form le tableau sera des objets Form et si mode est sur FormType,
+     *     il sera alors un tableau d'objets FormType
+     *
+     * @Secure(roles="ROLE_USER")
+     */
+    public function chartDashboardAction($period=Chart::PERIOD_YEAR, $mode='FormType', $objects = null)
     {
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
 
+        /** @var $chart Tellaw\LeadsFactoryBundle\Utils\Chart */
         $chart = $this->get('chart');
         $chart->setPeriod($period);
 
-        if($mode == 'FormType'){
+        // Get Bookmarks of object's type FormType
+        if( $mode == 'FormType' && $objects == null ){
+
             $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b WHERE b.formType = f.id AND b.user ='.$user->getId());
             $formTypes = $query->getResult();
             $chart->setFormType($formTypes);
-        }else{
+
+        // Get Bookmarks of object's type Form
+        } else if ( $mode == 'Form' && $objects == null ) {
+
             $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:Bookmark b WHERE b.form = f.id AND b.user ='.$user->getId());
             $forms = $query->getResult();
             $chart->setForm($forms);
+
+        // Get Array of objects of object's type FormType
+        } else if ($mode == 'FormType' && $objects != null ) {
+
+            $chart->setFormType ( $objects );
+
+        // Get Array of objects of object's type Form
+        } else if ( $mode == 'Form' && $objects != null ) {
+
+            $chart->setForm ( $objects );
+
+        // Throw exception for wrong state
+        } else {
+            throw new Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
         }
 
         $chartData = $chart->loadChartData();
@@ -112,6 +331,66 @@ class MonitoringController extends AbstractLeadsController{
 	        'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
         ));
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getAlertWidgetForTypeAction ( $type_id ) {
+
+        $formTypeEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find($type_id);
+
+        if ($formTypeEntity == null) throw new Exception ("FormType cannot be null");
+
+        return $this->render($this->getBaseTheme().":monitoring:measureFormTypeItem.html.twig", array(
+            'item'  => $formTypeEntity,
+            'alerteutil' => $this->get("alertes_utils"),
+        ));
+
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getAlertWidgetForFormAction ( $form_id ) {
+
+        $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($form_id);
+
+        if ($formEntity == null) throw new Exception ("Form cannot be null");
+
+        return $this->render($this->getBaseTheme().":monitoring:measureFormItem.html.twig", array(
+            'item'  => $formEntity,
+            'alerteutil' => $this->get("alertes_utils"),
+        ));
+
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getTypeViewStatisticsAction ( $type_id ) {
+
+        $formTypeEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->setStatisticsForId($type_id);
+
+        return $this->render($this->getBaseTheme().":monitoring:statisticsFormTypeItem.html.twig", array(
+            'formType' => $formTypeEntity,
+            'alerteutil' => $this->get("alertes_utils")
+        ));
+
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getFormViewStatisticsAction ( $form_id ) {
+
+        $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->setStatisticsForId($form_id);
+
+        return $this->render($this->getBaseTheme().":monitoring:statisticsFormItem.html.twig", array(
+            'form' => $formEntity,
+            'alerteutil' => $this->get("alertes_utils")
+        ));
+
     }
 
     /**

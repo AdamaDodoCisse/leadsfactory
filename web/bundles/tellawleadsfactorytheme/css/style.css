@@ -1,3 +1,9 @@
+.breadcrumb {background: rgba(245, 245, 245, 1); border: 0px solid rgba(245, 245, 245, 1); border-radius: 4px; display: block;}
+.breadcrumb li {font-size: 14px;}
+.breadcrumb a {color: rgba(66, 139, 202, 1);}
+.breadcrumb a:hover {color: rgba(42, 100, 150, 1);}
+.breadcrumb>.active {color: rgba(153, 153, 153, 1);}
+.breadcrumb>li+li:before {color: rgba(204, 204, 204, 1); content: "\002F\00a0";}
 .titleDescription {
     color:#a0a0a0;
     margin-top:10px;
@@ -2106,7 +2112,7 @@ a[data-tooltip][data-placement="bottom"]::after {
 /* Wrapper */
 .wrapper {
     float: left;
-    margin-top: 55px;
+    margin-top: 45px;
     padding-left: 100px;
     padding-top: 30px;
     width: 100%;
@@ -2153,6 +2159,7 @@ a[data-tooltip][data-placement="bottom"]::after {
     float: left;
     margin: 0px 0 10px;
     width: 100%;
+    padding:10px;
 }
 
 /* Visitors Stats */
@@ -5502,7 +5509,7 @@ color: #FFFFFF;
     border-right: 1px solid #EBEBEB;
     font-family: open sans;
     font-size: 14px;
-    margin-top: 60px;
+    margin-top: 10px;
     width: 100%;
 }
 #country-list .country-table-head {

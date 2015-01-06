@@ -1,0 +1,29 @@
+<table id="country-list" class="sortable-table">
+    <thead>
+    <tr class="country-table-head">
+        <th class="sort-down">Formulaires <span>▼</span></th>
+        <th>Vues <span>&nbsp;</span></th>
+        <th>Leads <span>&nbsp;</span></th>
+        <th class="date-sort" data-date-format="m d Y">Tr <span>&nbsp;</span></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for form in forms %}
+    <tr>
+        <td>
+            <a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">{{ form.name }}</a>
+        </td>
+        <td>{{ form.nbViews }}</td>
+        <td>{{ form.nbLeads }}</td>
+        <td>{{ form.transformRate }} %</td>
+    </tr>
+    {% else %}
+
+        <tr>
+            <td colspan="4">Aucun élément dans cette liste</td>
+
+        </tr>
+
+    {% endfor %}
+
+    </tbody></table>

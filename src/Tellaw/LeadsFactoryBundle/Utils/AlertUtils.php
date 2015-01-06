@@ -151,7 +151,7 @@ class AlertUtils {
 
         $em = $this->container->get("doctrine")->getManager();
 
-        if($itemClass == 'Tellaw\LeadsFactoryBundle\Entity\FormType'){
+        if( strstr ($itemClass, 'Tellaw\LeadsFactoryBundle\Entity\FormType')) {
             $forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($item->getId());
         }else{
             $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->find($item->getId());
@@ -201,7 +201,6 @@ class AlertUtils {
 		$item->weekBeforeValue = $value;
 
 		$item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
-
 
         $rules = $item->getRules();
 
