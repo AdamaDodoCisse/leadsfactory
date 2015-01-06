@@ -4,6 +4,11 @@ parameters:
 
 services:
 
+  messages.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\Messages
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   lf.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\LFUtils
     calls:

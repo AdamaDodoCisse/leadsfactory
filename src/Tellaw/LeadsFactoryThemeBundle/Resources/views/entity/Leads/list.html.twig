@@ -2,20 +2,25 @@
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
 
+
     <div class="col-md-12">
-        <div class="heading-sec" id="intro6">
-            <h1>Administration <i>des leads</i></h1>
-        </div>
+
+            <div class="heading-sec" id="intro6">
+                <h1>Administration <i>des leads</i></h1>
+                <div style="clear:both"></div>
+                <div class="titleDescription"><em>Un &laquo;leads&raquo; représente un formulaire posté depuis un de vos sites vers votre SI. Il s'agit de l'enregistrement brut des données, qui suivant votre configuration dans le formulaire source, va donner des exports vers les differents outils de votre système d'informations. </em></div>
+            </div>
+
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-12">
         <h3 class="custom-heading">Leads enregistrés:</h3>
         <div style="clear:both"></div>
         <div class="">
             <div class="streaming-tables">
                 <div>
                     <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
-                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Search here...">
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez...">
                     <select name="per_page" class="st_per_page" id="st_per_page">
                         {% for limit in limit_options %}
                             <option value="{{ limit }}">{{ limit }}</option>
@@ -100,18 +105,6 @@
             window.location.href = route + '/1/' + $(this).val() + keyword;
         });
     </script>
-
-    <div class="col-md-4">
-
-        <h3 class="custom-heading">Informations:</h3>
-
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi at semper arcu. Nulla lobortis tempus convallis. Curabitur pharetra ipsum sit amet rutrum aliquam. Aliquam gravida metus urna, consectetur consequat eros molestie eu. Etiam porta facilisis vulputate. Sed non sodales nisi. Nulla convallis mauris et libero hendrerit, sed fringilla turpis gravida. Phasellus ultricies orci tortor, sed rhoncus dui imperdiet vitae. Nam molestie justo eu blandit ultricies. Proin quis rutrum lorem. Curabitur tortor turpis, pulvinar a purus vel, rhoncus rhoncus ex. Integer hendrerit imperdiet sodales.
-
-            Pellentesque a varius ex. Duis nec magna id ligula luctus vehicula nec ut urna. Nullam odio mauris, tincidunt ut viverra eget, ornare in ex. Nulla facilisi. Sed venenatis finibus tincidunt. Nulla vitae neque et sapien euismod venenatis quis vel leo. Sed vitae dui vel tortor posuere vehicula.
-        </p>
-
-    </div>
 
 {% endblock %}
 {% block javascript %}

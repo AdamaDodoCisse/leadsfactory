@@ -18,33 +18,33 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityFormTypeController extends AbstractLeadsController
+class EntityFormTypeController extends AbstractEntityController
 {
 
     /**
      *
-     * @Route("/formType/list", name="_formType_list")
+     * @Route("/formType/list/{page}/{limit}/{keyword}", name="_formType_list")
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction(Request $request)
+    public function indexAction($page=1, $limit=10, $keyword='')
     {
-        $user = $this->getUser();
+        $list = $this->getList ('TellawLeadsFactoryBundle:FormType', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
+        $bookmarks = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->getBookmarkedFormsForUser( $this->getUser()->getId() );
 
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare('
-            SELECT DISTINCT f.*, (b.id > 0) as bookmark FROM FormType f
-            LEFT JOIN (SELECT * FROM bookmark WHERE user= :user_id AND entity_name="FormType") AS b ON f.id = b.entity_id
-        ');
-        $query->bindValue('user_id', $user->getId());
-        $query->execute();
-        $forms = $query->fetchAll();
-
-        //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
+        $formatedBookmarks = array();
+        foreach ($bookmarks as $bookmark) {
+            $formatedBookmarks[ $bookmark->getFormType()->getId() ] = true;
+        }
 
         return $this->render(
             $this->getBaseTheme().':entity/FormType:entity_formType_list.html.twig',
-            array(  'forms' => $forms )
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options'],
+                'bookmarks'     => $formatedBookmarks
+            )
         );
     }
 

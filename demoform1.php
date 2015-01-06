@@ -5,7 +5,7 @@
     <script src="http://local.dev/leadsfactory/web/bundles/tellawleadsfactory/js/libs/formValidator/jquery.validationEngine.js"></script>
     <script src="http://local.dev/leadsfactory/web/bundles/tellawleadsfactory/js/libs/formValidator/languages/jquery.validationEngine-fr.js"></script>
 
-    <script type="text/javascript" src="http://local.dev/leadsfactory/web/app_dev.php/client/form/js/2" ></script>
+    <script type="text/javascript" src="http://local.dev/leadsfactory/web/app_dev.php/client/form/js/adette/ks%47toto" ></script>
 
     <link rel="stylesheet" href="http://local.dev/leadsfactory/web/bundles/tellawleadsfactory/js/libs/formValidator/developr.validationEngine.css?v=1">
 

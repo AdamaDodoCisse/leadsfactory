@@ -6,9 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Form
- *
  * 
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\FormRepository")
  */
 class Form {
 

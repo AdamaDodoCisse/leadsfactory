@@ -22,7 +22,21 @@ class UtilsController extends AbstractLeadsController
 {
 
     /**
-     *
+     * @Route("/messages/{parentRoute}", name="_utils_messages")
+     * @Secure(roles="ROLE_USER")
+     * @template()
+     */
+    public function messagesAction (Request $request, $parentRoute) {
+
+        /** @var $messagesUtils Tellaw\LeadsFactoryBundle\Utils\Messages */
+        $messagesUtils = $this->container->get("messages.utils");
+        $pooledMessages = $messagesUtils->pullMessages( $parentRoute );
+
+        return $this->render($this->getBaseTheme().':Utils:messages.html.twig', array ("messages" => $pooledMessages));
+
+    }
+
+    /**
      * @Route("/navigation/{parentRoute}", name="_utils_navigation")
      * @Secure(roles="ROLE_USER")
      * @template()

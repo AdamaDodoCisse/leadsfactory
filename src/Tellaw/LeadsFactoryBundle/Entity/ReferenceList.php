@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceList
  *
  * 
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository")
  */
 class ReferenceList {
 
@@ -165,7 +165,7 @@ class ReferenceList {
 
         //var_dump(($elements));
         //die();
-        $json = json_encode( $data );
+        $json = json_encode( $data, JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT );
 
         return $json;
     }

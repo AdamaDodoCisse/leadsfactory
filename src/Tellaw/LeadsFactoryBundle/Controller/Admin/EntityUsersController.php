@@ -19,20 +19,24 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityUsersController extends AbstractLeadsController
+class EntityUsersController extends AbstractEntityController
 {
 
     /**
-     * @Route("/users/list", name="_users_list")
+     * @Route("/users/list/{page}/{limit}/{keyword}", name="_users_list")
      * @Secure(roles="ROLE_USER")
      */
-    public function indexAction(Request $request)
+    public function indexAction($page=1, $limit=10, $keyword='')
     {
-        $elements = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findAll();
+        $list = $this->getList ('TellawLeadsFactoryBundle:Users', $page, $limit, $keyword, array () );
 
         return $this->render(
             $this->getBaseTheme().':entity/Users:list.html.twig',
-            array(  'elements' => $elements )
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
+            )
         );
     }
 

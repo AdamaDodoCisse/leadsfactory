@@ -7,8 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * Tellaw\LeadsFactoryBundle\Entity\FormType
  *
- * 
- * @ORM\Entity
+ *
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\FormTypeRepository")
  */
 class FormType {
 

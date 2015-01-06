@@ -42,6 +42,9 @@
     <script type="text/javascript" src="{{ asset('bundles/tellawleadsfactorytheme/ace/ace.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/tellawleadsfactorytheme/asset/jsonlint/jsonlint.js') }}"></script>
 
+    <script src="{{ asset('bundles/tellawleadsfactorytheme/js/jquery.loader.js') }}"></script>
+    <link href="{{ asset('bundles/tellawleadsfactorytheme/css/jquery.loader.css') }}" rel="stylesheet" />
+
     <style type="text/css">
 
         code {
@@ -119,6 +122,8 @@
 
 <div class="wrapper">
 <div class="container">
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:messages', { "parentRoute" : app.request.attributes.get('_route') } )) }}
+
         {% block body %}{% endblock %}
 </div><!-- Container -->
 </div><!-- Wrapper -->

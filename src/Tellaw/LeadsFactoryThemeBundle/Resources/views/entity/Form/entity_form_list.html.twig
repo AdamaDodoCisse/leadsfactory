@@ -2,122 +2,117 @@
 {% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
 {% block body %}
 
-    <div class="col-md-12">
+	<div class="col-md-12">
+        <div class="col-md-8">
         <div class="heading-sec" id="intro6">
             <h1>Administration <i>des formulaires</i></h1>
+            <div style="clear:both"></div>
+            <div class="titleDescription"><em>Un &laquo;formulaire&raquo; permet de décrire un processus complet de récéption des données. Dans cette zone vous indiquerez le detail du formulaire client, la façon dont il doit etre monitoré, et la façon dont il doit etre exporté ver des système du SI. </em></div>
         </div>
-    </div>
-
-    <div class="col-md-8">
+        </div>
+        <div class="col-md-4">
+        <div class="btn-group btn-group-justified">
+            <a class="btn blue" href="{{ path ('_form_new') }}">Créer un formulaire</a>
+        </div>
+        </div>
+	</div>
+    <div class="col-md-12">
         <h3 class="custom-heading">Formulaires disponibles:</h3>
         <div class="">
             <div class="streaming-tables">
-                <div class="progress progress-striped active">
-                    <div id="record_count" class="progress-bar progress-bar-success pink large-progress" style="width: 0%">0</div>
+                <div>
+                    <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez...">
+                    <select name="per_page" class="st_per_page" id="st_per_page">
+                        {% for limit in limit_options %}
+                            <option value="{{ limit }}">{{ limit }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
-                <span id="found" class="label label-info"></span>
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
+                        <th>id</th>
+                        <th>Nom</th>
                         <th>Description</th>
                         <th>Actions</th>
+                        <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr><td colspan="4">Chargement en cours.</td></tr>
+                    {% for item in elements %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td style="text-align:center">
+                                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_form_edit', {'id': item.id}) }}'">Editer</button>
+                                <button type="button" class="btns  green  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_form_duplicate', {'id': item.id}) }}'">Dupliquer</button>
+                                <button type="button" class="btns  yellow  m-sml-btn flat-btn" style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_entity_leads_export', {'id': item.id}) }}'">Exporter</button>
+                                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'">Supprimer</button>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.id in bookmarks|keys %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a>
+                            </td>
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="5">Aucun élément dans cette liste</td>
+
+                        </tr>
+
+                    {% endfor %}
                     </tbody>
                 </table>
-                <div id="summary">
-                    <div>
-                    </div>
+                {% if pagination.pages_count > 1 %}
+                <div class="st_pagination">
+                    <ul class="pagination">
+                        {% if pagination.page > 1 %}
+                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword|raw}) }}" class="first">Début</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">&larr; Précédent</a></li>
+                        {% endif %}
+                        {% for i in pagination.pagination_min..pagination.pagination_max %}
+                            <li {% if pagination.page == i %}class="active" {% endif %}>
+                                <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if pagination.page < pagination.pages_count %}
+                            <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Suivant &rarr;</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Fin</a></li>
+                        {% endif %}
+                    </ul>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
 
-{% raw %}
-    <script id="template" type="text/html">
-        <tr>
-            <td>{{record.identifiant}}</td>
-            <td>{{record.name}}</td>
-            <td>{{record.description}}</td>
-            <td>{{{record.action}}}</td>
-        </tr>
-    </script>
-{% endraw %}
 
-    <script type="text/javascript">
-
-        var $summary = $('#summary');
-        var $found = $('#found');
-        var $record_count = $('#record_count');
-        var template = Mustache.compile($.trim($("#template").html()));
-        var view = function(record, index){
-            return template({record: record, index: index});
-        };
-
-        var callbacks = {
-            pagination: function(summary){
-                if ($.trim($('#st_search').val()).length > 0){
-                    $found.text('Found : '+ summary.total).show();
-                }else{
-                    $found.hide();
-                }
-                $summary.text( summary.from + ' to '+ summary.to +' of '+ summary.total +' entries');
-            },
-            after_add: function(){
-                var percent = this.data.length*100/2000;
-                $record_count.text(percent + '%').attr('style', 'width:' + percent + '%');
-
-                //Only for example: Stop ajax streaming beacause from localfile data size never going to empty.
-                if (this.data.length == 2000){
-                    this.stopStreaming();
-                    $('.example .progress').removeClass('active').hide();
-                }
-
-            }
-        }
-
-        var st = StreamTable('#stream_table', {
-            callbacks: callbacks,
-            per_page: 10,
-            view: view,
-            data_url: '{{ path ('_utils_streamtables_form') }}',
-            stream_after: 0,
-            fetch_data_limit: 100
-        }, []);
-
-    </script>
-
-
-    <div class="col-md-4">
-
-        <h3 class="custom-heading">Actions:</h3>
-
-        <div class="btn-group btn-group-justified">
-            <a class="btn blue" href="{{ path ('_form_new') }}">Créer un formulaire</a>
-        </div>
-
-    </div>
-
-    <div class="col-md-4">
-
-        <h3 class="custom-heading">Information:</h3>
-
-        <p>Un formulaire permet la description d'un nouveau type de leads. C'est à l'aide de sa description dans le "formulaire" que vous indiquerez :
-            <ul>
-            <li>Les contraintes de validation des champs</li>
-            <li>Les contraintes de monitoring.</li>
-            </ul>
-        </p>
-
-    </div>
 
 </div>
 {% endblock %}
 {% block javascript %}
+    <script type="text/javascript">
+
+        $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
+
+        $('#st_search').keypress(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+                var route = '{{ path(pagination.route) }}';
+                var keyword = $(this).val() != '' ? '/'+$(this).val() : ''
+                window.location.href = route + '/1/' + {{ pagination.limit }} + keyword;
+            }
+        });
+
+        $('#st_per_page').change(function(){
+            var route = '{{ path(pagination.route) }}';
+            var keyword = $('#st_search').val() != '' ? '/'+$('#st_search').val() : '';
+            window.location.href = route + '/1/' + $(this).val() + keyword;
+        });
+    </script>
 <script>
 
     $(document).ready(function(){

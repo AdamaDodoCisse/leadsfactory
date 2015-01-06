@@ -13,6 +13,10 @@ class LFUtils {
         $this->container = $container;
     }
 
+    /**
+     * Method used to update elements of the Reference List
+     * @param $jsonElements
+     */
     public function updateListElements ( $jsonElements ) {
 
         $jsonObject = json_decode( $jsonElements, true );
@@ -65,12 +69,12 @@ class LFUtils {
                 $item->setName( $child["name"] );
                 $item->setValue ( $child["value"] );
 
+                $referenceList = $em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find( $lists[$level] );
+                $item->setReferenceList ( $referenceList );
+
                 if ( $parentId != null ) {
 
-                    $referenceList = $em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find( $lists[$level] );
                     $parent = $em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find( $parentId );
-
-                    $item->setReferenceList ( $referenceList );
                     $item->setParent ( $parent );
 
                 }
