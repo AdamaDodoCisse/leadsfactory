@@ -5,7 +5,7 @@
 
     <div class="col-md-12">
         <div class="heading-sec" id="intro6">
-            <h1>Dashboard des groupements de formulaires : <i>  de &laquo; {{ app.user.firstname }} {{ app.user.lastname }} &raquo;</i></h1>
+            <h1>Dashboard de formulaires : <i>  de &laquo; {{ app.user.firstname }} {{ app.user.lastname }} &raquo;</i></h1>
         </div>
     </div>
 
@@ -25,28 +25,24 @@
 
         <div class="col-md-2" style="margin-top:10px;">
             <div class="widget-body custom-form" style="padding-top:10px;">
-            <div style="margin-left:10px;margin-bottom:5px;">Vos type favoris :</div>
+            <div style="margin-left:10px;margin-bottom:5px;">Vos formulaires favoris :</div>
             <ul>
                 {% for bookmark in bookmarks %}
-                    <li><a href="#type-{{ bookmark.formType.id }}">{{ bookmark.formType.name }}</a></li>
+                    <li><a href="#type-{{ bookmark.form.id }}">{{ bookmark.form.name }}</a></li>
                 {% endfor %}
             </ul>
                 </div>
         </div>
 
     </div>
-    {% if(app.request.get('form')) %}
+
+    <!-- Chart -->
         {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
-            "period" : app.request.get('form')['period'],
-            "mode" : "FormType"
+            "period"    : app.request.get('form')['period'],
+            "mode"      : "Form"
         }
         )) }}
-    {% else %}
-        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
-            "mode" : "FormType"
-        }
-        )) }}
-    {% endif %}
+
 
     <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
 
@@ -63,17 +59,17 @@
     {% for bookmark in bookmarks %}
 
         <div class="col-md-12" style="padding:20px 0px 20px 0px;margin-bottom:20px;border:1px dashed #a0a0a0">
-            <a id="type-{{ bookmark.formType.id }}"/>
+            <a id="type-{{ bookmark.form.id }}"/>
             <div class="col-md-8">
 
                 <div class="col-md-12" >
                     <div class="heading-sec" id="intro6">
-                        <h1>{{ bookmark.formType.name }} : <i> &laquo; type de formulaire &raquo;</i></h1>
+                        <h1>{{ bookmark.form.name }} : <i> &laquo; formulaire &raquo;</i></h1>
                     </div>
                 </div>
 
                 <div class="col-md-12" >
-                    {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getTypeViewStatistics', {"type_id" : bookmark.formType.id})) }}
+                    {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormViewStatistics', {"form_id" : bookmark.form.id})) }}
                 </div>
 
 
@@ -81,14 +77,13 @@
                     <div class="col-md-8" >
                     </div>
                     <div class="col-md-4" style="text-align:right">
-                            <a class="btn blue" href="{{ path('_monitoring_dashboard_type_page', {'type_id': bookmark.formType.id}) }}">Voir le détail du type</a>
+                            <a class="btn blue" href="{{ path('_monitoring_dashboard_form_page', {'form_id': bookmark.form.id}) }}">Voir le détail du formulaire</a>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-4">
             <!-- Render the Alert Widget -->
-            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForType', {"type_id" : bookmark.formType.id})) }}
+            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForForm', {"form_id" : bookmark.form.id})) }}
             </div>
         </div>
 

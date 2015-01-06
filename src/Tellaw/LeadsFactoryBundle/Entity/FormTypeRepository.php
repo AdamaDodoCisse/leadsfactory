@@ -53,4 +53,43 @@ class FormTypeRepository extends EntityRepository
 
     }
 
+    public function getFormsInFormType ( $formType_id ) {
+
+        $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:FormType ft WHERE f.formType = ft.id AND ft.id=:formType_id";
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formType_id', $formType_id )->getResult();
+
+        return $result;
+
+    }
+
+    public function setStatisticsForId ( $formType_id ) {
+
+        // Get forms in this type
+        $formType = $this->find( $formType_id );
+
+        // Load the number of pages views
+        $dql = 'SELECT count(f) as nbviews FROM TellawLeadsFactoryBundle:Tracking t,TellawLeadsFactoryBundle:FormType ft, TellawLeadsFactoryBundle:Form f  WHERE ft.id = f.formType AND t.form = f.id AND ft.id = :formTypeId';
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formTypeId', $formType_id )->getResult();
+        $nbviews = $result[0]["nbviews"];
+
+        // Load the number of submited forms
+        $dql = 'SELECT count(l) as nbleads FROM TellawLeadsFactoryBundle:Leads l,TellawLeadsFactoryBundle:FormType ft  WHERE ft.id = l.formType AND ft.id = :formTypeId';
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formTypeId', $formType_id )->getResult();
+        $nbleads = $result[0]["nbleads"];
+
+        // Calculate the transformation rate
+        if ($nbviews > 0) {
+            $transformRate = round (($nbleads/$nbviews)*100);
+        } else {
+            $transformRate = 0;
+        }
+
+        $formType->nbViews = $nbviews;
+        $formType->nbLeads = $nbleads;
+        $formType->transformRate = $transformRate;
+
+        return $formType;
+
+    }
+
 }

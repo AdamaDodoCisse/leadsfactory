@@ -221,4 +221,7 @@ class FormType {
 	public $yesterdayStatusText = null;
 	public $yesterdayVariation = null;
 
+    public $nbViews = null;
+    public $nbLeads = null;
+    public $transformRate = null;
 }

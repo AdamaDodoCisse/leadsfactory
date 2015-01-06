@@ -1,0 +1,98 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryThemeBundle:Form:fields.html.twig' %}
+{% extends 'TellawLeadsFactoryThemeBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Type de formulaire :  &laquo; {{ entity.name }} &raquo;</h1>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+
+        <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
+            <div id="demo-chart" class="widget-body blue">
+                <!-- This div will hold the chart generated in the footer -->
+            </div>
+        </div>
+
+        <div class="col-md-4" style="margin-top:20px;">
+            <div class="widget-body custom-form">
+                {{ form(form) }}
+            </div>
+        </div>
+
+        <script>
+            var skycons = new Skycons({"color": "white"});
+        </script>
+        <div class="col-md-4" style="margin-top:20px;">
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForType', {"type_id" : entity.id})) }}
+            </div>
+        <script>
+            skycons.play();
+        </script>
+
+
+    </div>
+
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "period"    : app.request.get('form')['period'],
+            "mode"      : "FormType",
+            "objects"   : entity.forms
+        }
+        )) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "mode"      : "FormType",
+            "objects"   : entity.forms
+        }
+        )) }}
+    {% endif %}
+
+    <!-- Chart -->
+
+
+
+    <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
+
+    <!-- ==== DASHBOARD === -->
+<!--
+    <div class="with-padding">
+            render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measureDashboard')) }}
+    </div>
+-->
+
+
+    <div class="col-md-12">
+
+        <div class="col-md-8">
+            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormsInTypeWidget', {"type_id" : entity.id})) }}
+        </div>
+
+
+
+        <div class="col-md-4">
+            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getTypeViewStatistics', {"type_id" : entity.id})) }}
+        </div>
+
+    </div>
+
+
+
+
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+    $("a[href^=#]").click(function(e) {
+        e.preventDefault();
+        var dest = $(this).attr('href');
+        $('html,body').animate({
+            scrollTop: $(dest).offset().top - 60
+        }, 'slow');
+    });
+</script>
+{% endblock %}

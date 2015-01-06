@@ -37,6 +37,124 @@ class UtilsController extends AbstractLeadsController
     }
 
     /**
+     * @Route("/breadcrumb/{parentRoute}", name="_utils_breadcrumb")
+     * @Secure(roles="ROLE_USER")
+     * @template()
+     */
+    public function breadCrumbAction ( Request $request, $parentRoute ) {
+
+        $sections = array();
+
+        $sections[] = array (   "name" => "Acceuil", "url" => $this->get('router')->generate('_monitoring_dashboard'));
+
+        if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_type_page")) == "_monitoring_dashboard_type_page") {
+
+            $sections[] = array (   "name" => "Dashboard des groupements de formulaires", "url" => $this->get('router')->generate('_monitoring_dashboard'));
+            $sections[] = array (   "name" => "Détail d'un groupement de formulaire", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_form_page")) == "_monitoring_dashboard_form_page") {
+
+            $sections[] = array (   "name" => "Dashboard des formulaires", "url" => $this->get('router')->generate('_monitoring_dashboard_forms'));
+            $sections[] = array (   "name" => "Détail d'un formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_forms")) == "_monitoring_dashboard_forms") {
+
+            $sections[] = array (   "name" => "Dashboard des formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard")) == "_monitoring_dashboard") {
+
+            $sections[] = array (   "name" => "Dashboard des groupements de formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_form_list")) == "_form_list") {
+
+            $sections[] = array (   "name" => "Liste des formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_form_new")) == "_form_new") {
+
+            $sections[] = array (   "name" => "Liste des formulaires", "url" => $this->get('router')->generate('_form_list'));
+            $sections[] = array (   "name" => "Création d'un formulaire", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_form_edit")) == "_form_edit") {
+
+            $sections[] = array (   "name" => "Liste des formulaires", "url" => $this->get('router')->generate('_form_list'));
+            $sections[] = array (   "name" => "edition des formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_formType_list")) == "_formType_list") {
+
+            $sections[] = array (   "name" => "Liste des groupements de formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_formType_new")) == "_formType_new") {
+
+            $sections[] = array (   "name" => "Liste des groupements de formulaires", "url" => $this->get('router')->generate('_formType_list'));
+            $sections[] = array (   "name" => "Création d'un groupement de formulaire", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_formType_edit")) == "_formType_edit") {
+
+            $sections[] = array (   "name" => "Liste des groupements de formulaires", "url" => $this->get('router')->generate('_formType_list'));
+            $sections[] = array (   "name" => "edition d'un groupement de formulaires", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_referenceList_list")) == "_referenceList_list") {
+
+            $sections[] = array (   "name" => "Listes de références", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_referenceList_new")) == "_referenceList_new") {
+
+            $sections[] = array (   "name" => "Listes de références", "url" => $this->get('router')->generate('_referenceList_list'));
+            $sections[] = array (   "name" => "Création d'une liste de référence", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_referenceList_edit")) == "_referenceList_edit") {
+
+            $sections[] = array (   "name" => "Listes de références", "url" => $this->get('router')->generate('_referenceList_list'));
+            $sections[] = array (   "name" => "edition d'une liste de référence", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_leads_list")) == "_leads_list") {
+
+            $sections[] = array (   "name" => "Géstion des leads", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_leads_edit")) == "_leads_edit") {
+
+            $sections[] = array (   "name" => "Géstion des leads", "url" => $this->get('router')->generate('_leads_list'));
+            $sections[] = array (   "name" => "Edition d'un LEAD", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_export_history")) == "_export_history") {
+
+            $sections[] = array (   "name" => "Historique des leads exportés", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_users_list")) == "_users_list") {
+
+            $sections[] = array (   "name" => "Listes des utilisateurs", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_users_new")) == "_users_new") {
+
+            $sections[] = array (   "name" => "Listes des utilisateurs", "url" => $this->get('router')->generate('_users_list'));
+            $sections[] = array (   "name" => "Création d'un utilisateur", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_users_edit")) == "_users_edit") {
+
+            $sections[] = array (   "name" => "Listes des utilisateurs", "url" => $this->get('router')->generate('_users_list'));
+            $sections[] = array (   "name" => "edition d'un utilisateur", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_scope_list")) == "_scope_list") {
+
+            $sections[] = array (   "name" => "Scopes utilisateurs", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_scope_new")) == "_scope_new") {
+
+            $sections[] = array (   "name" => "Scopes utilisateurs", "url" => $this->get('router')->generate('_scope_list'));
+            $sections[] = array (   "name" => "Création d'un scope", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_scope_edit")) == "_scope_edit") {
+
+            $sections[] = array (   "name" => "Scopes utilisateurs", "url" => $this->get('router')->generate('_scope_list'));
+            $sections[] = array (   "name" => "edition d'un scope", "url" => "");
+
+        }
+
+        return $this->render($this->getBaseTheme().':Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute));
+
+    }
+
+    /**
      * @Route("/navigation/{parentRoute}", name="_utils_navigation")
      * @Secure(roles="ROLE_USER")
      * @template()

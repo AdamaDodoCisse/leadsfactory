@@ -286,4 +286,15 @@ class Form {
     {
         return $this->confirmationEmailSource;
     }
+
+    public $yesterdayValue = null;
+    public $weekBeforeValue = null;
+    public $yesterdayStatusColor = null;
+    public $yesterdayStatusText = null;
+    public $yesterdayVariation = null;
+
+    public $nbViews = null;
+    public $nbLeads = null;
+    public $transformRate = null;
+
 }

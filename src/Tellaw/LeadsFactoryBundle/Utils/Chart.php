@@ -227,9 +227,14 @@ class Chart {
     public function loadChartData()
     {
         if(!empty($this->form)){
+            // Loads datas from forms in array FORM
             $data = $this->_loadLeadsDataByForm();
         }else{
-            $data = (empty($this->formType) || count($this->formType) > 1) ? $this->_loadLeadsDataByTypes() : $this->_loadLeadsDataByFormsType();
+            if (empty($this->formType) || count($this->formType) > 1) {
+                $data = $this->_loadLeadsDataByTypes();
+            } else {
+                $data = $this->_loadLeadsDataByFormsType();
+            }
         }
         $chartData = $this->_formatChartData($data);
         $chartData = $this->_addAdditionalGraphs($chartData);
