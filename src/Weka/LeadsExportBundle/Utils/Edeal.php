@@ -173,9 +173,9 @@ class Edeal extends AbstractMethod{
 	    $config = $form->getConfig();
 
 	    $logger = $this->getContainer()->get('export.logger');
-	    $logger->info($config['export']['edeal']['mapping_class']);
 
 	    if(isset($config['export']['edeal']['mapping_class'])){
+		    $logger->info($config['export']['edeal']['mapping_class']);
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $config['export']['edeal']['mapping_class'];
 	    }else{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . ucfirst($form->getCode());
