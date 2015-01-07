@@ -104,7 +104,7 @@ class Livreblanc {
         if(isset($data['type-etablissement']))
             $comment .= "\nType d'établissement : ".$data['type-etablissement'];
 
-        if(isset($data['pack']))
+        if(isset($data['livre-blanc']))
             $comment .= "\nLivre blanc  : ".$data['livre-blanc'];
 
         return $comment;
