@@ -45,7 +45,7 @@ class UtilsController extends AbstractLeadsController
 
         $sections = array();
 
-        $sections[] = array (   "name" => "Acceuil", "url" => $this->get('router')->generate('_monitoring_dashboard'));
+        $sections[] = array (   "name" => "Accueil", "url" => $this->get('router')->generate('_monitoring_dashboard'));
 
         if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_type_page")) == "_monitoring_dashboard_type_page") {
 
@@ -55,7 +55,7 @@ class UtilsController extends AbstractLeadsController
         } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_form_page")) == "_monitoring_dashboard_form_page") {
 
             $sections[] = array (   "name" => "Dashboard des formulaires", "url" => $this->get('router')->generate('_monitoring_dashboard_forms'));
-            $sections[] = array (   "name" => "Détail d'un formulaires", "url" => "");
+            $sections[] = array (   "name" => "Détail d'un formulaire", "url" => "");
 
         } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_forms")) == "_monitoring_dashboard_forms") {
 
@@ -77,7 +77,7 @@ class UtilsController extends AbstractLeadsController
         } else if (substr ($parentRoute, 0, strlen ("_form_edit")) == "_form_edit") {
 
             $sections[] = array (   "name" => "Liste des formulaires", "url" => $this->get('router')->generate('_form_list'));
-            $sections[] = array (   "name" => "edition des formulaires", "url" => "");
+            $sections[] = array (   "name" => "Edition des formulaires", "url" => "");
 
         } else if (substr ($parentRoute, 0, strlen ("_formType_list")) == "_formType_list") {
 

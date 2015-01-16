@@ -22,7 +22,7 @@ class Tracking {
 
     /**
      * @var string $name
-     * @ORM\OneToOne(targetEntity="Form", mappedBy="id")
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form")
      * @ORM\JoinColumn(name="form_id", referencedColumnName="id")
      */
     protected $form;

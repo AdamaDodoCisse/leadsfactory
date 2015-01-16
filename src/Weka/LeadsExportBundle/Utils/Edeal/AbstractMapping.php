@@ -3,7 +3,7 @@
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
-class abstractMapping {
+class AbstractMapping {
 
     public function getEnterpriseMapping()
     {
@@ -88,11 +88,14 @@ class abstractMapping {
             'cpwTitre'          => '',
             'cpwTypePourImport_'=> '',
             'cpwUtmCampaign'    => 'utmcampaign',
-            'cpwUtmContent'     => '',
-            'cpwUtmMedium'      => '',
-            'cpwUtmSource'      => '',
+            'cpwUtmContent'     => 'utmcontent',
+            'cpwUtmMedium'      => 'utmmedium',
+            'cpwUtmSource'      => 'utmsource',
             'cpwUtmTerm'        => '',
             'cpwZip'            => 'zip',
+	        'cpwTypeDemande_'   => '',
+	        'cpwSku_'           => '',
+	        'cpwProductTitle_'  => ''
 
         );
     }
