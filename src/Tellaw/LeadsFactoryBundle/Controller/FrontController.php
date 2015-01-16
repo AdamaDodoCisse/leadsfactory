@@ -162,7 +162,10 @@ class FrontController extends Admin\AbstractLeadsController
 
             //Redirect to success page
             if (!empty($redirectUrlSuccess)) {
-                return $this->redirect($redirectUrlSuccess);
+	            if(isset($config['redirect']['redirect_with_id']) && $config['redirect']['redirect_with_id'] == true)
+					$redirectUrlSuccess = $redirectUrlSuccess.'?lead_id='.$leads->getId();
+
+	            return $this->redirect( $redirectUrlSuccess );
             }
 
         } catch (Exception $e) {

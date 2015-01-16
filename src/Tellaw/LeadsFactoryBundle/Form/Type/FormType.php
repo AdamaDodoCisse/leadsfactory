@@ -38,6 +38,8 @@ class FormType extends AbstractType
 
         $builder->add('code',null, array('label' => 'Code (identifiant technique) du formulaire'));
 
+	    $builder->add('secure_key',null, array('label' => 'Code de sécurité'));
+
         $builder->add('utmcampaign',null, array('label' => 'Code action par défaut'));
 
         $builder->add ( 'formType',null, array('label' => 'Type du formulaire') );

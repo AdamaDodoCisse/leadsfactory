@@ -8,6 +8,11 @@ tellaw_leads_factory_front:
     type:     annotation
     prefix:   /
 
+tellaw_leads_factory_api:
+    resource: "@TellawLeadsFactoryBundle/Controller/ApiController.php"
+    type:     annotation
+    prefix:   /api
+
 login_check:
     pattern:   /login_check
 
