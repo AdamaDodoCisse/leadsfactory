@@ -80,6 +80,12 @@ class Form {
      */
     protected $confirmationEmailSource;
 
+	/**
+	 * @var string $secureKey
+	 * @ORM\Column(type="string", nullable=true, name="secure_key")
+	 */
+	protected $secureKey;
+
     /**
      * @param mixed $formType
      */
@@ -297,4 +303,27 @@ class Form {
     public $nbLeads = null;
     public $transformRate = null;
 
+
+    /**
+     * Set secureKey
+     *
+     * @param string $secureKey
+     * @return Form
+     */
+    public function setSecureKey($secureKey)
+    {
+        $this->secureKey = $secureKey;
+
+        return $this;
+    }
+
+    /**
+     * Get secureKey
+     *
+     * @return string 
+     */
+    public function getSecureKey()
+    {
+        return $this->secureKey;
+    }
 }

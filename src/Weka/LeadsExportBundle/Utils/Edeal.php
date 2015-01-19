@@ -164,6 +164,8 @@ class Edeal extends AbstractMethod{
 
     /**
      * Retrieve mapping class
+     * Basé sur la clé mapping_class de la config du formulaire
+     * Si la clé mapping_class n'est pas renseigné, cherche une classe de mapping basé sur le nom de code du formulaire
      *
      * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      * @return mixed

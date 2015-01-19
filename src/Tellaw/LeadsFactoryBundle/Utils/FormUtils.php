@@ -204,6 +204,7 @@ class FormUtils {
             <input type='hidden' name='lfFormId' id='lfFormId' value='".$form->getId()."'/>
             <input type='hidden' name='lfFormType' id='lfFormType' value='".$form->getFormType()->getId()."'/>
             <input type='hidden' name='lfFormKey' id='lfFormKey' value='".$this->getFormKey($form->getId())."'/>
+            <input type='hidden' name='apiKey' id='apiKey' value='".$this->getApiKey($form)."'/>
             </form>
         ";
 
@@ -271,7 +272,6 @@ class FormUtils {
 
         $salt = "fac0ry".$month.$hour.$year."l3a".$formId."ds".$day;
         return md5 ( $salt );
-
     }
 
     public function checkFormKey ( $md5, $formId ) {
@@ -284,5 +284,16 @@ class FormUtils {
             return false;
 
     }
+
+	public function getApiKey($form)
+	{
+		$salt = 'fac0ry_f0rm'.$form->getsecureKey().'_id_'.$form->getId();
+		return md5($salt);
+	}
+
+	public function checkApiKey($form, $key)
+	{
+		return $key == $this->getApiKey($form) ? true : false;
+	}
 
 }

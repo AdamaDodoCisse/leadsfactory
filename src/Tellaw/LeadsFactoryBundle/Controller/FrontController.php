@@ -111,8 +111,8 @@ class FrontController extends Admin\AbstractLeadsController
             // Read configuration to map attributes correctly
             $config = $formObject->getConfig();
 
-            $redirectUrlSuccess = isset($config['redirect']['url_success']) ? $config['redirect']['url_success'] : '';
-            $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
+            $redirectUrlSuccess = isset($config['redirect']['url_success']) && $config['redirect']['url_success'] != '' ? $config['redirect']['url_success'] : '';
+            $redirectUrlError = isset($config['redirect']['url_error']) && $config['redirect']['url_error'] != '' ? $config['redirect']['url_error'] : '';
 
             if ( array_key_exists('configuration', $config) ) {
 
@@ -162,7 +162,14 @@ class FrontController extends Admin\AbstractLeadsController
 
             //Redirect to success page
             if (!empty($redirectUrlSuccess)) {
-                return $this->redirect($redirectUrlSuccess);
+
+				if($redirectUrlSuccess == 'redirect_url')
+					$redirectUrlSuccess = $fields['redirect_url'];
+
+	            if(isset($config['redirect']['redirect_with_id']) && $config['redirect']['redirect_with_id'] == true)
+					$redirectUrlSuccess = $redirectUrlSuccess.'?lead_id='.$leads->getId();
+
+	            return $this->redirect( $redirectUrlSuccess );
             }
 
         } catch (Exception $e) {
