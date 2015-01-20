@@ -25,23 +25,30 @@
 
         <div class="col-md-2" style="margin-top:10px;">
             <div class="widget-body custom-form" style="padding-top:10px;">
-            <div style="margin-left:10px;margin-bottom:5px;">Vos formulaires favoris :</div>
-            <ul>
-                {% for bookmark in bookmarks %}
-                    <li><a href="#type-{{ bookmark.form.id }}">{{ bookmark.form.name }}</a></li>
-                {% endfor %}
-            </ul>
-                </div>
+                <div style="margin-left:10px;margin-bottom:5px;">Vos formulaires favoris :</div>
+                <ul>
+                    {% for bookmark in bookmarks %}
+                        <li><a href="#type-{{ bookmark.form.id }}">{{ bookmark.form.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
 
     </div>
 
     <!-- Chart -->
+    {% if(app.request.get('form')) %}
         {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
-            "period"    : app.request.get('form')['period'],
-            "mode"      : "Form"
+            "period" : app.request.get('form')['period'],
+            "mode" : "Form"
         }
         )) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "mode" : "Form"
+        }
+        )) }}
+    {% endif %}
 
 
     <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>

@@ -99,19 +99,23 @@ class Leads {
         return $this->formType;
     }
     /**
+     * @deprecated
+     * @see setData
      * @param \Tellaw\LeadsFactoryBundle\Entity\longtext $content
      */
     public function setContent($content)
     {
-        $this->content = $content;
+        $this->data = $content;
     }
 
     /**
+     * @deprecated
+     * @see getData
      * @return \Tellaw\LeadsFactoryBundle\Entity\longtext
      */
     public function getContent()
     {
-        return $this->content;
+        return $this->data;
     }
 
     /**
