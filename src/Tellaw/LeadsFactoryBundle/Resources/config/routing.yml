@@ -13,6 +13,11 @@ tellaw_leads_factory_api:
     type:     annotation
     prefix:   /api
 
+tellaw_leads_factory_twilio:
+    resource: "@TellawLeadsFactoryBundle/Controller/TwilioController.php"
+    type:     annotation
+    prefix:   /twilio
+
 login_check:
     pattern:   /login_check
 

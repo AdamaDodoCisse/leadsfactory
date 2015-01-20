@@ -20,7 +20,8 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/security-extra-bundle": "dev-master",
-        "mtdowling/cron-expression": "1.0.*"
+        "mtdowling/cron-expression": "1.0.*",
+        "vresh/twilio-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
