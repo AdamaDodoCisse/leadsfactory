@@ -23,6 +23,7 @@ class AppKernel extends Kernel
             new Tellaw\LeadsFactoryBundle\TellawLeadsFactoryBundle(),
             new Weka\LeadsExportBundle\WekaLeadsExportBundle(),
             new Tellaw\LeadsFactoryThemeBundle\TellawLeadsFactoryThemeBundle(),
+	        new Vresh\TwilioBundle\VreshTwilioBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -30,7 +31,6 @@ class AppKernel extends Kernel
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-	        $bundles[] = new Vresh\TwilioBundle\VreshTwilioBundle();
         }
 
         return $bundles;
