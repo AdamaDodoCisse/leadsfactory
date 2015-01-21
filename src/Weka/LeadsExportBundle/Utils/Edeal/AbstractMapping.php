@@ -3,7 +3,16 @@
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
+use Doctrine\ORM\EntityManager;
+
 class AbstractMapping {
+
+	protected $em;
+
+	public function __construct(EntityManager $entityManager)
+	{
+		$this->em = $entityManager;
+	}
 
     public function getEnterpriseMapping()
     {
@@ -76,7 +85,7 @@ class AbstractMapping {
             'cpwOriIDCode'      => '',
             'cpwOrigine'        => '',
             'cpwPaysCode'       => '',
-            'cpwPerIDMail'      => '',
+            'cpwPerIDMail'      => 'email',
             'cpwPhone'          => 'phone',
             'cpwPrenom'         => 'firstName',
             'cpwProfilAutre'    => '',
@@ -129,8 +138,16 @@ class AbstractMapping {
 	public function getCpwCorpName($data)
 	{
 		if(isset($data['type-etablissement']))
-			return $data['type-etablissement'] . ' - ' . $data['zip'];
+			return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
 		return 'undefined';
+	}
+
+	protected function getTypeEtablissement($value)
+	{
+		$listId = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode('type_etablissement')->getId();
+		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel($listId, $value);
+
+		return $label;
 	}
 
     /*

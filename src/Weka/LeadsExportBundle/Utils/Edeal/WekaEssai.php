@@ -8,8 +8,11 @@ class WekaEssai extends AbstractMapping {
 	{
 		$comment = 'Provient du formulaire Essai Weka';
 
-		$comment .= "\nNom produit : " . $data['product_name'];
-		$comment .= "\nSKU : " . $data['product_sku'];
+		if(!empty($data['product_name']))
+			$comment .= "\nNom produit : " . $data['product_name'];
+
+		if(!empty($data['product_sku']))
+			$comment .= "\nSKU : " . $data['product_sku'];
 
 		return $comment;
 	}

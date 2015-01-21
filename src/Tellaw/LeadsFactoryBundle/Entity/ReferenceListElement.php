@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement
  *
  * 
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElementRepository")
  */
 class ReferenceListElement {
 
