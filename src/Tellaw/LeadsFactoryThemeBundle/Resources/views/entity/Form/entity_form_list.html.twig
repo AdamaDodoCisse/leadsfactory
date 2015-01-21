@@ -46,11 +46,11 @@
                             <td style="vertical-align: middle;">{{ item.name }}</td>
                             <td style="vertical-align: middle;">{{ item.description }}</td>
                             <td style="text-align:center">
-                                <a href="{{ path('_form_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons/5.png') }}"/></a>
-                                <a href="{{ path('_form_duplicate', {'id': item.id}) }}" alt="Dupliquer"><img title="Dupliquer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons/24.png') }}"/></a>
-                                <a href="{{ path('_entity_leads_export', {'id': item.id}) }}" alt="Exporter les leads"><img title="Exporter les leads" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons/2.png') }}"/></a>
-                                <a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons/6.png') }}"/></a>
-                                <a href="{{ path('_monitoring_dashboard_form_page', {'form_id': item.id}) }}"  alt="Voir les statistiques"><img title="Voir les statistiques" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons/15.png') }}"/></a>
+                                <a href="{{ path('_form_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/editer.png') }}"/></a>
+                                <a href="{{ path('_form_duplicate', {'id': item.id}) }}" alt="Dupliquer"><img title="Dupliquer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/dupliquer.png') }}"/></a>
+                                <a href="{{ path('_entity_leads_export', {'id': item.id}) }}" alt="Exporter les leads"><img title="Exporter les leads" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/exporter.png') }}"/></a>
+                                <a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_form_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/supprimer.png') }}"/></a>
+                                <a href="{{ path('_monitoring_dashboard_form_page', {'form_id': item.id}) }}"  alt="Voir les statistiques"><img title="Voir les statistiques" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/statistiques.png') }}"/></a>
                             </td>
                             <td>
                                 <a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.id in bookmarks|keys %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a>
