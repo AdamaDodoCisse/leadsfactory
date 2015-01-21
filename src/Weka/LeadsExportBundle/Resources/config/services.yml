@@ -26,3 +26,4 @@ services:
             arguments: [%edeal_wsdl%, %edeal_user%, %edeal_password%]
             tags:
                 -  { name: console.command }
+

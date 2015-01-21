@@ -29,7 +29,7 @@ class WekaExtract extends AbstractMapping {
 
 	public function getCpwTypeDemande_($data)
 	{
-		return 'Extrait';
+		return 'EXTRAITGRATUIT';
 	}
 
 	public function getCpwSku_($data)

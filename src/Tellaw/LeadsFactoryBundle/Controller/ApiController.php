@@ -33,7 +33,7 @@ class ApiController extends Controller
 	    }
 
 		$response =  new Response($data);
-	    $response->headers->set('content-type', 'Content-Type: application/json');
+	    $response->headers->set('content-type', 'application/json');
 
 	    return $response;
 

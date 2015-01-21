@@ -114,7 +114,7 @@ class Webinar {
 
     public function getCpwOriIDCode($data)
     {
-        return 'CLASSIC';
+        return 'WEBINAR';
     }
 
     public function getCpwDate($data)
@@ -134,48 +134,9 @@ class Webinar {
 		return 'undefined';
 	}
 
-    /*
-     * $couponsWeb->cpwActIDCode = '';
-            $couponsWeb->cpwAdresse1 = '';
-            $couponsWeb->cpwAdresse2 = '';
-            $couponsWeb->cpwAutresCin = '';
-            $couponsWeb->cpwCinTmp_ = '';
-            $couponsWeb->cpwCity = '';
-            $couponsWeb->cpwCivilite = '';
-            $couponsWeb->cpwCodeGCM = '';
-            $couponsWeb->cpwComment = '';
-            $couponsWeb->cpwCorpName = '';
-            $couponsWeb->cpwDate = '';
-            $couponsWeb->cpwDejaClient = '';
-            $couponsWeb->cpwDemandeRV = '';
-            $couponsWeb->cpwEmail = '';
-            $couponsWeb->cpwEmailValide = '';
-            $couponsWeb->cpwEntIDPhone = '';
-            $couponsWeb->cpwEventIDCode = '';
-            $couponsWeb->cpwFonctionLabel = '';
-            $couponsWeb->cpwMbm = '';
-            $couponsWeb->cpwNom = '';
-            $couponsWeb->cpwOriDossier = '';
-            $couponsWeb->cpwOriIDCode = '';
-            $couponsWeb->cpwOrigine = '';
-            $couponsWeb->cpwPaysCode = '';
-            $couponsWeb->cpwPerIDMail = '';
-            $couponsWeb->cpwPhone = '';
-            $couponsWeb->cpwPrenom = '';
-            $couponsWeb->cpwProfilAutre = '';
-            $couponsWeb->cpwProfilCode = '';
-            $couponsWeb->cpwStatus_Code = '';
-            $couponsWeb->cpwStatut = '';
-            $couponsWeb->cpwStopMailETI = '';
-            $couponsWeb->cpwStopPartenaires = '';
-            $couponsWeb->cpwTitre = '';
-            $couponsWeb->cpwTypePourImport_ = '';
-            $couponsWeb->cpwUtmCampaign = '';
-            $couponsWeb->cpwUtmContent = '';
-            $couponsWeb->cpwUtmMedium = '';
-            $couponsWeb->cpwUtmSource = '';
-            $couponsWeb->cpwUtmTerm = '';
-            $couponsWeb->cpwZip = '';
-     */
+	public function getCpwTypeDemande_($data)
+	{
+		return 'WEBINAR';
+	}
 
 } 
