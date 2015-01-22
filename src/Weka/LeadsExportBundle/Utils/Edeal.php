@@ -34,7 +34,7 @@ class Edeal extends AbstractMethod{
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
-        $logger->info('Edeal export start');
+        $logger->info('Edeal export start '.$form->getName());
 
         $client  = new \SoapClient($this->_wsdl, array('soap_version' => SOAP_1_2, 'trace' => true));
         $response = $client->authenticate($this->_user, $this->_password);
@@ -145,19 +145,25 @@ class Edeal extends AbstractMethod{
      */
     private function _getEnterprise($data)
     {
+	    $logger = $this->getContainer()->get('export.logger');
+
         $enterprise = new \StdClass();
         foreach($this->_mappingClass->getEnterpriseMapping() as $edealKey => $formKey){
             if(empty($formKey)){
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $enterprise->$edealKey = $this->_mappingClass->$getter($data);
+	                $logger->info($enterprise->$edealKey);
                 }else{
                     $enterprise->$edealKey = null;
                 }
             }else{
                 $enterprise->$edealKey = $data[$formKey];
+	            $logger->info($enterprise->$edealKey);
             }
         }
+
+
 
         return $enterprise;
     }
