@@ -1,15 +1,15 @@
 {
-    "name": "symfony/framework-standard-edition",
+    "name": "tellaw/LeadsFactoryBundle",
     "license": "MIT",
     "type": "project",
-    "description": "The \"Symfony Standard Edition\" distribution",
+    "description": "LeadsFactory Bundle Project",
     "type" : "symfony-bundle",
     "authors" : [{
-        "name" : "demo",
-        "email" : "demo@company.com"
+        "name" : "Eric Wallet",
+        "email" : "ewalletfr@gmail.com"
     }],
     "keywords" : [
-        "demo bundle"
+        "Leadsfactory"
     ],
     "license" : [
         "MIT"
@@ -33,7 +33,7 @@
     },
     "autoload" : {
         "psr-0" : {
-            "Company\\DemoBundle" : ""
+            "Tellaw\\LeadsFactoryBundle" : ""
         }
     },
     "target-dir" : "Tellaw/LeadsFactoryBundle",
