@@ -28,7 +28,7 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/security-extra-bundle": "dev-master",
-        "mtdowling/cron-expression": "1.0.*",
+        "mtdowling/cron-expression": "1.0.*"
     },
     "autoload" : {
         "psr-0" : {
