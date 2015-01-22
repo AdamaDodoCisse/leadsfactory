@@ -32,10 +32,13 @@ class TwilioController extends Controller
 
 	    $twilio = $this->get('twilio.api');
 
-	    $message = $twilio->account->messages->sendMessage(
+	    $baseUrl =  $this->container->get('router')->getContext()->getBaseUrl().':twilio/twiml';
+	    $logger->info('twiml url : '.$baseUrl);
+
+	    $message = $twilio->account->calls->create(
 		    '+33975186520', // From a Twilio number in your account
 		    '+33633926246', // Text any number
-		    $this->twimlAction()
+		    $baseUrl
 	    );
 
 	    $logger->info($message);
