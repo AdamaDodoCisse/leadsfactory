@@ -1,5 +1,5 @@
 parameters:
-    theme.bundle: TellawLeadsThemeBundle
+    theme.bundle: TellawLeadsBundle
     list.per_page_options: 10;25;50
 
 services:
