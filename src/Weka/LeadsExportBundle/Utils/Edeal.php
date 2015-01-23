@@ -64,6 +64,8 @@ class Edeal extends AbstractMethod{
                 continue;
             }
 
+	        $logger->info('job ID : '.$job->getId());
+
             $data = json_decode($job->getLead()->getData(), true);
 
             $enterprise = $this->_getEnterprise($data);

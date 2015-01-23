@@ -29,7 +29,7 @@ class AbstractMapping {
     public function getEntCorpName($data)
     {
 	    if(isset($data['type-etablissement']))
-		    return $data['type-etablissement'] . ' - ' . $data['zip'];
+		    return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
 	    return 'undefined';
     }
 
