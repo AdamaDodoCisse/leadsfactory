@@ -48,8 +48,8 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.description }}</td>
                             <td style="text-align:center">
-                                <a href="{{ path('_formType_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/editer.png') }}"/></a>
-                                <a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_formType_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactorytheme/img/icons2/supprimer.png') }}"/></a>
+                                <a href="{{ path('_formType_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
+                                <a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_formType_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/supprimer.png') }}"/></a>
                             </td>
                             <td>
                                 <a href="javascript:void(0)" id="bookmark-{{ item.id }}" class="bookmark-link {% if item.id in bookmarks|keys %} starred {% else %} unstarred {% endif %}" data-form-id="{{ item.id }}" title="Epingler dans le Tableau de bord">Favori</a>
