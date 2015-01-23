@@ -32,13 +32,12 @@ class TwilioController extends Controller
 
 	    $twilio = $this->get('twilio.api');
 
-	    $baseUrl =  $this->container->get('router')->getContext()->getBaseUrl().':twilio/twiml';
-	    $logger->info('twiml url : '.$baseUrl);
+	    $twimlUrl =  $this->generateUrl('_twilio_twiml', array(), true);
 
 	    $message = $twilio->account->calls->create(
 		    '+33975186520', // From a Twilio number in your account
 		    '+33633926246', // Text any number
-		    $baseUrl
+		    $twimlUrl
 	    );
 
 	    $logger->info($message);
@@ -47,7 +46,7 @@ class TwilioController extends Controller
     }
 
 	/**
-	 * @Route("/twiml")
+	 * @Route("/twiml", name="_twilio_twiml")
 	 */
 	public function twimlAction()
 	{
@@ -62,6 +61,11 @@ class TwilioController extends Controller
 		foreach(str_split($code) as $digit){
 			$twiml->say($digit, array('language' => 'fr-FR'));
 		}
+		$twiml->say('Je répète : ,', array('language' => 'fr-FR'));
+        foreach(str_split($code) as $digit){
+	        $twiml->say($digit, array('language' => 'fr-FR'));
+	    }
+
 		$twiml->pause(array('length' => 1));
 		$twiml->say('Merci d\'utiliser les services des éditions tékniques de l\'ingénieur', array('language' => 'fr-FR'));
 
