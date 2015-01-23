@@ -1,0 +1,22 @@
+{
+    "lists": {
+        "0": "1"
+    },
+    "elements": {
+        "0": {
+            "id": 13,
+            "name": "M.",
+            "value": "MR"
+        },
+        "1": {
+            "id": 14,
+            "name": "Mme",
+            "value": "MRS"
+        },
+        "2": {
+            "id": 88321,
+            "name": "titi 2",
+            "value": "tutu 3"
+        }
+    }
+}

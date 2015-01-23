@@ -1,0 +1,26 @@
+.idea
+.DS_Store
+/web/bundles/
+/app/bootstrap.php.cache
+/composer.phar
+
+app/config/parameters.yml
+app/cache
+app/logs
+app/sessions
+vendor/
+
+# Cache and logs
+/vendor/*
+/app/cache/*
+/app/logs/*
+/app/sessions/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+
+# Parameters
+/app/config/parameters.yml
+/app/config/parameters.ini
+
+# Composer PHAR
+/composer.phar

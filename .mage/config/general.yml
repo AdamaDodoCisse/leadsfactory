@@ -1,0 +1,7 @@
+# global settings
+name: Implementation Weka Leads Factory
+email: ewallet@weka.fr
+notifications: true
+logging: true
+maxlogs: 30
+ssh_needs_tty: false

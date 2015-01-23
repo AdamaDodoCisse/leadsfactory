@@ -1,0 +1,16 @@
+tellaw_leads_factory_theme:
+    resource: "@TellawLeadsFactoryBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+tellaw_leads_factory:
+    resource: "@TellawLeadsFactoryBundle/Resources/config/routing.yml"
+
+login_path:
+    pattern:   /admin/login
+
+login_check:
+    pattern:   /admin/login_check
+
+_security_logout:
+    pattern:  /admin/logout
