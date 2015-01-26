@@ -37,10 +37,5 @@
     },
     "target-dir" : "Tellaw/LeadsFactoryBundle",
     "repositories" : [{
-    }],
-    "extra" : {
-        "branch-alias" : {
-            "dev-master" : "some_version-dev"
-        }
-    }
+    }]
 }
