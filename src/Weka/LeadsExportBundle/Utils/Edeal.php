@@ -111,7 +111,7 @@ class Edeal extends AbstractMethod{
                     $couponsWeb->$edealKey = null;
                 }
             }else{
-                $couponsWeb->$edealKey = $data[$formKey];
+                $couponsWeb->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
             }
         }
 
@@ -134,7 +134,7 @@ class Edeal extends AbstractMethod{
                     $person->$edealKey = null;
                 }
             }else{
-                $person->$edealKey = $data[$formKey];
+                $person->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
             }
         }
 
@@ -160,7 +160,7 @@ class Edeal extends AbstractMethod{
                     $enterprise->$edealKey = null;
                 }
             }else{
-                $enterprise->$edealKey = $data[$formKey];
+                $enterprise->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
 	            $logger->info($enterprise->$edealKey);
             }
         }
@@ -190,7 +190,7 @@ class Edeal extends AbstractMethod{
 	    }else{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . ucfirst($form->getCode());
 	    }
-		$em = $this->getContainer()->get('doctrine')->getEntityManager();
+		$em = $this->getContainer()->get('doctrine')->getManager();
         return (class_exists($className)) ? new $className($em) : null;
     }
 
