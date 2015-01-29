@@ -61,3 +61,14 @@ services:
     class:        Tellaw\LeadsFactoryBundle\Utils\AlertUtils
     calls:
                   - [ setContainer, [ @service_container ] ]
+
+  leadsfactory.twig_extension:
+    class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension
+    arguments: [@form_utils]
+    tags:
+      - { name: twig.extension }
+
+  leadsfactory.twig_stringloader_extension:
+      class: Twig_Extension_StringLoader
+      tags:
+        - { name: twig.extension }

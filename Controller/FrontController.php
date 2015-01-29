@@ -26,24 +26,26 @@ use Swift_Message;
  */
 class FrontController extends Admin\AbstractLeadsController
 {
+	/**
+	 * @Route("/form/twig/{code}", name="_client_twig")
+	 * @ParamConverter("form")
+	 */
+	public function twigAction(Form $form)
+	{
+		return $this->render(
+			$this->getBaseTheme().'::shell.html.twig',
+			array('template' => $form->getSource())
+		);
+	}
 
     /**
      * @Route("/form/{id}", name="_client_get_form")
+     * @ParamConverter("form")
      */
-    public function getFormAction(Request $request, $id )
+    public function getFormAction(Form $form)
     {
-
-        //$formUtils = new FormUtils();
         $formUtils = $this->get("form_utils");
-
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
-
-        $source = $object->getSource();
-
-        //$tags = $formUtils->parseTags( $source );
-
-        $html = $formUtils->buildHtmlForm( $object );
-
+        $html = $formUtils->buildHtmlForm( $form );
         return $this->render(
             $this->getBaseTheme().':Front:display_form.html.twig',
             array(  'formHtmlObject' => $html )
@@ -53,14 +55,12 @@ class FrontController extends Admin\AbstractLeadsController
 
     /**
      * @Route("/form/js/{code}/{utm_campaign}", name="_client_get_form_js")
+     * @ParamConverter("form")
      */
-    public function getFormAsJsAction($code, $utm_campaign = '')
+    public function getFormAsJsAction(Form $form, $utm_campaign = '')
     {
         /** @var \Tellaw\LeadsFactoryBundle\Utils\JsUtils $formUtils */
         $formUtils = $this->get("js_utils");
-
-        /** @var \Tellaw\LeadsFactoryBundle\Entity\Form $form */
-        $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($code);
         $jsForm = $formUtils->buildAndWrapForm ($form);
 
         // Track call request
