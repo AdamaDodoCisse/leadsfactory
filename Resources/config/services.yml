@@ -72,3 +72,15 @@ services:
       class: Twig_Extension_StringLoader
       tags:
         - { name: twig.extension }
+
+  leadsfactory.leads_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\LeadsRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Leads']
+
+  leadsfactory.extract_field_command:
+    class: Tellaw\LeadsFactoryBundle\Command\ExtractFieldCommand
+    arguments: [@leadsfactory.leads_repository]
+    tags:
+    - { name: console.command }
