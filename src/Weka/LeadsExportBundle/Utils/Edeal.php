@@ -35,6 +35,8 @@ class Edeal extends AbstractMethod{
         $logger = $this->getContainer()->get('export.logger');
 
         $logger->info('Edeal export start '.$form->getName());
+	    $logger->info('wsdl : '.$this->_wsdl);
+	    $logger->info('user : '.$this->_user);
 
         $client  = new \SoapClient($this->_wsdl, array('soap_version' => SOAP_1_2, 'trace' => true));
         $response = $client->authenticate($this->_user, $this->_password);

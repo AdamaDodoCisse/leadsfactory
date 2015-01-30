@@ -103,8 +103,8 @@ class AbstractMapping {
             'cpwUtmTerm'        => '',
             'cpwZip'            => 'zip',
 	        'cpwTypeDemande_'   => '',
-	        'cpwSku_'           => '',
-	        'cpwProductTitle_'  => '',
+	        'cpwSku_'           => 'product_sku',
+	        'cpwProductTitle_'  => 'product_name',
 	        'cpwTypeDemande_'   => '',
 
         );
