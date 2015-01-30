@@ -10,8 +10,8 @@ use Symfony\Component\Validator\Constraints\DateTime;
  *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\LeadsRepository")
  */
-class Leads {
-
+class Leads
+{
 	/**
 	 * @var integer $id
 	 *
@@ -81,6 +81,11 @@ class Leads {
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $createdAt;
+
+	/**
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	private $email = true;
 
 
     /**
@@ -323,4 +328,27 @@ class Leads {
     {
         return $this->form;
     }
+
+	/**
+	 * Set email
+	 *
+	 * @param string $email
+	 * @return Leads
+	 */
+	public function setEmail($email)
+	{
+		$this->email = $email;
+
+		return $this;
+	}
+
+	/**
+	 * Get email
+	 *
+	 * @return string
+	 */
+	public function getEmail()
+	{
+		return $this->email;
+	}
 }
