@@ -7,6 +7,7 @@
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,13 +22,12 @@ use Symfony\Component\Console\Question\Question;
 
 class ExtractFieldCommand extends Command
 {
-	/** @var LeadsRepository */
-	private $leadsRepository;
+	/** @var  EntityManager */
+	private $em;
 
-	public function __construct(LeadsRepository $leadsRepository)
+	public function __construct(EntityManager $em)
 	{
-		$this->leadsRepository = $leadsRepository;
-
+		$this->em = $em;
 		parent::__construct();
 	}
 
@@ -57,7 +57,8 @@ class ExtractFieldCommand extends Command
 			return;
 		}
 
-		$leads = $this->leadsRepository->findAll();
+		$leads_repository = $this->em->getRepository('TellawLeadsFactoryBundle:Leads');
+		$leads = $leads_repository->findAll();
 
 		$progress = new ProgressBar($output, count($leads));
 		$progress->setRedrawFrequency(50);
@@ -83,6 +84,9 @@ class ExtractFieldCommand extends Command
 			}
 		}
 		$progress->finish();
+
+		$this->em->flush();
+
 		$output->writeln('');
 		$output->writeln("$count $attribute_name extraits");
 	}

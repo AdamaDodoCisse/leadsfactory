@@ -81,6 +81,6 @@ services:
 
   leadsfactory.extract_field_command:
     class: Tellaw\LeadsFactoryBundle\Command\ExtractFieldCommand
-    arguments: [@leadsfactory.leads_repository]
+    arguments: [@doctrine.orm.entity_manager]
     tags:
     - { name: console.command }
