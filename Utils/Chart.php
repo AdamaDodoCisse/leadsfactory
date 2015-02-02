@@ -230,7 +230,7 @@ class Chart {
             // Loads datas from forms in array FORM
             $data = $this->_loadLeadsDataByForm();
         }else{
-            if (empty($this->formType) || count($this->formType) > 1) {
+            if (!empty($this->formType) && count($this->formType) > 1) {
                 $data = $this->_loadLeadsDataByTypes();
             } else {
                 $data = $this->_loadLeadsDataByFormsType();
