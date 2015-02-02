@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -68,14 +69,21 @@ class FormTypeRepository extends EntityRepository
         $formType = $this->find( $formType_id );
 
         // Load the number of pages views
+
         $dql = 'SELECT count(f) as nbviews FROM TellawLeadsFactoryBundle:Tracking t,TellawLeadsFactoryBundle:FormType ft, TellawLeadsFactoryBundle:Form f  WHERE ft.id = f.formType AND t.form = f.id AND ft.id = :formTypeId';
         $result = $this->getEntityManager()->createQuery($dql)->setParameter('formTypeId', $formType_id )->getResult();
         $nbviews = $result[0]["nbviews"];
 
-        // Load the number of submited forms
-        $dql = 'SELECT count(l) as nbleads FROM TellawLeadsFactoryBundle:Leads l,TellawLeadsFactoryBundle:FormType ft  WHERE ft.id = l.formType AND ft.id = :formTypeId';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formTypeId', $formType_id )->getResult();
-        $nbleads = $result[0]["nbleads"];
+	    $qb = $this->_em->createQueryBuilder();
+	    $qb->select('count(l)')
+	        ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	        ->where('l.formType = :formTypeId')
+		    ->setParameter('formTypeId', $formType_id)
+	    ;
+
+	    $qb = $this->excludeInternalLeads($qb);
+
+	    $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
         if ($nbviews > 0) {
@@ -92,4 +100,26 @@ class FormTypeRepository extends EntityRepository
 
     }
 
+	public function setInternalEmailPatterns($patterns)
+	{
+		$this->internal_email_patterns = $patterns;
+	}
+
+	/**
+	 * @param QueryBuilder $qb
+	 *
+	 * @return QueryBuilder
+	 *
+	 */
+	private function excludeInternalLeads(QueryBuilder $qb)
+	{
+		$i = 0;
+		foreach ($this->internal_email_patterns as $pattern) {
+			$qb->andWhere('l.email not like :pattern_'.$i)
+			   ->setParameter('pattern_'.$i, $pattern)
+			;
+			++$i;
+		}
+		return $qb;
+	}
 }

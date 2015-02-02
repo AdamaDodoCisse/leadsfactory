@@ -39,7 +39,7 @@ class CronRunnerCommand extends ContainerAwareCommand {
             $typesInWarning = array();
 
             // Second iterate over Types
-            $types = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:FormType')->findByScope($scope->getId());
+            $types = $this->getContainer()->get('leadsfactory.form_type_repository')->findByScope($scope->getId());
             foreach ( $types as $type ) {
 
                 $yesterdayLeads = $this->getTypeLeadsForDay( $dayToTest, $type->getId() );
@@ -51,7 +51,7 @@ class CronRunnerCommand extends ContainerAwareCommand {
             $formsInWarning = array();
 
             // Third, iterate over forms
-            $forms = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Form')->findByScope($scope->getId());
+            $forms = $this->get('leadsfactory.form_repository')->findByScope($scope->getId());
             foreach ( $forms as $form ) {
 
                 

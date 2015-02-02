@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -13,6 +14,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class FormRepository extends EntityRepository
 {
+	/** @var  array */
+	private $internal_email_patterns = array();
 
     /**
      * @param $keyword
@@ -53,35 +56,44 @@ class FormRepository extends EntityRepository
 
     }
 
-    public function setStatisticsForId ( $form_id ) {
+	public function setStatisticsForId($form_id)
+	{
+		// Get forms in this type
+		$form = $this->find( $form_id );
 
-        // Get forms in this type
-        $form = $this->find( $form_id );
+		// Load the number of pages views
+		$qb = $this->_em->createQueryBuilder();
+		$qb->select('count(t)')
+		   ->from('TellawLeadsFactoryBundle:Tracking', 't')
+		   ->where('t.form = :formId')
+		   ->setParameter('formId', $form_id )
+		;
+		$nbviews = $qb->getQuery()->getSingleScalarResult();
 
-        // Load the number of pages views
-        $dql = 'SELECT count(f) as nbviews FROM TellawLeadsFactoryBundle:Tracking t, TellawLeadsFactoryBundle:Form f  WHERE t.form = f.id AND f.id = :formId';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->getResult();
-        $nbviews = $result[0]["nbviews"];
+		// Load the number of submited forms
+		$qb = $this->_em->createQueryBuilder();
+		$qb->select('count(l)')
+		    ->from('TellawLeadsFactoryBundle:Leads', 'l')
+		    ->where('l.form = :formId')
+		    ->setParameter('formId', $form_id )
+		;
+		$qb = $this->excludeInternalLeads($qb);
+		$nbleads = $qb->getQuery()->getSingleScalarResult();
 
-        // Load the number of submited forms
-        $dql = 'SELECT count(l) as nbleads FROM TellawLeadsFactoryBundle:Leads l,TellawLeadsFactoryBundle:Form f  WHERE f.id = l.form AND f.id = :formId';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->getResult();
-        $nbleads = $result[0]["nbleads"];
+		// Calculate the transformation rate
+		if ($nbviews > 0) {
+			$transformRate = round (($nbleads/$nbviews)*100);
+		} else {
+			$transformRate = 0;
+		}
 
-        // Calculate the transformation rate
-        if ($nbviews > 0) {
-            $transformRate = round (($nbleads/$nbviews)*100);
-        } else {
-            $transformRate = 0;
-        }
+		$form->nbViews = $nbviews;
+		$form->nbLeads = $nbleads;
+		$form->transformRate = $transformRate;
 
-        $form->nbViews = $nbviews;
-        $form->nbLeads = $nbleads;
-        $form->transformRate = $transformRate;
+		return $form;
 
-        return $form;
-
-    }
+	}
 
     public function getUtmLinkedToForm ( $form_id ) {
 
@@ -101,10 +113,16 @@ class FormRepository extends EntityRepository
         $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->setParameter('utm', $utm )->getResult();
         $nbviews = $result[0]["nbviews"];
 
-        // Load the number of submited forms
-        $dql = 'SELECT count(l) as nbleads FROM TellawLeadsFactoryBundle:Leads l,TellawLeadsFactoryBundle:Form f  WHERE f.id = l.form AND f.id = :formId AND l.utmcampaign = :utm';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->setParameter('utm', $utm )->getResult();
-        $nbleads = $result[0]["nbleads"];
+	    $qb = $this->_em->createQueryBuilder();
+	    $qb->select('count(l)')
+	       ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	       ->where('l.form = :formId')
+	       ->setParameter('formId', $form_id )
+	       ->andWhere('l.utmcampaign = :utm')
+	       ->setParameter('utm', $utm)
+	    ;
+	    $qb = $this->excludeInternalLeads($qb);
+	    $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
         if ($nbviews > 0) {
@@ -122,7 +140,7 @@ class FormRepository extends EntityRepository
 
     }
 
-    public function getStatisticsForUtm ( $utm, $form_id ) {
+    /*public function getStatisticsForUtm ( $utm, $form_id ) {
 
         $item = array();
 
@@ -132,9 +150,16 @@ class FormRepository extends EntityRepository
         $nbviews = $result[0]["nbviews"];
 
         // Load the number of submited forms
-        $dql = 'SELECT count(l) as nbleads FROM TellawLeadsFactoryBundle:Leads l,TellawLeadsFactoryBundle:Form f  WHERE f.id = l.form AND AND t.utm_campaign = :utm';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('utm', $utm )->getResult();
-        $nbleads = $result[0]["nbleads"];
+	    $qb = $this->_em->createQueryBuilder();
+	    $qb->select('count(l)')
+	        ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	        ->where('l.form = :formId')
+	        ->setParameter('formId', $form_id )
+		    ->andWhere('t.utm_campaign = :utm')
+		    ->setParameter('utm', $utm)
+	    ;
+	    $qb = $this->excludeInternalLeads($qb);
+	    $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
         if ($nbviews > 0) {
@@ -149,6 +174,28 @@ class FormRepository extends EntityRepository
 
         return $item;
 
-    }
+    }*/
 
+	public function setInternalEmailPatterns($patterns)
+	{
+		$this->internal_email_patterns = $patterns;
+	}
+
+	/**
+	 * @param QueryBuilder $qb
+	 *
+	 * @return QueryBuilder
+	 *
+	 */
+	private function excludeInternalLeads(QueryBuilder $qb)
+	{
+		$i = 0;
+		foreach ($this->internal_email_patterns as $pattern) {
+			$qb->andWhere('l.email not like :pattern_'.$i)
+			   ->setParameter('pattern_'.$i, $pattern)
+			;
+			++$i;
+		}
+		return $qb;
+	}
 }

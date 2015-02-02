@@ -147,7 +147,7 @@ class Chart {
         foreach($this->formType as $formType){
 
             if(!is_object($formType))
-                $formType = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findOneById($formType);
+                $formType = $this->getContainer()->get('leadsfactory.form_type_repository')->findOneById($formType);
 
             $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
             $query->bindValue('format', $this->_getSqlDateFormat());
@@ -174,7 +174,7 @@ class Chart {
 
         $formTypeId = $this->formType[0];
 
-        $forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($formTypeId);
+        $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($formTypeId);
 
         foreach($forms as $form){
 
@@ -204,7 +204,7 @@ class Chart {
         foreach($this->form as $form){
 
             if(!($form instanceof Form))
-                $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->findOneById($form);
+                $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
 
             $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
             $query->bindValue('format', $this->_getSqlDateFormat());
@@ -268,7 +268,7 @@ class Chart {
     private function _getAllFormTypes()
     {
         $em = $this->container->get('doctrine')->getManager();
-        $formTypes = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
+        $formTypes = $this->getContainer()->get('leadsfactory.form_type_repository')->findAll();
 
         return $formTypes;
     }
@@ -527,7 +527,7 @@ class Chart {
         echo ("Loading demo data\r\n");
 
         $em = $this->container->get('doctrine')->getManager();
-        $forms = $this->container->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+        $forms = $this->container->get('leadsfactory.form_repository')->findAll();
 
         // Loop over forms
         foreach ($forms as $form) {

@@ -106,7 +106,7 @@ class MonitoringController extends AbstractLeadsController{
     public function dashboardTypePageAction( Request $request, $type_id )
     {
 
-        $entity = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->find( $type_id );
+        $entity = $this->get('leadsfactory.form_type_repository')->find( $type_id );
 
         $data = array();
 
@@ -139,7 +139,7 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function dashboardFormPageAction( Request $request, $form_id )
     {
-        $entity = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->find( $form_id );
+        $entity = $this->get('leadsfactory.form_repository')->find( $form_id );
 
         $data = array();
 
@@ -203,13 +203,15 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getUtmLinkedToFormAction ( $form_id ) {
 
-        $entity = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->find( $form_id );
-        $utms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getUtmLinkedToForm( $form_id );
+	    $form_repository = $this->get('leadsfactory.form_repository');
+
+        $entity = $form_repository->find( $form_id );
+        $utms = $form_repository->getUtmLinkedToForm( $form_id );
 
         $utmsObjects = array();
 
         foreach ( $utms as $item ) {
-            $result = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForUtmInForm( $item["utm"], $form_id );
+            $result = $form_repository->getStatisticsForUtmInForm( $item["utm"], $form_id );
             $utmsObjects[$result["transformRate"]] = $result;
         }
 
@@ -228,12 +230,12 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getFormsInTypeWidgetAction ( $type_id ) {
 
-        $entities = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsInFormType( $type_id );
+        $entities = $this->get('leadsfactory.form_type_repository')->getFormsInFormType( $type_id );
 
         $forms = array();
 
         foreach ( $entities as $form ) {
-            $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->setStatisticsForId($form->getId());
+            $form = $this->get('leadsfactory.form_repository')->setStatisticsForId($form->getId());
             $forms[$form->transformRate] = $form;
         }
 
@@ -338,7 +340,7 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getAlertWidgetForTypeAction ( $type_id ) {
 
-        $formTypeEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find($type_id);
+        $formTypeEntity = $this->get('leadsfactory.form_type_repository')->find($type_id);
 
         if ($formTypeEntity == null) throw new Exception ("FormType cannot be null");
 
@@ -354,9 +356,12 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getAlertWidgetForFormAction ( $form_id ) {
 
-        $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($form_id);
+        $formEntity = $this->get('leadsfactory.form_repository')->find($form_id);
 
         if ($formEntity == null) throw new Exception ("Form cannot be null");
+
+	    $alertes_utils = $this->get("alertes_utils");
+	    $alertes_utils->setValuesForAlerts($formEntity);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormItem.html.twig", array(
             'item'  => $formEntity,
@@ -370,7 +375,7 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getTypeViewStatisticsAction ( $type_id ) {
 
-        $formTypeEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->setStatisticsForId($type_id);
+        $formTypeEntity = $this->get('leadsfactory.form_type_repository')->setStatisticsForId($type_id);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormTypeItem.html.twig", array(
             'formType' => $formTypeEntity,
@@ -384,7 +389,7 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getFormViewStatisticsAction ( $form_id ) {
 
-        $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->setStatisticsForId($form_id);
+        $formEntity = $this->get('leadsfactory.form_repository')->setStatisticsForId($form_id);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormItem.html.twig", array(
             'form' => $formEntity,
@@ -401,14 +406,14 @@ class MonitoringController extends AbstractLeadsController{
         $em = $this->getDoctrine()->getManager();
 
         if(!empty($form)){
-            $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->find($form);
+            $form = $this->get('leadsfactory.form_repository')->find($form);
             $entities = array($form);
             $title = 'Formulaire '.$form->getName();
         }elseif(!empty($formType)){
-            $entities = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($formType);
+            $entities = $this->get('leadsfactory.form_repository')->findByFormType($formType);
             $title = "Tous les formulaires du type sélectionné";
         }else{
-            $entities = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
+            $entities = $this->get('leadsfactory.form_type_repository')->findAll();
             $title = "Tous les types de formulaires";
         }
 
@@ -505,7 +510,7 @@ class MonitoringController extends AbstractLeadsController{
      */
     private function getFormTypesOptions()
     {
-        $formTypes = $this->get('doctrine')->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
+        $formTypes = $this->get('leadsfactory.form_type_repository')->findAll();
         $array = array('' => 'Tous');
         foreach($formTypes as $formType){
             $array[$formType->getId()] = $formType->getName();
@@ -526,7 +531,7 @@ class MonitoringController extends AbstractLeadsController{
         if(empty($form_type))
             return array('' => 'Choisissez d\'abord un type');
 
-        $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($form_type);
+        $forms = $this->get('leadsfactory.form_repository')->findByFormType($form_type);
 
         $options = array('' => 'Sélectionnez');
         foreach($forms as $form){

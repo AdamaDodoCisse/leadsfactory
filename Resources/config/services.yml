@@ -78,6 +78,22 @@ services:
     factory_method: getRepository
     arguments: ['TellawLeadsFactoryBundle:Leads']
 
+  leadsfactory.form_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\FormRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Form']
+    calls:
+      - [setInternalEmailPatterns, [%leadsfactory.internal_email_patterns%]]
+
+  leadsfactory.form_type_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\FormTypeRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:FormType']
+    calls:
+      - [setInternalEmailPatterns, [%leadsfactory.internal_email_patterns%]]
+
   leadsfactory.extract_field_command:
     class: Tellaw\LeadsFactoryBundle\Command\ExtractFieldCommand
     arguments: [@doctrine.orm.entity_manager]
