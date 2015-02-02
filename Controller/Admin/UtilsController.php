@@ -32,7 +32,7 @@ class UtilsController extends AbstractLeadsController
         $messagesUtils = $this->container->get("messages.utils");
         $pooledMessages = $messagesUtils->pullMessages( $parentRoute );
 
-        return $this->render($this->getBaseTheme().':Utils:messages.html.twig', array ("messages" => $pooledMessages));
+        return $this->render('TellawLeadsFactoryBundle:Utils:messages.html.twig', array ("messages" => $pooledMessages));
 
     }
 
@@ -150,7 +150,7 @@ class UtilsController extends AbstractLeadsController
 
         }
 
-        return $this->render($this->getBaseTheme().':Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute));
+        return $this->render('TellawLeadsFactoryBundle:Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute));
 
     }
 
@@ -182,7 +182,7 @@ class UtilsController extends AbstractLeadsController
 
         }
 
-        return $this->render($this->getBaseTheme().':Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
+        return $this->render('TellawLeadsFactoryBundle:Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
 
     }
 
@@ -202,7 +202,7 @@ class UtilsController extends AbstractLeadsController
             ->select('form')
             ->from('TellawLeadsFactoryBundle:Form','form')->setFirstResult($offset)->setMaxResults($limit);
 
-        return $this->render($this->getBaseTheme().':Utils:streamtables_form.html.twig', array ( 'items' => new Paginator ($q) ));
+        return $this->render('TellawLeadsFactoryBundle:Utils:streamtables_form.html.twig', array ( 'items' => new Paginator ($q) ));
 
     }
 
@@ -222,7 +222,7 @@ class UtilsController extends AbstractLeadsController
             ->select('leads')
             ->from('TellawLeadsFactoryBundle:Leads','leads')->setFirstResult($offset)->setMaxResults($limit);
 
-        return $this->render($this->getBaseTheme().':Utils:streamtables_leads.html.twig', array ( 'items' => new Paginator ($q) ));
+        return $this->render('TellawLeadsFactoryBundle:Utils:streamtables_leads.html.twig', array ( 'items' => new Paginator ($q) ));
 
     }
 

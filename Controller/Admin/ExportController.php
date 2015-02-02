@@ -65,7 +65,7 @@ class ExportController extends AbstractEntityController
         $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword);
 
         return $this->render(
-            $this->getBaseTheme().':entity/Export:list.html.twig',
+            'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],

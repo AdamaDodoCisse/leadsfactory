@@ -38,7 +38,7 @@ class EntityFormTypeController extends AbstractEntityController
         }
 
         return $this->render(
-            $this->getBaseTheme().':entity/FormType:entity_formType_list.html.twig',
+            'TellawLeadsFactoryBundle:entity/FormType:entity_formType_list.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
@@ -76,7 +76,7 @@ class EntityFormTypeController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_formType_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                          'title' => "Création d'un type"));
     }
 
@@ -116,7 +116,7 @@ class EntityFormTypeController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_formType_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
                                                                                                         'title' => "Edition d'un type"));
 
     }

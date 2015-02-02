@@ -57,7 +57,7 @@ class MonitoringController extends AbstractLeadsController{
         // Load bookmarked types for user
         $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getTypesForUser( $user_id );
 
-        return $this->render ($this->getBaseTheme().":monitoring:dashboard.html.twig", array(
+        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig", array(
             'form'  => $form->createView(),
             'bookmarks' => $bookmarks
         ));
@@ -93,7 +93,7 @@ class MonitoringController extends AbstractLeadsController{
         // Load bookmarked forms for user
         $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getFormsForUser( $user_id );
 
-        return $this->render ($this->getBaseTheme().":monitoring:dashboard_forms.html.twig", array(
+        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
             'form'  => $form->createView(),
             'bookmarks' => $bookmarks
         ));
@@ -126,7 +126,7 @@ class MonitoringController extends AbstractLeadsController{
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
-        return $this->render ($this->getBaseTheme().":monitoring:dashboard_type_page.html.twig", array(
+        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_type_page.html.twig", array(
             'form'  => $form->createView(),
             'entity' => $entity
         ));
@@ -159,7 +159,7 @@ class MonitoringController extends AbstractLeadsController{
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
-        return $this->render($this->getBaseTheme().":monitoring:dashboard_form_page.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_form_page.html.twig", array(
             'form'  => $form->createView(),
             'entity'   => $entity,
             'alerteutil' => $this->get("alertes_utils"),
@@ -191,7 +191,7 @@ class MonitoringController extends AbstractLeadsController{
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
-        return $this->render($this->getBaseTheme().":monitoring:dashboard_utm_page.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_utm_page.html.twig", array(
             'form'  => $form->createView(),
             'alerteutil' => $this->get("alertes_utils"),
         ));
@@ -215,7 +215,7 @@ class MonitoringController extends AbstractLeadsController{
 
         krsort( $utmsObjects );
 
-        return $this->render($this->getBaseTheme().":monitoring:utmsLinkedToFormWidget.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:utmsLinkedToFormWidget.html.twig", array(
             'entity'   => $entity,
             'utmsObjects' => $utmsObjects,
             'alerteutil' => $this->get("alertes_utils"),
@@ -239,7 +239,7 @@ class MonitoringController extends AbstractLeadsController{
 
         krsort( $forms );
 
-        return $this->render($this->getBaseTheme().":monitoring:formsInTypeWidget.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:formsInTypeWidget.html.twig", array(
             'forms'   => $forms,
             'alerteutil' => $this->get("alertes_utils"),
         ));
@@ -297,7 +297,7 @@ class MonitoringController extends AbstractLeadsController{
         $chartData = $chart->loadChartData();
 
         //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
-        $template = $this->getBaseTheme().":monitoring:chart_bar.html.twig";
+        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
 
         $data = array(
             'chart_data'        => $chartData,
@@ -326,7 +326,7 @@ class MonitoringController extends AbstractLeadsController{
             $title = 'Mes formulaires favoris';
         }
 
-        return $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:measure.html.twig", array(
             'entities'  => $entities,
 	        'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
@@ -342,7 +342,7 @@ class MonitoringController extends AbstractLeadsController{
 
         if ($formTypeEntity == null) throw new Exception ("FormType cannot be null");
 
-        return $this->render($this->getBaseTheme().":monitoring:measureFormTypeItem.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormTypeItem.html.twig", array(
             'item'  => $formTypeEntity,
             'alerteutil' => $this->get("alertes_utils"),
         ));
@@ -358,7 +358,7 @@ class MonitoringController extends AbstractLeadsController{
 
         if ($formEntity == null) throw new Exception ("Form cannot be null");
 
-        return $this->render($this->getBaseTheme().":monitoring:measureFormItem.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormItem.html.twig", array(
             'item'  => $formEntity,
             'alerteutil' => $this->get("alertes_utils"),
         ));
@@ -372,7 +372,7 @@ class MonitoringController extends AbstractLeadsController{
 
         $formTypeEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->setStatisticsForId($type_id);
 
-        return $this->render($this->getBaseTheme().":monitoring:statisticsFormTypeItem.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormTypeItem.html.twig", array(
             'formType' => $formTypeEntity,
             'alerteutil' => $this->get("alertes_utils")
         ));
@@ -386,7 +386,7 @@ class MonitoringController extends AbstractLeadsController{
 
         $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->setStatisticsForId($form_id);
 
-        return $this->render($this->getBaseTheme().":monitoring:statisticsFormItem.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormItem.html.twig", array(
             'form' => $formEntity,
             'alerteutil' => $this->get("alertes_utils")
         ));
@@ -412,7 +412,7 @@ class MonitoringController extends AbstractLeadsController{
             $title = "Tous les types de formulaires";
         }
 
-        return $this->render($this->getBaseTheme().":monitoring:measure.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:measure.html.twig", array(
             'entities'  => $entities,
             'alerteutil' => $this->get("alertes_utils"),
             'title'  => $title
@@ -461,7 +461,7 @@ class MonitoringController extends AbstractLeadsController{
 
         $form->handleRequest($request);
 
-        return $this->render($this->getBaseTheme().":monitoring:index.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:monitoring:index.html.twig", array(
             'form'       => $form->createView()
         ));
     }
@@ -487,7 +487,7 @@ class MonitoringController extends AbstractLeadsController{
         $chartData = $chart->loadChartData();
 
         //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
-        $template = $this->getBaseTheme().":monitoring:chart_bar.html.twig";
+        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
 
         $data = array(
             'chart_data'        => $chartData,

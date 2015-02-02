@@ -33,7 +33,7 @@ class FrontController extends Admin\AbstractLeadsController
 	public function twigAction(Form $form)
 	{
 		return $this->render(
-			$this->getBaseTheme().'::shell.html.twig',
+			'TellawLeadsFactoryBundle::shell.html.twig',
 			array('template' => $form->getSource())
 		);
 	}
@@ -47,7 +47,7 @@ class FrontController extends Admin\AbstractLeadsController
         $formUtils = $this->get("form_utils");
         $html = $formUtils->buildHtmlForm( $form );
         return $this->render(
-            $this->getBaseTheme().':Front:display_form.html.twig',
+            'TellawLeadsFactoryBundle:Front:display_form.html.twig',
             array(  'formHtmlObject' => $html )
         );
 
@@ -239,7 +239,7 @@ class FrontController extends Admin\AbstractLeadsController
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($this->renderView($this->getBaseTheme().':'.$template,
+            ->setBody($this->renderView('TellawLeadsFactoryBundle:'.$template,
                 array(
                     'fields' => $data,
                     'intro' => 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName())), 'text/html'

@@ -36,7 +36,7 @@ class ScopeController extends AbstractEntityController
         $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
 
         return $this->render(
-            $this->getBaseTheme().':entity/Scope:index.html.twig',
+            'TellawLeadsFactoryBundle:entity/Scope:index.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
@@ -69,7 +69,7 @@ class ScopeController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        return $this->render( $this->getBaseTheme().":entity:Scope/edit.html.twig", array(
+        return $this->render( "TellawLeadsFactoryBundle:entity:Scope/edit.html.twig", array(
             'title' => 'Ajouter un scope',
             'form'   => $form->createView(),
         ));
@@ -107,7 +107,7 @@ class ScopeController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        return $this->render($this->getBaseTheme().":entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
+        return $this->render("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
                        'title' => "Edition d'un scope"
         ));
 

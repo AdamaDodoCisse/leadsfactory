@@ -40,7 +40,7 @@ class EntityReferenceListController extends AbstractEntityController
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
 
         return $this->render(
-            $this->getBaseTheme().':entity/ReferenceList:entity_referenceList_list.html.twig',
+            'TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_list.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
@@ -79,7 +79,7 @@ class EntityReferenceListController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/ReferenceList:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'une liste de référence",
                                                                                                     'refernceListId' => '-1'));
     }
@@ -185,7 +185,7 @@ class EntityReferenceListController extends AbstractEntityController
         */
         $formData->getElements();
 
-        return $this->render($this->getBaseTheme().':entity/ReferenceList:entity_referenceList_edit.html.twig',
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig',
                                 array(  'form' => $form->createView(),
                                         'elements'=> $formData->getElements(),
                                         'title' => "Edition d'une liste de référence",
@@ -250,7 +250,7 @@ class EntityReferenceListController extends AbstractEntityController
      * @Template()
      */
     public function addElementWidgetAction (Request $request, $referenceListId) {
-        return $this->render($this->getBaseTheme().':entity/ReferenceList:modal.html.twig', array ("referenceListId" => $referenceListId));
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:modal.html.twig', array ("referenceListId" => $referenceListId));
     }
 
     /**

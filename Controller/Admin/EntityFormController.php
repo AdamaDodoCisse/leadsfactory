@@ -37,13 +37,13 @@ class EntityFormController extends AbstractEntityController {
         }
 
         return $this->render(
-        		$this->getBaseTheme().':entity/Form:entity_form_list.html.twig',
-        		array(
-        				'elements'      => $list['collection'],
-        				'pagination'    => $list['pagination'],
-        				'limit_options' => $list['limit_options'],
-                        'bookmarks'     => $formatedBookmarks
-        		)
+	        'TellawLeadsFactoryBundle:entity/Form:entity_form_list.html.twig',
+            array(
+                    'elements'      => $list['collection'],
+                    'pagination'    => $list['pagination'],
+                    'limit_options' => $list['limit_options'],
+                    'bookmarks'     => $formatedBookmarks
+            )
         );
 
     }
@@ -68,18 +68,9 @@ class EntityFormController extends AbstractEntityController {
             $em->flush();
 
             return $this->redirect($this->generateUrl('_form_list'));
-
-            /*return $this->render(
-                $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
-                array(
-                  //  'id' => $form->getId(),
-                    'form' => $form->createView(),
-                    'title' => "Edition d'un formulaire"
-                )
-            );*/
         }
         return $this->render(
-            $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
+            'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
             array(
                 'form' => $form->createView(),
                 'title' => "Création d'un formulaire"
@@ -110,7 +101,7 @@ class EntityFormController extends AbstractEntityController {
         }
 
         return $this->render(
-            $this->getBaseTheme().':entity/Form:entity_form_edit.html.twig',
+            'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
             array(
                 'id' => $id,
                 'form' => $form->createView(),

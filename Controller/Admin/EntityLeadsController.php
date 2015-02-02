@@ -29,7 +29,7 @@ class EntityLeadsController extends AbstractEntityController
         $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword);
 
         return $this->render(
-            $this->getBaseTheme().':entity/Leads:list.html.twig',
+            'TellawLeadsFactoryBundle:entity/Leads:list.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
@@ -74,7 +74,7 @@ class EntityLeadsController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_leads_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/Leads:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array(  'form' => $form->createView(),
                                                                                              'title' => "Edition d'un leads"));
     }
 

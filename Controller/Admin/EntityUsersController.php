@@ -31,7 +31,7 @@ class EntityUsersController extends AbstractEntityController
         $list = $this->getList ('TellawLeadsFactoryBundle:Users', $page, $limit, $keyword, array () );
 
         return $this->render(
-            $this->getBaseTheme().':entity/Users:list.html.twig',
+            'TellawLeadsFactoryBundle:entity/Users:list.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
@@ -69,7 +69,7 @@ class EntityUsersController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_users_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/Users:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'un utilisateur"));
     }
 
@@ -109,7 +109,7 @@ class EntityUsersController extends AbstractEntityController
             return $this->redirect($this->generateUrl('_users_list'));
         }
 
-        return $this->render($this->getBaseTheme().':entity/Users:edit.html.twig', array(  'form' => $form->createView(),
+        return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Edition d'un profil utilisateur"));
 
     }

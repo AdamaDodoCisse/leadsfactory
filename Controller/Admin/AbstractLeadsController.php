@@ -20,18 +20,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
-abstract class AbstractLeadsController extends Controller {
-
-    public function __construct () {
-
-    }
-
-    protected function getBaseTheme () {
-
-        return $this->container->getParameter("theme.bundle");
-
-
-    }
-
-
+abstract class AbstractLeadsController extends Controller
+{
 }

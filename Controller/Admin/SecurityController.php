@@ -25,7 +25,7 @@ class SecurityController extends AbstractLeadsController
             $session->remove(SecurityContext::AUTHENTICATION_ERROR);
         }
 
-        return $this->render($this->getBaseTheme().':Security:login.html.twig', array(
+        return $this->render('TellawLeadsFactoryBundle:Security:login.html.twig', array(
             // last username entered by the user
             'last_username' => $session->get(SecurityContext::LAST_USERNAME),
             'error'         => $error,
