@@ -27,7 +27,7 @@ class TwilioController extends Controller
 	    if (!in_array(substr($phone, 1, 2), array('32', '33', '41'))
 	        && !in_array(substr($phone, 1, 3), array('352', '377'))) {
 		    $logger->info('Refused to call '.$phone);
-		    return new Response();
+		    return new Response('Numéro invalide');
 	    }
 
 	    $twilio = $this->get('twilio.api');
@@ -36,7 +36,7 @@ class TwilioController extends Controller
 
 	    $message = $twilio->account->calls->create(
 		    '+33975186520', // From a Twilio number in your account
-		    '+33633926246', // Text any number
+		    $phone, // Text any number
 		    $twimlUrl
 	    );
 
@@ -84,7 +84,7 @@ class TwilioController extends Controller
 
 		$code = $request->query->get('code');
 		$valid = (string)$code === (string)$this->getValidationCode();
-		$response = new Response(json_encode(array('valid' => $valid)));
+		$response = new Response(json_encode(array('validate' => $valid)));
 		$response->headers->set('Content-Type', 'application/json');
 
 		$logger->info('validate : '.$valid);
