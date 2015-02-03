@@ -4,31 +4,6 @@ namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 class WekaWebcallback extends AbstractMapping {
 
-
-	/*public function getEntCorpName($data)
-	{
-		if(isset($data['etablissement']))
-			return $data['etablissement'];
-		return 'undefined';
-	}
-
-	public function getEntZip($data)
-	{
-		return '';
-	}
-
-	public function getCpwCorpName($data)
-	{
-		if(isset($data['etablissement']))
-			return $data['etablissement'];
-		return 'undefined';
-	}
-
-	public function getCpwZip($data)
-	{
-		return '';
-	}*/
-
 	public function getCpwOriIDCode($data)
 	{
 		return $this->getOrigine($data);

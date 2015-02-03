@@ -175,22 +175,24 @@ class Edeal extends AbstractMethod{
     /**
      * Retrieve mapping class
      * Basé sur la clé mapping_class de la config du formulaire
-     * Si la clé mapping_class n'est pas renseigné, cherche une classe de mapping basé sur le nom de code du formulaire
+     * Si la clé mapping_class n'est pas renseignée, cherche une classe de mapping basée sur le nom de code du formulaire
      *
      * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
      * @return mixed
      */
     private function _getMapping($form)
     {
-	    $config = $form->getConfig();
-
 	    $logger = $this->getContainer()->get('export.logger');
+
+	    $config = $form->getConfig();
+	    $scope = !is_null($form->getScope()) ? $form->getScope()->getCode() : null;
+	    $scopePath = !is_null($scope) ? $scope."\\" : '';
 
 	    if(isset($config['export']['edeal']['mapping_class'])){
 		    $logger->info($config['export']['edeal']['mapping_class']);
-		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $config['export']['edeal']['mapping_class'];
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . $config['export']['edeal']['mapping_class'];
 	    }else{
-		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . ucfirst($form->getCode());
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . ucfirst($form->getCode());
 	    }
 		$em = $this->getContainer()->get('doctrine')->getManager();
         return (class_exists($className)) ? new $className($em) : null;
