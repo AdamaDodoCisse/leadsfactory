@@ -48,7 +48,14 @@ class Form {
      * @var longtext $source
      * @ORM\Column(type="text", nullable=true, name="source")
      */
-    protected $source;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+	 * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+	 */
+	protected $scope;
+
+	protected $source;
 
     /**
      * @var longtext $script
@@ -326,4 +333,18 @@ class Form {
     {
         return $this->secureKey;
     }
+
+	/**
+	 * @return mixed
+	 */
+	public function getScope() {
+		return $this->scope;
+	}
+
+	/**
+	 * @param mixed $scope
+	 */
+	public function setScope( $scope ) {
+		$this->scope = $scope;
+	}
 }
