@@ -28,11 +28,11 @@ class ExportCommand extends ContainerAwareCommand {
 
         if($form){
             $output->writeln('Exporting '.$form.' leads...');
-            $form = $doctrine->getRepository('TellawLeadsFactoryBundle:Form')->findByCode($form);
+            $form = $this->getContainer()->get('leadsfactory.form_repository')->findByCode($form);
             $forms = array($form);
         }else{
             $output->writeln('Exporting all leads...');
-            $forms = $doctrine->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+            $forms = $this->getContainer()->get('leadsfactory.form_repository')->findAll();
         }
 
         foreach($forms as $form){

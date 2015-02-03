@@ -29,7 +29,7 @@ class EntityFormController extends AbstractEntityController {
     {
 
         $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
-        $bookmarks = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->getBookmarkedFormsForUser( $this->getUser()->getId() );
+        $bookmarks = $this->get('leadsfactory.form_repository')->getBookmarkedFormsForUser( $this->getUser()->getId() );
 
         $formatedBookmarks = array();
         foreach ($bookmarks as $bookmark) {
@@ -85,7 +85,7 @@ class EntityFormController extends AbstractEntityController {
      */
     public function editAction( Request $request, $id )
     {
-        $formEntity = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+        $formEntity = $this->get('leadsfactory.form_repository')->find($id);
         $form = $this->createForm(
             new FormType(),
             $formEntity,
@@ -121,7 +121,7 @@ class EntityFormController extends AbstractEntityController {
         /**
          * This is the deletion action
          */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+        $object = $this->get('leadsfactory.form_repository')->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
@@ -139,7 +139,7 @@ class EntityFormController extends AbstractEntityController {
      */
     public function duplicateAction ($id)
     {
-        $old = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($id);
+        $old = $this->get('leadsfactory.form_repository')->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $new = clone $old;

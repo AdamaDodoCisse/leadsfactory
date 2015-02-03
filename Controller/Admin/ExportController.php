@@ -37,9 +37,9 @@ class ExportController extends AbstractEntityController
         $logger = $this->get('export.logger');
 
         if(is_null($formId)){
-            $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+            $forms = $this->get('leadsfactory.form_repository')->findAll();
         }else{
-            $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($formId);
+            $forms = $this->get('leadsfactory.form_repository')->find($formId);
             $forms = array($forms);
         }
 

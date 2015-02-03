@@ -105,8 +105,8 @@ class FrontController extends Admin\AbstractLeadsController
 
         try {
 
-            $formTypeObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find((string)$request->get ("lfFormType"));
-            $formObject = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->find($request->get("lfFormId"));
+            $formTypeObject = $this->get('leadsfactory.form_type_repository')->find((string)$request->get ("lfFormType"));
+            $formObject = $this->get('leadsfactory.form_repository')->find($request->get("lfFormId"));
 
             // Read configuration to map attributes correctly
             $config = $formObject->getConfig();

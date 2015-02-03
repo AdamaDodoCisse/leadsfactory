@@ -30,7 +30,7 @@ class EntityFormTypeController extends AbstractEntityController
     public function indexAction($page=1, $limit=10, $keyword='')
     {
         $list = $this->getList ('TellawLeadsFactoryBundle:FormType', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
-        $bookmarks = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->getBookmarkedFormsForUser( $this->getUser()->getId() );
+        $bookmarks = $this->get('leadsfactory.form_type_repository')->getBookmarkedFormsForUser( $this->getUser()->getId() );
 
         $formatedBookmarks = array();
         foreach ($bookmarks as $bookmark) {
@@ -93,7 +93,7 @@ class EntityFormTypeController extends AbstractEntityController
          */
 
         // crée une tâche et lui donne quelques données par défaut pour cet exemple
-        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find($id);
+        $formData = $this->get('leadsfactory.form_type_repository')->find($id);
 
         $type = new FormTypeType();
 
@@ -132,7 +132,7 @@ class EntityFormTypeController extends AbstractEntityController
         /**
          * This is the deletion action
          */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:FormType')->find($id);
+        $object = $this->get('leadsfactory.form_type_repository')->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);

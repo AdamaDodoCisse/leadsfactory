@@ -152,9 +152,9 @@ class AlertUtils {
         $em = $this->container->get("doctrine")->getManager();
 
         if( strstr ($itemClass, 'Tellaw\LeadsFactoryBundle\Entity\FormType')) {
-            $forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($item->getId());
+            $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($item->getId());
         }else{
-            $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->find($item->getId());
+            $form = $this->container->get('leadsfactory.form_repository')->find($item->getId());
             $forms = array($form);
         }
 
