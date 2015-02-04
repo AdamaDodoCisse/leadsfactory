@@ -63,7 +63,7 @@ services:
 
   leadsfactory.twig_extension:
     class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension
-    arguments: [@form_utils]
+    arguments: [@form_utils, @leadsfactory.reference_list_repository]
     tags:
       - { name: twig.extension }
 
@@ -99,3 +99,9 @@ services:
     arguments: [@doctrine.orm.entity_manager]
     tags:
     - { name: console.command }
+
+  leadsfactory.reference_list_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:ReferenceList']
