@@ -61,6 +61,7 @@ class FormUtils {
 
         $html = $this->setFormTag ($html);
         $html = $this->setHiddenTags ($form, $html);
+	    $html = $this->setJsTag($form, $html);
 
         list ($isValid, $error_msg) = $this->checkFormValidity( $html );
 
@@ -216,6 +217,12 @@ class FormUtils {
         $html = str_replace ( "</form>", $tags, $html );
         return $html;
     }
+
+	private function setJsTag($form, $html)
+	{
+		$html .= "\n<script>". $form->getScript() ."</script>";
+		return $html;
+	}
 
     /**
      * Retrieve element options
