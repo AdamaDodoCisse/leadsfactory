@@ -1,9 +1,10 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  *
@@ -16,6 +17,7 @@ class ReferenceList {
 
     /**
      * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", mappedBy="referenceList", cascade={"persist"})
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     protected $elements;
 

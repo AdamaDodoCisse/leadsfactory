@@ -202,11 +202,16 @@ class FormUtils {
         $tags="
             <input type='hidden' name=\"lffield[utmcampaign]\" id=\"lffield[utmcampaign]\" value='".$form->getUtmcampaign()."'/>
             <input type='hidden' name='lfFormId' id='lfFormId' value='".$form->getId()."'/>
-            <input type='hidden' name='lfFormType' id='lfFormType' value='".$form->getFormType()->getId()."'/>
             <input type='hidden' name='lfFormKey' id='lfFormKey' value='".$this->getFormKey($form->getId())."'/>
             <input type='hidden' name='apiKey' id='apiKey' value='".$this->getApiKey($form)."'/>
             </form>
         ";
+
+	    if(!is_null($form->getFormType())){
+		    $tags .= "<input type='hidden' name='lfFormType' id='lfFormType' value='".$form->getFormType()->getId()."'/>";
+	    }
+
+	    $tags .= "</form>";
 
         $html = str_replace ( "</form>", $tags, $html );
         return $html;
