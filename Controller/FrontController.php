@@ -32,10 +32,12 @@ class FrontController extends Admin\AbstractLeadsController
 	 */
 	public function twigAction(Form $form)
 	{
-		return $this->render(
+		$response = $this->render(
 			'TellawLeadsFactoryBundle::shell.html.twig',
 			array('template' => $form->getSource())
 		);
+		$response->headers->set('Content-Type', 'application/javascript');
+		return $response;
 	}
 
     /**
@@ -135,6 +137,9 @@ class FrontController extends Admin\AbstractLeadsController
             $leads->setFormType( $formTypeObject );
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
+	        if (array_key_exists('email', $fields)) {
+		        $leads->setEmail($fields['email']);
+	        }
 
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
