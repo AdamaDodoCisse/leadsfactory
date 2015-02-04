@@ -23,7 +23,8 @@ tasks:
   pre-deploy:
     - unlink
   on-deploy:
-#    - symfony2/cache-clear
+    - symfony2/cache-clear: {env: dev}
+    - symfony2/cache-clear: {env: prod}
 #    - composer/install
 #    - filesystem/link-shared-files: {linked_folders: [app/cache, app/config, app/logs, app/sessions, datas]}
   post-release:
