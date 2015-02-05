@@ -33,8 +33,8 @@ class FrontController extends Admin\AbstractLeadsController
 	public function twigAction(Form $form)
 	{
 		$response = $this->render(
-			'TellawLeadsFactoryBundle::shell.html.twig',
-			array('template' => $form->getSource())
+			'TellawLeadsFactoryBundle::form-jquery.js.twig',
+			array('form' => $form)
 		);
 		$response->headers->set('Content-Type', 'application/javascript');
 		return $response;

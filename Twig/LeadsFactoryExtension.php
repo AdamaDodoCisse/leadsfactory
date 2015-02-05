@@ -39,8 +39,10 @@ class LeadsFactoryExtension extends \Twig_Extension
 			} else {
 				$listCode = $params['attributes']['data-list'];
 				$list = $this->reference_list_repository->findOneBy(array('code' => $listCode));
-				$options = $list->getElements()->getValues();
-				$params['options'] = $options;
+				if ($list !== null) {
+					$options = $list->getElements()->getValues();
+					$params['options'] = $options;
+				}
 			}
 		}
 
