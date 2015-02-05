@@ -308,25 +308,19 @@ class FrontController extends Admin\AbstractLeadsController
     /**
      * Render template variables {{ var }}
      *
-     * @param $str
-     * @param $data
+     * @param string $template
+     * @param array $data
      * @return mixed
      */
-    protected function renderTemplate($str, $data)
+    protected function renderTemplate($template, $data)
     {
-        $hasVars = preg_match_all('/{{\s*([\w]*)\s*}}/', $str, $matches);
+	    $data['template'] = $template;
 
-        if(!$hasVars)
-            return $str;
+	    $string = $this->renderView(
+		    'TellawLeadsFactoryBundle::template_from_string.raw.twig',
+		    $data
+	    );
 
-        $replacement = array();
-        foreach($matches[1] as $key){
-            $replacement[] = isset($data[$key]) ? $data[$key] : '';
-        }
-
-        $str = str_replace($matches[0], $replacement, $str);
-
-        return $str;
+	    return $string;
     }
-
 }
