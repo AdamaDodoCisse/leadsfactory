@@ -1,11 +1,16 @@
 {#<script>#}
 var leadsfactory = {
     html: '{{ include(template_from_string(form.source))|e('js') }}',
-    init: function(form_id, data) {
+    init: function(form_id, data, options) {
         var $ = jQuery;
         var form = $('#'+form_id);
         $.each(data, function(key, value) {
-            $('[name=lffield\\['+key+'\\]]', form).val(value);
+            var field = $('[name=lffield\\['+key+'\\]]', form);
+            if (field.attr('type') == 'checkbox') {
+                field.prop('checked', value);
+            } else {
+                field.val(value);
+            }
         });
         {{ form.script|raw }}
     }
