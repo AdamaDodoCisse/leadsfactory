@@ -105,7 +105,18 @@ class Edeal extends AbstractMethod{
     {
         $couponsWeb = new \StdClass();
         foreach($this->_mappingClass->getCouponsWebMapping() as $edealKey => $formKey){
-            if(empty($formKey)){
+
+	        $getter = 'get'.ucfirst(strtolower($edealKey));
+
+	        if (method_exists($this->_mappingClass, $getter)){
+		        $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
+	        }elseif(!empty($formKey)){
+		        $couponsWeb->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
+	        }else{
+		        $couponsWeb->$edealKey = null;
+	        }
+
+            /*if(empty($formKey)){
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
@@ -114,7 +125,7 @@ class Edeal extends AbstractMethod{
                 }
             }else{
                 $couponsWeb->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-            }
+            }*/
         }
 
         return $couponsWeb;

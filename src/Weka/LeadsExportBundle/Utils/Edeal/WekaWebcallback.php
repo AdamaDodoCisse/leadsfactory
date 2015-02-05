@@ -45,6 +45,11 @@ class WekaWebcallback extends AbstractMapping {
 		return $comment;
 	}
 
+	public function getCpwPaysCode($data)
+	{
+		return 'FR';
+	}
+
 	protected function getOrigine($data)
 	{
 		if(!empty($data['wcp_type'])){
@@ -55,6 +60,16 @@ class WekaWebcallback extends AbstractMapping {
 		}
 
 		return $origine;
+	}
+
+	public function getEntCtrCode($data)
+	{
+		return 'FR';
+	}
+
+	public function getPerCtrCode($data)
+	{
+		return 'FR';
 	}
 
 }

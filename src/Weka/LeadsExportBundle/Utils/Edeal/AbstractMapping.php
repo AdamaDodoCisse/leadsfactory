@@ -19,31 +19,19 @@ class AbstractMapping {
         return array(
             "entAd1"		=> "address",
             "entCity"       => "ville",
-            "entCorpName"	=> '',
-            "entCtrCode"    => "",
+            "entCorpName"	=> 'etablissement',
+            "entCtrCode"    => 'pays',
             "entPhone"      => "phone",
             "entZip"		=> "zip",
         );
     }
-
-    public function getEntCorpName($data)
-    {
-	    if(isset($data['type-etablissement']))
-		    return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
-	    return 'undefined';
-    }
-
-	public function getEntCtrCode($data)
-	{
-		return 'FR';
-	}
 
     public function getPersonMapping()
     {
         return array(
             'perCity'           => 'ville',
             'perCivilite'       => 'salutation',
-            'perCtrCode'        => '',
+            'perCtrCode'        => 'pays',
             'perFstName'        => 'firstName',
             'perMail'           => 'email',
             'perName'           => 'lastName',
@@ -51,11 +39,6 @@ class AbstractMapping {
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
         );
-    }
-
-    public function getPerCtrCode($data)
-    {
-        return 'FR';
     }
 
     public function getCouponsWebMapping()
@@ -70,7 +53,7 @@ class AbstractMapping {
             'cpwCivilite'       => 'salutation',
             'cpwCodeGCM'        => '',
             'cpwComment'        => '',
-            'cpwCorpName'       => '',
+            'cpwCorpName'       => 'etablissement',
             'cpwDate'           => '',
             'cpwDejaClient'     => '',
             'cpwDemandeRV'      => '',
@@ -84,7 +67,7 @@ class AbstractMapping {
             'cpwOriDossier'     => '',
             'cpwOriIDCode'      => '',
             'cpwOrigine'        => '',
-            'cpwPaysCode'       => '',
+            'cpwPaysCode'       => 'pays',
             'cpwPerIDMail'      => 'email',
             'cpwPhone'          => 'phone',
             'cpwPrenom'         => 'firstName',
@@ -115,11 +98,6 @@ class AbstractMapping {
         return '';
     }
 
-    public function getCpwPaysCode($data)
-    {
-        return 'FR';
-    }
-
     public function getCpwOriIDCode($data)
     {
         return 'CLASSIC';
@@ -134,13 +112,6 @@ class AbstractMapping {
     {
         return 'DIATRAITER';
     }
-
-	public function getCpwCorpName($data)
-	{
-		if(isset($data['type-etablissement']))
-			return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
-		return 'undefined';
-	}
 
 	protected function getTypeEtablissement($value)
 	{
