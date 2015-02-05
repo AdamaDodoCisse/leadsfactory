@@ -32,9 +32,15 @@ class FrontController extends Admin\AbstractLeadsController
 	 */
 	public function twigAction(Form $form)
 	{
+		$post_url = $this->get('router')->generate('_client_post_form', array(), true);
+		$hidden_tags = $this->get('form_utils')->getHiddenTags($form);
 		$response = $this->render(
 			'TellawLeadsFactoryBundle::form-jquery.js.twig',
-			array('form' => $form)
+			array(
+				'form' => $form,
+				'post_url' => $post_url,
+				'hidden_tags' => $hidden_tags,
+			)
 		);
 		$response->headers->set('Content-Type', 'application/javascript');
 		return $response;
