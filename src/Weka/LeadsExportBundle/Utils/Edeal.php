@@ -53,7 +53,8 @@ class Edeal extends AbstractMethod{
             $logger->error($error);
         }
 
-        foreach($jobs as $job){
+	    /** @var Export $job */
+	    foreach($jobs as $job){
 
             if(!empty($error)){
                 $job->setLog($error);

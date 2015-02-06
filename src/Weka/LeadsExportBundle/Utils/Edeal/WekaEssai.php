@@ -2,8 +2,8 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
-class WekaEssai extends AbstractMapping {
-
+class WekaEssai extends BaseMapping
+{
 	public function getCpwCorpName($data)
 	{
 		if(isset($data['type-etablissement']))

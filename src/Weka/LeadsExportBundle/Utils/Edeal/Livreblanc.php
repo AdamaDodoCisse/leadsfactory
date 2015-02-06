@@ -3,8 +3,8 @@
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
-class Livreblanc {
-
+class Livreblanc extends BaseMapping
+{
     public function getEnterpriseMapping()
     {
         return array(
@@ -136,4 +136,4 @@ class Livreblanc {
 			return $data['type-etablissement'] . ' - ' . $data['zip'];
 		return 'undefined';
 	}
-} 
+}

@@ -3,8 +3,8 @@
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
-class Adette {
-
+class Adette extends BaseMapping
+{
     public function getEnterpriseMapping()
     {
         return array(
@@ -137,4 +137,4 @@ class Adette {
 		return 'undefined';
 	}
 
-} 
+}

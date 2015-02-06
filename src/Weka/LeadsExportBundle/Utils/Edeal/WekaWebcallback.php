@@ -2,8 +2,8 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
-class WekaWebcallback extends AbstractMapping {
-
+class WekaWebcallback extends BaseMapping
+{
 	public function getCpwOriIDCode($data)
 	{
 		return $this->getOrigine($data);

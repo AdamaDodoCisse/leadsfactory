@@ -2,8 +2,8 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
-class DevisPack extends AbstractMapping {
-
+class DevisPack extends BaseMapping
+{
 	public function getCpwOriIDCode($data)
 	{
 		return 'CLASSIC';
