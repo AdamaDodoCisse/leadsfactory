@@ -2,9 +2,15 @@ parameters:
     weka_leads_export.athena.class: Weka\LeadsExportBundle\Utils\Athena
     athena_url: http://athena.host-athena-dev1.captivea.net/index.php
     weka_leads_export.edeal.class: Weka\LeadsExportBundle\Utils\Edeal
-    edeal_wsdl: http://10.25.109.44:8080/edealwkCRM/ws/EDEALExternalServices?wsdl
-    edeal_user: admin
-    edeal_password: youplas
+    weka_leads.edeal_credentials:
+      weka:
+        wsdl: http://10.25.109.44:8080/edealwkCRM/ws/EDEALExternalServices?wsdl
+        user: admin
+        password: youplas
+      ti:
+        wsdl: http://10.25.109.44:8080/edealtiCRM/ws/EDEALExternalServices?wsdl
+        user: ef
+        password: chat30
 
 services:
     athena_method:
@@ -20,10 +26,10 @@ services:
           - [setContainer, [@service_container]]
         tags:
           - {name: export.method, alias: edeal}
-        arguments: [%edeal_wsdl%, %edeal_user%, %edeal_password%]
-    weka_leads_export.soap_command:
-            class: Tellaw\LeadsFactoryBundle\Command\SoapCommand
-            arguments: [%edeal_wsdl%, %edeal_user%, %edeal_password%]
-            tags:
-                -  { name: console.command }
+        arguments: [%weka_leads.edeal_credentials%]
+    #weka_leads_export.soap_command:
+    #        class: Tellaw\LeadsFactoryBundle\Command\SoapCommand
+    #        arguments: [%edeal_wsdl%, %edeal_user%, %edeal_password%]
+    #        tags:
+    #            -  { name: console.command }
 

@@ -3,50 +3,57 @@
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
-use Doctrine\ORM\EntityManager;
-
-class AbstractMapping {
-
-	protected $em;
-
-	public function __construct(EntityManager $entityManager)
-	{
-		$this->em = $entityManager;
-	}
+class Webinar {
 
     public function getEnterpriseMapping()
     {
         return array(
-            "entAd1"		=> "address",
+            "entAd1"		=> "",
             "entCity"       => "ville",
-            "entCorpName"	=> 'etablissement',
-            "entCtrCode"    => 'pays',
+            "entCorpName"	=> '',
+            "entCtrCode"    => "",
             "entPhone"      => "phone",
             "entZip"		=> "zip",
         );
     }
+
+    public function getEntCorpName($data)
+    {
+	    if(isset($data['type-etablissement']))
+		    return $data['type-etablissement'] . ' - ' . $data['zip'];
+	    return 'undefined';
+    }
+
+	public function getEntCtrCode($data)
+	{
+		return 'FR';
+	}
 
     public function getPersonMapping()
     {
         return array(
             'perCity'           => 'ville',
             'perCivilite'       => 'salutation',
-            'perCtrCode'        => 'pays',
+            'perCtrCode'        => '',
             'perFstName'        => 'firstName',
             'perMail'           => 'email',
             'perName'           => 'lastName',
             'perPhone'          => 'phone',
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
-	        'PerProfil'         => 'profil'
         );
+    }
+
+    public function getPerCtrCode($data)
+    {
+        return 'FR';
     }
 
     public function getCouponsWebMapping()
     {
         return array(
             'cpwActIDCode'      => '',
-            'cpwAdresse1'       => 'address',
+            'cpwAdresse1'       => '',
             'cpwAdresse2'       => '',
             'cpwAutresCin'      => '',
             'cpwCinTmp_'        => '',
@@ -54,9 +61,9 @@ class AbstractMapping {
             'cpwCivilite'       => 'salutation',
             'cpwCodeGCM'        => '',
             'cpwComment'        => '',
-            'cpwCorpName'       => 'etablissement',
+            'cpwCorpName'       => '',
             'cpwDate'           => '',
-            'cpwDejaClient'     => 'deja-client',
+            'cpwDejaClient'     => '',
             'cpwDemandeRV'      => '',
             'cpwEmail'          => 'email',
             'cpwEmailValide'    => '',
@@ -68,8 +75,8 @@ class AbstractMapping {
             'cpwOriDossier'     => '',
             'cpwOriIDCode'      => '',
             'cpwOrigine'        => '',
-            'cpwPaysCode'       => 'pays',
-            'cpwPerIDMail'      => 'email',
+            'cpwPaysCode'       => '',
+            'cpwPerIDMail'      => '',
             'cpwPhone'          => 'phone',
             'cpwPrenom'         => 'firstName',
             'cpwProfilAutre'    => '',
@@ -81,27 +88,33 @@ class AbstractMapping {
             'cpwTitre'          => '',
             'cpwTypePourImport_'=> '',
             'cpwUtmCampaign'    => 'utmcampaign',
-            'cpwUtmContent'     => 'utmcontent',
-            'cpwUtmMedium'      => 'utmmedium',
-            'cpwUtmSource'      => 'utmsource',
+            'cpwUtmContent'     => '',
+            'cpwUtmMedium'      => '',
+            'cpwUtmSource'      => '',
             'cpwUtmTerm'        => '',
             'cpwZip'            => 'zip',
-	        'cpwTypeDemande_'   => '',
-	        'cpwSku_'           => 'product_sku',
-	        'cpwProductTitle_'  => 'product_name',
-	        'cpwTypeDemande_'   => '',
 
         );
     }
 
-	public function getCpwComment($data)
+    public function getCpwComment($data)
     {
-        return '';
+        $comment = 'Provient du formulaire WEBINAR';
+
+        if(isset($data['type-etablissement']))
+            $comment .= "\nType d'établissement : ".$data['type-etablissement'];
+
+        return $comment;
+    }
+
+    public function getCpwPaysCode($data)
+    {
+        return 'FR';
     }
 
     public function getCpwOriIDCode($data)
     {
-        return 'CLASSIC';
+        return 'WEBINAR';
     }
 
     public function getCpwDate($data)
@@ -114,11 +127,16 @@ class AbstractMapping {
         return 'DIATRAITER';
     }
 
-	protected function getTypeEtablissement($value)
+	public function getCpwCorpName($data)
 	{
-		$listId = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode('type_etablissement')->getId();
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel($listId, $value);
-
-		return $label;
+		if(isset($data['type-etablissement']))
+			return $data['type-etablissement'] . ' - ' . $data['zip'];
+		return 'undefined';
 	}
+
+	public function getCpwTypeDemande_($data)
+	{
+		return 'WEBINAR';
+	}
+
 } 

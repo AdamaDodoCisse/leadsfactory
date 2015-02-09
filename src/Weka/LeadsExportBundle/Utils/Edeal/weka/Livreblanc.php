@@ -3,43 +3,50 @@
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
-use Doctrine\ORM\EntityManager;
-
-class AbstractMapping {
-
-	protected $em;
-
-	public function __construct(EntityManager $entityManager)
-	{
-		$this->em = $entityManager;
-	}
+class Livreblanc {
 
     public function getEnterpriseMapping()
     {
         return array(
             "entAd1"		=> "address",
             "entCity"       => "ville",
-            "entCorpName"	=> 'etablissement',
-            "entCtrCode"    => 'pays',
+            "entCorpName"	=> '',
+            "entCtrCode"    => "",
             "entPhone"      => "phone",
             "entZip"		=> "zip",
         );
     }
+
+    public function getEntCorpName($data)
+    {
+	    if(isset($data['type-etablissement']))
+		    return $data['type-etablissement'] . ' - ' . $data['zip'];
+	    return 'undefined';
+    }
+
+	public function getEntCtrCode($data)
+	{
+		return 'FR';
+	}
 
     public function getPersonMapping()
     {
         return array(
             'perCity'           => 'ville',
             'perCivilite'       => 'salutation',
-            'perCtrCode'        => 'pays',
+            'perCtrCode'        => '',
             'perFstName'        => 'firstName',
             'perMail'           => 'email',
             'perName'           => 'lastName',
             'perPhone'          => 'phone',
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
-	        'PerProfil'         => 'profil'
         );
+    }
+
+    public function getPerCtrCode($data)
+    {
+        return 'FR';
     }
 
     public function getCouponsWebMapping()
@@ -54,9 +61,9 @@ class AbstractMapping {
             'cpwCivilite'       => 'salutation',
             'cpwCodeGCM'        => '',
             'cpwComment'        => '',
-            'cpwCorpName'       => 'etablissement',
+            'cpwCorpName'       => '',
             'cpwDate'           => '',
-            'cpwDejaClient'     => 'deja-client',
+            'cpwDejaClient'     => '',
             'cpwDemandeRV'      => '',
             'cpwEmail'          => 'email',
             'cpwEmailValide'    => '',
@@ -68,8 +75,8 @@ class AbstractMapping {
             'cpwOriDossier'     => '',
             'cpwOriIDCode'      => '',
             'cpwOrigine'        => '',
-            'cpwPaysCode'       => 'pays',
-            'cpwPerIDMail'      => 'email',
+            'cpwPaysCode'       => '',
+            'cpwPerIDMail'      => '',
             'cpwPhone'          => 'phone',
             'cpwPrenom'         => 'firstName',
             'cpwProfilAutre'    => '',
@@ -81,22 +88,31 @@ class AbstractMapping {
             'cpwTitre'          => '',
             'cpwTypePourImport_'=> '',
             'cpwUtmCampaign'    => 'utmcampaign',
-            'cpwUtmContent'     => 'utmcontent',
-            'cpwUtmMedium'      => 'utmmedium',
-            'cpwUtmSource'      => 'utmsource',
+            'cpwUtmContent'     => '',
+            'cpwUtmMedium'      => '',
+            'cpwUtmSource'      => '',
             'cpwUtmTerm'        => '',
             'cpwZip'            => 'zip',
-	        'cpwTypeDemande_'   => '',
-	        'cpwSku_'           => 'product_sku',
-	        'cpwProductTitle_'  => 'product_name',
-	        'cpwTypeDemande_'   => '',
 
         );
     }
 
-	public function getCpwComment($data)
+    public function getCpwComment($data)
     {
-        return '';
+        $comment = 'Provient du formulaire Télchargement de livre blanc (actu)';
+
+        if(isset($data['type-etablissement']))
+            $comment .= "\nType d'établissement : ".$data['type-etablissement'];
+
+        if(isset($data['livre-blanc']))
+            $comment .= "\nLivre blanc  : ".$data['livre-blanc'];
+
+        return $comment;
+    }
+
+    public function getCpwPaysCode($data)
+    {
+        return 'FR';
     }
 
     public function getCpwOriIDCode($data)
@@ -114,11 +130,10 @@ class AbstractMapping {
         return 'DIATRAITER';
     }
 
-	protected function getTypeEtablissement($value)
+	public function getCpwCorpName($data)
 	{
-		$listId = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode('type_etablissement')->getId();
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel($listId, $value);
-
-		return $label;
+		if(isset($data['type-etablissement']))
+			return $data['type-etablissement'] . ' - ' . $data['zip'];
+		return 'undefined';
 	}
 } 

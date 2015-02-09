@@ -14,13 +14,15 @@ class Edeal extends AbstractMethod{
     private $_user;
     private $_password;
 
+	private $_credentials;
+
     private $_mappingClass;
 
-    public function __construct($wsdl, $user, $password)
+
+	public function __construct($credentials)
     {
-        $this->_wsdl = $wsdl;
-        $this->_user = $user;
-        $this->_password = $password;
+        $this->_credentials = $credentials;
+		$x=0;
     }
 
     /**
@@ -34,12 +36,14 @@ class Edeal extends AbstractMethod{
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
-        $logger->info('Edeal export start '.$form->getName());
-	    $logger->info('wsdl : '.$this->_wsdl);
-	    $logger->info('user : '.$this->_user);
+	    $scope = $form->getScope()->getCode();
 
-        $client  = new \SoapClient($this->_wsdl, array('soap_version' => SOAP_1_2, 'trace' => true));
-        $response = $client->authenticate($this->_user, $this->_password);
+        $logger->info('Edeal export start '.$form->getName());
+	    $logger->info('wsdl : '.$this->_credentials[$scope]['wsdl']);
+	    $logger->info('user : '.$this->_credentials[$scope]['user']);
+
+        $client  = new \SoapClient($this->_credentials[$scope]['wsdl'], array('soap_version' => SOAP_1_2, 'trace' => true));
+        $response = $client->authenticate($this->_credentials[$scope]['user'], $this->_credentials[$scope]['password']);
 
         if(!$response){
             $error = 'Edeal : l\'authentification a échouée FORM '.$form->getCode();
@@ -139,16 +143,16 @@ class Edeal extends AbstractMethod{
     {
         $person = new \StdClass();
         foreach($this->_mappingClass->getPersonMapping() as $edealKey => $formKey){
-            if(empty($formKey)){
-                $getter = 'get'.ucfirst(strtolower($edealKey));
-                if (method_exists($this->_mappingClass, $getter)){
-                    $person->$edealKey = $this->_mappingClass->$getter($data);
-                }else{
-                    $person->$edealKey = null;
-                }
-            }else{
-                $person->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-            }
+
+	        $getter = 'get'.ucfirst(strtolower($edealKey));
+
+	        if (method_exists($this->_mappingClass, $getter)){
+		        $person->$edealKey = $this->_mappingClass->$getter($data);
+	        }elseif(!empty($formKey)){
+		        $person->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
+	        }else{
+		        $person->$edealKey = null;
+	        }
         }
 
         return $person;
@@ -164,7 +168,19 @@ class Edeal extends AbstractMethod{
 
         $enterprise = new \StdClass();
         foreach($this->_mappingClass->getEnterpriseMapping() as $edealKey => $formKey){
-            if(empty($formKey)){
+
+	        $getter = 'get'.ucfirst(strtolower($edealKey));
+
+	        if (method_exists($this->_mappingClass, $getter)){
+		        $enterprise->$edealKey = $this->_mappingClass->$getter($data);
+	        }elseif(!empty($formKey)){
+		        $enterprise->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
+	        }else{
+		        $enterprise->$edealKey = null;
+	        }
+
+
+	        /*if(empty($formKey)){
                 $getter = 'get'.ucfirst(strtolower($edealKey));
                 if (method_exists($this->_mappingClass, $getter)){
                     $enterprise->$edealKey = $this->_mappingClass->$getter($data);
@@ -175,7 +191,7 @@ class Edeal extends AbstractMethod{
             }else{
                 $enterprise->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
 	            $logger->info($enterprise->$edealKey);
-            }
+            }*/
         }
 
 
@@ -202,6 +218,7 @@ class Edeal extends AbstractMethod{
 	    if(isset($config['export']['edeal']['mapping_class'])){
 		    $logger->info($config['export']['edeal']['mapping_class']);
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . $config['export']['edeal']['mapping_class'];
+		    $logger->info($className);
 	    }else{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . ucfirst($form->getCode());
 	    }

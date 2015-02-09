@@ -2,11 +2,13 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\ti;
 
-class Webcallback extends AbstractMapping {
+use Weka\LeadsExportBundle\Utils\Edeal\AbstractMapping;
+
+class Devispack extends AbstractMapping{
 
 	public function getCpwOriIDCode($data)
 	{
-		return 'WEBCALLBACK';
+		return 'CLASSIC';
 	}
 
 	public function getCpwActIDCode($data)
@@ -16,18 +18,20 @@ class Webcallback extends AbstractMapping {
 
 	public function getCpwComment($data)
 	{
-		$comment = 'Provient du formulaire de Web call back';
-
-		if(isset($data['referrer_url']))
-			$comment .= "\nURL : ".$data['referrer_url'];
+		$comment = "Demande d'information sur le pack";
 
 		if(!empty($data['product_name']))
-			$comment .= "\nNom produit : " . $data['product_name'];
+			$comment .= $data['product_name'];
 
 		if(!empty($data['product_sku']))
 			$comment .= "\nSKU : " . $data['product_sku'];
 
 		return $comment;
+	}
+
+	public function getCpwOriDossier($data)
+	{
+		return !empty($data['product_sku']) ? $data['product_sku'] : '';
 	}
 
 }
