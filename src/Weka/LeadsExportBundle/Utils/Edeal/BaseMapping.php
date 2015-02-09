@@ -5,8 +5,8 @@ namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 use Doctrine\ORM\EntityManager;
 
-class AbstractMapping {
-
+class BaseMapping
+{
 	protected $em;
 
 	public function __construct(EntityManager $entityManager)
@@ -121,4 +121,4 @@ class AbstractMapping {
 
 		return $label;
 	}
-} 
+}

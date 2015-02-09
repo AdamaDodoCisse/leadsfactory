@@ -15,14 +15,14 @@ class Edeal extends AbstractMethod{
     private $_password;
 
 	private $_credentials;
-
+	
+	/** @var  \Weka\LeadsExportBundle\Utils\Edeal\BaseMapping */
     private $_mappingClass;
 
 
 	public function __construct($credentials)
     {
         $this->_credentials = $credentials;
-		$x=0;
     }
 
     /**
@@ -57,7 +57,8 @@ class Edeal extends AbstractMethod{
             $logger->error($error);
         }
 
-        foreach($jobs as $job){
+	    /** @var Export $job */
+	    foreach($jobs as $job){
 
             if(!empty($error)){
                 $job->setLog($error);
@@ -100,6 +101,27 @@ class Edeal extends AbstractMethod{
         }
     }
 
+	private function getMappedData($data, $mapping)
+	{
+		$entity = new \StdClass();
+		$logger = $this->getContainer()->get('export.logger');
+		foreach($mapping as $edealKey => $formKey) {
+			if ( empty( $formKey ) ) {
+				$getter = 'get' . ucfirst( strtolower( $edealKey ) );
+				if ( method_exists( $this->_mappingClass, $getter ) ) {
+					$entity->$edealKey = $this->_mappingClass->$getter( $data );
+					$logger->info( $entity->$edealKey );
+				} else {
+					$entity->$edealKey = null;
+				}
+			} else {
+				$entity->$edealKey = isset( $data[ $formKey ] ) ? $data[ $formKey ] : null;
+				$logger->info( $entity->$edealKey );
+			}
+		}
+		return $entity;
+	}
+
     /**
      * @param $data
      * @return \StdClass
@@ -107,32 +129,7 @@ class Edeal extends AbstractMethod{
      */
     private function _getCouponsWeb($data)
     {
-        $couponsWeb = new \StdClass();
-        foreach($this->_mappingClass->getCouponsWebMapping() as $edealKey => $formKey){
-
-	        $getter = 'get'.ucfirst(strtolower($edealKey));
-
-	        if (method_exists($this->_mappingClass, $getter)){
-		        $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
-	        }elseif(!empty($formKey)){
-		        $couponsWeb->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-	        }else{
-		        $couponsWeb->$edealKey = null;
-	        }
-
-            /*if(empty($formKey)){
-                $getter = 'get'.ucfirst(strtolower($edealKey));
-                if (method_exists($this->_mappingClass, $getter)){
-                    $couponsWeb->$edealKey = $this->_mappingClass->$getter($data);
-                }else{
-                    $couponsWeb->$edealKey = null;
-                }
-            }else{
-                $couponsWeb->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-            }*/
-        }
-
-        return $couponsWeb;
+	    return $this->getMappedData($data, $this->_mappingClass->getCouponsWebMapping());
     }
 
     /**
@@ -141,21 +138,7 @@ class Edeal extends AbstractMethod{
      */
     private function _getPerson($data)
     {
-        $person = new \StdClass();
-        foreach($this->_mappingClass->getPersonMapping() as $edealKey => $formKey){
-
-	        $getter = 'get'.ucfirst(strtolower($edealKey));
-
-	        if (method_exists($this->_mappingClass, $getter)){
-		        $person->$edealKey = $this->_mappingClass->$getter($data);
-	        }elseif(!empty($formKey)){
-		        $person->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-	        }else{
-		        $person->$edealKey = null;
-	        }
-        }
-
-        return $person;
+	    return $this->getMappedData($data, $this->_mappingClass->getPersonMapping());
     }
 
     /**
@@ -164,39 +147,7 @@ class Edeal extends AbstractMethod{
      */
     private function _getEnterprise($data)
     {
-	    $logger = $this->getContainer()->get('export.logger');
-
-        $enterprise = new \StdClass();
-        foreach($this->_mappingClass->getEnterpriseMapping() as $edealKey => $formKey){
-
-	        $getter = 'get'.ucfirst(strtolower($edealKey));
-
-	        if (method_exists($this->_mappingClass, $getter)){
-		        $enterprise->$edealKey = $this->_mappingClass->$getter($data);
-	        }elseif(!empty($formKey)){
-		        $enterprise->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-	        }else{
-		        $enterprise->$edealKey = null;
-	        }
-
-
-	        /*if(empty($formKey)){
-                $getter = 'get'.ucfirst(strtolower($edealKey));
-                if (method_exists($this->_mappingClass, $getter)){
-                    $enterprise->$edealKey = $this->_mappingClass->$getter($data);
-	                $logger->info($enterprise->$edealKey);
-                }else{
-                    $enterprise->$edealKey = null;
-                }
-            }else{
-                $enterprise->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
-	            $logger->info($enterprise->$edealKey);
-            }*/
-        }
-
-
-
-        return $enterprise;
+	    return $this->getMappedData($data, $this->_mappingClass->getEnterpriseMapping());
     }
 
     /**
@@ -218,13 +169,10 @@ class Edeal extends AbstractMethod{
 	    if(isset($config['export']['edeal']['mapping_class'])){
 		    $logger->info($config['export']['edeal']['mapping_class']);
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . $config['export']['edeal']['mapping_class'];
-		    $logger->info($className);
 	    }else{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . ucfirst($form->getCode());
 	    }
 		$em = $this->getContainer()->get('doctrine')->getManager();
         return (class_exists($className)) ? new $className($em) : null;
     }
-
-
 }

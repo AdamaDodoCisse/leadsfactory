@@ -1,22 +1,27 @@
 <?php
 
-namespace Weka\LeadsExportBundle\Utils\Edeal\ti;
+namespace Weka\LeadsExportBundle\Utils\Edeal;
 
-class Webcallback extends BaseMapping
+class DevisPack extends BaseMapping
 {
 	public function getCpwOriIDCode($data)
 	{
-		return 'WEBCALLBACK';
+		return 'CLASSIC';
 	}
 
 	public function getCpwActIDCode($data)
 	{
-		return 'TMK';
+		return '';
+	}
+
+	public function getCpwPaysCode($data)
+	{
+		return $data['pays'];
 	}
 
 	public function getCpwComment($data)
 	{
-		$comment = 'Provient du formulaire de Web call back';
+		$comment = 'Provient du formulaire de demande de devis pack';
 
 		if(isset($data['referrer_url']))
 			$comment .= "\nURL : ".$data['referrer_url'];
