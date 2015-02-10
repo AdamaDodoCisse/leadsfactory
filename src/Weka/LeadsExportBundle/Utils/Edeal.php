@@ -10,10 +10,6 @@ use Tellaw\LeadsFactoryBundle\Entity\Export;
 
 class Edeal extends AbstractMethod{
 
-    private $_wsdl;
-    private $_user;
-    private $_password;
-
 	private $_credentials;
 	
 	/** @var  \Weka\LeadsExportBundle\Utils\Edeal\BaseMapping */
@@ -84,6 +80,7 @@ class Edeal extends AbstractMethod{
             $logger->info('Edeal createPerson result : '.$personResponse);
 
             $couponsWeb = $this->_getCouponsWeb($data);
+		    var_dump($couponsWeb);
             $cpwResponse = $client->createCouponsWeb_($couponsWeb);
             $logger->info('Edeal createCouponsWeb_ result : '.$cpwResponse);
 
@@ -106,17 +103,15 @@ class Edeal extends AbstractMethod{
 		$entity = new \StdClass();
 		$logger = $this->getContainer()->get('export.logger');
 		foreach($mapping as $edealKey => $formKey) {
-			if ( empty( $formKey ) ) {
-				$getter = 'get' . ucfirst( strtolower( $edealKey ) );
-				if ( method_exists( $this->_mappingClass, $getter ) ) {
-					$entity->$edealKey = $this->_mappingClass->$getter( $data );
-					$logger->info( $entity->$edealKey );
-				} else {
-					$entity->$edealKey = null;
-				}
-			} else {
-				$entity->$edealKey = isset( $data[ $formKey ] ) ? $data[ $formKey ] : null;
-				$logger->info( $entity->$edealKey );
+
+			$getter = 'get'.ucfirst(strtolower($edealKey));
+
+			if (method_exists($this->_mappingClass, $getter)){
+				$entity->$edealKey = $this->_mappingClass->$getter($data);
+			}elseif(!empty($formKey)){
+				$entity->$edealKey = isset($data[$formKey]) ? $data[$formKey] : null;
+			}else{
+				$entity->$edealKey = null;
 			}
 		}
 		return $entity;

@@ -19,7 +19,7 @@ class BaseMapping
         return array(
             "entAd1"		=> "address",
             "entCity"       => "ville",
-            "entCorpName"	=> 'etablissement',
+            "entCorpName"	=> "etablissement",
             "entCtrCode"    => 'pays',
             "entPhone"      => "phone",
             "entZip"		=> "zip",
@@ -38,7 +38,8 @@ class BaseMapping
             'perPhone'          => 'phone',
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
-	        'PerProfil'         => 'profil'
+	        'PerProfil'         => 'profil',
+	        'perFonction'       => 'fonction'
         );
     }
 
@@ -76,8 +77,8 @@ class BaseMapping
             'cpwProfilCode'     => '',
             'cpwStatus_Code'    => '',
             'cpwStatut'         => '',
-            'cpwStopMailETI'    => '',
-            'cpwStopPartenaires'=> '',
+            'cpwStopMailETI'    => 'cnilTi',
+            'cpwStopPartenaires'=> 'cnilPartners',
             'cpwTitre'          => '',
             'cpwTypePourImport_'=> '',
             'cpwUtmCampaign'    => 'utmcampaign',

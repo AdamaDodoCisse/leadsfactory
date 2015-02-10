@@ -2,7 +2,7 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal;
 
-class WekaExtract extends AbstractMapping {
+class WekaExtract extends BaseMapping {
 
 	public function getCpwCorpName($data)
 	{

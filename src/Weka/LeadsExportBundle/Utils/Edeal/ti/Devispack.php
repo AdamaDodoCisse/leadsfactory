@@ -2,9 +2,9 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\ti;
 
-use Weka\LeadsExportBundle\Utils\Edeal\AbstractMapping;
+use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
-class Devispack extends AbstractMapping{
+class Devispack extends BaseMapping{
 
 	public function getCpwOriIDCode($data)
 	{
@@ -13,12 +13,12 @@ class Devispack extends AbstractMapping{
 
 	public function getCpwActIDCode($data)
 	{
-		return 'TMK';
+		return '';
 	}
 
 	public function getCpwComment($data)
 	{
-		$comment = "Demande d'information sur le pack";
+		$comment = "Demande d'information sur le pack ";
 
 		if(!empty($data['product_name']))
 			$comment .= $data['product_name'];
@@ -29,9 +29,19 @@ class Devispack extends AbstractMapping{
 		return $comment;
 	}
 
-	public function getCpwOriDossier($data)
+	/*public function getCpwOriDossier($data)
 	{
 		return !empty($data['product_sku']) ? $data['product_sku'] : '';
+	}*/
+
+	public function getCpwCorpName($data)
+	{
+		return 'azerty';
+	}
+
+	public function getEntCorpName($data)
+	{
+		return 'azerty';
 	}
 
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace Weka\LeadsExportBundle\Utils\Edeal;
+namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
-class WekaEssai extends AbstractMapping {
+use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
+
+class WekaEssai extends BaseMapping {
 
 	public function getCpwCorpName($data)
 	{
