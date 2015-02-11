@@ -5,6 +5,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\RadioFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\HiddenFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
@@ -144,6 +145,9 @@ class FormUtils {
             case "checkbox":
                 $fieldType = CheckboxFieldType::getInstance();
                 break;
+	        case "radio":
+		        $fieldType = RadioFieldType::getInstance();
+		        break;
             case "linked-reference-list":
                 $fieldType = LinkedReferenceListFieldType::getInstance();
                 break;
