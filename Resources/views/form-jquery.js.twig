@@ -5,8 +5,8 @@ var leadsfactory = {
         var $ = jQuery;
         var form = $('#'+form_id);
         $.each(data, function(key, value) {
-            var field = $('[name=lffield\\['+key+'\\]]', form);
-            if (field.attr('type') == 'checkbox') {
+            var field = $('[id=lffield\\['+key+'\\]]', form);
+            if (field.attr('type') == 'checkbox' || field.attr('type') == 'radio') {
                 field.prop('checked', value);
             } else {
                 field.val(value);
