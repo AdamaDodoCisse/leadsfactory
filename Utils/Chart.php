@@ -539,10 +539,10 @@ class Chart {
 
                 echo ("--> Deleting leads\r\n");
 
-                // Is not, delete anyleads for 2 years
-                /*$query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
+                // Delete leads for form
+                $query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
                 $query->bindValue('form_id', $form->getId());
-                $query->execute();*/
+                $query->execute();
 
                 // Reload leads for two years
                 for ( $i=0; $i<365; $i++ ) {
@@ -568,11 +568,53 @@ class Chart {
                         unset ($lead);
                     }
 
+                    // Ajout des listes
+                    $this->createPageViewsForDemo ( $leadsNumberForDay, $form, $day );
+
                 }
 
 
             }
 
+
+    }
+
+    private function createPageViewsForDemo ( $leadsNumberForDay, $form, $day ) {
+
+        // Now create page views
+        echo ("--> Creating page views for the day\r\n");
+
+        // Calculate % of variation
+        $variation = rand (1, 99);
+
+        // Calculate number of page views
+        $nbPageViews = ($variation / 100) * $leadsNumberForDay + $leadsNumberForDay;
+
+
+        for ($j=0; $j<=$nbPageViews; $j++) {
+
+            echo ("--> Creating Page view : ".$j."/".$nbPageViews." (form : ".$form->getId().")\r\n");
+
+            // write them
+            $tracking = new Tracking();
+
+            // random if UTM is origin (1) or not (0)
+            $hasUtm = rand (0,1);
+
+            // if utm is not origin, calculate it from 1 to 5;
+            if ($hasUtm) {
+                $utm_campaign = rand (1,5);
+                $utm_campaign = "demo_utm_code_".$utm;
+                $tracking->setUtmCampaign($utm_campaign);
+            }
+
+            $tracking->setForm($form);
+            $tracking->setCreatedAt($day);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($tracking);
+            $em->flush();
+        }
 
     }
 
