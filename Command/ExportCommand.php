@@ -28,8 +28,7 @@ class ExportCommand extends ContainerAwareCommand {
 
         if($form){
             $output->writeln('Exporting '.$form.' leads...');
-            $form = $this->getContainer()->get('leadsfactory.form_repository')->findByCode($form);
-            $forms = array($form);
+            $forms = $this->getContainer()->get('leadsfactory.form_repository')->findByCode($form);
         }else{
             $output->writeln('Exporting all leads...');
             $forms = $this->getContainer()->get('leadsfactory.form_repository')->findAll();
@@ -42,7 +41,9 @@ class ExportCommand extends ContainerAwareCommand {
                 $output->writeln('Done');
             }catch(\Exception $e){
                 $output->writeln('Error : '.$e->getMessage());
-                $logger->error('Export '.$form->getName(). ' error : '.$e->getMessage());
+	            $output->writeln('Error : '.$e->getTraceAsString());
+	            $logger->error('Export '.$form->getName(). ' error : '.$e->getMessage());
+	            $logger->error($e->getTraceAsString());
             }
         }
 	}
