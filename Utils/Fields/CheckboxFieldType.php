@@ -6,7 +6,7 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 class CheckboxFieldType extends AbstractFieldType {
 
     protected function createInstance () {
-        return new TextareaFieldType();
+        return new CheckboxFieldType();
     }
 
     /**
@@ -18,7 +18,7 @@ class CheckboxFieldType extends AbstractFieldType {
     public function renderToHtml ( $tag )
     {
         $id = $tag["attributes"]["id"];
-        return '<input type="checkbox" name="lffield['.$id.']" id="lffield['.$id.']"/>';
+        return '<input type="checkbox" name="lffield['.$id.']" id="lffield['.$id.']" '.$this->getAttributes( $tag ).'/>';
     }
 
 }
