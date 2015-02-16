@@ -28,14 +28,13 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/security-extra-bundle": "dev-master",
-        "mtdowling/cron-expression": "1.0.*"
+        "mtdowling/cron-expression": "1.0.*",
+        "beberlei/DoctrineExtensions": "0.1@dev"
     },
     "autoload" : {
         "psr-0" : {
             "Tellaw\\LeadsFactoryBundle" : ""
         }
     },
-    "target-dir" : "Tellaw/LeadsFactoryBundle",
-    "repositories" : [{
-    }]
+    "target-dir" : "Tellaw/LeadsFactoryBundle"
 }
