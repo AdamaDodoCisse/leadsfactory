@@ -39,7 +39,7 @@ class BaseMapping
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
 	        'PerProfil'         => 'profil',
-	        'perFonction'       => 'fonction'
+	        'perFctCode'       => 'fonction'
         );
     }
 
@@ -50,15 +50,15 @@ class BaseMapping
             'cpwAdresse1'       => 'address',
             'cpwAdresse2'       => '',
             'cpwAutresCin'      => '',
-            'cpwCinTmp_'        => '',
+            'cpwCinTmp_'        => 'secteur-activite',
             'cpwCity'           => 'ville',
             'cpwCivilite'       => 'salutation',
             'cpwCodeGCM'        => '',
-            'cpwComment'        => '',
+            'cpwComment'        => 'comment',
             'cpwCorpName'       => 'etablissement',
             'cpwDate'           => '',
             'cpwDejaClient'     => 'deja-client',
-            'cpwDemandeRV'      => '',
+            'cpwDemandeRV'      => 'demande-rdv',
             'cpwEmail'          => 'email',
             'cpwEmailValide'    => '',
             'cpwEntIDPhone'     => 'phone',

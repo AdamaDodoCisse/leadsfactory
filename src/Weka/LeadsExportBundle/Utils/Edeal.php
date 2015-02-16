@@ -71,6 +71,13 @@ class Edeal extends AbstractMethod{
 
             $data = json_decode($job->getLead()->getData(), true);
 
+		    //on dégage si profil étudiant
+		    if($data['profil'] == 'ETUDIANT'){
+			    $exportUtils->updateJob($job, $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
+			    $exportUtils->updateLead($job->getLead(), $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
+			    continue;
+		    }
+
             $enterprise = $this->_getEnterprise($data);
             $entResponse = $client->createEnterprise($enterprise);
             $logger->info('Edeal createEnterprise result : '.$entResponse);

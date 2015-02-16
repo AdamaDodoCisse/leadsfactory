@@ -4,7 +4,7 @@ namespace Weka\LeadsExportBundle\Utils\Edeal\ti;
 
 use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
-class Devispack extends BaseMapping{
+class Classic extends BaseMapping{
 
 	public function getCpwOriIDCode($data)
 	{
@@ -18,20 +18,14 @@ class Devispack extends BaseMapping{
 
 	public function getCpwComment($data)
 	{
-		$comment = "Demande d'information sur le pack ";
-
-		if(!empty($data['product_name']))
-			$comment .= $data['product_name'];
-
-		if(!empty($data['product_sku']))
-			$comment .= "\nSKU : " . $data['product_sku'];
+		$comment = "Demande d'information";
 
 		return $comment;
 	}
 
-	public function getCpwOriDossier($data)
+	public function getCpwDemandeRV($data)
 	{
-		return !empty($data['product_sku']) ? $data['product_sku'] : '';
+		return "true";
 	}
 
 	public function getCpwSku_($data)
