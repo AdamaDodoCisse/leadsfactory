@@ -4,20 +4,20 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "71175bed37076fa0f242f8526ae181ae",
+    "hash": "1da7698b95084e91b77c370ec7025084",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v0.1",
+            "version": "v0.2-alpha",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "d38b081dbf826960bd9aad9d7dabed5164d3e7d3"
+                "reference": "5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/d38b081dbf826960bd9aad9d7dabed5164d3e7d3",
-                "reference": "d38b081dbf826960bd9aad9d7dabed5164d3e7d3",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc",
+                "reference": "5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc",
                 "shasum": ""
             },
             "require": {
@@ -30,7 +30,7 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2012-05-16 07:04:34"
+            "time": "2013-12-20 22:02:19"
         },
         {
             "name": "doctrine/annotations",
