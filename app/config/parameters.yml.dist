@@ -18,4 +18,7 @@ parameters:
     edeal_user:         ~
     edeal_password:     ~
 
-    leadsfactory.internal_email_patterns: [%%@weka.fr, %%@teching.com, %%text%%]
+    leadsfactory.internal_email_patterns:
+        - '%%@weka.fr'
+        - '%%@teching.com'
+        - '%%test%%'
