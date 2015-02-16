@@ -90,8 +90,6 @@ class BaseMapping
 	        'cpwTypeDemande_'   => '',
 	        'cpwSku_'           => 'product_sku',
 	        'cpwProductTitle_'  => 'product_name',
-	        'cpwTypeDemande_'   => '',
-
         );
     }
 
