@@ -4,8 +4,34 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ecb80f6d576c3bd0d597d79145971926",
+    "hash": "004421d22e5110bff3660c81ed109447",
     "packages": [
+        {
+            "name": "beberlei/DoctrineExtensions",
+            "version": "v0.2-alpha",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/beberlei/DoctrineExtensions.git",
+                "reference": "5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc",
+                "reference": "5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/orm": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "DoctrineExtensions": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2013-12-20 22:02:19"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.3",
@@ -1511,17 +1537,17 @@
         },
         {
             "name": "sensio/generator-bundle",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "target-dir": "Sensio/Bundle/GeneratorBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioGeneratorBundle.git",
-                "reference": "9e23fc3de265ae013690d84aab98e7a84f46edcd"
+                "reference": "4b09746520a826a7bf34a466ba31c7d8740fef7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/9e23fc3de265ae013690d84aab98e7a84f46edcd",
-                "reference": "9e23fc3de265ae013690d84aab98e7a84f46edcd",
+                "url": "https://api.github.com/repos/sensiolabs/SensioGeneratorBundle/zipball/4b09746520a826a7bf34a466ba31c7d8740fef7e",
+                "reference": "4b09746520a826a7bf34a466ba31c7d8740fef7e",
                 "shasum": ""
             },
             "require": {
@@ -1555,7 +1581,7 @@
                 }
             ],
             "description": "This bundle generates code for you",
-            "time": "2015-01-13 07:33:46"
+            "time": "2015-02-11 07:21:23"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -1913,15 +1939,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "156116f7b935465e4f6adffcadaf2f161b34e4b5"
+                "reference": "72bf2984e2b1faa2969b0c4e253cf6d34fa4caaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/156116f7b935465e4f6adffcadaf2f161b34e4b5",
-                "reference": "156116f7b935465e4f6adffcadaf2f161b34e4b5",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/72bf2984e2b1faa2969b0c4e253cf6d34fa4caaf",
+                "reference": "72bf2984e2b1faa2969b0c4e253cf6d34fa4caaf",
                 "shasum": ""
             },
             "require": {
+                "beberlei/doctrineextensions": "0.2-alpha@dev",
                 "doctrine/doctrine-bundle": "~1.2",
                 "doctrine/orm": "~2.2,>=2.2.3",
                 "incenteev/composer-parameter-handler": "~2.0",
@@ -1960,7 +1987,7 @@
                 "source": "https://github.com/tellaw/leadsfactory/tree/master",
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
-            "time": "2015-02-03 16:26:56"
+            "time": "2015-02-16 15:36:12"
         },
         {
             "name": "twig/extensions",
@@ -2174,7 +2201,8 @@
     "stability-flags": {
         "jms/security-extra-bundle": 20,
         "vresh/twilio-bundle": 20,
-        "tellaw/leadsfactorybundle": 20
+        "tellaw/leadsfactorybundle": 20,
+        "beberlei/doctrineextensions": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
