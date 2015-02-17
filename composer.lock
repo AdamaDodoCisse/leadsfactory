@@ -1939,16 +1939,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "72bf2984e2b1faa2969b0c4e253cf6d34fa4caaf"
+                "reference": "72c46bf5a633aa0c1278395f08dc0139df6a1e25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/72bf2984e2b1faa2969b0c4e253cf6d34fa4caaf",
-                "reference": "72bf2984e2b1faa2969b0c4e253cf6d34fa4caaf",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/72c46bf5a633aa0c1278395f08dc0139df6a1e25",
+                "reference": "72c46bf5a633aa0c1278395f08dc0139df6a1e25",
                 "shasum": ""
             },
             "require": {
-                "beberlei/doctrineextensions": "0.2-alpha@dev",
+                "beberlei/doctrineextensions": "0.2-alpha",
                 "doctrine/doctrine-bundle": "~1.2",
                 "doctrine/orm": "~2.2,>=2.2.3",
                 "incenteev/composer-parameter-handler": "~2.0",
@@ -1987,7 +1987,7 @@
                 "source": "https://github.com/tellaw/leadsfactory/tree/master",
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
-            "time": "2015-02-16 15:36:12"
+            "time": "2015-02-17 11:27:07"
         },
         {
             "name": "twig/extensions",
