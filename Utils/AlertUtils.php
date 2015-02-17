@@ -1,6 +1,8 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
+use Doctrine\ORM\QueryBuilder;
+use Tellaw\LeadsFactoryBundle\Entity\FormType;
 
 
 /**
@@ -145,86 +147,74 @@ class AlertUtils {
 
     }
 
-	public function setValuesForAlerts ( $item ) {
-
-        $itemClass = get_class($item);
-
-        $em = $this->container->get("doctrine")->getManager();
-
-        if( strstr ($itemClass, 'Tellaw\LeadsFactoryBundle\Entity\FormType')) {
+	public function setValuesForAlerts($item)
+	{
+		$formIds = array();
+        if ($item instanceof FormType) {
             $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($item->getId());
-        }else{
+	        foreach ($forms as $form) {
+		        $formIds[] = $form->getId();
+	        }
+        } else {
             $form = $this->container->get('leadsfactory.form_repository')->find($item->getId());
-            $forms = array($form);
+	        $formIds[] = $form->getId();
         }
 
-        $minDate = new \DateTime();
-        $minDate = $minDate->sub(new \DateInterval("P01D"))->format('Y-m-d');
+		$em = $this->container->get("doctrine")->getManager();
+        /** @var QueryBuilder $qb */
+        $qb = $em->createQueryBuilder();
+        $qb->select('count(l)')
+            ->from('TellawLeadsFactoryBundle:Leads', 'l')
+            ->where('l.form IN (:form_ids)')
+            ->andWhere('DATE(l.createdAt) = :date')
+            ->setParameter('form_ids', $formIds)
+        ;
+        $qb = $this->excludeInternalLeads($qb);
 
-		$value = 0;
+		$yesterday = new \DateTime();
+		$yesterday = $yesterday->sub(new \DateInterval("P1D"));
+		$qb->setParameter('date', $yesterday->format('Y-m-d'));
+		$item->yesterdayValue = $qb->getQuery()->getSingleScalarResult();
 
-		foreach($forms as $form){
+        $last_week = $yesterday->sub(new \DateInterval("P7D"));
+		$qb->setParameter('date', $last_week->format('Y-m-d'));
+		$item->weekBeforeValue = $qb->getQuery()->getSingleScalarResult();
 
-			$query = $em->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate GROUP BY DAY(createdAt)');
-			$query->bindValue('minDate', $minDate);
-			$query->bindValue('form_id', $form->getId());
-			$query->execute();
-			$results = $query->fetchAll();
-
-			if (count ($results)>0)
-				$value = $results[0]["count"] + $value;
-		}
-
-		// Set the value
-		$item->yesterdayValue = $value;
-
-		// Get the value for week before
-		$minDate = new \DateTime();
-		$minDate = $minDate->sub(new \DateInterval("P09D"))->format('Y-m-d');
-
-		$value = 0;
-
-		foreach($forms as $form){
-
-			$query = $em->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate GROUP BY DAY(createdAt)');
-			$query->bindValue('minDate', $minDate);
-			$query->bindValue('form_id', $form->getId());
-			$query->execute();
-			$results = $query->fetchAll();
-
-
-			if (count ($results))
-				$value = $results[0]["count"] + $value;
-		}
-
-		// Set the value
-		$item->weekBeforeValue = $value;
-
-		$item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
+        $item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
 
         $rules = $item->getRules();
 
-        if(empty($rules)){
+        if (empty($rules)) {
             $status = AlertUtils::$_STATUS_ERROR;
-        }else{
-		    $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
+        } else {
+            $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
         }
 
-		if ( $status == AlertUtils::$_STATUS_ERROR ) {
+        if ( $status == AlertUtils::$_STATUS_ERROR ) {
+            $item->yesterdayStatusColor = "pink";
+            $item->yesterdayStatusText = "Erreur";
+        } else if ( $status == AlertUtils::$_STATUS_WARNING ) {
+            $item->yesterdayStatusColor = "yellow";
+            $item->yesterdayStatusText = "Attention!";
+        } else {
+            $item->yesterdayStatusColor = "green";
+            $item->yesterdayStatusText = "Status OK";
+        }
+    }
 
-			$item->yesterdayStatusColor = "pink";
-			$item->yesterdayStatusText = "Erreur";
-
-		} else if ( $status == AlertUtils::$_STATUS_WARNING ) {
-
-			$item->yesterdayStatusColor = "yellow";
-			$item->yesterdayStatusText = "Attention!";
-
-		} else {
-			$item->yesterdayStatusColor = "green";
-			$item->yesterdayStatusText = "Status OK";
-		}
-
-	}
-
+    /**
+     * @param QueryBuilder $qb
+     * @return QueryBuilder
+     */
+    private function excludeInternalLeads(QueryBuilder $qb)
+    {
+        $i = 0;
+        foreach ($this->container->getParameter('leadsfactory.internal_email_patterns') as $pattern) {
+            $qb->andWhere('l.email not like :pattern_'.$i)
+               ->setParameter('pattern_'.$i, $pattern)
+            ;
+            ++$i;
+        }
+        return $qb;
+    }
 }

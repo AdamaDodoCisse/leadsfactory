@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Doctrine\ORM\QueryBuilder;
 
 class Chart {
 
@@ -146,15 +147,24 @@ class Chart {
         $data = array();
         foreach($this->formType as $formType){
 
-            if(!is_object($formType))
-                $formType = $this->getContainer()->get('leadsfactory.form_type_repository')->findOneById($formType);
+            if (!is_object($formType)) {
+	            $formType = $this->getContainer()->get('leadsfactory.form_type_repository')->findOneById($formType);
+            }
 
-            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
-            $query->bindValue('format', $this->_getSqlDateFormat());
-            $query->bindValue('minDate', $minDate);
-            $query->bindValue('formType', $formType->getId());
-            $query->execute();
-            $results = $query->fetchAll();
+	        /** @var QueryBuilder $qb */
+	        $qb = $em->createQueryBuilder();
+	        $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
+	           ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	           ->where('l.formType = :form_type_id')
+	           ->andWhere('l.createdAt >= :minDate')
+	           ->groupBy($this->_getSqlGroupByClause())
+	           ->setParameter('format', $this->_getSqlDateFormat())
+	           ->setParameter('form_type_id', $formType->getId())
+	           ->setParameter('minDate', $minDate)
+	        ;
+	        $qb = $this->excludeInternalLeads($qb);
+	        $results = $qb->getQuery()->getResult();
+
             array_unshift($results,$formType->getName());
             $data[$formType->getName()] = $results;
         }
@@ -176,14 +186,21 @@ class Chart {
 
         $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($formTypeId);
 
-        foreach($forms as $form){
+        foreach ($forms as $form) {
+	        /** @var QueryBuilder $qb */
+	        $qb = $em->createQueryBuilder();
+	        $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
+	           ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	           ->where('l.form = :form_id')
+	           ->andWhere('l.createdAt >= :minDate')
+	           ->groupBy($this->_getSqlGroupByClause())
+	           ->setParameter('format', $this->_getSqlDateFormat())
+	           ->setParameter('form_type_id', $form->getId())
+	           ->setParameter('minDate', $minDate)
+	        ;
+	        $qb = $this->excludeInternalLeads($qb);
+	        $results = $qb->getQuery()->getResult();
 
-            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
-            $query->bindValue('format', $this->_getSqlDateFormat());
-            $query->bindValue('minDate', $minDate);
-            $query->bindValue('form_id', $form->getId());
-            $query->execute();
-            $results = $query->fetchAll();
             array_unshift($results, $form->getName());
             $data[$form->getId()] = $results;
         }
@@ -201,23 +218,47 @@ class Chart {
         $em = $this->container->get('doctrine')->getManager();
         $data = array();
 
-        foreach($this->form as $form){
+        foreach ($this->form as $form) {
+            if(!($form instanceof Form)) {
+	            $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
+            }
 
-            if(!($form instanceof Form))
-                $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
+	        /** @var QueryBuilder $qb */
+	        $qb = $em->createQueryBuilder();
+	        $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
+	            ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	            ->where('l.form = :form_id')
+	            ->andWhere('l.createdAt >= :minDate')
+		        ->groupBy($this->_getSqlGroupByClause())
+		        ->setParameter('format', $this->_getSqlDateFormat())
+		        ->setParameter('form_id', $form->getId())
+	            ->setParameter('minDate', $minDate)
+	        ;
+	        $qb = $this->excludeInternalLeads($qb);
+	        $results = $qb->getQuery()->getResult();
 
-            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
-            $query->bindValue('format', $this->_getSqlDateFormat());
-            $query->bindValue('minDate', $minDate);
-            $query->bindValue('form_id', $form->getId());
-            $query->execute();
-            $results = $query->fetchAll();
             array_unshift($results, $form->getName());
             $data[$form->getName()] = $results;
         }
 
         return $data;
     }
+
+	/**
+	 * @param QueryBuilder $qb
+	 * @return QueryBuilder
+	 */
+	private function excludeInternalLeads(QueryBuilder $qb)
+	{
+		$i = 0;
+		foreach ($this->container->getParameter('leadsfactory.internal_email_patterns') as $pattern) {
+			$qb->andWhere('l.email not like :pattern_'.$i)
+			   ->setParameter('pattern_'.$i, $pattern)
+			;
+			++$i;
+		}
+		return $qb;
+	}
 
     /**
      * Load chart data
@@ -288,7 +329,7 @@ class Chart {
 
             foreach($formTypeData as $c){
                 if(array_key_exists('date', $c)){
-                    $d[$c['date']] = (int) $c['count'];
+                    $d[$c['date']] = (int) $c['n'];
                 }
             }
             $dateFormat = $this->_getDateFormat();
@@ -438,6 +479,8 @@ class Chart {
             case self::PERIOD_MONTH:
                 $title = "Nombre de DI sur le mois";
                 break;
+	        default:
+		        throw new \Exception('Unknown timeframe');
         }
         return $title;
     }
@@ -449,6 +492,8 @@ class Chart {
                 return '%Y%m';
             case self::PERIOD_MONTH:
                 return '%m%d';
+	        default:
+		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -462,6 +507,8 @@ class Chart {
                 return 'Ym';
             case self::PERIOD_MONTH:
                 return 'md';
+	        default:
+		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -475,6 +522,8 @@ class Chart {
                 return 'month';
             case self::PERIOD_MONTH:
                 return 'day';
+	        default:
+		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -492,8 +541,25 @@ class Chart {
             case self::PERIOD_MONTH:
                 $minDate = $this->_getRangeMinDate();
                 return (cal_days_in_month(CAL_GREGORIAN, $minDate->format('m'), $minDate->format('Y')) +1);
+	        default:
+		        throw new \Exception('Unknown timeframe');
         }
     }
+
+	/**
+	 * @return array
+	 */
+	private function _getSqlGroupByAggregates()
+	{
+		switch($this->period){
+			case self::PERIOD_YEAR:
+                return array('MONTH(l.createdAt) as month', 'YEAR(l.createdAt) as year');
+			case self::PERIOD_MONTH:
+                return array('DAY(l.createdAt) as day', 'MONTH(l.createdAt) as month');
+			default:
+				throw new \Exception('Unknown timeframe');
+		}
+	}
 
     /**
      * @return string
@@ -502,9 +568,11 @@ class Chart {
     {
         switch($this->period){
             case self::PERIOD_YEAR:
-                return 'GROUP BY MONTH(createdAt), YEAR(createdAt)';
+                return 'month, year';
             case self::PERIOD_MONTH:
-                return 'GROUP BY DAY(createdAt), MONTH(createdAt)';
+	            return 'day, month';
+	        default:
+		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -522,6 +590,7 @@ class Chart {
         $this->specialGraphIndexes = $specials;
     }
 
+	// TODO: move to fixtures or remove
     public function loadDemoData () {
 
         echo ("Loading demo data\r\n");
@@ -579,6 +648,7 @@ class Chart {
 
     }
 
+	// TODO: move to fixtures or remove
     private function createPageViewsForDemo ( $leadsNumberForDay, $form, $day ) {
 
         // Now create page views
@@ -619,4 +689,4 @@ class Chart {
     }
 
 
-} 
+}

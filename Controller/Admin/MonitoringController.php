@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\Bookmark;
 use Tellaw\LeadsFactoryBundle\Utils\Chart;
+use \Tellaw\LeadsFactoryBundle\Utils\AlertUtils;
 
 /**
  * @Route("/monitoring")
@@ -263,7 +264,7 @@ class MonitoringController extends AbstractLeadsController{
 
         $em = $this->getDoctrine()->getManager();
 
-        /** @var $chart Tellaw\LeadsFactoryBundle\Utils\Chart */
+        /** @var $chart \Tellaw\LeadsFactoryBundle\Utils\Chart */
         $chart = $this->get('chart');
         $chart->setPeriod($period);
 
@@ -293,13 +294,10 @@ class MonitoringController extends AbstractLeadsController{
 
         // Throw exception for wrong state
         } else {
-            throw new Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
+            throw new \Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
         }
 
         $chartData = $chart->loadChartData();
-
-        //Si un type de formulaire est sélectionné on utilise le template chart2.html.twig
-        $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
 
         $data = array(
             'chart_data'        => $chartData,
@@ -308,7 +306,7 @@ class MonitoringController extends AbstractLeadsController{
             'special_graphs'    => $chart->getSpecialGraphIndexes($chartData) //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
         );
 
-        return $this->render($template, $data);
+        return $this->render("TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig", $data);
     }
 
     /**
@@ -342,11 +340,16 @@ class MonitoringController extends AbstractLeadsController{
 
         $formTypeEntity = $this->get('leadsfactory.form_type_repository')->find($type_id);
 
-        if ($formTypeEntity == null) throw new Exception ("FormType cannot be null");
+        if ($formTypeEntity == null) {
+	        throw new \Exception ("FormType cannot be null");
+        }
+
+	    /** @var AlertUtils $alertes_utils */
+	    $alertes_utils = $this->get("alertes_utils");
+	    $alertes_utils->setValuesForAlerts($formTypeEntity);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormTypeItem.html.twig", array(
             'item'  => $formTypeEntity,
-            'alerteutil' => $this->get("alertes_utils"),
         ));
 
     }
@@ -354,48 +357,43 @@ class MonitoringController extends AbstractLeadsController{
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getAlertWidgetForFormAction ( $form_id ) {
-
+    public function getAlertWidgetForFormAction($form_id)
+    {
         $formEntity = $this->get('leadsfactory.form_repository')->find($form_id);
 
-        if ($formEntity == null) throw new Exception ("Form cannot be null");
+        if ($formEntity == null) throw new \Exception ("Form cannot be null");
 
+	    /** @var AlertUtils $alertes_utils */
 	    $alertes_utils = $this->get("alertes_utils");
 	    $alertes_utils->setValuesForAlerts($formEntity);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormItem.html.twig", array(
             'item'  => $formEntity,
-            'alerteutil' => $this->get("alertes_utils"),
         ));
-
     }
 
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getTypeViewStatisticsAction ( $type_id ) {
-
+    public function getTypeViewStatisticsAction($type_id)
+    {
         $formTypeEntity = $this->get('leadsfactory.form_type_repository')->setStatisticsForId($type_id);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormTypeItem.html.twig", array(
             'formType' => $formTypeEntity,
-            'alerteutil' => $this->get("alertes_utils")
         ));
-
     }
 
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getFormViewStatisticsAction ( $form_id ) {
-
+    public function getFormViewStatisticsAction($form_id)
+    {
         $formEntity = $this->get('leadsfactory.form_repository')->setStatisticsForId($form_id);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormItem.html.twig", array(
             'form' => $formEntity,
-            'alerteutil' => $this->get("alertes_utils")
         ));
-
     }
 
     /**
