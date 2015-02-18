@@ -5,7 +5,8 @@ deployment:
   to: /data/apps/leads-factory
   excludes:
     - app/cache
-    - app/config
+#    - app/config
+    - app/config/parameters.yml
     - app/logs
     - app/sessions
     - datas
