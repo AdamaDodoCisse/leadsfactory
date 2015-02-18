@@ -1,6 +1,8 @@
 <?php
 
-namespace Weka\LeadsExportBundle\Utils\Edeal;
+namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
+
+use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
 class WekaWebcallback extends BaseMapping {
 
