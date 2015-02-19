@@ -3,8 +3,8 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
-class HiddenFieldType extends AbstractFieldType {
-
+class HiddenFieldType extends AbstractFieldType
+{
     protected function createInstance () {
         return new HiddenFieldType();
     }
@@ -17,8 +17,25 @@ class HiddenFieldType extends AbstractFieldType {
      */
     public function renderToHtml ( $tag )
     {
-        $id = $tag["attributes"]["id"];
-        return '<input type="hidden" name="lffield['.$id.']" id="lffield['.$id.']" '.$this->getAttributes( $tag ).'/>';
-    }
+        if (array_key_exists('id', $tag["attributes"])) {
+            $id = $tag["attributes"]["id"];
+        } else {
+	        $id = false;
+        }
 
+        if (array_key_exists('name', $tag["attributes"])) {
+            $name = $tag["attributes"]["name"];
+        } else {
+            $name = $id;
+        }
+
+        $html = '<input type="hidden"';
+        $html .= ' name="lffield['.$name.']"';
+        if ($id) {
+            $html .= ' id="lffield['.$id.']"';
+        }
+        $html .= ' '.$this->getAttributes( $tag ).'/>';
+
+        return $html;
+    }
 }
