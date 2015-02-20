@@ -98,16 +98,3 @@ var webcallback = {
         return this.callCounter < this.maxCalls ? true : false;
     }
 };
-
-jQuery(document).ready(function($){
-    webcallback.init();
-    $('#webcallback-new-call').on('click', function (e) {
-        webcallback.newCall();
-    });
-});
-
-
-
-
-
-
