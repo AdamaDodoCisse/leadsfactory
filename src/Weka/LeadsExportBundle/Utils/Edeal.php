@@ -70,6 +70,7 @@ class Edeal extends AbstractMethod{
 	        $logger->info('job ID : '.$job->getId());
 
             $data = json_decode($job->getLead()->getData(), true);
+		    var_dump($data);
 
 		    //on dégage si profil étudiant
 		    if(isset($data['profil']) && $data['profil'] == 'ETUDIANT'){
@@ -79,7 +80,6 @@ class Edeal extends AbstractMethod{
 		    }
 
             $enterprise = $this->_getEnterprise($data);
-		    var_dump($data);
             $entResponse = $client->createEnterprise($enterprise);
             $logger->info('Edeal createEnterprise result : '.$entResponse);
 
