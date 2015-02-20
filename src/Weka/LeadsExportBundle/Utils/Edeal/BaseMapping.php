@@ -39,7 +39,7 @@ class BaseMapping
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
 	        'PerProfil'         => 'profil',
-	        'perFctCode'       => 'fonction'
+	        'perFctCode'        => 'fonction'
         );
     }
 
@@ -115,16 +115,19 @@ class BaseMapping
 
 	protected function getTypeEtablissement($value)
 	{
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel('type_etablissement', $value);
+		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getNameUsingListCode('type_etablissement', $value);
 
 		return $label;
 	}
 
 	public function getCpwCin($data)
 	{
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel('ti_secteur_activite', $data['secteur-activite']);
-
-		return $label;
+		$repository = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement');
+		return $repository->getNameUsingListCode('ti_secteur_activite', $data['secteur-activite']);
 	}
 
+	public function getBooleanString($value)
+	{
+		return ($value === '1')?'true':'false';
+	}
 }

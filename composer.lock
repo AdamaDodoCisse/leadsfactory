@@ -1939,12 +1939,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "72c46bf5a633aa0c1278395f08dc0139df6a1e25"
+                "reference": "63277d96e13e5ecb2b122c0642bbe80f91bccf0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/72c46bf5a633aa0c1278395f08dc0139df6a1e25",
-                "reference": "72c46bf5a633aa0c1278395f08dc0139df6a1e25",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/63277d96e13e5ecb2b122c0642bbe80f91bccf0e",
+                "reference": "63277d96e13e5ecb2b122c0642bbe80f91bccf0e",
                 "shasum": ""
             },
             "require": {
@@ -1987,7 +1987,7 @@
                 "source": "https://github.com/tellaw/leadsfactory/tree/master",
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
-            "time": "2015-02-17 11:27:07"
+            "time": "2015-02-20 15:22:44"
         },
         {
             "name": "twig/extensions",
