@@ -44,4 +44,34 @@ class ReferenceListRepository extends EntityRepository
         return new Paginator($query);
     }
 
+	/**
+	 * @param string $code
+	 * @param array $values
+	 *
+	 * @return string
+	 */
+	public function getCommaSeparatedNames($code, $values)
+	{
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('e.name')
+			->from('TellawLeadsFactoryBundle:ReferenceListElement', 'e')
+			->join('TellawLeadsFactoryBundle:ReferenceList', 'l')
+			->where('l.code = :code')
+			->andWhere('e.value IN (:values)')
+			->setParameter('code', $code)
+			->setParameter('values', $values)
+		;
+		$names = $qb->getQuery()->getScalarResult();
+
+		$n = count($names);
+		if ($n === 0) {
+			return '';
+		}
+
+		$val = $names[1];
+		for ($i=1; $i<$n; ++$i) {
+			$val .= ','.$names[$i];
+		}
+		return $val;
+	}
 }

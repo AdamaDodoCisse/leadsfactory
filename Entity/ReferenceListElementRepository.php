@@ -10,25 +10,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class ReferenceListElementRepository extends EntityRepository
 {
-
 	/**
 	 * Retourne le libellé correspondant à la valeur d'une option
 	 *
-	 * @param string $listCode
-	 * @param string $value
+	 * @param string $list_code
+	 * @param string $element_value
 	 *
 	 * @return string
 	 */
-	public function getLabel($listCode, $value)
+	public function getNameUsingListCode($list_code, $element_value)
 	{
-		$sql = "SELECT e.name FROM ReferenceListElement e LEFT JOIN ReferenceList l ON e.referencelist_id=l.id WHERE l.code=:code AND e.value=:value";
-		$query = $this->_em->getConnection()->prepare($sql);
-		$query->bindValue('code', $listCode);
-		$query->bindValue('value', $value);
-		$query->execute();
-		$label = $query->fetchColumn();
-
-		return $label;
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('e.name')
+		    ->from('TellawLeadsFactoryBundle:ReferenceListElement', 'e')
+		    ->join('TellawLeadsFactoryBundle:ReferenceList', 'l')
+		    ->where('l.code = :code')
+			->andWhere('e.referencelist_id = l.id')
+		    ->andWhere('e.value = :value')
+		    ->setParameter('code', $list_code)
+		    ->setParameter('value', $element_value)
+		;
+		echo $qb->getQuery()->getSQL();
+		return $qb->getQuery()->getSingleScalarResult();
 	}
-
 }
