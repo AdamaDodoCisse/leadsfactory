@@ -26,22 +26,14 @@ class Devispack extends BaseMapping{
 		if(!empty($data['product_sku']))
 			$comment .= "\nSKU : " . $data['product_sku'];
 
+		$comment = 'Effectuée le '.date('c');
+
 		return $comment;
 	}
 
 	public function getCpwOriDossier($data)
 	{
 		return !empty($data['product_sku']) ? $data['product_sku'] : '';
-	}
-
-	public function getCpwSku_($data)
-	{
-		return null;
-	}
-
-	public function getCpwProductTitle_($data)
-	{
-		return null;
 	}
 
 	public function getEntCity($data)
