@@ -50,7 +50,7 @@ class BaseMapping
             'cpwAdresse1'       => 'address',
             'cpwAdresse2'       => '',
             'cpwAutresCin'      => '',
-            'cpwCinTmp_'        => 'secteur-activite',
+            'cpwCin'            => 'secteur-activite',
             'cpwCity'           => 'ville',
             'cpwCivilite'       => 'salutation',
             'cpwCodeGCM'        => '',
@@ -115,9 +115,16 @@ class BaseMapping
 
 	protected function getTypeEtablissement($value)
 	{
-		$listId = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode('type_etablissement')->getId();
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel($listId, $value);
+		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel('type_etablissement', $value);
 
 		return $label;
 	}
+
+	public function getCpwCin($data)
+	{
+		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel('ti_secteur_activite', $data['secteur-activite']);
+
+		return $label;
+	}
+
 }

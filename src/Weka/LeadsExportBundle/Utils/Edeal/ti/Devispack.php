@@ -44,16 +44,6 @@ class Devispack extends BaseMapping{
 		return null;
 	}
 
-	public function getCpwDejaClient($data)
-	{
-		return 'True';
-	}
-
-	public function getCpwStopMailETI($data)
-	{
-		return 'True';
-	}
-
 	public function getEntCity($data)
 	{
 		return !empty($data['ville_id']) ? $data['ville_id'] : $data['ville_text'];
