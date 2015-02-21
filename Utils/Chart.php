@@ -5,7 +5,6 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
-use Doctrine\ORM\QueryBuilder;
 
 class Chart {
 
@@ -147,24 +146,15 @@ class Chart {
         $data = array();
         foreach($this->formType as $formType){
 
-            if (!is_object($formType)) {
-	            $formType = $this->getContainer()->get('leadsfactory.form_type_repository')->findOneById($formType);
-            }
+            if(!is_object($formType))
+                $formType = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findOneById($formType);
 
-	        /** @var QueryBuilder $qb */
-	        $qb = $em->createQueryBuilder();
-	        $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
-	           ->from('TellawLeadsFactoryBundle:Leads', 'l')
-	           ->where('l.formType = :form_type_id')
-	           ->andWhere('l.createdAt >= :minDate')
-	           ->groupBy($this->_getSqlGroupByClause())
-	           ->setParameter('format', $this->_getSqlDateFormat())
-	           ->setParameter('form_type_id', $formType->getId())
-	           ->setParameter('minDate', $minDate)
-	        ;
-	        $qb = $this->excludeInternalLeads($qb);
-	        $results = $qb->getQuery()->getResult();
-
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+            $query->bindValue('format', $this->_getSqlDateFormat());
+            $query->bindValue('minDate', $minDate);
+            $query->bindValue('formType', $formType->getId());
+            $query->execute();
+            $results = $query->fetchAll();
             array_unshift($results,$formType->getName());
             $data[$formType->getName()] = $results;
         }
@@ -184,23 +174,16 @@ class Chart {
 
         $formTypeId = $this->formType[0];
 
-        $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($formTypeId);
+        $forms = $em->getRepository('TellawLeadsFactoryBundle:Form')->findByFormType($formTypeId);
 
-        foreach ($forms as $form) {
-	        /** @var QueryBuilder $qb */
-	        $qb = $em->createQueryBuilder();
-	        $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
-	           ->from('TellawLeadsFactoryBundle:Leads', 'l')
-	           ->where('l.form = :form_id')
-	           ->andWhere('l.createdAt >= :minDate')
-	           ->groupBy($this->_getSqlGroupByClause())
-	           ->setParameter('format', $this->_getSqlDateFormat())
-	           ->setParameter('form_type_id', $form->getId())
-	           ->setParameter('minDate', $minDate)
-	        ;
-	        $qb = $this->excludeInternalLeads($qb);
-	        $results = $qb->getQuery()->getResult();
+        foreach($forms as $form){
 
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+            $query->bindValue('format', $this->_getSqlDateFormat());
+            $query->bindValue('minDate', $minDate);
+            $query->bindValue('form_id', $form->getId());
+            $query->execute();
+            $results = $query->fetchAll();
             array_unshift($results, $form->getName());
             $data[$form->getId()] = $results;
         }
@@ -218,47 +201,23 @@ class Chart {
         $em = $this->container->get('doctrine')->getManager();
         $data = array();
 
-        foreach ($this->form as $form) {
-            if(!($form instanceof Form)) {
-	            $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
-            }
+        foreach($this->form as $form){
 
-	        /** @var QueryBuilder $qb */
-	        $qb = $em->createQueryBuilder();
-	        $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
-	            ->from('TellawLeadsFactoryBundle:Leads', 'l')
-	            ->where('l.form = :form_id')
-	            ->andWhere('l.createdAt >= :minDate')
-		        ->groupBy($this->_getSqlGroupByClause())
-		        ->setParameter('format', $this->_getSqlDateFormat())
-		        ->setParameter('form_id', $form->getId())
-	            ->setParameter('minDate', $minDate)
-	        ;
-	        $qb = $this->excludeInternalLeads($qb);
-	        $results = $qb->getQuery()->getResult();
+            if(!($form instanceof Form))
+                $form = $em->getRepository('TellawLeadsFactoryBundle:Form')->findOneById($form);
 
+            $query = $em->getConnection()->prepare('SELECT DATE_FORMAT(createdAt,:format) as date, count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate '.$this->_getSqlGroupByClause());
+            $query->bindValue('format', $this->_getSqlDateFormat());
+            $query->bindValue('minDate', $minDate);
+            $query->bindValue('form_id', $form->getId());
+            $query->execute();
+            $results = $query->fetchAll();
             array_unshift($results, $form->getName());
             $data[$form->getName()] = $results;
         }
 
         return $data;
     }
-
-	/**
-	 * @param QueryBuilder $qb
-	 * @return QueryBuilder
-	 */
-	private function excludeInternalLeads(QueryBuilder $qb)
-	{
-		$i = 0;
-		foreach ($this->container->getParameter('leadsfactory.internal_email_patterns') as $pattern) {
-			$qb->andWhere('l.email not like :pattern_'.$i)
-			   ->setParameter('pattern_'.$i, $pattern)
-			;
-			++$i;
-		}
-		return $qb;
-	}
 
     /**
      * Load chart data
@@ -309,7 +268,7 @@ class Chart {
     private function _getAllFormTypes()
     {
         $em = $this->container->get('doctrine')->getManager();
-        $formTypes = $this->getContainer()->get('leadsfactory.form_type_repository')->findAll();
+        $formTypes = $em->getRepository('TellawLeadsFactoryBundle:FormType')->findAll();
 
         return $formTypes;
     }
@@ -329,7 +288,7 @@ class Chart {
 
             foreach($formTypeData as $c){
                 if(array_key_exists('date', $c)){
-                    $d[$c['date']] = (int) $c['n'];
+                    $d[$c['date']] = (int) $c['count'];
                 }
             }
             $dateFormat = $this->_getDateFormat();
@@ -362,11 +321,11 @@ class Chart {
     {
         // En mode d'affichage d'un formulaire ou d'un type unique on ajoute la courbe moyenne
         //if(count($chartData) <= 1 || count($this->formType) == 1 )
-            $chartData[] = $this->_addAverageGraph($chartData);
+        $chartData[] = $this->_addAverageGraph($chartData);
 
         //En mode d'affichage d'un type, on ajoute la courbe qui totalise les valeurs de chacun des formulaires
         //if(count($this->formType) == 1 && $this->graph_count > 1)
-            $chartData[] = $this->_addTotalGraph($chartData);
+        $chartData[] = $this->_addTotalGraph($chartData);
 
 
         //Set les courbes "spéciales" pour distinction dans le template
@@ -479,8 +438,6 @@ class Chart {
             case self::PERIOD_MONTH:
                 $title = "Nombre de DI sur le mois";
                 break;
-	        default:
-		        throw new \Exception('Unknown timeframe');
         }
         return $title;
     }
@@ -492,8 +449,6 @@ class Chart {
                 return '%Y%m';
             case self::PERIOD_MONTH:
                 return '%m%d';
-	        default:
-		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -507,8 +462,6 @@ class Chart {
                 return 'Ym';
             case self::PERIOD_MONTH:
                 return 'md';
-	        default:
-		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -522,8 +475,6 @@ class Chart {
                 return 'month';
             case self::PERIOD_MONTH:
                 return 'day';
-	        default:
-		        throw new \Exception('Unknown timeframe');
         }
     }
 
@@ -541,25 +492,8 @@ class Chart {
             case self::PERIOD_MONTH:
                 $minDate = $this->_getRangeMinDate();
                 return (cal_days_in_month(CAL_GREGORIAN, $minDate->format('m'), $minDate->format('Y')) +1);
-	        default:
-		        throw new \Exception('Unknown timeframe');
         }
     }
-
-	/**
-	 * @return array
-	 */
-	private function _getSqlGroupByAggregates()
-	{
-		switch($this->period){
-			case self::PERIOD_YEAR:
-                return array('MONTH(l.createdAt) as month', 'YEAR(l.createdAt) as year');
-			case self::PERIOD_MONTH:
-                return array('DAY(l.createdAt) as day', 'MONTH(l.createdAt) as month');
-			default:
-				throw new \Exception('Unknown timeframe');
-		}
-	}
 
     /**
      * @return string
@@ -568,11 +502,9 @@ class Chart {
     {
         switch($this->period){
             case self::PERIOD_YEAR:
-                return 'month, year';
+                return 'GROUP BY MONTH(createdAt), YEAR(createdAt)';
             case self::PERIOD_MONTH:
-	            return 'day, month';
-	        default:
-		        throw new \Exception('Unknown timeframe');
+                return 'GROUP BY DAY(createdAt), MONTH(createdAt)';
         }
     }
 
@@ -590,13 +522,16 @@ class Chart {
         $this->specialGraphIndexes = $specials;
     }
 
-	// TODO: move to fixtures or remove
-    public function loadDemoData () {
+    public function loadDemoData ( $formId = null ) {
 
         echo ("Loading demo data\r\n");
 
         $em = $this->container->get('doctrine')->getManager();
-        $forms = $this->container->get('leadsfactory.form_repository')->findAll();
+
+        if ($formId == null)
+            $forms = $this->container->get('leadsfactory.form_repository')->findAll();
+        else
+            $forms = array($this->container->get('leadsfactory.form_repository')->find( $formId ));
 
         // Loop over forms
         foreach ($forms as $form) {
@@ -606,53 +541,52 @@ class Chart {
 
             echo ("Processing form (".$form->getId()." -> ".$form->getName().")\r\n");
 
-                echo ("--> Deleting leads\r\n");
+            echo ("--> Deleting leads\r\n");
 
-                // Delete leads for form
-                $query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
-                $query->bindValue('form_id', $form->getId());
-                $query->execute();
+            // Delete leads for form
+            $query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
+            $query->bindValue('form_id', $form->getId());
+            $query->execute();
 
-                // Reload leads for two years
-                for ( $i=0; $i<365; $i++ ) {
+            // Reload leads for two years
+            for ( $i=0; $i<365; $i++ ) {
 
-                    // Random a number of leads for that day beetween 0 and 20
-                    $leadsNumberForDay = rand (0, 5);
+                // Random a number of leads for that day beetween 0 and 20
+                $leadsNumberForDay = rand (0, 5);
 
-                    echo ("--> Creating Lead DAY : ".$i."/365 (form : ".$form->getId()." / number of leads to create : ".$leadsNumberForDay.")\r\n");
+                echo ("--> Creating Lead DAY : ".$i."/365 (form : ".$form->getId()." / number of leads to create : ".$leadsNumberForDay.")\r\n");
 
-                    $day->sub( $dateInterval );
+                $day->sub( $dateInterval );
 
-                    for ($j=0; $j<=$leadsNumberForDay; $j++) {
+                for ($j=0; $j<=$leadsNumberForDay; $j++) {
 
-                        $lead = new Leads();
-                        $lead->setFirstname("firstname-(".$j."/".$leadsNumberForDay.")-".rand());
-                        $lead->setLastname( "lastname-".rand() );
-                        $lead->setStatus( 1 );
-                        $lead->setFormType( $form->getFormType() );
-                        $lead->setForm( $form );
-                        $lead->setCreatedAt( $day );
-                        $em->persist($lead);
-                        $em->flush();
-                        unset ($lead);
-                    }
+                    $lead = new Leads();
+                    $lead->setFirstname("firstname-(".$j."/".$leadsNumberForDay.")-".rand());
+                    $lead->setLastname( "lastname-".rand() );
+                    $lead->setStatus( 1 );
+                    $lead->setFormType( $form->getFormType() );
+                    $lead->setForm( $form );
+                    $lead->setCreatedAt( $day );
+                    $em->persist($lead);
+                    $em->flush();
 
-                    // Ajout des listes
-                    $this->createPageViewsForDemo ( $leadsNumberForDay, $form, $day );
-
+                    unset ($lead);
                 }
 
+                // Ajout des listes
+                $this->createPageViewsForDemo ( $leadsNumberForDay, $form, $day );
 
             }
+
+        }
 
 
     }
 
-	// TODO: move to fixtures or remove
     private function createPageViewsForDemo ( $leadsNumberForDay, $form, $day ) {
 
         // Now create page views
-        echo ("--> Creating page views for the day\r\n");
+        //echo ("--> Creating page views for the day\r\n");
 
         // Calculate % of variation
         $variation = rand (1, 99);
@@ -663,7 +597,7 @@ class Chart {
 
         for ($j=0; $j<=$nbPageViews; $j++) {
 
-            echo ("--> Creating Page view : ".$j."/".$nbPageViews." (form : ".$form->getId().")\r\n");
+            //echo ("--> Creating Page view : ".$j."/".$nbPageViews." (form : ".$form->getId().")\r\n");
 
             // write them
             $tracking = new Tracking();
@@ -674,19 +608,26 @@ class Chart {
             // if utm is not origin, calculate it from 1 to 5;
             if ($hasUtm) {
                 $utm_campaign = rand (1,5);
-                $utm_campaign = "demo_utm_code_".$utm;
+                $utm_campaign = "demo_utm_code_".$utm_campaign;
                 $tracking->setUtmCampaign($utm_campaign);
             }
 
             $tracking->setForm($form);
             $tracking->setCreatedAt($day);
 
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->container->get('doctrine')->getManager();
             $em->persist($tracking);
             $em->flush();
+
+            unset ($tracking);
+            unset ($hasUtm);
+            unset ($utm_campaign);
+
         }
+
+        unset ($nbPageViews);
+        unset ($variation);
 
     }
 
-
-}
+} 

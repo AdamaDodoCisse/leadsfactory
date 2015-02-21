@@ -16,13 +16,15 @@ class DemoModeCommand extends ContainerAwareCommand {
 		$this
 		->setName('leadsfactory:demomode')
 		->setDescription('Cron Job Demo Mode data feeder')
-		->addArgument('mode', InputArgument::OPTIONAL, 'set to true to force cronjob execution')
+		->addArgument('formid', InputArgument::OPTIONAL, 'Specify form ID')
 		;
 	}
 
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $this->getContainer()->get("chart")->loadDemoData();
+		$formid = trim($input->getArgument('formid'));
+
+        $this->getContainer()->get("chart")->loadDemoData($formid);
 
 	}
 
