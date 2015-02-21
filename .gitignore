@@ -8,6 +8,7 @@ app/cache
 app/logs
 app/sessions
 vendor/
+Search/logs/
 
 # Cache and logs
 /vendor/*

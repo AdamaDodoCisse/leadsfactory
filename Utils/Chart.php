@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 
 class Chart {
 
