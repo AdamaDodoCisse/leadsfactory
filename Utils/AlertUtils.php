@@ -40,7 +40,7 @@ class AlertUtils {
     public function checkWarningStatus ( $valueNow, $valueOld, $rules ) {
 
         $warningRules = $this->getWarningRules( $rules['rules'] );
-        $alertRules = $this->getAlertRules( $rules );
+        $alertRules = $this->getAlertRules( $rules['rules'] );
 
         if ( count ($alertRules) > 0 ) {
 
@@ -51,9 +51,11 @@ class AlertUtils {
             if ($alertRules["max"] != null && $valueNow >= $alertRules["max"] )
                 return AlertUtils::$_STATUS_ERROR;
 
-            if ($alertRules["delta"] != null && $this->getDeltaPourcent( $valueOld, $valueNow ) > $alertRules["delta"] )
+            if ($alertRules["delta"] != null && $this->getDeltaPourcentValue ( $valueOld, $valueNow, $alertRules["delta"] ) )
                 return AlertUtils::$_STATUS_ERROR;
 
+        } else {
+            return AlertUtils::$_STATUS_UNKNOWN;
         }
 
         if ( count ($warningRules) > 0 ) {
@@ -65,9 +67,11 @@ class AlertUtils {
             if ($warningRules["max"] != null && $valueNow >= $warningRules["max"] )
                 return AlertUtils::$_STATUS_WARNING;
 
-            if ($warningRules["delta"] != null && $this->getDeltaPourcent( $valueOld, $valueNow ) > $warningRules["delta"] )
+            if ($warningRules["delta"] != null && $this->getDeltaPourcentValue( $valueOld, $valueNow, $warningRules["delta"] ) )
                 return AlertUtils::$_STATUS_WARNING;
 
+        } else {
+            return AlertUtils::$_STATUS_UNKNOWN;
         }
 
         return AlertUtils::$_STATUS_OK;
@@ -131,17 +135,32 @@ class AlertUtils {
     }
 
     /**
-     * Return the pourcent of variation for the values
+     * Test that current value is inside the possible variation of ol value
      * @param $oldValue
      * @param $currentValue
+     * @param $deltaValue
      * @return float|string
      */
-    public function getDeltaPourcent ( $oldValue, $currentValue ) {
+    public function getDeltaPourcentValue ( $oldValue, $currentValue, $deltaValue ) {
 
-        if ( $currentValue == 0 ) return "&laquo;NAN&raquo;";
+        if ( $deltaValue == 0 ) return "&laquo;NAN&raquo;";
 
-        $pourcent = ($currentValue - $oldValue) / $currentValue * 100;
-        return $pourcent;
+        // calculate variation of first value
+        // FirstValue * DeltaPourcentValue / 100 = Delta
+        $value = ($oldValue * $deltaValue) / 100;
+
+        //throw new \Exception ("Error : ".($oldValue - $value)." - ".$currentValue. " - ".($oldValue + $value));
+
+        // Current value is smaller then last value including maximum variation decreasing
+        if ( ($oldValue - $value) > $currentValue )
+            return true;
+
+        // Current value is higher then last value including maximum variation increasing
+        if ( ($oldValue + $value) < $currentValue )
+            return true;
+
+        // Match delta changes criterias
+        return false;
 
     }
 
