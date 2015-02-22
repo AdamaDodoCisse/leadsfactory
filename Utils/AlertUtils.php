@@ -164,6 +164,22 @@ class AlertUtils {
 
     }
 
+    /**
+     * Function used to return variation % of newvalue compared to old value
+     * @param $oldValue
+     * @param $currentValue
+     * @return float|string
+     */
+    public function getDeltaPourcent ( $oldValue, $currentValue ) {
+
+        if ($currentValue == 0) return "&laquo; Données indisponibles &raquo;";
+
+        $result = ( $oldValue * 100 ) / $currentValue;
+
+        return $result;
+
+    }
+
     public function setValuesForAlerts ( $item ) {
 
         $itemClass = get_class($item);
