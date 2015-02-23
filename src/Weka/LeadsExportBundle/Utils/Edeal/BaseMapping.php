@@ -130,4 +130,24 @@ class BaseMapping
 	{
 		return ($value === '1')?'true':'false';
 	}
+
+	public function getCpwDemandeRV($data)
+	{
+		return $this->getBooleanString($data['demande-rdv']);
+	}
+
+	public function getCpwDejaClient($data)
+	{
+		return $this->getBooleanString($data['deja-client']);
+	}
+
+	public function getCpwStopMailETI($data)
+	{
+		return $this->getBooleanString($data['cnilTi']);
+	}
+
+	public function getCpwStopPartenaires($data)
+	{
+		return $this->getBooleanString($data['cnilPartners']);
+	}
 }

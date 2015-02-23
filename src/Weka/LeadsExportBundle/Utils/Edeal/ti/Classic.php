@@ -23,11 +23,6 @@ class Classic extends BaseMapping{
 		return $comment;
 	}
 
-	public function getCpwDemandeRV($data)
-	{
-		return $this->getBooleanString($data['demande-rdv']);
-	}
-
 	public function getCpwSku_($data)
 	{
 		return null;
@@ -36,21 +31,6 @@ class Classic extends BaseMapping{
 	public function getCpwProductTitle_($data)
 	{
 		return null;
-	}
-
-	public function getCpwDejaClient($data)
-	{
-		return $this->getBooleanString($data['deja-client']);
-	}
-
-	public function getCpwStopMailETI($data)
-	{
-		return $this->getBooleanString($data['cnilTi']);
-	}
-
-	public function getCpwStopPartenaires($data)
-	{
-		return $this->getBooleanString($data['cnilPartners']);
 	}
 
 	public function getEntCity($data)
