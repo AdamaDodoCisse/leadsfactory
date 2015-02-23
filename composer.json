@@ -22,7 +22,8 @@
         "jms/security-extra-bundle": "dev-master",
         "mtdowling/cron-expression": "1.0.*",
         "vresh/twilio-bundle": "dev-master",
-        "tellaw/LeadsFactoryBundle" : "dev-master"
+        "tellaw/LeadsFactoryBundle" : "dev-master",
+        "beberlei/DoctrineExtensions": "@dev"
     },
     "scripts": {
         "post-install-cmd": [

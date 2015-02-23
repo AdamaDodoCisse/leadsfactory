@@ -2,7 +2,6 @@
 
 namespace Weka\LeadsExportBundle\Utils;
 
-use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
@@ -70,12 +69,22 @@ class Edeal extends AbstractMethod{
 	        $logger->info('job ID : '.$job->getId());
 
             $data = json_decode($job->getLead()->getData(), true);
+//		    var_dump($data);
+
+		    //on dégage si profil étudiant
+		    if(isset($data['profil']) && $data['profil'] == 'ETUDIANT'){
+			    $exportUtils->updateJob($job, $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
+			    $exportUtils->updateLead($job->getLead(), $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
+			    continue;
+		    }
 
             $enterprise = $this->_getEnterprise($data);
+		    var_dump($enterprise);
             $entResponse = $client->createEnterprise($enterprise);
             $logger->info('Edeal createEnterprise result : '.$entResponse);
 
             $person = $this->_getPerson($data);
+		    var_dump($person);
             $personResponse = $client->createPerson($person);
             $logger->info('Edeal createPerson result : '.$personResponse);
 
@@ -101,7 +110,6 @@ class Edeal extends AbstractMethod{
 	private function getMappedData($data, $mapping)
 	{
 		$entity = new \StdClass();
-		$logger = $this->getContainer()->get('export.logger');
 		foreach($mapping as $edealKey => $formKey) {
 
 			$getter = 'get'.ucfirst(strtolower($edealKey));
@@ -150,7 +158,7 @@ class Edeal extends AbstractMethod{
      * Basé sur la clé mapping_class de la config du formulaire
      * Si la clé mapping_class n'est pas renseignée, cherche une classe de mapping basée sur le nom de code du formulaire
      *
-     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
+     * @param Form $form
      * @return mixed
      */
     private function _getMapping($form)

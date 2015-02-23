@@ -1,21 +1,10 @@
 <?php
 
-namespace Weka\LeadsExportBundle\Utils\Edeal;
+namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
+use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
-class Livreblanc {
-
-    public function getEnterpriseMapping()
-    {
-        return array(
-            "entAd1"		=> "address",
-            "entCity"       => "ville",
-            "entCorpName"	=> '',
-            "entCtrCode"    => "",
-            "entPhone"      => "phone",
-            "entZip"		=> "zip",
-        );
-    }
+class Livreblanc extends BaseMapping {
 
     public function getEntCorpName($data)
     {
@@ -29,72 +18,9 @@ class Livreblanc {
 		return 'FR';
 	}
 
-    public function getPersonMapping()
-    {
-        return array(
-            'perCity'           => 'ville',
-            'perCivilite'       => 'salutation',
-            'perCtrCode'        => '',
-            'perFstName'        => 'firstName',
-            'perMail'           => 'email',
-            'perName'           => 'lastName',
-            'perPhone'          => 'phone',
-            'perServiceCode'    => 'service',
-            'perZip'            => 'zip',
-        );
-    }
-
     public function getPerCtrCode($data)
     {
         return 'FR';
-    }
-
-    public function getCouponsWebMapping()
-    {
-        return array(
-            'cpwActIDCode'      => '',
-            'cpwAdresse1'       => 'address',
-            'cpwAdresse2'       => '',
-            'cpwAutresCin'      => '',
-            'cpwCinTmp_'        => '',
-            'cpwCity'           => 'ville',
-            'cpwCivilite'       => 'salutation',
-            'cpwCodeGCM'        => '',
-            'cpwComment'        => '',
-            'cpwCorpName'       => '',
-            'cpwDate'           => '',
-            'cpwDejaClient'     => '',
-            'cpwDemandeRV'      => '',
-            'cpwEmail'          => 'email',
-            'cpwEmailValide'    => '',
-            'cpwEntIDPhone'     => 'phone',
-            'cpwEventIDCode'    => '',
-            'cpwFonctionLabel'  => 'fonction',
-            'cpwMbm'            => '',
-            'cpwNom'            => 'lastName',
-            'cpwOriDossier'     => '',
-            'cpwOriIDCode'      => '',
-            'cpwOrigine'        => '',
-            'cpwPaysCode'       => '',
-            'cpwPerIDMail'      => '',
-            'cpwPhone'          => 'phone',
-            'cpwPrenom'         => 'firstName',
-            'cpwProfilAutre'    => '',
-            'cpwProfilCode'     => '',
-            'cpwStatus_Code'    => '',
-            'cpwStatut'         => '',
-            'cpwStopMailETI'    => '',
-            'cpwStopPartenaires'=> '',
-            'cpwTitre'          => '',
-            'cpwTypePourImport_'=> '',
-            'cpwUtmCampaign'    => 'utmcampaign',
-            'cpwUtmContent'     => '',
-            'cpwUtmMedium'      => '',
-            'cpwUtmSource'      => '',
-            'cpwUtmTerm'        => '',
-            'cpwZip'            => 'zip',
-
-        );
     }
 
     public function getCpwComment($data)
@@ -102,7 +28,7 @@ class Livreblanc {
         $comment = 'Provient du formulaire Télchargement de livre blanc (actu)';
 
         if(isset($data['type-etablissement']))
-            $comment .= "\nType d'établissement : ".$data['type-etablissement'];
+            $comment .= "\nType d'établissement : ".$this->getTypeEtablissement($data['type-etablissement']);
 
         if(isset($data['livre-blanc']))
             $comment .= "\nLivre blanc  : ".$data['livre-blanc'];
@@ -133,7 +59,7 @@ class Livreblanc {
 	public function getCpwCorpName($data)
 	{
 		if(isset($data['type-etablissement']))
-			return $data['type-etablissement'] . ' - ' . $data['zip'];
+			return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
 		return 'undefined';
 	}
 } 

@@ -39,7 +39,7 @@ class BaseMapping
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
 	        'PerProfil'         => 'profil',
-	        'perFonction'       => 'fonction'
+	        'perFctCode'        => 'fonction'
         );
     }
 
@@ -50,15 +50,15 @@ class BaseMapping
             'cpwAdresse1'       => 'address',
             'cpwAdresse2'       => '',
             'cpwAutresCin'      => '',
-            'cpwCinTmp_'        => '',
+            'cpwCin'            => 'secteur-activite',
             'cpwCity'           => 'ville',
             'cpwCivilite'       => 'salutation',
             'cpwCodeGCM'        => '',
-            'cpwComment'        => '',
+            'cpwComment'        => 'comment',
             'cpwCorpName'       => 'etablissement',
             'cpwDate'           => '',
             'cpwDejaClient'     => 'deja-client',
-            'cpwDemandeRV'      => '',
+            'cpwDemandeRV'      => 'demande-rdv',
             'cpwEmail'          => 'email',
             'cpwEmailValide'    => '',
             'cpwEntIDPhone'     => 'phone',
@@ -90,8 +90,6 @@ class BaseMapping
 	        'cpwTypeDemande_'   => '',
 	        'cpwSku_'           => 'product_sku',
 	        'cpwProductTitle_'  => 'product_name',
-	        'cpwTypeDemande_'   => '',
-
         );
     }
 
@@ -117,9 +115,19 @@ class BaseMapping
 
 	protected function getTypeEtablissement($value)
 	{
-		$listId = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode('type_etablissement')->getId();
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getLabel($listId, $value);
+		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getNameUsingListCode('type_etablissement', $value);
 
 		return $label;
+	}
+
+	public function getCpwCin($data)
+	{
+		$repository = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement');
+		return $repository->getNameUsingListCode('ti_secteur_activite', $data['secteur-activite']);
+	}
+
+	public function getBooleanString($value)
+	{
+		return ($value === '1')?'true':'false';
 	}
 }

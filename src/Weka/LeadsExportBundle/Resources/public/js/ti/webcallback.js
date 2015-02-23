@@ -13,14 +13,14 @@ var webcallback = {
     init: function(){
         jQuery('#callback-form').submit(function(e){
 
-            if(!$(this).validationEngine('validate')){
+            if(!jQuery(this).validationEngine('validate')){
                 e.preventDefault();
                 return;
             }
 
             if(webcallback.interceptSubmit){
                 e.preventDefault();
-            };
+            }
 
             switch(webcallback.step){
                 case 'call':
@@ -98,16 +98,3 @@ var webcallback = {
         return this.callCounter < this.maxCalls ? true : false;
     }
 };
-
-jQuery(document).ready(function($){
-    webcallback.init();
-    $('#webcallback-new-call').on('click', function (e) {
-        webcallback.newCall();
-    });
-});
-
-
-
-
-
-

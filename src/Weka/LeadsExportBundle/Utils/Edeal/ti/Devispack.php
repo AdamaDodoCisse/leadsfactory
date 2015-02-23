@@ -26,22 +26,29 @@ class Devispack extends BaseMapping{
 		if(!empty($data['product_sku']))
 			$comment .= "\nSKU : " . $data['product_sku'];
 
+		$comment = 'Effectuée le '.date('c');
+
 		return $comment;
 	}
 
-	/*public function getCpwOriDossier($data)
+	public function getCpwOriDossier($data)
 	{
 		return !empty($data['product_sku']) ? $data['product_sku'] : '';
-	}*/
-
-	public function getCpwCorpName($data)
-	{
-		return 'azerty';
 	}
 
-	public function getEntCorpName($data)
+	public function getEntCity($data)
 	{
-		return 'azerty';
+		return !empty($data['ville_id']) ? $data['ville_id'] : $data['ville_text'];
+	}
+
+	public function getPerCity($data)
+	{
+		return $this->getEntCity($data);
+	}
+
+	public function getCpwCity($data)
+	{
+		return $this->getEntCity($data);
 	}
 
 }

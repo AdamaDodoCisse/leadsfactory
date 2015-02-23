@@ -1,6 +1,6 @@
 <?php
 
-namespace Weka\LeadsExportBundle\Utils\Edeal;
+namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
 
 class Webinar {
