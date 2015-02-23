@@ -1,0 +1,33 @@
+#preprod
+deployment:
+  user: ewallet
+  from: ./
+  to: /data/apps/leads-factory
+  excludes:
+    - app/cache
+#    - app/config
+    - app/config/parameters.yml
+    - app/logs
+    - app/sessions
+    - datas
+#    - web/bundles/tellawleadsfactory
+#    - vendor
+  strategy: rsync
+releases:
+  enabled: false
+  max: 10
+  symlink: ../
+  directory: releases
+hosts:
+  - 10.25.109.50
+tasks:
+  pre-deploy:
+    - unlink
+  on-deploy:
+    - symfony2/cache-clear: {env: dev}
+    - symfony2/cache-clear: {env: prod}
+#    - composer/install
+#    - filesystem/link-shared-files: {linked_folders: [app/cache, app/config, app/logs, app/sessions, datas]}
+  post-release:
+  post-deploy:
+    - symlink
