@@ -84,12 +84,12 @@ class Edeal extends AbstractMethod{
             $logger->info('Edeal createEnterprise result : '.$entResponse);
 
             $person = $this->_getPerson($data);
-		    var_dump($person);
+//		    var_dump($person);
             $personResponse = $client->createPerson($person);
             $logger->info('Edeal createPerson result : '.$personResponse);
 
             $couponsWeb = $this->_getCouponsWeb($data);
-		    var_dump($couponsWeb);
+//		    var_dump($couponsWeb);
             $cpwResponse = $client->createCouponsWeb_($couponsWeb);
             $logger->info('Edeal createCouponsWeb_ result : '.$cpwResponse);
 
