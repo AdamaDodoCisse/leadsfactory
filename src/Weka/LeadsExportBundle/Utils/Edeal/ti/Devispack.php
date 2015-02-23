@@ -18,37 +18,11 @@ class Devispack extends BaseMapping{
 
 	public function getCpwComment($data)
 	{
-		$comment = "Demande d'information sur le pack ";
-
-		if(!empty($data['product_name']))
-			$comment .= $data['product_name'];
-
-		if(!empty($data['product_sku']))
-			$comment .= "\nSKU : " . $data['product_sku'];
-
-		$comment = 'Effectuée le '.date('c');
-
-		return $comment;
+		return '';
 	}
 
-	public function getCpwOriDossier($data)
+	public function getCpwDemandeRV($data)
 	{
-		return !empty($data['product_sku']) ? $data['product_sku'] : '';
+		return 'true';
 	}
-
-	public function getEntCity($data)
-	{
-		return !empty($data['ville_id']) ? $data['ville_id'] : $data['ville_text'];
-	}
-
-	public function getPerCity($data)
-	{
-		return $this->getEntCity($data);
-	}
-
-	public function getCpwCity($data)
-	{
-		return $this->getEntCity($data);
-	}
-
 }

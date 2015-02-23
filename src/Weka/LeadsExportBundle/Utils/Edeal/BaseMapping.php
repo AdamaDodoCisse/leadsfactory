@@ -66,7 +66,7 @@ class BaseMapping
             'cpwFonctionLabel'  => 'fonction',
             'cpwMbm'            => '',
             'cpwNom'            => 'lastName',
-            'cpwOriDossier'     => '',
+            'cpwOriDossier'     => 'thematique',
             'cpwOriIDCode'      => '',
             'cpwOrigine'        => '',
             'cpwPaysCode'       => 'pays',
@@ -74,7 +74,7 @@ class BaseMapping
             'cpwPhone'          => 'phone',
             'cpwPrenom'         => 'firstName',
             'cpwProfilAutre'    => '',
-            'cpwProfilCode'     => '',
+            'cpwProfilCode'     => 'profil',
             'cpwStatus_Code'    => '',
             'cpwStatut'         => '',
             'cpwStopMailETI'    => 'cnilTi',
@@ -149,5 +149,20 @@ class BaseMapping
 	public function getCpwStopPartenaires($data)
 	{
 		return $this->getBooleanString($data['cnilPartners']);
+	}
+
+	public function getEntCity($data)
+	{
+		return !empty($data['ville_id']) ? $data['ville_id'] : $data['ville_text'];
+	}
+
+	public function getPerCity($data)
+	{
+		return $this->getEntCity($data);
+	}
+
+	public function getCpwCity($data)
+	{
+		return $this->getEntCity($data);
 	}
 }

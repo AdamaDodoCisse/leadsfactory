@@ -32,19 +32,4 @@ class Classic extends BaseMapping{
 	{
 		return null;
 	}
-
-	public function getEntCity($data)
-	{
-		return !empty($data['ville_id']) ? $data['ville_id'] : $data['ville_text'];
-	}
-
-	public function getPerCity($data)
-	{
-		return $this->getEntCity($data);
-	}
-
-	public function getCpwCity($data)
-	{
-		return $this->getEntCity($data);
-	}
 }
