@@ -27,9 +27,3 @@ services:
         tags:
           - {name: export.method, alias: edeal}
         arguments: [%weka_leads.edeal_credentials%]
-    #weka_leads_export.soap_command:
-    #        class: Tellaw\LeadsFactoryBundle\Command\SoapCommand
-    #        arguments: [%edeal_wsdl%, %edeal_user%, %edeal_password%]
-    #        tags:
-    #            -  { name: console.command }
-
