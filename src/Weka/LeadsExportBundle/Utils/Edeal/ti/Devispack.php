@@ -11,6 +11,11 @@ class Devispack extends BaseMapping{
 		return 'CLASSIC';
 	}
 
+	public function getCpwTypeDemande_($data)
+	{
+		return 'PACK';
+	}
+
 	public function getCpwActIDCode($data)
 	{
 		return '';
