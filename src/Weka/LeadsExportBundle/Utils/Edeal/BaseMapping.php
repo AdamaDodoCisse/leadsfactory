@@ -122,8 +122,12 @@ class BaseMapping
 
 	public function getCpwCin($data)
 	{
-		$repository = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement');
-		return $repository->getNameUsingListCode('ti_secteur_activite', $data['secteur-activite']);
+		if(!empty($data['secteur-activite'])){
+			$repository = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement');
+			return $repository->getNameUsingListCode('ti_secteur_activite', $data['secteur-activite']);
+		}else{
+			return null;
+		}
 	}
 
 	public function getBooleanString($value)
