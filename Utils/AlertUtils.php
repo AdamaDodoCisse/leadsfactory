@@ -3,7 +3,7 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Doctrine\ORM\QueryBuilder;
 use Tellaw\LeadsFactoryBundle\Entity\FormType;
-
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class AlertUtils
@@ -21,14 +21,14 @@ class AlertUtils {
     public static $_STATUS_DATA_PROBLEM = 4; // Not used yet
 
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param ContainerInterface $container
      */
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    public function setContainer (ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -174,9 +174,8 @@ class AlertUtils {
      */
     public function getDeltaPourcent ( $oldValue, $currentValue ) {
 
-        if ($currentValue == 0) return "&laquo; Données indisponibles &raquo;";
-
-        $result = ( $oldValue * 100 ) / $currentValue;
+        if ($oldValue == 0) return "&laquo; Données indisponibles &raquo;";
+        $result = ( $currentValue * 100 ) / $oldValue;
 
         return $result;
 

@@ -13,6 +13,18 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AlertUtilsTest extends WebTestCase {
 
+    private $_client = null;
+    private $_container = null;
+    private $_alertUtils = null;
+
+    public function __construct () {
+
+        $this->_client = static::createClient();
+        $this->_container = $this->_client->getContainer();
+        $this->_alertUtils = $this->_container->get("alertes_utils");
+
+    }
+
     public function testCheckWarningStatus () {
 
         $rules = array (
@@ -30,16 +42,13 @@ class AlertUtilsTest extends WebTestCase {
             )
         );
 
-        $client = static::createClient();
-        $container = $client->getContainer();
-        $alertUtils = $container->get("alertes_utils");
 
         // First test must pass
         $valueNow = 6;
         $valueOld = 8;
         $this->assertEquals(
             AlertUtils::$_STATUS_OK,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         /**
@@ -52,7 +61,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 30;
         $this->assertEquals(
             AlertUtils::$_STATUS_WARNING,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         // Test de valeur max
@@ -61,7 +70,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 30;
         $this->assertEquals(
             AlertUtils::$_STATUS_WARNING,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         // Test de valeur min
@@ -70,7 +79,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 2;
         $this->assertEquals(
             AlertUtils::$_STATUS_WARNING,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         /**
@@ -82,7 +91,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 50;
         $this->assertEquals(
             AlertUtils::$_STATUS_ERROR,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         // Test de valeur max
@@ -90,7 +99,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 26;
         $this->assertEquals(
             AlertUtils::$_STATUS_ERROR,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         // Test de valeur min
@@ -98,7 +107,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 0;
         $this->assertEquals(
             AlertUtils::$_STATUS_ERROR,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         /**
@@ -117,7 +126,7 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 8;
         $this->assertEquals(
             AlertUtils::$_STATUS_UNKNOWN,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
         );
 
         $rules = array (
@@ -133,7 +142,92 @@ class AlertUtilsTest extends WebTestCase {
         $valueOld = 8;
         $this->assertEquals(
             AlertUtils::$_STATUS_UNKNOWN,
-            $alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+            $this->_alertUtils->checkWarningStatus ( $valueNow, $valueOld, $rules )
+        );
+
+    }
+
+    public function testGetWarningRules () {
+
+        $rules = array (
+            "rules" => array (
+                'error' => array (
+                    "min" => "1",
+                    "max" => "25",
+                    "delta" => "50"
+                ),
+                'warning' => array (
+                    "min" => "3",
+                    "max" => "23",
+                    "delta" => "25"
+                )
+            )
+        );
+
+        // Asserting that rules are filled
+        $this->assertEquals(
+            $rules["rules"]["error"],
+            $this->_alertUtils->getAlertRules ($rules["rules"])
+        );
+
+        $rules = array (
+            "rules" => array (
+                'warning' => array (
+                    "min" => "3",
+                    "max" => "23",
+                    "delta" => "25"
+                )
+            )
+        );
+
+        // Asserting that rules are empty, returning empty objects
+        $expected = $rules["rules"]["error"] = array ("min"=> null, "max" => null, "delta"=>null);
+        $this->assertEquals(
+            $expected,
+            $this->_alertUtils->getAlertRules ($rules["rules"])
+        );
+
+    }
+
+    public function testGetDeltaValue () {
+
+        // Variation : 5 max
+        $oldValue = 10;
+        $currentValue = 5;
+        $deltaValue = 50;
+
+        $this->assertEquals(
+            false,
+            $this->_alertUtils->getDeltaPourcentValue ( $oldValue, $currentValue, $deltaValue )
+        );
+
+        // Variation : 5 max
+        $oldValue = 10; // Old value
+        $currentValue = 4; // Current value
+        $deltaValue = 50; // % of accepted changes
+
+        $this->assertEquals(
+            true,
+            $this->_alertUtils->getDeltaPourcentValue ( $oldValue, $currentValue, $deltaValue )
+        );
+
+
+    }
+
+    public function testGetDeltaPourcent () {
+
+        $oldValue = 100;
+        $currentValue = 50;
+        $this->assertEquals(
+            50,
+            $this->_alertUtils->getDeltaPourcent ( $oldValue, $currentValue )
+        );
+
+        $oldValue = 100;
+        $currentValue = 150;
+        $this->assertEquals(
+            150,
+            $this->_alertUtils->getDeltaPourcent ( $oldValue, $currentValue )
         );
 
     }
