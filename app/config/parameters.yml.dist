@@ -14,11 +14,11 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    edeal_wsdl:         ~
-    edeal_user:         ~
-    edeal_password:     ~
-
     leadsfactory.internal_email_patterns:
         - '%%@weka.fr'
         - '%%@teching.com'
         - '%%test%%'
+
+    twilio_sid:         AC7239fc934bd45900bd85715f6ce6ab2a
+    twilio_authToken:   83a6842dd399473232caccb92159544c
+    twilio_retryAttempts:   2
