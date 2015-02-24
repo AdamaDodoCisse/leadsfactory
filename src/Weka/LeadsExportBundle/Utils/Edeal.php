@@ -79,7 +79,7 @@ class Edeal extends AbstractMethod{
 		    }
 
             $enterprise = $this->_getEnterprise($data);
-		    var_dump($enterprise);
+//		    var_dump($enterprise);
             $entResponse = $client->createEnterprise($enterprise);
             $logger->info('Edeal createEnterprise result : '.$entResponse);
 
