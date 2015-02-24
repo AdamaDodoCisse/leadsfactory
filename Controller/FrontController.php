@@ -46,6 +46,15 @@ class FrontController extends Admin\AbstractLeadsController
 		return $response;
 	}
 
+	/**
+	 * @Route("/preview/twig/{code}", name="_client_twig_preview")
+	 * @ParamConverter("form")
+	 */
+	public function getTwigFormPreview(Form $form)
+	{
+		return $this->render('TellawLeadsFactoryBundle:Front:display_twig_form.html.twig', array('form' => $form));
+	}
+
     /**
      * @Route("/form/{id}", name="_client_get_form")
      * @ParamConverter("form")
