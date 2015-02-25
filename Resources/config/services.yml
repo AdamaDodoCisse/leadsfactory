@@ -31,6 +31,8 @@ services:
   export_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ExportUtils
     arguments:    [@leadsfactory.client_email_repository]
+    calls:
+                      - [ setContainer, [ @service_container ] ]
 
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV

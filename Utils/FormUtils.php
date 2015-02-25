@@ -62,7 +62,7 @@ class FormUtils {
 
         $html = $this->setFormTag ($html);
         $html = $this->setHiddenTags ($form, $html);
-	    $html = $this->setJsTag($form, $html);
+        $html = $this->setJsTag($form, $html);
 
         list ($isValid, $error_msg) = $this->checkFormValidity( $html );
 
@@ -145,9 +145,9 @@ class FormUtils {
             case "checkbox":
                 $fieldType = CheckboxFieldType::getInstance();
                 break;
-	        case "radio":
-		        $fieldType = RadioFieldType::getInstance();
-		        break;
+            case "radio":
+                $fieldType = RadioFieldType::getInstance();
+                break;
             case "linked-reference-list":
                 $fieldType = LinkedReferenceListFieldType::getInstance();
                 break;
@@ -204,36 +204,36 @@ class FormUtils {
      */
     private function setHiddenTags($form, $html)
     {
-	    $tags = $this->getHiddenTags( $form );
-	    $tags .= "</form>";
+        $tags = $this->getHiddenTags( $form );
+        $tags .= "</form>";
         $html = str_replace ( "</form>", $tags, $html );
         return $html;
     }
 
-	/**
-	 * @param FormEntity $form
-	 *
-	 * @return string
-	 */
-	public function getHiddenTags($form) {
-		$tags = "
+    /**
+     * @param FormEntity $form
+     *
+     * @return string
+     */
+    public function getHiddenTags($form) {
+        $tags = "
             <input type='hidden' name=\"lffield[utmcampaign]\" id=\"lffield[utmcampaign]\" value='" . $form->getUtmcampaign() . "'/>
             <input type='hidden' name='lfFormId' id='lfFormId' value='" . $form->getId() . "'/>
             <input type='hidden' name='lfFormKey' id='lfFormKey' value='" . $this->getFormKey( $form->getId() ) . "'/>
         ";
 
-		if ( ! is_null( $form->getFormType() ) ) {
-			$tags .= "<input type='hidden' name='lfFormType' id='lfFormType' value='" . $form->getFormType()->getId() . "'/>";
-		}
+        if ( ! is_null( $form->getFormType() ) ) {
+            $tags .= "<input type='hidden' name='lfFormType' id='lfFormType' value='" . $form->getFormType()->getId() . "'/>";
+        }
 
-		return $tags;
-	}
+        return $tags;
+    }
 
-	private function setJsTag($form, $html)
-	{
-		$html .= "\n<script>". $form->getScript() ."</script>";
-		return $html;
-	}
+    private function setJsTag($form, $html)
+    {
+        $html .= "\n<script>". $form->getScript() ."</script>";
+        return $html;
+    }
 
     /**
      * Retrieve element options
@@ -280,8 +280,8 @@ class FormUtils {
         $attributes['class'] .= ' validate['.$attributes['validator'].']';
     }
 
-    public function getFormKey ($formId, $hourOffset = 0) {
-
+    public function getFormKey ($formId, $hourOffset = 0)
+    {
         $date = date_create();
 
         if ( $hourOffset > 0 ) {
@@ -294,28 +294,30 @@ class FormUtils {
         $year   = $date->format ("Y");
 
         $salt = "fac0ry".$month.$hour.$year."l3a".$formId."ds".$day;
-        return md5 ( $salt );
+        $form_key = md5 ($salt);
+        return $form_key;
     }
 
-    public function checkFormKey ( $md5, $formId ) {
-
+    public function checkFormKey ( $md5, $formId )
+    {
         if ($md5 == $this->getFormKey( $formId )) {
             return true;
         } else if ($md5 == $this->getFormKey( $formId, '-1' )) {
             return true;
-        } else
+        } else {
             return false;
+        }
 
     }
 
-	public function getApiKey($form)
-	{
-		$salt = 'fac0ry_f0rm'.$form->getsecureKey().'_id_'.$form->getId();
-		return md5($salt);
-	}
+    public function getApiKey($form)
+    {
+        $salt = 'fac0ry_f0rm'.$form->getsecureKey().'_id_'.$form->getId();
+        return md5($salt);
+    }
 
-	public function checkApiKey($form, $key)
-	{
-		return $key == $this->getApiKey($form) ? true : false;
-	}
+    public function checkApiKey($form, $key)
+    {
+        return $key == $this->getApiKey($form) ? true : false;
+    }
 }
