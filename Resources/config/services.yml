@@ -30,8 +30,7 @@ services:
 
   export_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ExportUtils
-    calls:
-                  - [ setContainer, [ @service_container ] ]
+    arguments:    [@leadsfactory.client_email_repository]
 
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV
@@ -105,3 +104,15 @@ services:
     factory_service: doctrine.orm.default_entity_manager
     factory_method: getRepository
     arguments: ['TellawLeadsFactoryBundle:ReferenceList']
+
+  leadsfactory.client_email_repository:
+      class: Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['TellawLeadsFactoryBundle:ClientEmail']
+
+  leadsfactory.export_repository:
+      class: Tellaw\LeadsFactoryBundle\Entity\ExportRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['TellawLeadsFactoryBundle:Export']

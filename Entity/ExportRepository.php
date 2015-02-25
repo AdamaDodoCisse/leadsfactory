@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 /**
  * ExportRepository
@@ -44,4 +45,17 @@ class ExportRepository extends EntityRepository
         return new Paginator($query);
     }
 
+    public function findByEmailWaitingValidation($email)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('e')
+            ->from('TellawLeadsFactoryBundle:Export', 'e')
+            ->innerJoin('TellawLeadsFactoryBundle:Leads', 'l', 'WITH', 'e.lead = l.id')
+            ->where('l.email = :email')
+            ->andWhere('e.status = :status')
+            ->setParameter('email', $email)
+            ->setParameter('status', ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED)
+        ;
+        return $qb->getQuery()->getResult();
+    }
 }
