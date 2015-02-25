@@ -1,12 +1,13 @@
+<!-- template : statisticsFormTypeItem.html.twig -->
 <table id="country-list">
     <thead>
     <tr class="country-table-head">
-        <th >Statistique</th>
+        <th>Déscription des données</th>
         <th>Valeur</th>
     </tr>
     </thead>
     <tbody>
-    <tr><td><a href="#">Nombre de pages vues</a></td><td>{{ formType.nbViews }}</td></tr>
-    <tr><td><a href="#">Nombre de leads</a></td><td>{{ formType.nbLeads }}</td></tr>
-    <tr><td><a href="#">Taux de transformation</a></td><td>{{ formType.transformRate }} %</td></tr>
+    <tr><td><a href="#">Nombre de pages vues sur la période</a></td><td>{{ formType.nbViews }}</td></tr>
+    <tr><td><a href="#">Nombre de leads sur la période</a></td><td>{{ formType.nbLeads }}</td></tr>
+    <tr><td><a href="#">Taux de transformation sur la période</a></td><td>{{ formType.transformRate }} %</td></tr>
     </tbody></table>

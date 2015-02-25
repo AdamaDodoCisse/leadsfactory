@@ -1,3 +1,4 @@
+<!-- template : measureFormItem.html.twig -->
 <div class="weather-box widget-body  {{ item.yesterdayStatusColor }}">
     <div style="margin:15px 0px 0px 15px">
         <div class="heading-sec" id="intro6">
@@ -6,7 +7,7 @@
     </div>
     <div class="weather-day">
         <span>{{ item.yesterdayValue }}</span>
-        <p>LEADS</p>
+        <p>LEADS le  {{ item.textualYesterdayDay }}</p>
     </div>
 
     <div class="weather-icon">
@@ -14,7 +15,11 @@
         <p>{{ item.yesterdayStatusText }}</p>
     </div>
     <div style="clear:both;text-align:center;color:#FFF;">
-        <p><em>Variation {{ item.yesterdayVariation|raw }} %<br/>Valeur précédente : {{ item.weekBeforeValue }} lead(s)</em></p>
+        <em>
+            Variation {{ item.yesterdayVariation|raw }} %<br/>
+            jour de comparaison : {{ item.textualWeekBeforeDay }} : {{ item.weekBeforeValue }} lead(s)<br/>
+            Leads enregistrées ce jour : {{ item.todayValue }} lead(s)
+        </em>
     </div>
 </div>
 
@@ -23,6 +28,8 @@
     skycons.add("icon{{ item.id }}", Skycons.RAIN);
     {% elseif item.yesterdayStatusColor == "yellow" %}
     skycons.add("icon{{ item.id }}", Skycons.PARTLY_CLOUDY_DAY);
+    {% elseif item.yesterdayStatusColor == "black" %}
+    skycons.add("icon{{ item.id }}", Skycons.CLEAR_NIGHT);
     {% else %}
     skycons.add("icon{{ item.id }}", Skycons.CLEAR_DAY);
     {% endif %}

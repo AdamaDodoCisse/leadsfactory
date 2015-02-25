@@ -5562,7 +5562,7 @@ tr {
 
 .country-table-head th:first-child{
 	border-left: none;
-	width: 200px;
+
 }
 .country-table-head span{
   font-size: 12px;

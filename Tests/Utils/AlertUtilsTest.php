@@ -211,7 +211,6 @@ class AlertUtilsTest extends WebTestCase {
             $this->_alertUtils->getDeltaPourcentValue ( $oldValue, $currentValue, $deltaValue )
         );
 
-
     }
 
     public function testGetDeltaPourcent () {

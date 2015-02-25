@@ -36,17 +36,6 @@ class MonitoringController extends AbstractLeadsController{
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
             );
-            /*
-            ->add('mode', 'choice', array(
-                    'choices'   => array(
-                        'FormType' => 'Types de formulaire',
-                        'Form' => 'Formulaires'
-                    ),
-                    'data'      => 'FormType',
-                    'label'     => 'Données',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
-                )
-            );*/
 
         // Create the form used for grap configuration
         $form = $formBuilder->getForm();
@@ -55,11 +44,15 @@ class MonitoringController extends AbstractLeadsController{
         // Logged User
         $user_id = $this->get('security.context')->getToken()->getUser()->getId();
 
+        // Get All Types in the scope
+        $types = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsType();
+
         // Load bookmarked types for user
         $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getTypesForUser( $user_id );
 
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig", array(
             'form'  => $form->createView(),
+            'types' => $types,
             'bookmarks' => $bookmarks
         ));
     }

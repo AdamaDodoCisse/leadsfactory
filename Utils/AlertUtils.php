@@ -18,6 +18,9 @@ class AlertUtils {
     public static $_STATUS_ERROR = 3;
     public static $_STATUS_DATA_PROBLEM = 4; // Not used yet
 
+    public $day = array ('','lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche');
+    public $month = array ('', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre');
+
     /**
      * @var ContainerInterface
      */
@@ -173,18 +176,53 @@ class AlertUtils {
     public function getDeltaPourcent ( $oldValue, $currentValue ) {
 
         if ($oldValue == 0) return "&laquo; Données indisponibles &raquo;";
+        if ($currentValue == 0) return "&laquo; calcul impossible &raquo;";
         $result = ( $currentValue * 100 ) / $oldValue;
 
         return $result;
 
     }
 
-    public function setValuesForAlerts ( $item ) {
+    /**
+     * Method used to count leads for a specified day
+     * @param $forms Array of forms
+     * @param $minDate DateTime object
+     * @return mixed
+     */
+    private function getLeadsCountForForms ( $forms, $minDate ) {
 
-        $itemClass = get_class($item);
+        foreach($forms as $form) {$formIds[] = $form->getId();}
 
+        // Get Doctrine instance.
         $em = $this->container->get("doctrine")->getManager();
 
+        // formated date time
+        $formatedMinDate = $minDate->format('Y-m-d');
+
+        // Count leads for the specified day
+        $query = $em->getConnection()->prepare('SELECT count(1) as count
+                                                FROM Leads
+                                                WHERE form_id IN (:formIds) AND createdAt BETWEEN :minDate and :maxDate' );
+
+        $query->bindValue('minDate', $formatedMinDate." 00:00:00");
+        $query->bindValue('maxDate', $formatedMinDate." 23:59:59");
+        $query->bindValue('formIds', implode(',',$formIds));
+        $query->execute();
+        $results = $query->fetchAll();
+
+        if (count ($results)>0)
+            return $results[0]["count"];
+        else
+            return 0;
+
+    }
+
+    public function setValuesForAlerts ( $item ) {
+
+        // retrieve class of requested object
+        $itemClass = get_class($item);
+
+        // Extract information from Type or Form. If from Type, it gets datas from each forms of the type
         if( strstr ($itemClass, 'Tellaw\LeadsFactoryBundle\Entity\FormType')) {
             $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($item->getId());
         }else{
@@ -192,68 +230,43 @@ class AlertUtils {
             $forms = array($form);
         }
 
+        // Calculate todays number of leads
         $minDate = new \DateTime();
-        $minDate = $minDate->sub(new \DateInterval("P01D"))->format('Y-m-d');
+        $item->todayValue = $this->getLeadsCountForForms( $forms, $minDate );
 
-        $value = 0;
-
-        foreach($forms as $form){
-
-            $query = $em->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate GROUP BY DAY(createdAt)');
-            $query->bindValue('minDate', $minDate);
-            $query->bindValue('form_id', $form->getId());
-            $query->execute();
-            $results = $query->fetchAll();
-
-            if (count ($results)>0)
-                $value = $results[0]["count"] + $value;
-        }
-
-        // Set the value
-        $item->yesterdayValue = $value;
+        // Create yesterday's date object
+        $minDate = new \DateTime();
+        $minDate = $minDate->sub(new \DateInterval("P01D"));
+        $item->yesterdayValue = $this->getLeadsCountForForms( $forms, $minDate );
+        $item->textualYesterdayDay = $this->day[$minDate->format('N')]." ". $minDate->format("d")." ". $this->month[$minDate->format('n')];
 
         // Get the value for week before
         $minDate = new \DateTime();
-        $minDate = $minDate->sub(new \DateInterval("P09D"))->format('Y-m-d');
+        $minDate = $minDate->sub(new \DateInterval("P08D"));
+        $item->weekBeforeValue = $this->getLeadsCountForForms( $forms, $minDate );;
+        $item->textualWeekBeforeDay = $this->day[$minDate->format('N')]." ". $minDate->format("d")." ". $this->month[$minDate->format('n')];
 
-        $value = 0;
-
-        foreach($forms as $form){
-
-            $query = $em->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_id = :form_id AND createdAt >= :minDate GROUP BY DAY(createdAt)');
-            $query->bindValue('minDate', $minDate);
-            $query->bindValue('form_id', $form->getId());
-            $query->execute();
-            $results = $query->fetchAll();
-
-
-            if (count ($results))
-                $value = $results[0]["count"] + $value;
-        }
-
-        // Set the value
-        $item->weekBeforeValue = $value;
-
+        // Calculte the variation for both lead's counts
         $item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
 
+        // Evaluate the error status of the form / Type.
         $rules = $item->getRules();
 
         if(empty($rules)){
-            $status = AlertUtils::$_STATUS_ERROR;
+            $status = AlertUtils::$_STATUS_UNKNOWN;
         }else{
             $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
         }
 
         if ( $status == AlertUtils::$_STATUS_ERROR ) {
-
             $item->yesterdayStatusColor = "pink";
             $item->yesterdayStatusText = "Erreur";
-
         } else if ( $status == AlertUtils::$_STATUS_WARNING ) {
-
             $item->yesterdayStatusColor = "yellow";
             $item->yesterdayStatusText = "Attention!";
-
+        } else if ( $status == AlertUtils::$_STATUS_UNKNOWN ) {
+            $item->yesterdayStatusColor = "black";
+            $item->yesterdayStatusText = "Aucune donnée";
         } else {
             $item->yesterdayStatusColor = "green";
             $item->yesterdayStatusText = "Status OK";

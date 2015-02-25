@@ -45,6 +45,15 @@ class FormTypeRepository extends EntityRepository
         return new Paginator($query);
     }
 
+    public function getFormsType ( $scope = null ) {
+
+        $dql = "SELECT t FROM TellawLeadsFactoryBundle:FormType t";
+        $result = $this->getEntityManager()->createQuery($dql)->getResult();
+
+        return $result;
+
+    }
+
     public function getBookmarkedFormsForUser ( $user_id ) {
 
         $dql = "SELECT b FROM TellawLeadsFactoryBundle:Bookmark b WHERE b.user = :user_id AND b.entity_name='FormType'";

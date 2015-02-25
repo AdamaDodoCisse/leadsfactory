@@ -25,13 +25,23 @@
 
         <div class="col-md-2" style="margin-top:10px;">
             <div class="widget-body custom-form" style="padding-top:10px;">
-            <div style="margin-left:10px;margin-bottom:5px;">Vos type favoris :</div>
-            <ul>
-                {% for bookmark in bookmarks %}
-                    <li><a href="#type-{{ bookmark.formType.id }}">{{ bookmark.formType.name }}</a></li>
-                {% endfor %}
-            </ul>
-                </div>
+                <div style="margin-left:10px;margin-bottom:5px;">Vos type favoris :</div>
+                <ul>
+                    {% for bookmark in bookmarks %}
+                        <li><a href="#type-{{ bookmark.formType.id }}">{{ bookmark.formType.name }}</a></li>
+                    {% endfor %}
+                </ul>
+
+                <div style="margin-left:10px;margin-bottom:5px;">Tous les types :</div>
+
+                <select onChange="window.location.href=this.value">
+                    <option>Séléctionnez un type</option>
+                    {% for type in types %}
+                        <option value="{{ path('_monitoring_dashboard_type_page', {'type_id': type.id}) }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
         </div>
 
     </div>
