@@ -1,7 +1,9 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use \Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Tellaw\LeadsFactoryBundle\Entity\FormType;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class AlertUtils
@@ -43,7 +45,7 @@ class AlertUtils {
     public function checkWarningStatus ( $valueNow, $valueOld, $rules ) {
 
         $warningRules = $this->getWarningRules( $rules['rules'] );
-        $alertRules = $this->getAlertRules( $rules['rules'] );
+        $alertRules = $this->getAlertRules( $rules['rules'] );;
 
         if ( count ($alertRules) > 0 ) {
 
@@ -183,6 +185,7 @@ class AlertUtils {
 
     }
 
+
     /**
      * Method used to count leads for a specified day
      * @param $forms Array of forms
@@ -200,32 +203,27 @@ class AlertUtils {
         $formatedMinDate = $minDate->format('Y-m-d');
 
         // Count leads for the specified day
-        $query = $em->getConnection()->prepare('SELECT count(1) as count
-                                                FROM Leads
-                                                WHERE form_id IN (:formIds) AND createdAt BETWEEN :minDate and :maxDate' );
 
-        $query->bindValue('minDate', $formatedMinDate." 00:00:00");
-        $query->bindValue('maxDate', $formatedMinDate." 23:59:59");
-        $query->bindValue('formIds', implode(',',$formIds));
-        $query->execute();
-        $results = $query->fetchAll();
+        $querybuilder = $em->createQueryBuilder();
+        $querybuilder->select('count(l)')
+                     ->from('TellawLeadsFactoryBundle:Leads', 'l')
+                     ->where('l.form IN (:formIds)')
+                     ->andWhere('l.createdAt BETWEEN :minDate AND :maxDate')
+                     ->setParameter('formIds', $formIds)
+                     ->setParameter('minDate', $formatedMinDate." 00:00:00")
+                     ->setParameter('maxDate', $formatedMinDate." 23:59:59");
 
-        if (count ($results)>0)
-            return $results[0]["count"];
-        else
-            return 0;
+        $querybuilder = $this->excludeInternalLeads($querybuilder);
+        return $querybuilder->getQuery()->getSingleScalarResult();
 
     }
 
-    public function setValuesForAlerts ( $item ) {
-
-        // retrieve class of requested object
-        $itemClass = get_class($item);
-
-        // Extract information from Type or Form. If from Type, it gets datas from each forms of the type
-        if( strstr ($itemClass, 'Tellaw\LeadsFactoryBundle\Entity\FormType')) {
+    public function setValuesForAlerts($item)
+    {
+        $formIds = array();
+        if ($item instanceof FormType) {
             $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($item->getId());
-        }else{
+        } else {
             $form = $this->container->get('leadsfactory.form_repository')->find($item->getId());
             $forms = array($form);
         }
@@ -252,6 +250,7 @@ class AlertUtils {
         // Evaluate the error status of the form / Type.
         $rules = $item->getRules();
 
+
         if(empty($rules)){
             $status = AlertUtils::$_STATUS_UNKNOWN;
         }else{
@@ -271,7 +270,21 @@ class AlertUtils {
             $item->yesterdayStatusColor = "green";
             $item->yesterdayStatusText = "Status OK";
         }
-
     }
 
+    /**
+     * @param QueryBuilder $qb
+     * @return QueryBuilder
+     */
+    private function excludeInternalLeads(QueryBuilder $qb)
+    {
+        $i = 0;
+        foreach ($this->container->getParameter('leadsfactory.internal_email_patterns') as $pattern) {
+            $qb->andWhere('l.email not like :pattern_'.$i)
+               ->setParameter('pattern_'.$i, $pattern)
+            ;
+            ++$i;
+        }
+        return $qb;
+    }
 }

@@ -30,7 +30,6 @@ class ReferenceListElementRepository extends EntityRepository
 		    ->setParameter('code', $list_code)
 		    ->setParameter('value', $element_value)
 		;
-		echo $qb->getQuery()->getSQL();
 		return $qb->getQuery()->getSingleScalarResult();
 	}
 }

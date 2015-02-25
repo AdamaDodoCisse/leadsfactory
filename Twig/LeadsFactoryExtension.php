@@ -46,6 +46,21 @@ class LeadsFactoryExtension extends \Twig_Extension
 			}
 		}
 
+		//classes du champ
+		$class = 'input input-'.$params['type'];
+		if(isset($params['attributes']['class'])){
+			$class = $params['attributes']['class'] . ' '. $class;
+		}
+
+		if(!empty($params['attributes']['data-parent'])){
+			$class = 'child-list ' . $class;
+		}
+		$params['attributes']['class'] = $class;
+
+		//classe(s) de validation
+		if(isset($params['attributes']['validator']))
+			$params['attributes']['class'] .= ' validate['.$params['attributes']['validator'].']';
+
 		return $this->form_helper->renderTag(null, $params);
 	}
 
