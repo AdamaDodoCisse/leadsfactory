@@ -37,9 +37,15 @@ var webcallback = {
             webcallback.countryCode = jQuery(this).val();
             if(jQuery.inArray(webcallback.countryCode, ['FR', 'BE', 'LU', 'CH', 'MC']) !== -1){
                 jQuery('#callback-step2').show();
+                jQuery('#di-msg').hide();
                 webcallback.step = 'call';
             }else{
                 jQuery('#callback-step2').hide();
+                jQuery('#callback-step3').hide();
+                jQuery('#di-msg').show();
+                jQuery('#di-msg #di-link').click(function(){
+                    window.location.href = '/information-request.html?'+jQuery('#callback-form').serialize();
+                });
                 webcallback.step = 'init';
             }
         });
