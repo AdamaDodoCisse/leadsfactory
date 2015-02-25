@@ -1,20 +1,24 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 use Cron\CronExpression;
+use Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository;
 
-class ExportUtils{
-
+class ExportUtils implements ContainerAwareInterface
+{
     public static $_EXPORT_NOT_PROCESSED = 0;
     public static $_EXPORT_SUCCESS = 1;
     public static $_EXPORT_ONE_TRY_ERROR = 2;
     public static $_EXPORT_MULTIPLE_ERROR = 3;
     public static $_EXPORT_NOT_SCHEDULED = 4;
+    const EXPORT_EMAIL_NOT_CONFIRMED = 5;
 
     /**
      * Email notifications settings
@@ -25,35 +29,37 @@ class ExportUtils{
     /**
      * @var array
      */
-    private $_methods;
+    private $_methods = array();
 
     /**
      * @var string
      */
-    private $_defaultCronExp;
+    private $_defaultCronExp = "0 * * * *";
 
     /**
-     * @var \Symfony\Component\DependencyInjection\ContainerInterface
+     * @var ContainerInterface
      */
     protected $container;
 
+    /** @var  ClientEmailRepository */
+    private $client_email_repository;
 
-    public function __construct()
+
+    public function __construct(ClientEmailRepository $client_email_repository)
     {
-        $this->_methods = array();
-        $this->_defaultCronExp = "0 * * * *";
+        $this->client_email_repository = $client_email_repository;
     }
 
     /**
-     * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
+     * @param ContainerInterface $container
      */
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    public function setContainer (ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
     /**
-     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     * @return ContainerInterface
      */
     protected function getContainer()
     {
@@ -93,7 +99,7 @@ class ExportUtils{
     /**
      * Create export job
      *
-     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $lead
+     * @param Leads $lead
      */
     public function createJob($lead)
     {
@@ -112,7 +118,8 @@ class ExportUtils{
             $job->setMethod($method);
             $job->setLead($lead);
             $job->setForm($lead->getForm());
-            $job->setStatus($lead->getStatus());
+            $status = $this->getInitialExportStatus($lead, $methodConfig);
+            $job->setStatus($status);
             $job->setCreatedAt(new \DateTime());
             $job->setScheduledAt($this->getScheduledDate($methodConfig));
 
@@ -126,6 +133,27 @@ class ExportUtils{
                 $logger->error($e->getMessage());
                 //Error
             }
+        }
+    }
+
+    /**
+     * @param Leads $lead
+     */
+    protected function getInitialExportStatus($lead, $method_config)
+    {
+        if (
+            array_key_exists('if_email_validated', $method_config)
+            && $method_config['if_email_validated'] === true
+        ) {
+            $email = $lead->getEmail();
+            $validated = $this->client_email_repository->isEmailValidated($email);
+            if ($validated) {
+                return self::$_EXPORT_NOT_PROCESSED;
+            } else {
+                return self::EXPORT_EMAIL_NOT_CONFIRMED;
+            }
+        } else {
+            return self::$_EXPORT_NOT_PROCESSED;
         }
     }
 
@@ -207,7 +235,7 @@ class ExportUtils{
             'form'      => $form,
             'method'    => $method,
             'now'       => new \DateTime(),
-            'status'    => self::$_EXPORT_SUCCESS
+            'status'    => array(self::$_EXPORT_SUCCESS, self::EXPORT_EMAIL_NOT_CONFIRMED)
         ));
         return $query->getResult();
     }
