@@ -8,7 +8,7 @@ namespace Tellaw\LeadsFactoryBundle\Tests\Utils;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class AlertUtilsTest extends WebTestCase {
+class ChartTest extends WebTestCase {
 
     private $_client = null;
     private $_container = null;
@@ -25,5 +25,6 @@ class AlertUtilsTest extends WebTestCase {
     /**
      * Add methods to test here.
      */
+
 
 }

@@ -21,9 +21,7 @@
             <div class="widget-body custom-form">
                 {{ form(form) }}
             </div>
-        </div>
 
-        <div class="col-md-2" style="margin-top:10px;">
             <div class="widget-body custom-form" style="padding-top:10px;">
                 <div style="margin-left:10px;margin-bottom:5px;">Vos type favoris :</div>
                 <ul>
@@ -31,7 +29,8 @@
                         <li><a href="#type-{{ bookmark.formType.id }}">{{ bookmark.formType.name }}</a></li>
                     {% endfor %}
                 </ul>
-
+            </div>
+            <div class="widget-body custom-form" style="padding-top:10px;">
                 <div style="margin-left:10px;margin-bottom:5px;">Tous les types :</div>
 
                 <select onChange="window.location.href=this.value">
