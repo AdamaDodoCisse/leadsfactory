@@ -1,6 +1,7 @@
 <?php
-
 namespace Weka\LeadsExportBundle\Utils\Edeal\ti;
+
+use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
 class Webcallback extends BaseMapping
 {
@@ -14,20 +15,18 @@ class Webcallback extends BaseMapping
 		return 'TMK';
 	}
 
-	public function getCpwComment($data)
+	public function getEntCorpName($data)
 	{
-		$comment = 'Provient du formulaire de Web call back';
-
-		if(isset($data['referrer_url']))
-			$comment .= "\nURL : ".$data['referrer_url'];
-
-		if(!empty($data['product_name']))
-			$comment .= "\nNom produit : " . $data['product_name'];
-
-		if(!empty($data['product_sku']))
-			$comment .= "\nSKU : " . $data['product_sku'];
-
-		return $comment;
+		return 'Undefined';
 	}
 
+	public function getCpwCorpName($data)
+	{
+		return $this->getEntCorpName($data);
+	}
+
+	public function getEntZip($data)
+	{
+		return '00000';
+	}
 }

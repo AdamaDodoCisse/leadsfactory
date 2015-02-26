@@ -93,11 +93,6 @@ class BaseMapping
         );
     }
 
-	public function getCpwComment($data)
-    {
-        return '';
-    }
-
     public function getCpwOriIDCode($data)
     {
         return 'CLASSIC';
