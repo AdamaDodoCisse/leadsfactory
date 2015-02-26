@@ -15,16 +15,6 @@ class Webcallback extends BaseMapping
 		return 'TMK';
 	}
 
-	public function getEntCorpName($data)
-	{
-		return 'Undefined';
-	}
-
-	public function getCpwCorpName($data)
-	{
-		return $this->getEntCorpName($data);
-	}
-
 	public function getEntZip($data)
 	{
 		return '00000';
