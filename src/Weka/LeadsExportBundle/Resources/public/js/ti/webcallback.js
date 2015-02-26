@@ -43,8 +43,9 @@ var webcallback = {
                 jQuery('#callback-step2').hide();
                 jQuery('#callback-step3').hide();
                 jQuery('#di-msg').show();
+                var redirect_url = webcallback.getRedirectUrl(); console.log(redirect_url);
                 jQuery('#di-msg #di-link').click(function(){
-                    window.location.href = '/information-request.html?'+jQuery('#callback-form').serialize();
+                    window.location.href = redirect_url;
                 });
                 webcallback.step = 'init';
             }
@@ -102,5 +103,21 @@ var webcallback = {
     isCallEnabled: function(){
         this.callCounter++;
         return this.callCounter < this.maxCalls ? true : false;
+    },
+    getRedirectUrl: function(){
+        var params = 'salutation='+jQuery('#lffield\\[twilio_validation\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[lastName\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[firstName\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[pays\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[utmcampaign\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[product_sku\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[product_name\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[comment\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[thematique\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[utmsource\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[utmmedium\\]').val();
+        params += '&lastName='+jQuery('#lffield\\[utmcontent\\]').val();
+
+        return encodeURI('/information-request.html?'+params);
     }
 };
