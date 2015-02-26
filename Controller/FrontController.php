@@ -128,8 +128,8 @@ class FrontController extends Admin\AbstractLeadsController
             // Read configuration to map attributes correctly
             $config = $formObject->getConfig();
 
-            $redirectUrlSuccess = isset($config['redirect']['url_success']) && $config['redirect']['url_success'] != '' ? $config['redirect']['url_success'] : '';
-            $redirectUrlError = isset($config['redirect']['url_error']) && $config['redirect']['url_error'] != '' ? $config['redirect']['url_error'] : '';
+            $redirectUrlSuccess = isset($config['redirect']['url_success']) ? $config['redirect']['url_success'] : '';
+            $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
 
             if ( array_key_exists('configuration', $config) ) {
 
