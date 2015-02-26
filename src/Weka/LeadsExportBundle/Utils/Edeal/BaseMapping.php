@@ -137,22 +137,22 @@ class BaseMapping
 
 	public function getCpwDemandeRV($data)
 	{
-		return $this->getBooleanString($data['demande-rdv']);
+		return isset($data['demande-rdv']) ? $this->getBooleanString($data['demande-rdv']) : null;
 	}
 
 	public function getCpwDejaClient($data)
 	{
-		return $this->getBooleanString($data['deja-client']);
+		return isset($data['deja-client']) ? $this->getBooleanString($data['deja-client']) : null;
 	}
 
 	public function getCpwStopMailETI($data)
 	{
-		return $this->getBooleanString($data['cnilTi']);
+		return isset($data['cnilTi']) ? $this->getBooleanString($data['cnilTi']) : null;
 	}
 
 	public function getCpwStopPartenaires($data)
 	{
-		return $this->getBooleanString($data['cnilPartners']);
+		return isset($data['cnilPartners']) ? $this->getBooleanString($data['cnilPartners']) : null;
 	}
 
 	public function getEntCity($data)
