@@ -1,5 +1,3 @@
-baseUrl = 'http://preprod.weka.fr/leads-factory';
-
 var webcallback = {
     step: 'init',
     phoneUtil: i18n.phonenumbers.PhoneNumberUtil.getInstance(),
@@ -10,8 +8,10 @@ var webcallback = {
     callEnabled: true,
     callCounter: 0,
     maxCalls: 3,
-    init: function(){
-        jQuery('#callback-form').submit(function(e){
+    formId: '',
+    init: function(form_id){
+        this.formId = form_id;
+        jQuery('#'+this.formId).submit(function(e){
 
             if(!jQuery(this).validationEngine('validate')){
                 e.preventDefault();
@@ -43,7 +43,7 @@ var webcallback = {
                 jQuery('#callback-step2').hide();
                 jQuery('#callback-step3').hide();
                 jQuery('#di-msg').show();
-                var redirect_url = webcallback.getRedirectUrl(); console.log(redirect_url);
+                var redirect_url = webcallback.getRedirectUrl();
                 jQuery('#di-msg #di-link').click(function(){
                     window.location.href = redirect_url;
                 });
@@ -72,7 +72,6 @@ var webcallback = {
             }
         })
         this.step = 'check';
-
     },
     newCall: function(){
         jQuery('#webcallback-calling').show();
@@ -98,25 +97,25 @@ var webcallback = {
         });
     },
     post: function(){
-        jQuery('#callback-form').submit();
+        jQuery('#'+this.formId).submit();
     },
     isCallEnabled: function(){
         this.callCounter++;
         return this.callCounter < this.maxCalls ? true : false;
     },
     getRedirectUrl: function(){
-        var params = 'salutation='+jQuery('#lffield\\[twilio_validation\\]').val();
+        var params = 'salutation='+jQuery('#lffield\\[salutation\\]').val();
         params += '&lastName='+jQuery('#lffield\\[lastName\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[firstName\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[pays\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[utmcampaign\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[product_sku\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[product_name\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[comment\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[thematique\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[utmsource\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[utmmedium\\]').val();
-        params += '&lastName='+jQuery('#lffield\\[utmcontent\\]').val();
+        params += '&firstName='+jQuery('#lffield\\[firstName\\]').val();
+        params += '&pays='+jQuery('#lffield\\[pays\\]').val();
+        params += '&utmcampaign='+jQuery('#lffield\\[utmcampaign\\]').val();
+        params += '&product_sku='+jQuery('#lffield\\[product_sku\\]').val();
+        params += '&product_name='+jQuery('#lffield\\[product_name\\]').val();
+        params += '&comment='+jQuery('#lffield\\[comment\\]').val();
+        params += '&thematique='+jQuery('#lffield\\[thematique\\]').val();
+        params += '&utmsource='+jQuery('#lffield\\[utmsource\\]').val();
+        params += '&utmmedium='+jQuery('#lffield\\[utmmedium\\]').val();
+        params += '&utmcontent='+jQuery('#lffield\\[utmcontent\\]').val();
 
         return encodeURI('/information-request.html?'+params);
     }
