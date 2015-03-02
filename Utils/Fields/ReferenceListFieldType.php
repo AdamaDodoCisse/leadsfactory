@@ -14,12 +14,8 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils\Fields
  */
-class ReferenceListFieldType extends AbstractFieldType {
-
-    protected function createInstance () {
-        return new ReferenceFieldType();
-    }
-
+class ReferenceListFieldType extends AbstractFieldType
+{
     private $_defaultDisplay = 'select';
 
     /**
@@ -106,5 +102,4 @@ class ReferenceListFieldType extends AbstractFieldType {
         }
         return '<ul id="'.$id.'">'.$html.'</ul>';
     }
-
 }

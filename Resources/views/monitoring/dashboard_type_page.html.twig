@@ -39,13 +39,13 @@
     {% if(app.request.get('form')) %}
         {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
             "period"    : app.request.get('form')['period'],
-            "mode"      : "FormType",
+            "mode"      : "Form",
             "objects"   : entity.forms
         }
         )) }}
     {% else %}
         {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
-            "mode"      : "FormType",
+            "mode"      : "Form",
             "objects"   : entity.forms
         }
         )) }}

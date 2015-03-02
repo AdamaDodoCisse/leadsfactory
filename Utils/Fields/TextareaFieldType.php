@@ -3,12 +3,8 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
-class TextareaFieldType extends AbstractFieldType {
-
-    protected function createInstance () {
-        return new TextareaFieldType();
-    }
-
+class TextareaFieldType extends AbstractFieldType
+{
     /**
      * Render HTML
      *
@@ -21,5 +17,4 @@ class TextareaFieldType extends AbstractFieldType {
         return '<textarea name="lffield['.$id.']" id="lffield['.$id.']"></textarea>';
         //return "<input type='text' name='lffield[".$id."]' id='lffield[".$id."]' value='' ".$this->getAttributes( $tag )." />";
     }
-
 }

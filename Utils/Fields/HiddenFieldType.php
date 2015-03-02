@@ -5,10 +5,6 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
 class HiddenFieldType extends AbstractFieldType
 {
-    protected function createInstance () {
-        return new HiddenFieldType();
-    }
-
     /**
      * Render HTML
      *

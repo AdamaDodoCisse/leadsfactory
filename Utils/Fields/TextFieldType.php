@@ -12,11 +12,6 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils\Fields
  */
-class TextFieldType extends AbstractFieldType {
-
-    protected function createInstance () {
-        return new TextFieldType();
-    }
-
-
+class TextFieldType extends AbstractFieldType
+{
 }

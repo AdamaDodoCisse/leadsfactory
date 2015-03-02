@@ -13,12 +13,8 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils\Fields
  */
-class LinkedReferenceListFieldType extends AbstractFieldType {
-
-    protected function createInstance () {
-        return new LinkedReferenceFieldType();
-    }
-
+class LinkedReferenceListFieldType extends AbstractFieldType
+{
     /**
      * Render options
      *
@@ -46,5 +42,4 @@ class LinkedReferenceListFieldType extends AbstractFieldType {
 
         return $html;
     }
-
 }

@@ -1,37 +1,38 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Exception\Exception;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\RadioFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\HiddenFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory;
+use Tellaw\LeadsFactoryBundle\DependencyInjection\TimeConfiguratorAwareInterface;
 
-class FormUtils {
+class FormUtils implements TimeConfiguratorAwareInterface
+{
+    /** @var ReferenceListRepository */
+    protected $reference_list_repository;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    /** @var Router */
+    protected $router;
 
-    public function setContainer (ContainerInterface $container)
+    /** @var FieldFactory */
+    protected $field_factory;
+
+    /** @var \DateTime */
+    protected $time;
+
+    public function __construct(ReferenceListRepository $reference_list_repository, Router $router, FieldFactory $field_factory)
     {
-        $this->container = $container;
+        $this->reference_list_repository = $reference_list_repository;
+        $this->router = $router;
+        $this->field_factory = $field_factory;
     }
 
-    /**
-     * @return ContainerInterface
-     */
-    protected function getContainer()
+    public function setTime(\DateTime $time)
     {
-        return $this->container;
+        $this->time = $time;
     }
 
     /**
@@ -120,47 +121,11 @@ class FormUtils {
         return $items;
     }
 
-    public function renderTag( $id, $tag ) {
-
-        $type = $tag["type"];
-
-        //echo ("Tag Detected : ".$type);
-
-        $type = strtolower($type);
-
-        $fieldType = null;
-        switch ($type) {
-            case "email":
-                $fieldType = EmailFieldType::getInstance();
-                break;
-            case "text":
-                $fieldType = TextFieldType::getInstance();
-                break;
-            case "reference-list":
-                $fieldType = ReferenceListFieldType::getInstance();
-                break;
-            case "textarea":
-                $fieldType = TextareaFieldType::getInstance();
-                break;
-            case "checkbox":
-                $fieldType = CheckboxFieldType::getInstance();
-                break;
-            case "radio":
-                $fieldType = RadioFieldType::getInstance();
-                break;
-            case "linked-reference-list":
-                $fieldType = LinkedReferenceListFieldType::getInstance();
-                break;
-            case "hidden":
-                $fieldType = HiddenFieldType::getInstance();
-                break;
-            default:
-                $fieldType = TextFieldType::getInstance();
-
-        }
-
-        return $fieldType->renderToHtml ( $tag );
-
+    public function renderTag($id, $tag)
+    {
+        $type = strtolower($tag['type']);
+        $field = $this->field_factory->createFromType($type);
+        return $field->renderToHtml($tag);
     }
 
     /**
@@ -183,7 +148,7 @@ class FormUtils {
      */
     private function setFormTag($html)
     {
-        $currentUrl = $this->container->get('router')->generate("_client_post_form", array(), true);
+        $currentUrl = $this->router->generate("_client_post_form", array(), true);
 
         $action = $currentUrl;
         $method = "POST";
@@ -243,7 +208,7 @@ class FormUtils {
      */
     public function getElementOptions($listCode)
     {
-        $list = $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneBy(array('code' => $listCode));
+        $list = $this->reference_list_repository->findOneBy(array('code' => $listCode));
         $options = $list->getElements()->getValues();
         return $options;
     }
@@ -282,10 +247,10 @@ class FormUtils {
 
     public function getFormKey ($formId, $hourOffset = 0)
     {
-        $date = date_create();
+        $date = $this->time;
 
-        if ( $hourOffset > 0 ) {
-            $date->add ( new \DateInterval('P'.$hourOffset.'H') );
+        if ($hourOffset > 0) {
+            $date->sub(new \DateInterval('PT'.$hourOffset.'H'));
         }
 
         $hour   = $date->format ("H");
@@ -302,7 +267,7 @@ class FormUtils {
     {
         if ($md5 == $this->getFormKey( $formId )) {
             return true;
-        } else if ($md5 == $this->getFormKey( $formId, '-1' )) {
+        } else if ($md5 == $this->getFormKey( $formId, '1' )) {
             return true;
         } else {
             return false;

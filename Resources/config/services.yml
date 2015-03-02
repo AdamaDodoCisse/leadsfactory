@@ -2,11 +2,12 @@ parameters:
     list.per_page_options: 10;25;50
 
 services:
+  leadsfactory.time_configurator:
+    class:        Tellaw\LeadsFactoryBundle\DependencyInjection\TimeConfigurator
 
   messages.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\Messages
-    calls:
-                  - [ setContainer, [ @service_container ] ]
+    arguments:    [@session]
 
   lf.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\LFUtils
@@ -49,8 +50,11 @@ services:
 
   form_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\FormUtils
-    calls:
-                  - [ setContainer, [ @service_container ] ]
+    arguments:    [@leadsfactory.reference_list_repository, @router, @leadsfactory.field_factory]
+    configurator: ["@leadsfactory.time_configurator", configure]
+
+  leadsfactory.field_factory:
+    class:        Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory
 
   js_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\JsUtils
@@ -59,8 +63,7 @@ services:
 
   alertes_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\AlertUtils
-    calls:
-                  - [ setContainer, [ @service_container ] ]
+    arguments:    [@doctrine.orm.entity_manager, %leadsfactory.internal_email_patterns%]
 
   leadsfactory.twig_extension:
     class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension
