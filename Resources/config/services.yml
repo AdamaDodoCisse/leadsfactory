@@ -5,8 +5,7 @@ services:
 
   messages.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\Messages
-    calls:
-                  - [ setContainer, [ @service_container ] ]
+    arguments:    [@session]
 
   lf.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\LFUtils
