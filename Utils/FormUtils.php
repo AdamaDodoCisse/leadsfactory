@@ -1,7 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
@@ -13,25 +12,21 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
-class FormUtils {
+class FormUtils
+{
+    /** @var ReferenceListRepository */
+    protected $reference_list_repository;
 
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    /** @var  Router */
+    protected $router;
 
-    public function setContainer (ContainerInterface $container)
+    public function __construct(ReferenceListRepository $reference_list_repository, Router $router)
     {
-        $this->container = $container;
-    }
-
-    /**
-     * @return ContainerInterface
-     */
-    protected function getContainer()
-    {
-        return $this->container;
+        $this->reference_list_repository = $reference_list_repository;
+        $this->router = $router;
     }
 
     /**
@@ -183,7 +178,7 @@ class FormUtils {
      */
     private function setFormTag($html)
     {
-        $currentUrl = $this->container->get('router')->generate("_client_post_form", array(), true);
+        $currentUrl = $this->router->generate("_client_post_form", array(), true);
 
         $action = $currentUrl;
         $method = "POST";
@@ -243,7 +238,7 @@ class FormUtils {
      */
     public function getElementOptions($listCode)
     {
-        $list = $this->getContainer()->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneBy(array('code' => $listCode));
+        $list = $this->reference_list_repository->findOneBy(array('code' => $listCode));
         $options = $list->getElements()->getValues();
         return $options;
     }
