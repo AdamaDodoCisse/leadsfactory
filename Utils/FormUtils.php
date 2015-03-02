@@ -7,8 +7,9 @@ use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory;
+use Tellaw\LeadsFactoryBundle\DependencyInjection\TimeConfiguratorAwareInterface;
 
-class FormUtils
+class FormUtils implements TimeConfiguratorAwareInterface
 {
     /** @var ReferenceListRepository */
     protected $reference_list_repository;
@@ -19,11 +20,19 @@ class FormUtils
     /** @var FieldFactory */
     protected $field_factory;
 
+    /** @var \DateTime */
+    protected $time;
+
     public function __construct(ReferenceListRepository $reference_list_repository, Router $router, FieldFactory $field_factory)
     {
         $this->reference_list_repository = $reference_list_repository;
         $this->router = $router;
         $this->field_factory = $field_factory;
+    }
+
+    public function setTime(\DateTime $time)
+    {
+        $this->time = $time;
     }
 
     /**

@@ -2,6 +2,8 @@ parameters:
     list.per_page_options: 10;25;50
 
 services:
+  leadsfactory.time_configurator:
+    class:        Tellaw\LeadsFactoryBundle\DependencyInjection\TimeConfigurator
 
   messages.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\Messages
@@ -49,6 +51,7 @@ services:
   form_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\FormUtils
     arguments:    [@leadsfactory.reference_list_repository, @router, @leadsfactory.field_factory]
+    configurator: ["@leadsfactory.time_configurator", configure]
 
   leadsfactory.field_factory:
     class:        Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory
