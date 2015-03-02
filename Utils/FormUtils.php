@@ -247,10 +247,10 @@ class FormUtils implements TimeConfiguratorAwareInterface
 
     public function getFormKey ($formId, $hourOffset = 0)
     {
-        $date = date_create();
+        $date = $this->time;
 
-        if ( $hourOffset > 0 ) {
-            $date->add ( new \DateInterval('P'.$hourOffset.'H') );
+        if ($hourOffset > 0) {
+            $date->sub(new \DateInterval('PT'.$hourOffset.'H'));
         }
 
         $hour   = $date->format ("H");
@@ -267,7 +267,7 @@ class FormUtils implements TimeConfiguratorAwareInterface
     {
         if ($md5 == $this->getFormKey( $formId )) {
             return true;
-        } else if ($md5 == $this->getFormKey( $formId, '-1' )) {
+        } else if ($md5 == $this->getFormKey( $formId, '1' )) {
             return true;
         } else {
             return false;
