@@ -30,6 +30,12 @@
         "mtdowling/cron-expression": "1.0.*",
         "beberlei/DoctrineExtensions": "0.2-alpha"
     },
+    "require-dev": {
+        "phpspec/phpspec": "~2.0"
+    },
+    "config": {
+        "bin-dir": "bin"
+    },
     "autoload" : {
         "psr-0" : {
             "Tellaw\\LeadsFactoryBundle" : ""
