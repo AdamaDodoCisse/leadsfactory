@@ -59,11 +59,19 @@ class TwilioController extends Controller
 		$twiml->say('Le code est : ,', array('language' => 'fr-FR'));
 		$twiml->pause(array('length' => 1));
 		foreach(str_split($code) as $digit){
-			$twiml->say($digit, array('language' => 'fr-FR'));
+			if($digit == '0'){
+				$twiml->say( 'zéro', array( 'language' => 'fr-FR' ) );
+			}else {
+				$twiml->say( $digit, array( 'language' => 'fr-FR' ) );
+			}
 		}
 		$twiml->say('Je répète : ,', array('language' => 'fr-FR'));
         foreach(str_split($code) as $digit){
-	        $twiml->say($digit, array('language' => 'fr-FR'));
+	        if($digit == '0'){
+		        $twiml->say( 'zéro', array( 'language' => 'fr-FR' ) );
+	        }else {
+		        $twiml->say( $digit, array( 'language' => 'fr-FR' ) );
+	        }
 	    }
 
 		$twiml->pause(array('length' => 1));
