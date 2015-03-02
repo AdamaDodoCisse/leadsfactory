@@ -188,8 +188,14 @@ class FrontController extends Admin\AbstractLeadsController
 					$redirectUrlSuccess = $fields['redirect_url'];
 				}
 
-	            if(isset($config['redirect']['redirect_with_id']) && $config['redirect']['redirect_with_id'] == true)
-					$redirectUrlSuccess = $redirectUrlSuccess.'?lead_id='.$leads->getId().'&key='.$formUtils->getApiKey($formObject);
+	            if(isset($config['redirect']['redirect_with_id']) && $config['redirect']['redirect_with_id'] == true){
+		            if(strpos($redirectUrlSuccess, '?')){
+			            $paramsSep = '&';
+		            }else{
+			            $paramsSep = '?';
+		            }
+		            $redirectUrlSuccess = $redirectUrlSuccess. $paramsSep . 'lead_id='.$leads->getId().'&key='.$formUtils->getApiKey($formObject);
+	            }
 
 	            return $this->redirect( $redirectUrlSuccess );
             }
