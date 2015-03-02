@@ -3,14 +3,6 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Exception\Exception;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\CheckboxFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\RadioFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\EmailFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\HiddenFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\LinkedReferenceListFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\TextareaFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\TextFieldType;
-use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
