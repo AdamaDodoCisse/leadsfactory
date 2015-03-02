@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class FormType {
 
     /**
-     * 
+     * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form", mappedBy="formType")
      */
     protected $forms;
 

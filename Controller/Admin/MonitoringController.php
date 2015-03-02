@@ -285,6 +285,7 @@ class MonitoringController extends AbstractLeadsController{
 
             $chart->setForm ( $objects );
 
+
         // Throw exception for wrong state
         } else {
             throw new \Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
