@@ -30,6 +30,12 @@ class AlertUtils
     /** @var array */
     protected $internal_email_patterns = array();
 
+    public function __construct(EntityManagerInterface $entity_manager, array $internal_email_patterns)
+    {
+        $this->entity_manager = $entity_manager;
+        $this->internal_email_patterns = $internal_email_patterns;
+    }
+
     /**
      * @param integer $valueNow actual value
      * @param integer $valueOld Value for period -1
