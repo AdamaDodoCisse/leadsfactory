@@ -3,12 +3,8 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
-class RadioFieldType extends AbstractFieldType {
-
-    protected function createInstance () {
-        return new RadioFieldType();
-    }
-
+class RadioFieldType extends AbstractFieldType
+{
     /**
      * Render HTML
      *
@@ -21,5 +17,4 @@ class RadioFieldType extends AbstractFieldType {
 	    $name = $tag["attributes"]["name"];
         return '<input type="radio" name="lffield['.$name.']" id="lffield['.$id.']" '.$this->getAttributes( $tag ).'/>';
     }
-
 }

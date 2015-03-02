@@ -26,24 +26,6 @@ abstract class AbstractFieldType {
     private $customValidatorList = array ();
 
     /**
-     * @var Object $_instance Object instance, mustn't be called directly, please use getInstance static method.
-     */
-    private static $instances = null;
-
-    abstract protected function createInstance();
-
-    public static function getInstance (  ) {
-
-        $class = get_called_class();
-
-        if(!isset(self::$instances[$class]))
-            self::$instances[$class] = new $class();
-
-        return self::$instances[$class];
-
-    }
-
-    /**
      * Method used to render to html a field
      * @param Object $tag Tag object
      * @return string Html Content formatted

@@ -10,10 +10,6 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils\Fields
  */
-class EmailFieldType extends AbstractFieldType {
-
-    protected function createInstance () {
-        return new EmailFieldType();
-    }
-
+class EmailFieldType extends AbstractFieldType
+{
 }

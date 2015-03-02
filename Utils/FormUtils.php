@@ -14,19 +14,24 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\ReferenceListFieldType;
 use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory;
 
 class FormUtils
 {
     /** @var ReferenceListRepository */
     protected $reference_list_repository;
 
-    /** @var  Router */
+    /** @var Router */
     protected $router;
 
-    public function __construct(ReferenceListRepository $reference_list_repository, Router $router)
+    /** @var FieldFactory */
+    protected $field_factory;
+
+    public function __construct(ReferenceListRepository $reference_list_repository, Router $router, FieldFactory $field_factory)
     {
         $this->reference_list_repository = $reference_list_repository;
         $this->router = $router;
+        $this->field_factory = $field_factory;
     }
 
     /**
@@ -115,47 +120,11 @@ class FormUtils
         return $items;
     }
 
-    public function renderTag( $id, $tag ) {
-
-        $type = $tag["type"];
-
-        //echo ("Tag Detected : ".$type);
-
-        $type = strtolower($type);
-
-        $fieldType = null;
-        switch ($type) {
-            case "email":
-                $fieldType = EmailFieldType::getInstance();
-                break;
-            case "text":
-                $fieldType = TextFieldType::getInstance();
-                break;
-            case "reference-list":
-                $fieldType = ReferenceListFieldType::getInstance();
-                break;
-            case "textarea":
-                $fieldType = TextareaFieldType::getInstance();
-                break;
-            case "checkbox":
-                $fieldType = CheckboxFieldType::getInstance();
-                break;
-            case "radio":
-                $fieldType = RadioFieldType::getInstance();
-                break;
-            case "linked-reference-list":
-                $fieldType = LinkedReferenceListFieldType::getInstance();
-                break;
-            case "hidden":
-                $fieldType = HiddenFieldType::getInstance();
-                break;
-            default:
-                $fieldType = TextFieldType::getInstance();
-
-        }
-
-        return $fieldType->renderToHtml ( $tag );
-
+    public function renderTag($id, $tag)
+    {
+        $type = strtolower($tag['type']);
+        $field = $this->field_factory->createFromType($type);
+        return $field->renderToHtml($tag);
     }
 
     /**
