@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 use Doctrine\ORM\QueryBuilder;
 use Tellaw\LeadsFactoryBundle\Entity\FormType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class AlertUtils
@@ -12,8 +13,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils
  */
-class AlertUtils {
-
+class AlertUtils
+{
     public static $_STATUS_UNKNOWN = 0;
     public static $_STATUS_OK = 1;
     public static $_STATUS_WARNING = 2;
@@ -23,18 +24,11 @@ class AlertUtils {
     public $day = array ('','lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche');
     public $month = array ('', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre');
 
-    /**
-     * @var ContainerInterface
-     */
-    protected $container;
+    /** @var EntityManagerInterface */
+    protected $entity_manager;
 
-    /**
-     * @param ContainerInterface $container
-     */
-    public function setContainer (ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
+    /** @var array */
+    protected $internal_email_patterns = array();
 
     /**
      * @param integer $valueNow actual value
@@ -192,39 +186,38 @@ class AlertUtils {
      * @param $minDate DateTime object
      * @return mixed
      */
-    private function getLeadsCountForForms ( $forms, $minDate ) {
-
-        foreach($forms as $form) {$formIds[] = $form->getId();}
-
-        // Get Doctrine instance.
-        $em = $this->container->get("doctrine")->getManager();
+    private function getLeadsCountForForms ($forms, $minDate)
+    {
+        foreach($forms as $form) {
+            $formIds[] = $form->getId();
+        }
 
         // formated date time
         $formatedMinDate = $minDate->format('Y-m-d');
 
         // Count leads for the specified day
-
-        $querybuilder = $em->createQueryBuilder();
+        $querybuilder = $this->entity_manager->createQueryBuilder();
         $querybuilder->select('count(l)')
-                     ->from('TellawLeadsFactoryBundle:Leads', 'l')
-                     ->where('l.form IN (:formIds)')
-                     ->andWhere('l.createdAt BETWEEN :minDate AND :maxDate')
-                     ->setParameter('formIds', $formIds)
-                     ->setParameter('minDate', $formatedMinDate." 00:00:00")
-                     ->setParameter('maxDate', $formatedMinDate." 23:59:59");
+            ->from('TellawLeadsFactoryBundle:Leads', 'l')
+            ->where('l.form IN (:formIds)')
+            ->andWhere('l.createdAt BETWEEN :minDate AND :maxDate')
+            ->setParameter('formIds', $formIds)
+            ->setParameter('minDate', $formatedMinDate." 00:00:00")
+            ->setParameter('maxDate', $formatedMinDate." 23:59:59")
+        ;
 
         $querybuilder = $this->excludeInternalLeads($querybuilder);
         return $querybuilder->getQuery()->getSingleScalarResult();
-
     }
 
     public function setValuesForAlerts($item)
     {
-        $formIds = array();
+        $form_repository = $this->entity_manager->getRepository('TellawLeadsFactoryBundle:Form');
+
         if ($item instanceof FormType) {
-            $forms = $this->container->get('leadsfactory.form_repository')->findByFormType($item->getId());
+            $forms = $form_repository->findByFormType($item->getId());
         } else {
-            $form = $this->container->get('leadsfactory.form_repository')->find($item->getId());
+            $form = $form_repository->find($item->getId());
             $forms = array($form);
         }
 
@@ -279,7 +272,7 @@ class AlertUtils {
     private function excludeInternalLeads(QueryBuilder $qb)
     {
         $i = 0;
-        foreach ($this->container->getParameter('leadsfactory.internal_email_patterns') as $pattern) {
+        foreach ($this->internal_email_patterns as $pattern) {
             $qb->andWhere('l.email not like :pattern_'.$i)
                ->setParameter('pattern_'.$i, $pattern)
             ;

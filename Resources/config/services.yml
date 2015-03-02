@@ -63,8 +63,7 @@ services:
 
   alertes_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\AlertUtils
-    calls:
-                  - [ setContainer, [ @service_container ] ]
+    arguments:    [@doctrine.orm.entity_manager, %leadsfactory.internal_email_patterns%]
 
   leadsfactory.twig_extension:
     class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension
