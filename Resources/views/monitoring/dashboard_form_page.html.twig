@@ -25,6 +25,10 @@
                 {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getUtmLinkedToForm', {"form_id" : entity.id})) }}
             </div>
 
+            <div class="col-md-12">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormViewStatistics', {"form_id" : entity.id})) }}
+            </div>
+
         </div>
 
         <div class="col-md-4" style="margin-top:20px;">
@@ -33,7 +37,21 @@
                 <div class="widget-body custom-form">
                     {{ form(form) }}
                 </div>
+                <div class="widget-body custom-form" style="padding-top:10px;">
+                    <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser un autre formulaire :</b></div>
+
+                    <select onChange="window.location.href=this.value" class="form-control">
+                        <option>Séléctionnez un formulaire</option>
+                        {% for form in forms %}
+                            <option {% if form.id == entity.id %}selected="selected" {% endif %}value="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">{{ form.name }}</option>
+                        {% endfor %}
+                    </select>
+
                 </div>
+
+            </div>
+
+
 
             <script>
                 var skycons = new Skycons({"color": "white"});
@@ -44,11 +62,6 @@
             <script>
                 skycons.play();
             </script>
-
-            <div class="col-md-12">
-                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormViewStatistics', {"form_id" : entity.id})) }}
-            </div>
-
 
         </div>
 

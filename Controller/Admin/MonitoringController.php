@@ -84,12 +84,16 @@ class MonitoringController extends AbstractLeadsController{
         // Logged User
         $user_id = $this->get('security.context')->getToken()->getUser()->getId();
 
+        // Get All Types in the scope
+        $forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
+
         // Load bookmarked forms for user
         $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getFormsForUser( $user_id );
 
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
             'form'  => $form->createView(),
-            'bookmarks' => $bookmarks
+            'bookmarks' => $bookmarks,
+            'forms' => $forms
         ));
     }
 
@@ -120,9 +124,13 @@ class MonitoringController extends AbstractLeadsController{
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
+        // Get All Types in the scope
+        $types = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsType();
+
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_type_page.html.twig", array(
             'form'  => $form->createView(),
-            'entity' => $entity
+            'entity' => $entity,
+            'types' => $types
         ));
 
     }
@@ -153,10 +161,14 @@ class MonitoringController extends AbstractLeadsController{
         $form = $formBuilder->getForm();
         $form->handleRequest($request);
 
+        // Get All Types in the scope
+        $forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
+
         return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_form_page.html.twig", array(
             'form'  => $form->createView(),
             'entity'   => $entity,
             'alerteutil' => $this->get("alertes_utils"),
+            'forms' => $forms
         ));
     }
 

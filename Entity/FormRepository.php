@@ -198,4 +198,15 @@ class FormRepository extends EntityRepository
 		}
 		return $qb;
 	}
+
+
+    public function getForms ( $scope = null ) {
+
+        $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
+        $result = $this->getEntityManager()->createQuery($dql)->getResult();
+
+        return $result;
+
+    }
+
 }

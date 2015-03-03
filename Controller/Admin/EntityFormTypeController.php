@@ -77,7 +77,7 @@ class EntityFormTypeController extends AbstractEntityController
         }
 
         return $this->render('TellawLeadsFactoryBundle:entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                         'title' => "Création d'un type"));
+                                                                                                         'title' => "Création d'un groupe"));
     }
 
     /**
@@ -117,7 +117,7 @@ class EntityFormTypeController extends AbstractEntityController
         }
 
         return $this->render('TellawLeadsFactoryBundle:entity/FormType:entity_formType_edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                        'title' => "Edition d'un type"));
+                                                                                                        'title' => "Edition d'un groupe"));
 
     }
 

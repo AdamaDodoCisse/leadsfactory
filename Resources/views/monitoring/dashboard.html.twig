@@ -11,13 +11,13 @@
 
     <div class="col-md-12">
 
-        <div class="col-md-10" style="margin-top:20px;margin-bottom:25px;">
+        <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
             <div id="demo-chart" class="widget-body blue">
                 <!-- This div will hold the chart generated in the footer -->
             </div>
         </div>
 
-        <div class="col-md-2" style="margin-top:20px;">
+        <div class="col-md-4" style="margin-top:20px;">
             <div class="widget-body custom-form">
                 {{ form(form) }}
             </div>
@@ -31,10 +31,10 @@
                 </ul>
             </div>
             <div class="widget-body custom-form" style="padding-top:10px;">
-                <div style="margin-left:10px;margin-bottom:5px;">Tous les types :</div>
+                <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser une autre groupe de formulaires :</b></div>
 
-                <select onChange="window.location.href=this.value">
-                    <option>Séléctionnez un type</option>
+                <select onChange="window.location.href=this.value" class="form-control">
+                    <option>Séléctionnez un groupe</option>
                     {% for type in types %}
                         <option value="{{ path('_monitoring_dashboard_type_page', {'type_id': type.id}) }}">{{ type.name }}</option>
                     {% endfor %}
