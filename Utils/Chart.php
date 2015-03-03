@@ -7,6 +7,7 @@ use Symfony\Component\Form\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class Chart {
 
@@ -47,6 +48,28 @@ class Chart {
      * @var array
      */
     private $specialGraphIndexes;
+
+    private $minDate = null;
+    private $maxDate = null;
+
+    public function __construct () {
+
+        /*
+        $session = new Session();
+        $session->start();
+        if ( $session->has ( 'minDateStatistics' ) && $session->has ( 'minDateStatistics' ) ) {
+
+            $this->minDate = $session->get('minDateStatistics');
+            $this->maxDate = $session->get('maxDateStatistics');
+
+        } else {
+
+            $this->minDate = $this->_getRangeMinDate()->format('Y-m-d');
+
+        }
+        */
+
+    }
 
     /**
      * @return array
@@ -134,6 +157,15 @@ class Chart {
     protected function getContainer()
     {
         return $this->container;
+    }
+
+    /**
+     * Method used to set the timeframe used by statistics
+     */
+    public function setTimeFrame ( $minDate, $maxDate ) {
+
+
+
     }
 
     /**

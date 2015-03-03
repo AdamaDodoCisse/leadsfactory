@@ -35,7 +35,8 @@ class MonitoringController extends AbstractLeadsController{
                     'label' => 'Période du graphique',
                     'attr' => array('onchange'  => 'javascript:this.form.submit()')
                 )
-            );
+
+            )->add('datemin', 'date', array('label' => 'Début'));
 
         // Create the form used for grap configuration
         $form = $formBuilder->getForm();
