@@ -1,5 +1,4 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
-{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
 
@@ -19,7 +18,7 @@
 
         <div class="col-md-4" style="margin-top:20px;">
             <div class="widget-body custom-form">
-                {{ form(form) }}
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
             </div>
 
             <div class="widget-body custom-form" style="padding-top:10px;">

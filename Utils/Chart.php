@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Chart {
 
+    const DEBUG_MODE = true;
+
     /**
      * @var string year|month
      */
@@ -18,6 +20,10 @@ class Chart {
 
     const PERIOD_YEAR = 'year';
     const PERIOD_MONTH = 'month';
+
+    const ZOOM_SWITCH_RANGE = 90; // Switch from days to month at a range of 90 values
+
+    private $graphTimeRange = null;
 
     /**
      * DateInterval specification
@@ -160,24 +166,16 @@ class Chart {
     }
 
     /**
-     * Method used to set the timeframe used by statistics
-     */
-    public function setTimeFrame ( $minDate, $maxDate ) {
-
-
-
-    }
-
-    /**
      * Fetch leads counts grouped by form type
      *
      * @return array
      */
     private function _loadLeadsDataByTypes()
     {
-        $minDate = $this->_getRangeMinDate()->format('Y-m-d');
+
         $em = $this->container->get('doctrine')->getManager();
         $data = array();
+
         foreach($this->formType as $formType){
 
             if (!is_object($formType)) {
@@ -190,10 +188,12 @@ class Chart {
                ->from('TellawLeadsFactoryBundle:Leads', 'l')
                ->where('l.formType = :form_type_id')
                ->andWhere('l.createdAt >= :minDate')
+                ->andWhere('l.createdAt <= :maxDate')
                ->groupBy($this->_getSqlGroupByClause())
                ->setParameter('format', $this->_getSqlDateFormat())
                ->setParameter('form_type_id', $formType->getId())
-               ->setParameter('minDate', $minDate)
+               ->setParameter('minDate', $this->_getRangeMinDate()->format('Y-m-d'))
+               ->setParameter('maxDate', $this->_getRangeMaxDate()->format('Y-m-d'))
             ;
             $qb = $this->excludeInternalLeads($qb);
             $results = $qb->getQuery()->getResult();
@@ -201,6 +201,7 @@ class Chart {
             array_unshift($results,$formType->getName());
             $data[$formType->getName()] = $results;
         }
+
         return $data;
     }
 
@@ -300,6 +301,7 @@ class Chart {
      */
     public function loadChartData()
     {
+
         if(!empty($this->form)){
             // Loads datas from forms in array FORM
             $data = $this->_loadLeadsDataByForm();
@@ -310,8 +312,14 @@ class Chart {
                 $data = $this->_loadLeadsDataByFormsType();
             }
         }
+
+        var_dump ($data);
+
         $chartData = $this->_formatChartData($data);
         $chartData = $this->_addAdditionalGraphs($chartData);
+
+
+
         $chartData = json_encode($chartData);
 
         return $chartData;
@@ -324,14 +332,33 @@ class Chart {
      */
     private function _getRangeMinDate()
     {
-        $minDate = new \DateTime();
-        $minDate->sub(new \DateInterval($this->period_interval[$this->period]));
 
-        if($this->period == self::PERIOD_YEAR){
-            $minDate->modify('first day of this month');
-        }
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
 
-        return $minDate;
+        /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
+        $userPreferences = $utils->getUserPreferences();
+
+        return clone($userPreferences->getDataPeriodMinDate());
+
+    }
+
+    /**
+     * Get max date of period
+     *
+     * @return \DateTime
+     */
+    private function _getRangeMaxDate()
+    {
+
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
+
+        /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
+        $userPreferences = $utils->getUserPreferences();
+
+        return $userPreferences->getDataPeriodMaxDate();
+
     }
 
     /**
@@ -352,37 +379,128 @@ class Chart {
      *
      * @param $data
      * @return array
+     *
+     * Origine :
+     *
+        array (size=2)
+            'Demande info ' =>
+                array (size=366)
+                    0 => string 'Demande info ' (length=17)
+                    1 =>
+                        array (size=4)
+                            'date' => string '201501' (length=6)
+                            'n' => string '5' (length=1)
+                            'day' => string '1' (length=1)
+                            'month' => string '1' (length=1)
+                    2 =>
+                        array (size=4)
+                            'date' => string '201502' (length=6)
+                            'n' => string '6' (length=1)
+                            'day' => string '1' (length=1)
+                            'month' => string '2' (length=1)
+     *
+     * Cible :
+     *
+     *                 var data = new google.visualization.DataTable();
+        var raw_data = [    ["Demande info ",6,9,7,8,7,7,9,8,4,5,7,6,11,0],
+     *                      ["Type de d\u00e9monstration",2,3,4,2,2,1,2,4,6,2,3,2,4,0],
+     *                      ["Moyenne",9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4],
+     *                      ["Total",8,12,11,10,9,8,11,12,10,7,10,8,15,0] ]
+
+        var range =     ["Jun 13","Jul 13","Aug 13","Sep 13","Oct 13","Nov 13","Dec 13","Jan 14","Feb 14","Mar 14","Apr 14","May 14","Jun 14","Jul 14","Aug 14","Sep 14","Oct 14","Nov 14","Dec 14","Jan 15","Feb 15","Mar 15"]
+     *
      */
-    private function _formatChartData($data)
-    {
-        $chartData = array();
-        foreach($data as $formTypeData){
-            $type = array_shift($formTypeData);
-            $d = array();
 
-            foreach($formTypeData as $c){
-                if(array_key_exists('date', $c)){
-                    $d[$c['date']] = (int) $c['n'];
-                }
-            }
-            $dateFormat = $this->_getDateFormat();
-            $date = new \DateTime();
-            for($i=0; $i<$this->_getIndexNumber($date); $i++){
+    private function _formatChartData($data) {
 
-                if(!array_key_exists($date->format($dateFormat), $d)){
-                    $d[(int) $date->format($dateFormat)]= 0;
-                }
-                $date->modify('-1 '.$this->_getDateIncrement());
-            }
-            ksort($d);
-            array_unshift($d, $type);
-            $d = array_values($d);
-            $chartData[] = $d;
+        // determine if we are working on days of monthes
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $diff = $minDate->diff ($maxDate);
+        $nbDiffDays = $diff->format('%R%a');
+        $nbDiffMonths = $diff->format ('%R%m');
+
+        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+            // Nous affichons à la journée
+            $workingOnDays = true;
+        } else {
+            $workingOnDays = false;
         }
 
-        $this->graph_count = count($chartData);
+        // Array to build formated with target content.
+        $targetArray = array();
+        $timeRange = array();
 
-        return $chartData;
+        $initialLoop = true;
+
+        // Loop over Objects availables
+        foreach ( $data as $graphObject ) {
+
+            $type = array_shift($graphObject);
+            $targetArray [$type] = array();
+
+            // Reset days counter
+            $startingDate = $this->_getRangeMinDate();
+
+            // Create loop for building empty dates of timeframe
+
+                // determine if we are working on days of monthes
+                if ( $workingOnDays ) {
+
+                    // Building empty slots for every days
+                    for ($a=0; $a<=$nbDiffDays; $a++) {
+
+                        if ($initialLoop) $timeRange[] = (string)$startingDate->format('d/m/Y');
+
+                        $targetArray [$type][ (string)$startingDate->format('d/m/Y') ] = 0;
+                        $startingDate->add(new \DateInterval('P1D'));
+                    }
+                    $initialLoop = false;
+
+                    // filling with good values
+                    foreach ( $graphObject as $object ) {
+                        $targetArray [$type][ (string)$object['date'] ] = $object['n'];
+                    }
+
+                } else {
+
+                    // Building empty slots for every monthes
+                    for ($a=0; $a<$nbDiffMonths; $a++) {
+                        die();
+                    }
+
+
+                }
+
+        }
+
+        // extract TimeRange
+        $this->graphTimeRange = $timeRange;
+
+        $googleFormat = array();
+        // Extract Data to Google Format
+        $nbGraph = 0;
+        foreach ( $targetArray as $key => $graphObject ) {
+
+            $googleFormat[$nbGraph] = array ();
+            $googleFormat[$nbGraph][] = $key;
+
+            foreach ( $graphObject as $graphElement ) {
+
+                $googleFormat[$nbGraph][] = (int)$graphElement;
+            }
+            $nbGraph++;
+        }
+
+        if (Chart::DEBUG_MODE) {
+            var_dump ($targetArray);
+            var_dump ($googleFormat);
+            var_dump ($timeRange);
+        }
+
+        return $googleFormat;
+
     }
 
     /**
@@ -444,7 +562,9 @@ class Chart {
                 $value += $graphData[$i];
             }
         }
+        
         $value = round($value/($graphLength -1), 1);
+
         $average = array_fill(1, $graphLength-1, $value);
         array_unshift($average, 'Moyenne');
 
@@ -458,16 +578,15 @@ class Chart {
      */
     public function getTimeRange()
     {
-        $rangeGetter = '_get'.ucfirst($this->period).'Range';
-        $range = $this->$rangeGetter();
 
-        return json_encode($range);
+        return json_encode($this->graphTimeRange);
     }
 
     /**
      * Get year time range
      *
      * @return array
+     * @deprecated
      */
     private function _getYearRange()
     {
@@ -486,6 +605,8 @@ class Chart {
      * Get mont time range
      *
      * @return array
+     *
+     * @deprecated
      */
     private function _getMonthRange()
     {
@@ -505,28 +626,29 @@ class Chart {
      */
     public function getChartTitle()
     {
-        switch($this->period){
-            case self::PERIOD_YEAR:
-                $title = "Nombre de DI sur l\'année";
-                break;
-            case self::PERIOD_MONTH:
-                $title = "Nombre de DI sur le mois";
-                break;
-            default:
-                throw new \Exception('Unknown timeframe');
-        }
+
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $title = "Lead\'s du ".$minDate->format ('d m Y')." au ".$maxDate->format ('d m Y');
+
         return $title;
     }
 
     private function _getSqlDateFormat()
     {
-        switch($this->period){
-            case self::PERIOD_YEAR:
-                return '%Y%m';
-            case self::PERIOD_MONTH:
-                return '%m%d';
-            default:
-                throw new \Exception('Unknown timeframe');
+
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $diff = $minDate->diff ($maxDate);
+        $nbDiffDays = $diff->format('%R%a');
+
+        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+            // Nous affichons à la journée
+            return '%d/%m/%Y';
+        } else {
+            return '%d/%m/%Y';
         }
     }
 
@@ -535,13 +657,18 @@ class Chart {
      */
     private function _getDateFormat()
     {
-        switch($this->period){
-            case self::PERIOD_YEAR:
-                return 'Ym';
-            case self::PERIOD_MONTH:
-                return 'md';
-            default:
-                throw new \Exception('Unknown timeframe');
+
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $diff = $minDate->diff ($maxDate);
+        $nbDiffDays = $diff->format('%R%a');
+
+        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+            // Nous affichons à la journée
+            return 'md';
+        } else {
+            return 'Ym';
         }
     }
 
@@ -550,14 +677,20 @@ class Chart {
      */
     private function _getDateIncrement()
     {
-        switch($this->period){
-            case self::PERIOD_YEAR:
-                return 'month';
-            case self::PERIOD_MONTH:
-                return 'day';
-            default:
-                throw new \Exception('Unknown timeframe');
+
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $diff = $minDate->diff ($maxDate);
+        $nbDiffDays = $diff->format('%R%a');
+
+        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+            // Nous affichons à la journée
+            return 'day';
+        } else {
+            return 'month';
         }
+
     }
 
     /**
@@ -584,14 +717,19 @@ class Chart {
      */
     private function _getSqlGroupByAggregates()
     {
-        switch($this->period){
-            case self::PERIOD_YEAR:
-                return array('MONTH(l.createdAt) as month', 'YEAR(l.createdAt) as year');
-            case self::PERIOD_MONTH:
-                return array('DAY(l.createdAt) as day', 'MONTH(l.createdAt) as month');
-            default:
-                throw new \Exception('Unknown timeframe');
+
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $diff = $minDate->diff ($maxDate);
+        $nbDiffDays = $diff->format('%R%a');
+
+        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+            return array('DAY(l.createdAt) as day', 'MONTH(l.createdAt) as month');
+        } else {
+            return array('MONTH(l.createdAt) as month', 'YEAR(l.createdAt) as year');
         }
+
     }
 
     /**
@@ -599,14 +737,24 @@ class Chart {
      */
     private function _getSqlGroupByClause()
     {
-        switch($this->period){
-            case self::PERIOD_YEAR:
-                return 'month, year';
-            case self::PERIOD_MONTH:
-                return 'day, month';
-            default:
-                throw new \Exception('Unknown timeframe');
+
+        $minDate = $this->_getRangeMinDate();
+        $maxDate = $this->_getRangeMaxDate();
+
+        $diff = $minDate->diff ($maxDate);
+        $nbDiffDays = $diff->format('%R%a');
+
+        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+
+            // Nous affichons à la journée
+            return 'day, month';
+
+        } else {
+
+            return 'month, year';
+
         }
+
     }
 
     /**

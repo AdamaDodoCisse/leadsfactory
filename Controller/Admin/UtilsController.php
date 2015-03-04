@@ -28,11 +28,64 @@ class UtilsController extends AbstractLeadsController
      */
     public function messagesAction (Request $request, $parentRoute) {
 
-        /** @var $messagesUtils Tellaw\LeadsFactoryBundle\Utils\Messages */
+        /** @var Tellaw\LeadsFactoryBundle\Utils\Messages $messagesUtils */
         $messagesUtils = $this->container->get("messages.utils");
         $pooledMessages = $messagesUtils->pullMessages( $parentRoute );
 
         return $this->render('TellawLeadsFactoryBundle:Utils:messages.html.twig', array ("messages" => $pooledMessages));
+
+    }
+
+    /**
+     * @Route("/preferences/settimeperiod", name="_utils_preferences_timeperiod")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function setTimeperiodPreferenceAction ( Request $request ) {
+
+
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->get('lf.utils');
+
+        /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPrefences */
+        $userPrefences = $utils->getUserPreferences();
+
+        $data = array( 'datemin' => $userPrefences->getDataPeriodMinDate() , 'datemax' => $userPrefences->getDataPeriodMaxDate() );
+
+        $formBuilder = $this->createFormBuilder($data);
+        $formBuilder->setAction($this->generateUrl('_utils_preferences_timeperiod'));
+        $formBuilder->setMethod('POST')
+            ->add('datemin', 'date', array(
+                    'label' => 'Date de début',
+                    'widget'=>'single_text')
+            )->add('datemax', 'date', array(
+                    'label' => 'Date de fin',
+                    'widget'=>'single_text')
+            )->add('vlaider', 'submit')
+        ;
+
+
+        // Create the form used for grap configuration
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $datemin = $form["datemin"]->getData();;
+            $datemax = $form["datemax"]->getData();;
+
+            $userPrefences->setDataPeriodMinDate ( $datemin );
+            $userPrefences->setDataPeriodMaxDate ( $datemax );
+
+            $userPrefences = $utils->setUserPreferences( $userPrefences );
+
+            $referer = $this->getRequest()->headers->get('referer');
+            return $this->redirect($referer);
+
+        }
+
+        return $this->render ("TellawLeadsFactoryBundle:monitoring:timeperiod_form.html.twig", array(
+            'form'  => $form->createView()
+        ));
 
     }
 

@@ -23,24 +23,6 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function dashboardAction(Request $request)
     {
-        $data = array();
-
-        $formBuilder = $this->createFormBuilder($data);
-        $formBuilder->setMethod('POST')
-            ->add('period', 'choice', array(
-                    'choices' => array(
-                        Chart::PERIOD_YEAR  => 'Année',
-                        Chart::PERIOD_MONTH => 'Mois'
-                    ),
-                    'label' => 'Période du graphique',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
-                )
-
-            )->add('datemin', 'date', array('label' => 'Début'));
-
-        // Create the form used for grap configuration
-        $form = $formBuilder->getForm();
-        $form->handleRequest($request);
 
         // Logged User
         $user_id = $this->get('security.context')->getToken()->getUser()->getId();
@@ -52,7 +34,6 @@ class MonitoringController extends AbstractLeadsController{
         $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getTypesForUser( $user_id );
 
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig", array(
-            'form'  => $form->createView(),
             'types' => $types,
             'bookmarks' => $bookmarks
         ));

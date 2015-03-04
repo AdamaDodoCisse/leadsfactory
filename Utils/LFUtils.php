@@ -3,6 +3,7 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
+use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
 
 class LFUtils {
 
@@ -175,6 +176,31 @@ class LFUtils {
         } else {
             return false;
         }
+
+    }
+
+    public function getUserPreferences () {
+
+        $session = $this->container->get('session');
+
+        if ($session->has ('user-preferences')) {
+            return $session->get('user-preferences');
+
+        } else {
+            $userPreferences = new UserPreferences();
+            $session->set ('user-preferences', $userPreferences);
+            $session->save();
+
+            return $userPreferences;
+
+        }
+
+    }
+
+    public function setUserPreferences ( $userPreferences ) {
+        $session = $this->container->get('session');
+        $session->set ('user-preferences', $userPreferences);
+        $session->save();
 
     }
 
