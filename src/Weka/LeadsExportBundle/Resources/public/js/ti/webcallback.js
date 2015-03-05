@@ -9,12 +9,15 @@ var webcallback = {
     callCounter: 0,
     maxCalls: 3,
     formId: '',
+    trackingOrigin: '',
     init: function(form_id){
         this.formId = form_id;
+        this.trackingOrigin = this.setTrackingOrigin();
         jQuery('#'+this.formId).submit(function(e){
 
             if(!jQuery(this).validationEngine('validate')){
-                e.preventDefault();
+                e.preventDefault();console.log(webcallback.trackingOrigin);
+                _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_error' ]);
                 return;
             }
 
@@ -25,6 +28,7 @@ var webcallback = {
             switch(webcallback.step){
                 case 'call':
                     webcallback.call();
+                    _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterCodeDI' ]);
                     break;
                 case 'check':
                     webcallback.check();
@@ -38,16 +42,20 @@ var webcallback = {
             if(jQuery.inArray(webcallback.countryCode, ['FR', 'BE', 'LU', 'CH', 'MC']) !== -1){
                 jQuery('#callback-step2').show();
                 jQuery('#di-msg').hide();
+                jQuery('#callback-submit').show();
                 webcallback.step = 'call';
+                _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterTelDI' ]);
             }else{
                 jQuery('#callback-step2').hide();
                 jQuery('#callback-step3').hide();
+                jQuery('#callback-submit').hide();
                 jQuery('#di-msg').show();
                 var redirect_url = webcallback.getRedirectUrl();
                 jQuery('#di-msg #di-link').click(function(){
                     window.location.href = redirect_url;
                 });
                 webcallback.step = 'init';
+                _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_formulaireDI_Export' ]);
             }
         });
     },
@@ -118,5 +126,13 @@ var webcallback = {
         params += '&utmcontent='+jQuery('#lffield\\[utmcontent\\]').val();
 
         return encodeURI('/information-request.html?'+params);
+    },
+    setTrackingOrigin: function()
+    {
+        if(jQuery('#lffield\\[trackingOrigin\\]').val() == 'extract'){
+            return 'extrait';
+        }else if(jQuery('#lffield\\[trackingOrigin\\]').val() == 'wcb'){
+            return 'webCallBack';
+        }
     }
 };
