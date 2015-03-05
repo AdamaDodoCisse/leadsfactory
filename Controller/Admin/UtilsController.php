@@ -49,7 +49,12 @@ class UtilsController extends AbstractLeadsController
         /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPrefences */
         $userPrefences = $utils->getUserPreferences();
 
-        $data = array( 'datemin' => $userPrefences->getDataPeriodMinDate() , 'datemax' => $userPrefences->getDataPeriodMaxDate() );
+        $data = array(  'datemin' => $userPrefences->getDataPeriodMinDate() ,
+                        'datemax' => $userPrefences->getDataPeriodMaxDate() ,
+                        'zoom' => $userPrefences->getDataZoomOption(),
+                        'type' => $userPrefences->getDataTypeOfGraph(),
+                        'moyenne' => $userPrefences->getDataDisplayAverage(),
+                        'total' => $userPrefences->getDataDisplayTotal());
 
         $formBuilder = $this->createFormBuilder($data);
         $formBuilder->setAction($this->generateUrl('_utils_preferences_timeperiod'));
@@ -60,7 +65,40 @@ class UtilsController extends AbstractLeadsController
             )->add('datemax', 'date', array(
                     'label' => 'Date de fin',
                     'widget'=>'single_text')
-            )->add('vlaider', 'submit')
+            )
+            ->add('type', 'choice', array(
+                    'label' => 'Type de graphique',
+                    'choices' => array(
+                        'bar' => 'Barre cumulatives',
+                        'chart' => 'Courbes superposées'),
+                    'attr'   =>  array(
+                        'class'   => 'graphadvanced',
+                    )
+                )
+            )
+            ->add('zoom', 'choice', array(
+                    'label' => 'Option de zoom',
+                    'choices' => array(
+                        'none'  => 'Aucun zoom',
+                        'zoom' => 'Zoom par molette de souris',
+                        'subgraph' => 'Zoom sur region'),
+                    'attr'   =>  array(
+                        'class'   => 'graphadvanced')
+                    )
+            )->add('moyenne', 'checkbox', array(
+                    'label' => 'Afficher la moyenne',
+                    'attr'   =>  array(
+                        'class'   => 'graphadvanced'),
+                    'required'    => false
+                )
+            )->add('total', 'checkbox', array(
+                    'label' => 'Afficher le total',
+                    'attr'   =>  array(
+                        'class'   => 'graphadvanced'),
+                    'required'    => false
+                )
+            )
+            ->add('Valider', 'submit')
         ;
 
 
@@ -70,11 +108,15 @@ class UtilsController extends AbstractLeadsController
 
         if ($form->isValid()) {
 
-            $datemin = $form["datemin"]->getData();;
-            $datemax = $form["datemax"]->getData();;
+            $datemin = $form["datemin"]->getData();
+            $datemax = $form["datemax"]->getData();
 
             $userPrefences->setDataPeriodMinDate ( $datemin );
             $userPrefences->setDataPeriodMaxDate ( $datemax );
+            $userPrefences->setDataZoomOption ( $form["zoom"]->getData() );
+            $userPrefences->setDataTypeOfGraph ( $form["type"]->getData() );
+            $userPrefences->setDataDisplayAverage ( $form["moyenne"]->getData() );
+            $userPrefences->setDataDisplayTotal ( $form["total"]->getData() );
 
             $userPrefences = $utils->setUserPreferences( $userPrefences );
 

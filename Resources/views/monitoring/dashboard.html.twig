@@ -11,7 +11,7 @@
     <div class="col-md-12">
 
         <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
-            <div id="demo-chart" class="widget-body blue">
+            <div id="demo-chart" class="widget-body blue" style="height:500px;">
                 <!-- This div will hold the chart generated in the footer -->
             </div>
         </div>
@@ -43,18 +43,12 @@
         </div>
 
     </div>
-    {% if(app.request.get('form')) %}
-        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
-            "period" : app.request.get('form')['period'],
-            "mode" : "FormType"
-        }
-        )) }}
-    {% else %}
+
         {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
             "mode" : "FormType"
         }
         )) }}
-    {% endif %}
+
 
     <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
 

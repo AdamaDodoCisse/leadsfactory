@@ -44,8 +44,9 @@
 
                 // Create and draw the visualization.
                 // Learn more on configuration for the LineChart: http://code.google.com/apis/chart/interactive/docs/gallery/linechart.html
-                var div = $('#demo-chart'),
-                        divWidth = div.width();
+
+                var div = $('#demo-chart'), divWidth = div.width();
+
                 new google.visualization.LineChart(div.get(0)).draw(data, {
                     title: '{{ chart_title|raw }}',
                     width: divWidth,

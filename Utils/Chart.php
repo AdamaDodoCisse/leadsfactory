@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class Chart {
 
-    const DEBUG_MODE = true;
+    const DEBUG_MODE = false;
 
     /**
      * @var string year|month
@@ -21,7 +21,7 @@ class Chart {
     const PERIOD_YEAR = 'year';
     const PERIOD_MONTH = 'month';
 
-    const ZOOM_SWITCH_RANGE = 90; // Switch from days to month at a range of 90 values
+    const ZOOM_SWITCH_RANGE = 360; // Switch from days to month at a range of 90 values
 
     private $graphTimeRange = null;
 
@@ -54,6 +54,8 @@ class Chart {
      * @var array
      */
     private $specialGraphIndexes;
+
+    private $normalGraph;
 
     private $minDate = null;
     private $maxDate = null;
@@ -262,11 +264,13 @@ class Chart {
             $qb->select(array_merge(array('DATE_FORMAT(l.createdAt,:format) as date', 'count(l) as n'), $this->_getSqlGroupByAggregates()))
                ->from('TellawLeadsFactoryBundle:Leads', 'l')
                ->where('l.form = :form_id')
-               ->andWhere('l.createdAt >= :minDate')
+                ->andWhere('l.createdAt >= :minDate')
+                ->andWhere('l.createdAt <= :maxDate')
                ->groupBy($this->_getSqlGroupByClause())
                ->setParameter('format', $this->_getSqlDateFormat())
                ->setParameter('form_id', $form->getId())
-               ->setParameter('minDate', $minDate)
+                ->setParameter('minDate', $this->_getRangeMinDate()->format('Y-m-d'))
+                ->setParameter('maxDate', $this->_getRangeMaxDate()->format('Y-m-d'))
             ;
             $qb = $this->excludeInternalLeads($qb);
             $results = $qb->getQuery()->getResult();
@@ -313,7 +317,7 @@ class Chart {
             }
         }
 
-        var_dump ($data);
+        if (Chart::DEBUG_MODE) var_dump ($data);
 
         $chartData = $this->_formatChartData($data);
         $chartData = $this->_addAdditionalGraphs($chartData);
@@ -494,8 +498,11 @@ class Chart {
         }
 
         if (Chart::DEBUG_MODE) {
+            var_dump ('Formated output');
             var_dump ($targetArray);
+            var_dump ('Google Formated output <chartData>');
             var_dump ($googleFormat);
+            var_dump ('TimeRange output');
             var_dump ($timeRange);
         }
 
@@ -511,21 +518,34 @@ class Chart {
      */
     private function _addAdditionalGraphs($chartData)
     {
-        // En mode d'affichage d'un formulaire ou d'un type unique on ajoute la courbe moyenne
-        //if(count($chartData) <= 1 || count($this->formType) == 1 )
-        $chartData[] = $this->_addAverageGraph($chartData);
 
-        //En mode d'affichage d'un type, on ajoute la courbe qui totalise les valeurs de chacun des formulaires
-        //if(count($this->formType) == 1 && $this->graph_count > 1)
-        $chartData[] = $this->_addTotalGraph($chartData);
+        $this->graph_count = count($chartData);
 
+        $utils = $this->container->get("lf.utils");
+        $user_preferences = $utils->getUserPreferences();
+
+        if ($user_preferences->getDataDisplayAverage()) {
+            // En mode d'affichage d'un formulaire ou d'un type unique on ajoute la courbe moyenne
+            //if(count($chartData) <= 1 || count($this->formType) == 1 )
+            $chartData[] = $this->_addAverageGraph($chartData);
+        }
+
+        if ($user_preferences->getDataDisplayTotal()) {
+            //En mode d'affichage d'un type, on ajoute la courbe qui totalise les valeurs de chacun des formulaires
+            //if(count($this->formType) == 1 && $this->graph_count > 1)
+            $chartData[] = $this->_addTotalGraph($chartData);
+        }
 
         //Set les courbes "spéciales" pour distinction dans le template
-        if(count($chartData) != $this->graph_count)
+        //if(count($chartData) != $this->graph_count) {
             $this->setSpecialGraphIndexes($chartData);
+            $this->setNormalGraph($chartData);
+        //}
 
         return $chartData;
     }
+
+
 
     /**
      * Add total graph
@@ -556,19 +576,20 @@ class Chart {
     private function _addAverageGraph($chartData)
     {
         $graphLength = count($chartData[0]);
+        $nbGraphs = count ($chartData);
         $value = 0;
+
+        $moyenne = array('Moyenne');
         for($i=1; $i<$graphLength; $i++){
+            $value = 0;
             foreach($chartData as $graphData){
                 $value += $graphData[$i];
+
             }
+            $moyenne[] = $value/$nbGraphs;
         }
-        
-        $value = round($value/($graphLength -1), 1);
 
-        $average = array_fill(1, $graphLength-1, $value);
-        array_unshift($average, 'Moyenne');
-
-        return $average;
+        return $moyenne;
     }
 
     /**
@@ -769,6 +790,22 @@ class Chart {
             }
         }
         $this->specialGraphIndexes = $specials;
+    }
+
+    public function setNormalGraph($chartData)
+    {
+
+        $specials = array();
+        foreach($chartData as $key=>$data){
+            if($key < ($this->graph_count)){
+                $specials[] = $data[0];
+            }
+        }
+        $this->normalGraph = $specials;
+    }
+
+    public function getNormalGraph () {
+        return json_encode( $this->normalGraph );
     }
 
     // TODO: move to fixtures or remove

@@ -1,4 +1,6 @@
-
+{%- block checkbox_widget -%}
+    &nbsp;&nbsp;<input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock checkbox_widget -%}
 {% block form_widget_simple %}
     {% spaceless %}
         {% set type = type|default('text') %}

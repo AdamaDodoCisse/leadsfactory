@@ -56,17 +56,27 @@ class FormRepository extends EntityRepository
 
     }
 
-	public function setStatisticsForId($form_id)
+	public function setStatisticsForId($form_id, $utils)
 	{
 		// Get forms in this type
 		$form = $this->find( $form_id );
 
+        /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
+        $userPreferences = $utils->getUserPreferences();
+
+        $minDate = $userPreferences->getDataPeriodMinDate();
+        $maxDate = $userPreferences->getDataPeriodMaxDate();
+
 		// Load the number of pages views
 		$qb = $this->_em->createQueryBuilder();
 		$qb->select('count(t)')
-		   ->from('TellawLeadsFactoryBundle:Tracking', 't')
-		   ->where('t.form = :formId')
-		   ->setParameter('formId', $form_id )
+		    ->from('TellawLeadsFactoryBundle:Tracking', 't')
+		    ->where('t.form = :formId')
+            ->andWhere('t.created_at >= :minDate')
+            ->andWhere('t.created_at <= :maxDate')
+		    ->setParameter('formId', $form_id )
+            ->setParameter('minDate', $minDate )
+            ->setParameter('maxDate', $maxDate )
 		;
 		$nbviews = $qb->getQuery()->getSingleScalarResult();
 
@@ -75,7 +85,11 @@ class FormRepository extends EntityRepository
 		$qb->select('count(l)')
 		    ->from('TellawLeadsFactoryBundle:Leads', 'l')
 		    ->where('l.form = :formId')
+            ->andWhere('l.createdAt >= :minDate')
+            ->andWhere('l.createdAt <= :maxDate')
 		    ->setParameter('formId', $form_id )
+            ->setParameter('minDate', $minDate )
+            ->setParameter('maxDate', $maxDate )
 		;
 		$qb = $this->excludeInternalLeads($qb);
 		$nbleads = $qb->getQuery()->getSingleScalarResult();
@@ -104,22 +118,46 @@ class FormRepository extends EntityRepository
 
     }
 
-    public function getStatisticsForUtmInForm ( $utm, $form_id ) {
+    public function getStatisticsForUtmInForm ( $utm, $form_id, $utils ) {
 
         $item = array();
 
+        /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
+        $userPreferences = $utils->getUserPreferences();
+
+        $minDate = $userPreferences->getDataPeriodMinDate();
+        $maxDate = $userPreferences->getDataPeriodMaxDate();
+
         // Load the number of pages views
-        $dql = 'SELECT count(f) as nbviews FROM TellawLeadsFactoryBundle:Tracking t, TellawLeadsFactoryBundle:Form f  WHERE t.form = f.id AND f.id = :formId AND t.utm_campaign = :utm';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->setParameter('utm', $utm )->getResult();
+        $dql = 'SELECT  count(f) as nbviews
+                        FROM TellawLeadsFactoryBundle:Tracking t, TellawLeadsFactoryBundle:Form f
+                        WHERE t.form = f.id
+                        AND f.id = :formId
+                        AND t.utm_campaign = :utm
+                        AND t.created_at >= :minDate
+                        AND t.created_at <= :maxDate';
+
+        $result = $this->getEntityManager()
+                        ->createQuery($dql)
+                        ->setParameter('formId', $form_id )
+                        ->setParameter('utm', $utm )
+                        ->setParameter('minDate', $minDate )
+                        ->setParameter('maxDate', $maxDate )
+                        ->getResult();
+
         $nbviews = $result[0]["nbviews"];
 
 	    $qb = $this->_em->createQueryBuilder();
 	    $qb->select('count(l)')
-	       ->from('TellawLeadsFactoryBundle:Leads', 'l')
-	       ->where('l.form = :formId')
-	       ->setParameter('formId', $form_id )
-	       ->andWhere('l.utmcampaign = :utm')
-	       ->setParameter('utm', $utm)
+	        ->from('TellawLeadsFactoryBundle:Leads', 'l')
+	        ->where('l.form = :formId')
+	        ->setParameter('formId', $form_id )
+	        ->andWhere('l.utmcampaign = :utm')
+            ->andWhere('l.createdAt >= :minDate')
+            ->andWhere('l.createdAt <= :maxDate')
+	        ->setParameter('utm', $utm)
+            ->setParameter('minDate', $minDate )
+            ->setParameter('maxDate', $maxDate )
 	    ;
 	    $qb = $this->excludeInternalLeads($qb);
 	    $nbleads = $qb->getQuery()->getSingleScalarResult();

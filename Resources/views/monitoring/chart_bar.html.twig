@@ -1,105 +1,89 @@
 <!-- template : chart_bar.html.twig -->
 <!-- Charts library -->
 <!-- Load the AJAX API -->
-<script src="http://www.google.com/jsapi"></script>
+<!-- script src="http://www.google.com/jsapi"></script> -->
+<!-- Load c3.css -->
+<link href="{{ asset('bundles/tellawleadsfactory/css/c3.css') }}" rel="stylesheet" type="text/css">
+
+<!-- Load d3.js and c3.js -->
+<script src="{{ asset('bundles/tellawleadsfactory/js/d3.js') }}" charset="utf-8"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/js/c3.js') }}"></script>
+<style>
+    .c3-tooltip .name {
+        line-height: 12px;
+        padding-top:3px;
+    }
+
+</style>
 <script>
 
-    /*
-     * This script is dedicated to building and refreshing the chart
-     */
+    <!-- http://c3js.org/examples.html  -->
 
-    var chartInit = false,
-            drawVisitorsChart = function()
-            {
-                // Create our data table.
-                var data = new google.visualization.DataTable();
-                var raw_data = {{ chart_data|raw }}
+    var chart = c3.generate({
+        bindto: '#demo-chart',
+        data: {
+            columns: {{ chart_data|raw }},
+            {% if user_preferences.dataTypeOfGraph == 'chart' %}
+            type: 'spline',
+            {% else %}
+            type: 'bar',
+            {% endif %}
+            types: {
+                Total: 'spline',
+                Moyenne: 'spline'
+            },
+            groups: [{{ normal_graphs|raw }}]
+        },
+        legend: {
+            position: 'right'
+        },
+        {% if user_preferences.dataZoomOption == 'subgraph' %}
+        subchart: {
+            show: true
+        },
+        {% elseif user_preferences.dataZoomOption == 'zoom' %}
+        zoom: {
+            enabled: true,
+            rescale: true
+        },
+        {% else %}
+        {% endif %}
 
-                var range = {{ time_range|raw }}
 
-                data.addColumn('string', 'Month');
-                for (var i = 0; i < raw_data.length; ++i)
-                {
-                    data.addColumn('number', raw_data[i][0]);
-                }
 
-                data.addRows(range.length);
-
-                for (var j = 0; j < range.length; ++j)
-                {
-                    data.setValue(j, 0, range[j]);
-                }
-                for (var i = 0; i < raw_data.length; ++i)
-                {
-                    for (var j = 1; j < raw_data[i].length; ++j)
-                    {
-                        data.setValue(j-1, i+1, raw_data[i][j]);
-                    }
-                }
-
-                // Create and draw the visualization.
-                // Learn more on configuration for the LineChart: http://code.google.com/apis/chart/interactive/docs/gallery/linechart.html
-                var div = $('#demo-chart'),
-                        divWidth = div.width();
-
-                new google.visualization.ComboChart(div.get(0)).draw(data, {
-                    title: '{{ chart_title|raw }}',
-                    height: '400',
-                    width: divWidth,
-                    legend: 'right',
-                    yAxis: {title: '(thousands)'},
-                    backgroundColor: 'transparent',	// IE8 and lower do not support transparency
-                    legendTextStyle: { color: 'white' },
-                    titleTextStyle: { color: 'white' },
-                    hAxis: {
-                        textStyle: { color: 'white' }
+        axis: {
+            x: {
+                type: 'category',
+                tick: {
+                    culling : {
+                      max : 30
                     },
-                    vAxis: {
-                        textStyle: { color: 'white' },
-                        baselineColor: '#666666',
-                        gridlines: {count: 10},
-                        viewWindowMode: 'maximized'
-                        //format: '#,#'
-                    },
-                    chartArea: {
-                        top: 35,
-                        left: 50,
-                        width: divWidth-100
-                    },
-                    legend: 'bottom',
-                    seriesType: "bars",
-                    isStacked: true,
-                    series: {
-                        {% for graph in special_graphs %}
-                            '{{ graph }}': {type: "line"},
-                        {% endfor %}
-                    }
-                });
-
-                // Message only when resizing
-                if (chartInit)
-                {
-                    notify('Chart resized', 'The width change event has been triggered.', {
-                        icon: 'img/demo/icon.png'
-                    });
-                }
-
-                // Ready
-                chartInit = true;
-            };
-
-    // Load the Visualization API and the piechart package.
-    google.load('visualization', '1', {
-        'packages': ['corechart'], 'language': 'fr'
+                    rotate: 75,
+                    multiline: false
+                },
+                height: 130,
+                categories: {{ time_range|raw }}
+            }
+        },
+        grid: {
+            x: {
+                show: true
+            },
+            y: {
+                show: true
+            }
+        }
     });
 
-    // Set a callback to run when the Google Visualization API is loaded.
-    google.setOnLoadCallback(drawVisitorsChart);
+    function switchStatus(value) {
 
-    // Watch for block resizing
-    //$('#demo-chart').widthchange(drawVisitorsChart);
+        if (value) {
+            alert ("ok"+value);
 
-    // Respond.js hook (media query polyfill)
-    $(document).on('respond-ready', drawVisitorsChart);
+        } else {
+            alert ("nok");
+        }
+
+    }
 
 </script>

@@ -15,7 +15,7 @@
 
             <div class="col-md-12">
 
-                <div id="demo-chart" class="widget-body blue">
+                <div id="demo-chart" class="widget-body blue"  style="height:500px;">
                     <!-- This div will hold the chart generated in the footer -->
                 </div>
 
@@ -35,8 +35,9 @@
 
             <div class="col-md-12">
                 <div class="widget-body custom-form">
-                    {{ form(form) }}
+                    {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
                 </div>
+
                 <div class="widget-body custom-form" style="padding-top:10px;">
                     <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser un autre formulaire :</b></div>
 

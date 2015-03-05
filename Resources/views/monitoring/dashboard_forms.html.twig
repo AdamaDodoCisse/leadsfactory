@@ -12,14 +12,14 @@
     <div class="col-md-12">
 
         <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
-            <div id="demo-chart" class="widget-body blue">
+            <div id="demo-chart" class="widget-body blue" style="height:500px;">
                 <!-- This div will hold the chart generated in the footer -->
             </div>
         </div>
 
         <div class="col-md-4" style="margin-top:20px;">
             <div class="widget-body custom-form">
-                {{ form(form) }}
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
             </div>
         </div>
 

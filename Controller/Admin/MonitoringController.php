@@ -191,6 +191,9 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getUtmLinkedToFormAction ( $form_id ) {
 
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
+
 	    $form_repository = $this->get('leadsfactory.form_repository');
 
         $entity = $form_repository->find( $form_id );
@@ -199,7 +202,7 @@ class MonitoringController extends AbstractLeadsController{
         $utmsObjects = array();
 
         foreach ( $utms as $item ) {
-            $result = $form_repository->getStatisticsForUtmInForm( $item["utm"], $form_id );
+            $result = $form_repository->getStatisticsForUtmInForm( $item["utm"], $form_id, $utils );
             $utmsObjects[$result["transformRate"]] = $result;
         }
 
@@ -218,12 +221,15 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getFormsInTypeWidgetAction ( $type_id ) {
 
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
+
         $entities = $this->get('leadsfactory.form_type_repository')->getFormsInFormType( $type_id );
 
         $forms = array();
 
         foreach ( $entities as $form ) {
-            $form = $this->get('leadsfactory.form_repository')->setStatisticsForId($form->getId());
+            $form = $this->get('leadsfactory.form_repository')->setStatisticsForId($form->getId(), $utils);
             $forms[$form->transformRate] = $form;
         }
 
@@ -285,13 +291,17 @@ class MonitoringController extends AbstractLeadsController{
             throw new \Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
         }
 
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
+
         $chartData = $chart->loadChartData();
 
         $data = array(
             'chart_data'        => $chartData,
             'time_range'        => $chart->getTimeRange(),
             'chart_title'       => $chart->getChartTitle(),
-            'special_graphs'    => $chart->getSpecialGraphIndexes($chartData) //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
+            'normal_graphs'    => $chart->getNormalGraph($chartData), //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
+            'user_preferences' => $utils->getUserPreferences()
         );
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig", $data);
@@ -365,7 +375,11 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getTypeViewStatisticsAction($type_id)
     {
-        $formTypeEntity = $this->get('leadsfactory.form_type_repository')->setStatisticsForId($type_id);
+
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
+
+        $formTypeEntity = $this->get('leadsfactory.form_type_repository')->setStatisticsForId($type_id, $utils);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormTypeItem.html.twig", array(
             'formType' => $formTypeEntity,
@@ -377,7 +391,11 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function getFormViewStatisticsAction($form_id)
     {
-        $formEntity = $this->get('leadsfactory.form_repository')->setStatisticsForId($form_id);
+
+        /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
+        $utils = $this->container->get('lf.utils');
+
+        $formEntity = $this->get('leadsfactory.form_repository')->setStatisticsForId($form_id, $utils);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:statisticsFormItem.html.twig", array(
             'form' => $formEntity,

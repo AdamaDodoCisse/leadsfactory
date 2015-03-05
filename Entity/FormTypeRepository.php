@@ -65,33 +65,59 @@ class FormTypeRepository extends EntityRepository
 
     public function getFormsInFormType ( $formType_id ) {
 
-        $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:FormType ft WHERE f.formType = ft.id AND ft.id=:formType_id";
+        $dql = "SELECT f
+                FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:FormType ft
+                WHERE f.formType = ft.id
+                AND ft.id=:formType_id";
+
         $result = $this->getEntityManager()->createQuery($dql)->setParameter('formType_id', $formType_id )->getResult();
 
         return $result;
 
     }
 
-    public function setStatisticsForId ( $formType_id ) {
+    public function setStatisticsForId ( $formType_id, $utils ) {
 
         // Get forms in this type
         $formType = $this->find( $formType_id );
 
-        // Load the number of pages views
+        /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
+        $userPreferences = $utils->getUserPreferences();
 
-        $dql = 'SELECT count(f) as nbviews FROM TellawLeadsFactoryBundle:Tracking t,TellawLeadsFactoryBundle:FormType ft, TellawLeadsFactoryBundle:Form f  WHERE ft.id = f.formType AND t.form = f.id AND ft.id = :formTypeId';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formTypeId', $formType_id )->getResult();
+        $minDate = $userPreferences->getDataPeriodMinDate();
+        $maxDate = $userPreferences->getDataPeriodMaxDate();
+
+        // Load the number of pages views
+        $dql = 'SELECT count(f) as nbviews
+                FROM TellawLeadsFactoryBundle:Tracking t,TellawLeadsFactoryBundle:FormType ft, TellawLeadsFactoryBundle:Form f
+                WHERE ft.id = f.formType
+                AND t.form = f.id
+                AND ft.id = :formTypeId
+                AND t.created_at >= :minDate
+                AND t.created_at <= :maxDate';
+
+
+        $result = $this->getEntityManager()
+                    ->createQuery($dql)
+                    ->setParameter('formTypeId', $formType_id )
+                    ->setParameter('minDate', $minDate )
+                    ->setParameter('maxDate', $maxDate )
+                    ->getResult();
+
         $nbviews = $result[0]["nbviews"];
 
+        // Load the number of leads
 	    $qb = $this->_em->createQueryBuilder();
 	    $qb->select('count(l)')
 	        ->from('TellawLeadsFactoryBundle:Leads', 'l')
 	        ->where('l.formType = :formTypeId')
+            ->andWhere('l.createdAt >= :minDate')
+            ->andWhere('l.createdAt <= :maxDate')
 		    ->setParameter('formTypeId', $formType_id)
+            ->setParameter('minDate', $minDate )
+            ->setParameter('maxDate', $maxDate )
 	    ;
-
 	    $qb = $this->excludeInternalLeads($qb);
-
 	    $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
