@@ -35,6 +35,7 @@ class LeadsRepository extends EntityRepository
             $dql .= $where;
         }
 
+        $dql .= " ORDER BY l.createdAt DESC";
 
         $query = $this->getEntityManager()
             ->createQuery($dql)

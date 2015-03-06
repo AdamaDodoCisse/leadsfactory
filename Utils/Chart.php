@@ -21,7 +21,8 @@ class Chart {
     const PERIOD_YEAR = 'year';
     const PERIOD_MONTH = 'month';
 
-    const ZOOM_SWITCH_RANGE = 360; // Switch from days to month at a range of 90 values
+    // disabled for now, but kept for later use
+    const ZOOM_SWITCH_RANGE = 9999; // Switch from days to month at a range of 90 values
 
     private $graphTimeRange = null;
 
