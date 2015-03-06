@@ -6,6 +6,18 @@ use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
 class WekaWebcallback extends BaseMapping {
 
+	public function getCpwCorpName($data)
+	{
+		if(isset($data['type-etablissement']))
+			return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
+		return 'undefined';
+	}
+
+	public function getEntCorpName($data)
+	{
+		return $this->getCpwCorpName($data);
+	}
+
 	public function getCpwOriIDCode($data)
 	{
 		return $this->getOrigine($data);
