@@ -9,3 +9,34 @@
 [2015-03-06 11:54:43,612][INFO ][http                     ] [Farallah] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.229.130:9200]}
 [2015-03-06 11:54:43,613][INFO ][node                     ] [Farallah] started
 [2015-03-06 11:54:43,625][INFO ][gateway                  ] [Farallah] recovered [0] indices into cluster_state
+[2015-03-06 14:19:09,968][INFO ][node                     ] [Farallah] stopping ...
+[2015-03-06 14:19:10,017][INFO ][node                     ] [Farallah] stopped
+[2015-03-06 14:19:10,018][INFO ][node                     ] [Farallah] closing ...
+[2015-03-06 14:19:10,025][INFO ][node                     ] [Farallah] closed
+[2015-03-06 14:19:44,039][INFO ][node                     ] [Skywalker] version[1.4.4], pid[24723], build[c88f77f/2015-02-19T13:05:36Z]
+[2015-03-06 14:19:44,041][INFO ][node                     ] [Skywalker] initializing ...
+[2015-03-06 14:19:44,054][INFO ][plugins                  ] [Skywalker] loaded [], sites [head]
+[2015-03-06 14:19:46,933][INFO ][node                     ] [Skywalker] initialized
+[2015-03-06 14:19:46,935][INFO ][node                     ] [Skywalker] starting ...
+[2015-03-06 14:19:47,043][INFO ][transport                ] [Skywalker] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/192.168.229.130:9300]}
+[2015-03-06 14:19:47,063][INFO ][discovery                ] [Skywalker] elasticsearch/ZQX6sXy5RK-9Y0ymRnfMgQ
+[2015-03-06 14:19:50,841][INFO ][cluster.service          ] [Skywalker] new_master [Skywalker][ZQX6sXy5RK-9Y0ymRnfMgQ][ubuntu][inet[/192.168.229.130:9300]], reason: zen-disco-join (elected_as_master)
+[2015-03-06 14:19:50,869][INFO ][http                     ] [Skywalker] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.229.130:9200]}
+[2015-03-06 14:19:50,870][INFO ][node                     ] [Skywalker] started
+[2015-03-06 14:19:50,885][INFO ][gateway                  ] [Skywalker] recovered [0] indices into cluster_state
+[2015-03-06 14:24:17,197][INFO ][cluster.metadata         ] [Skywalker] [test] creating index, cause [api], shards [5]/[1], mappings []
+[2015-03-06 14:29:21,973][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] creating index, cause [api], shards [5]/[1], mappings [Form, Leads]
+[2015-03-06 14:31:26,613][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] deleting index
+[2015-03-06 14:31:26,740][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] creating index, cause [api], shards [5]/[1], mappings [Form, Leads]
+[2015-03-06 14:31:40,112][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] update_mapping [Form] (dynamic)
+[2015-03-06 14:41:07,691][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] deleting index
+[2015-03-06 14:41:07,863][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] creating index, cause [api], shards [5]/[1], mappings [Form, Leads]
+[2015-03-06 14:41:16,772][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] update_mapping [Form] (dynamic)
+[2015-03-06 14:41:18,223][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] update_mapping [Form] (dynamic)
+[2015-03-06 14:45:48,965][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] deleting index
+[2015-03-06 14:45:49,106][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] creating index, cause [api], shards [5]/[1], mappings [Form, Leads]
+[2015-03-06 14:45:58,176][INFO ][cluster.metadata         ] [Skywalker] [leadsfactory] update_mapping [Form] (dynamic)
+[2015-03-06 14:47:02,375][INFO ][node                     ] [Skywalker] stopping ...
+[2015-03-06 14:47:02,525][INFO ][node                     ] [Skywalker] stopped
+[2015-03-06 14:47:02,526][INFO ][node                     ] [Skywalker] closing ...
+[2015-03-06 14:47:02,539][INFO ][node                     ] [Skywalker] closed

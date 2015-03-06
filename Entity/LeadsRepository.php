@@ -14,6 +14,11 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsRepository extends EntityRepository
 {
 
+    public function createIsActiveQueryBuilder ($entityAlias) {
+        $qb = $this->createQueryBuilder($entityAlias);
+        return $qb;
+    }
+
     /**
      * @param $keyword
      * @param int $page
