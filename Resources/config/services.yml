@@ -121,3 +121,26 @@ services:
       factory_service: doctrine.orm.default_entity_manager
       factory_method: getRepository
       arguments: ['TellawLeadsFactoryBundle:Export']
+
+fos_elastica:
+    clients:
+        default: { host: 192.168.22.130, port: 9200 }
+    serializer:
+        callback_class: FOS\ElasticaBundle\Serializer\Callback
+        serializer: serializer
+    indexes:
+        leadsfactory:
+            client: default
+            types:
+                Form:
+                    mappings: ~
+                    persistence:
+                        driver: orm # orm, mongodb, propel are available
+                        model:  Tellaw\Bundle\LeadsFactoryBundle\Entity\Form
+                        provider: ~
+                Leads:
+                    mappings: ~
+                    persistence:
+                        driver: orm
+                        model:  Tellaw\Bundle\LeadsFactoryBundle\Entity\Leads
+                        provider: ~

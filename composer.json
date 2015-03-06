@@ -28,7 +28,9 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/security-extra-bundle": "dev-master",
         "mtdowling/cron-expression": "1.0.*",
-        "beberlei/DoctrineExtensions": "0.2-alpha"
+        "beberlei/DoctrineExtensions": "0.2-alpha",
+        "jms/serializer-bundle": "0.12.0",
+        "friendsofsymfony/elastica-bundle": "3.0.8"
     },
     "require-dev": {
         "phpspec/phpspec": "~2.0"

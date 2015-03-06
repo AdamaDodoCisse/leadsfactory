@@ -1,18 +1,11 @@
-[2015-02-20 17:19:39,864][INFO ][node                     ] [La Nuit] version[1.4.4], pid[11108], build[c88f77f/2015-02-19T13:05:36Z]
-[2015-02-20 17:19:39,866][INFO ][node                     ] [La Nuit] initializing ...
-[2015-02-20 17:19:39,873][INFO ][plugins                  ] [La Nuit] loaded [], sites []
-[2015-02-20 17:19:43,898][INFO ][node                     ] [La Nuit] initialized
-[2015-02-20 17:19:43,899][INFO ][node                     ] [La Nuit] starting ...
-[2015-02-20 17:19:44,218][INFO ][transport                ] [La Nuit] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/192.168.229.130:9300]}
-[2015-02-20 17:19:44,238][INFO ][discovery                ] [La Nuit] elasticsearch/_0dCq5t2RTSC_6KCbFddXA
-[2015-02-20 17:19:48,028][INFO ][cluster.service          ] [La Nuit] new_master [La Nuit][_0dCq5t2RTSC_6KCbFddXA][ubuntu][inet[/192.168.229.130:9300]], reason: zen-disco-join (elected_as_master)
-[2015-02-20 17:19:48,080][INFO ][http                     ] [La Nuit] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.229.130:9200]}
-[2015-02-20 17:19:48,081][INFO ][node                     ] [La Nuit] started
-[2015-02-20 17:19:48,087][INFO ][gateway                  ] [La Nuit] recovered [0] indices into cluster_state
-[2015-02-20 17:19:58,147][INFO ][node                     ] [La Nuit] stopping ...
-[2015-02-20 17:19:58,206][INFO ][node                     ] [La Nuit] stopped
-[2015-02-20 17:19:58,207][INFO ][node                     ] [La Nuit] closing ...
-[2015-02-20 17:19:58,228][INFO ][node                     ] [La Nuit] closed
-[2015-02-20 17:23:11,969][INFO ][node                     ] [Count Nefaria] version[1.4.4], pid[11175], build[c88f77f/2015-02-19T13:05:36Z]
-[2015-02-20 17:23:11,971][INFO ][node                     ] [Count Nefaria] initializing ...
-[2015-02-20 17:23:11,977][INFO ][plugins                  ] [Count Nefaria] loaded [], sites []
+[2015-03-06 11:54:35,819][INFO ][node                     ] [Farallah] version[1.4.4], pid[24442], build[c88f77f/2015-02-19T13:05:36Z]
+[2015-03-06 11:54:35,823][INFO ][node                     ] [Farallah] initializing ...
+[2015-03-06 11:54:35,858][INFO ][plugins                  ] [Farallah] loaded [], sites []
+[2015-03-06 11:54:39,520][INFO ][node                     ] [Farallah] initialized
+[2015-03-06 11:54:39,521][INFO ][node                     ] [Farallah] starting ...
+[2015-03-06 11:54:39,793][INFO ][transport                ] [Farallah] bound_address {inet[/0:0:0:0:0:0:0:0:9300]}, publish_address {inet[/192.168.229.130:9300]}
+[2015-03-06 11:54:39,813][INFO ][discovery                ] [Farallah] elasticsearch/jiRooawMRMSU1OLNY80qdQ
+[2015-03-06 11:54:43,588][INFO ][cluster.service          ] [Farallah] new_master [Farallah][jiRooawMRMSU1OLNY80qdQ][ubuntu][inet[/192.168.229.130:9300]], reason: zen-disco-join (elected_as_master)
+[2015-03-06 11:54:43,612][INFO ][http                     ] [Farallah] bound_address {inet[/0:0:0:0:0:0:0:0:9200]}, publish_address {inet[/192.168.229.130:9200]}
+[2015-03-06 11:54:43,613][INFO ][node                     ] [Farallah] started
+[2015-03-06 11:54:43,625][INFO ][gateway                  ] [Farallah] recovered [0] indices into cluster_state
