@@ -66,9 +66,9 @@ class WekaWebcallback extends BaseMapping {
 
 	protected function getOrigine($data)
 	{
-		if(!empty($data['wcp_type'])){
-			if($data['wcp_type'] == 'logiciels')
-				$origine = $data['wcp_type'] == 'logiciels' ? 'WEBCALLBACK_LOGICIEL' : 'WEBCALLBACK_RESDOC';
+		if(!empty($data['wcb_type'])){
+			if($data['wcb_type'] == 'logiciels')
+				$origine = $data['wcb_type'] == 'logiciels' ? 'WEBCALLBACK_LOGICIEL' : 'WEBCALLBACK_RESDOC';
 		}else{
 			$origine = 'WEBCALLBACK_RESDOC';
 		}
