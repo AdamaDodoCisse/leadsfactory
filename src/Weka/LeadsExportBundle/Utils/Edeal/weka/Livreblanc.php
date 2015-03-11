@@ -43,12 +43,7 @@ class Livreblanc extends BaseMapping {
 
     public function getCpwOriIDCode($data)
     {
-        return 'CLASSIC';
-    }
-
-    public function getCpwDate($data)
-    {
-        return date('m/d/Y');
+        return 'WHITE_PAPER';
     }
 
     public function getCpwStatus_Code($data)

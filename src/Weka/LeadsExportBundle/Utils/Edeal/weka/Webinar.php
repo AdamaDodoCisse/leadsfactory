@@ -2,20 +2,9 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
+use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
 
-class Webinar {
-
-    public function getEnterpriseMapping()
-    {
-        return array(
-            "entAd1"		=> "",
-            "entCity"       => "ville",
-            "entCorpName"	=> '',
-            "entCtrCode"    => "",
-            "entPhone"      => "phone",
-            "entZip"		=> "zip",
-        );
-    }
+class Webinar extends BaseMapping {
 
     public function getEntCorpName($data)
     {
@@ -29,72 +18,9 @@ class Webinar {
 		return 'FR';
 	}
 
-    public function getPersonMapping()
-    {
-        return array(
-            'perCity'           => 'ville',
-            'perCivilite'       => 'salutation',
-            'perCtrCode'        => '',
-            'perFstName'        => 'firstName',
-            'perMail'           => 'email',
-            'perName'           => 'lastName',
-            'perPhone'          => 'phone',
-            'perServiceCode'    => 'service',
-            'perZip'            => 'zip',
-        );
-    }
-
     public function getPerCtrCode($data)
     {
         return 'FR';
-    }
-
-    public function getCouponsWebMapping()
-    {
-        return array(
-            'cpwActIDCode'      => '',
-            'cpwAdresse1'       => '',
-            'cpwAdresse2'       => '',
-            'cpwAutresCin'      => '',
-            'cpwCinTmp_'        => '',
-            'cpwCity'           => 'ville',
-            'cpwCivilite'       => 'salutation',
-            'cpwCodeGCM'        => '',
-            'cpwComment'        => '',
-            'cpwCorpName'       => '',
-            'cpwDate'           => '',
-            'cpwDejaClient'     => '',
-            'cpwDemandeRV'      => '',
-            'cpwEmail'          => 'email',
-            'cpwEmailValide'    => '',
-            'cpwEntIDPhone'     => 'phone',
-            'cpwEventIDCode'    => '',
-            'cpwFonctionLabel'  => 'fonction',
-            'cpwMbm'            => '',
-            'cpwNom'            => 'lastName',
-            'cpwOriDossier'     => '',
-            'cpwOriIDCode'      => '',
-            'cpwOrigine'        => '',
-            'cpwPaysCode'       => '',
-            'cpwPerIDMail'      => '',
-            'cpwPhone'          => 'phone',
-            'cpwPrenom'         => 'firstName',
-            'cpwProfilAutre'    => '',
-            'cpwProfilCode'     => '',
-            'cpwStatus_Code'    => '',
-            'cpwStatut'         => '',
-            'cpwStopMailETI'    => '',
-            'cpwStopPartenaires'=> '',
-            'cpwTitre'          => '',
-            'cpwTypePourImport_'=> '',
-            'cpwUtmCampaign'    => 'utmcampaign',
-            'cpwUtmContent'     => '',
-            'cpwUtmMedium'      => '',
-            'cpwUtmSource'      => '',
-            'cpwUtmTerm'        => '',
-            'cpwZip'            => 'zip',
-
-        );
     }
 
     public function getCpwComment($data)
@@ -115,11 +41,6 @@ class Webinar {
     public function getCpwOriIDCode($data)
     {
         return 'WEBINAR';
-    }
-
-    public function getCpwDate($data)
-    {
-        return date('m/d/Y');
     }
 
     public function getCpwStatus_Code($data)
