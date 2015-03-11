@@ -43,6 +43,8 @@ var webcallback = {
                 jQuery('#callback-step2').show();
                 jQuery('#di-msg').hide();
                 jQuery('#callback-submit').show();
+                jQuery('#phone-prefix').html('+'+webcallback.phoneUtil.getCountryCodeForRegion(webcallback.countryCode));
+                webcallback.displayNumberExample();
                 webcallback.step = 'call';
                 _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterTelDI' ]);
             }else{
@@ -134,5 +136,25 @@ var webcallback = {
         }else if(jQuery('#lffield\\[trackingOrigin\\]').val() == 'wcb'){
             return 'webCallBack';
         }
+    },
+    displayNumberExample: function(){
+        switch (this.countryCode)
+        {
+            case 'FR':
+                var example = '+33 1 53 35 20 20';
+                break;
+            case 'BE':
+                var example = '+32 2 51 XX XX X ';
+                break;
+            case 'MC':
+                var example = '+377 92 XX XX XX';
+                break;
+            case 'LU':
+                var example = '+352 5 46 XX X';
+                break;
+            case 'CH':
+                var example = '+41 31 XXX XX XX';
+        }
+        jQuery('#phone-example').html(example);
     }
 };
