@@ -16,7 +16,7 @@ var webcallback = {
         jQuery('#'+this.formId).submit(function(e){
 
             if(!jQuery(this).validationEngine('validate')){
-                e.preventDefault();console.log(webcallback.trackingOrigin);
+                e.preventDefault();
                 _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_error' ]);
                 return;
             }
@@ -62,17 +62,26 @@ var webcallback = {
         });
     },
     call: function(){
+
+        var number = this.phoneUtil.parseAndKeepRawInput(jQuery('#lffield\\[phone\\]').val(), this.countryCode);
+
+        if(!this.phoneUtil.isValidNumberForRegion(number, this.countryCode)){
+            jQuery('#lffield\\[phone\\]').validationEngine('showPrompt', 'Numéro de téléphone invalide');
+            exit();
+        }
+
         if(!this.isCallEnabled()){
             jQuery('#callback-step2').hide();
             jQuery('#callback-step3').hide();
             return;
         }
+
         jQuery('#callback-step3').show();
         window.setTimeout(function () {
             jQuery('#webcallback-calling').hide();
             jQuery('#webcallback-new-call').show();
         }, 15000);
-        var number = this.phoneUtil.parseAndKeepRawInput(jQuery('#lffield\\[phone\\]').val(), this.countryCode);
+
         this.formattedNumber = this.phoneUtil.format(number, this.PNF.E164);
         jQuery.ajax({
             url: baseUrl+'/web/twilio/call',
