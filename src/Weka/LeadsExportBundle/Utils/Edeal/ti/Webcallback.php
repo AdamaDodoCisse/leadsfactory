@@ -19,4 +19,9 @@ class Webcallback extends BaseMapping
 	{
 		return '00000';
 	}
+
+	public function getCpwTypeDemande_($data)
+	{
+		return 'WEBCALLBACK';
+	}
 }
