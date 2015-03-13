@@ -1,3 +1,8 @@
+/**
+ * Commun aux formulaires de webcallback et téléchargement d'extrait
+ *
+ * @type {{step: string, phoneUtil: *, PNF: (i18n.phonenumbers.PhoneNumberFormat|*), countryCode: string, validationCodeIsCorrect: boolean, interceptSubmit: boolean, callEnabled: boolean, callCounter: number, maxCalls: number, formId: string, trackingOrigin: string, init: Function, call: Function, newCall: Function, check: Function, post: Function, isCallEnabled: Function, isAllowedCountry: Function, getRedirectUrl: Function, setTrackingOrigin: Function, displayNumberExample: Function}}
+ */
 var webcallback = {
     step: 'init',
     phoneUtil: i18n.phonenumbers.PhoneNumberUtil.getInstance(),
@@ -21,7 +26,11 @@ var webcallback = {
                 return;
             }
 
-            if(webcallback.interceptSubmit){
+            /**
+             * Pour le cas du téléchargement d'extrait, on autorise la validation du formulaire pour tous
+             * les pays hors FR, LU, BE, etc..., sans contrôle twilio
+             */
+            if(webcallback.interceptSubmit &&  webcallback.isAllowedCountry()){
                 e.preventDefault();
             }
 
@@ -51,6 +60,7 @@ var webcallback = {
                 jQuery('#callback-step2').hide();
                 jQuery('#callback-step3').hide();
                 jQuery('#callback-submit').hide();
+                jQuery('#phone-txt').hide(); // téléchargement extrait
                 jQuery('#di-msg').show();
                 var redirect_url = webcallback.getRedirectUrl();
                 jQuery('#di-msg #di-link').click(function(){
@@ -67,7 +77,6 @@ var webcallback = {
 
         if(!this.phoneUtil.isValidNumberForRegion(number, this.countryCode)){
             jQuery('#lffield\\[phone\\]').validationEngine('showPrompt', 'Numéro de téléphone invalide');
-            exit();
         }
 
         if(!this.isCallEnabled()){
@@ -122,6 +131,9 @@ var webcallback = {
         this.callCounter++;
         return this.callCounter < this.maxCalls ? true : false;
     },
+    isAllowedCountry: function(){
+        return jQuery.inArray(this.countryCode, ['FR', 'BE', 'LU', 'CH', 'MC']) !== -1;
+    },
     getRedirectUrl: function(){
         var params = 'salutation='+jQuery('#lffield\\[salutation\\]').val();
         params += '&lastName='+jQuery('#lffield\\[lastName\\]').val();
@@ -164,6 +176,7 @@ var webcallback = {
             case 'CH':
                 var example = '+41 31 XXX XX XX';
         }
+        jQuery('#phone-txt').show(); // téléchargement extrait
         jQuery('#phone-example').html(example);
     }
 };
