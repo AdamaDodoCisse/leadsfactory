@@ -20,4 +20,9 @@ class Livreblanc extends BaseMapping{
 	{
 		return 'WHITE-PAPER';
 	}
+
+	public function getCpwTypePourImport_($data)
+	{
+		return 'WPWEB';
+	}
 }

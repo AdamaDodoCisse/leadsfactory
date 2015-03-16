@@ -20,4 +20,9 @@ class Extrait extends BaseMapping{
 	{
 		return 'EXTRAIT';
 	}
+
+	public function getCpwTypePourImport_($data)
+	{
+		return 'EGWEB';
+	}
 }

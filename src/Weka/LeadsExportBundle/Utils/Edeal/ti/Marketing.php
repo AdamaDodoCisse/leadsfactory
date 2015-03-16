@@ -8,7 +8,7 @@ class Marketing extends BaseMapping
 {
 	public function getCpwOriIDCode($data)
 	{
-		return 'CLASSIC';
+		return 'MKG';
 	}
 
 	public function getCpwActIDCode($data)
