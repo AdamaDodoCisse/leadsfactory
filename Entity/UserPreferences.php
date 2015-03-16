@@ -24,7 +24,7 @@ class UserPreferences {
         $this->setDataPeriodMaxDate( $datetime );
 
         $yearBefore = new \DateTime();
-        $yearBefore->sub( new \DateInterval( "P1A" ) );
+        $yearBefore->sub( new \DateInterval( "P1M" ) );
         $this->setDataPeriodMinDate( $yearBefore );
 
         $this->dataZoomOption = "none";

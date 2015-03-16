@@ -10,6 +10,7 @@ app/sessions
 bin/
 vendor/
 Search/logs/
+Search/data/elasticsearch/nodes/
 
 # Cache and logs
 /vendor/*
