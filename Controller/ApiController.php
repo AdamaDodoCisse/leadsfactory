@@ -29,6 +29,10 @@ class ApiController extends Controller
         if(!is_null($lead)){
             $data = $lead->getData();
 
+	        $data = json_decode($data, true);
+	        $data['created_at'] = $lead->getCreatedAt();
+	        $data = json_encode($data);
+
             //check key
             if(!$formUtils->checkApiKey($lead->getForm(), $apikey)){
                 //throw new AccessDeniedHttpException('Invalid form key');
