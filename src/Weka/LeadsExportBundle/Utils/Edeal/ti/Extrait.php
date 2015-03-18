@@ -13,7 +13,7 @@ class Extrait extends BaseMapping{
 
 	public function getCpwActIDCode($data)
 	{
-		return '';
+		return in_array($data['pays'], array('FR', 'BE', 'LU', 'CH', 'MC')) ? 'TMK' : 'FMI';
 	}
 
 	public function getCpwTypeDemande_($data)
@@ -21,8 +21,8 @@ class Extrait extends BaseMapping{
 		return 'EXTRAIT';
 	}
 
-	public function getCpwTypePourImport_($data)
+	/*public function getCpwTypePourImport_($data)
 	{
 		return 'EGWEB';
-	}
+	}*/
 }

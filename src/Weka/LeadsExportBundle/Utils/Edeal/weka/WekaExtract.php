@@ -33,7 +33,7 @@ class WekaExtract extends BaseMapping {
 
 	public function getCpwActIDCode($data)
 	{
-		return 'tmk';
+		return '';
 	}
 
 	public function getCpwTypeDemande_($data)
