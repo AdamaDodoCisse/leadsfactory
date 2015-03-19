@@ -21,8 +21,19 @@ class Extrait extends BaseMapping{
 		return 'EXTRAIT';
 	}
 
-	/*public function getCpwTypePourImport_($data)
+	public function getEntPhone($data)
 	{
-		return 'EGWEB';
-	}*/
+		return !empty($data['phone']) ? $data['phone'] : 'undefined';
+	}
+
+	public function getPerPhone($data)
+	{
+		return $this->getEntPhone($data);
+	}
+
+	public function getCpwPhone($data)
+	{
+		return $this->getEntPhone($data);
+	}
+
 }
