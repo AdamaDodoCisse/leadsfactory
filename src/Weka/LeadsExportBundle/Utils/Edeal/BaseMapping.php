@@ -152,7 +152,7 @@ class BaseMapping
 
 	public function getEntCity($data)
 	{
-		if(!isset($data['ville_id']) && !isset($data['ville_text'])){
+		if(empty($data['ville_id']) && empty($data['ville_text'])){
 			return null;
 		}else {
 			return ! empty( $data['ville_id'] ) ? $data['ville_id'] : $data['ville_text'];
