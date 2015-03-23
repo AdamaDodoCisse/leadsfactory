@@ -11,6 +11,11 @@ class Classic extends BaseMapping
 		return 'CLASSIC';
 	}
 
+	public function getCpwTypeDemande_($data)
+	{
+		return 'CLASSIC';
+	}
+
 	public function getCpwActIDCode($data)
 	{
 		return '';

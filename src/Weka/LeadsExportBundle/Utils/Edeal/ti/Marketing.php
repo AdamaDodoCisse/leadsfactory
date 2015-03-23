@@ -11,6 +11,11 @@ class Marketing extends BaseMapping
 		return 'MKG';
 	}
 
+	public function getCpwTypeDemande_($data)
+	{
+		return 'MKG';
+	}
+
 	public function getCpwActIDCode($data)
 	{
 		return '';
