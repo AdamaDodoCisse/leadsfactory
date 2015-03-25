@@ -265,10 +265,15 @@ class FrontController extends Admin\AbstractLeadsController
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setBody($this->renderView('TellawLeadsFactoryBundle:'.$template,
-                array(
-                    'fields' => $data,
-                    'intro' => 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName())), 'text/html'
+            ->setBody(
+                $this->renderView(
+                    'TellawLeadsFactoryBundle:'.$template,
+                    array(
+                        'fields' => $data,
+                        'intro' => 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName()
+                    )
+                ),
+                'text/html'
             );
 
         try{
