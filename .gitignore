@@ -11,6 +11,7 @@ bin/
 vendor/
 Search/logs/
 Search/data/elasticsearch/nodes/
+Search/data/
 
 # Cache and logs
 /vendor/*
