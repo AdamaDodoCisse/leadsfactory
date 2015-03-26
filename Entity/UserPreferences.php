@@ -13,9 +13,29 @@ class UserPreferences {
     protected $dataDisplayAverage = null;
     protected $dataDisplayTotal = null;
 
+    protected $period = null;
+
+    /**
+     * @return null
+     */
+    public function getPeriod()
+    {
+        return $this->period;
+    }
+
+    /**
+     * @param null $period
+     */
+    public function setPeriod($period)
+    {
+        $this->period = $period;
+    }
+
+
     public function __construct () {
 
-
+        // Par defaut la conf se positionne sur 1 mois.
+        $this->setPeriod('1M');
 
         // date
         $datetime = new \DateTime();
@@ -24,7 +44,7 @@ class UserPreferences {
         $this->setDataPeriodMaxDate( $datetime );
 
         $yearBefore = new \DateTime();
-        $yearBefore->sub( new \DateInterval( "P1A" ) );
+        $yearBefore->sub( new \DateInterval( "P1M" ) );
         $this->setDataPeriodMinDate( $yearBefore );
 
         $this->dataZoomOption = "none";
@@ -39,7 +59,27 @@ class UserPreferences {
      */
     public function getDataPeriodMinDate()
     {
+
+        if ( $this->getPeriod() != "custom" && trim($this->getPeriod()) != "") {
+            return $this->getAutoPeriodMinDate();
+        }
+
         return $this->dataPeriodMinDateBis;
+    }
+
+    public function getAutoPeriodMinDate() {
+
+        $period = $this->getPeriod();
+
+        $dateBefore = new \DateTime();
+        $dateBefore->sub( new \DateInterval( "P".$period ) );
+        $dateBefore->setDate( $dateBefore->format("Y"), $dateBefore->format("m"), 1 );
+        $dateBefore->setTime( 0,0,0 );
+
+        return $dateBefore;
+
+        //$this->setDataPeriodMinDate( $dateBefore );
+
     }
 
     /**
@@ -56,6 +96,15 @@ class UserPreferences {
     public function getDataPeriodMaxDate()
     {
         return $this->dataPeriodMaxDate;
+    }
+
+    public function getAutoPeriodMaxDate() {
+
+        $dateBefore = new \DateTime( 'now' );
+        //$this->setDataPeriodMaxDate( $dateBefore );
+
+        return $dateBefore;
+
     }
 
     /**

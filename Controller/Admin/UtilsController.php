@@ -54,18 +54,56 @@ class UtilsController extends AbstractLeadsController
                         'zoom' => $userPrefences->getDataZoomOption(),
                         'type' => $userPrefences->getDataTypeOfGraph(),
                         'moyenne' => $userPrefences->getDataDisplayAverage(),
-                        'total' => $userPrefences->getDataDisplayTotal());
+                        'total' => $userPrefences->getDataDisplayTotal(),
+                        'period' => $userPrefences->getPeriod()
+            );
 
         $formBuilder = $this->createFormBuilder($data);
         $formBuilder->setAction($this->generateUrl('_utils_preferences_timeperiod'));
         $formBuilder->setMethod('POST')
+
+            ->add('period', 'choice', array(
+                    'expanded' => true,
+                    'label' => 'Période glissante (début de mois) ou pésronnalisée (custom)',
+                    'choices' => array(
+
+                        '7D' => '7 Jours',
+                        '1M' => '1 Mois',
+                        '3M' => '3 Mois',
+                        '6M' => '6 Mois',
+                        '1Y' => '1 an',
+                        'custom' => 'Custom',
+                        ),
+                    'attr'   =>  array(
+                        'class'   => 'graphadvanced periodConfiguration'
+                    )
+                )
+            )
+
             ->add('datemin', 'date', array(
                     'label' => 'Date de début',
                     'widget'=>'single_text')
-            )->add('datemax', 'date', array(
+            )
+
+            ->add('datemax', 'date', array(
                     'label' => 'Date de fin',
                     'widget'=>'single_text')
             )
+
+            ->add('displaymode', 'choice', array(
+                    'expanded' => true,
+                    'label' => 'Paramétrage du graphique',
+                    'choices' => array(
+                        'nok' => 'Mode compact',
+                        'ok' => 'Paramètres étendus',
+                    ),
+                    'data' => 'nok',
+                    'attr'   =>  array(
+                        'class'   => 'graphadvanced displayConfiguration',
+                    )
+                )
+            )
+
             ->add('type', 'choice', array(
                     'label' => 'Type de graphique',
                     'choices' => array(
@@ -117,6 +155,7 @@ class UtilsController extends AbstractLeadsController
             $userPrefences->setDataTypeOfGraph ( $form["type"]->getData() );
             $userPrefences->setDataDisplayAverage ( $form["moyenne"]->getData() );
             $userPrefences->setDataDisplayTotal ( $form["total"]->getData() );
+            $userPrefences->setPeriod ( $form["period"]->getData() );
 
             $userPrefences = $utils->setUserPreferences( $userPrefences );
 
