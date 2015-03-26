@@ -64,7 +64,7 @@ class UtilsController extends AbstractLeadsController
 
             ->add('period', 'choice', array(
                     'expanded' => true,
-                    'label' => 'Période glissante (debut de mois) ou pésronnalisée (custom)',
+                    'label' => 'Période glissante (début de mois) ou pésronnalisée (custom)',
                     'choices' => array(
 
                         '7D' => '7 Jours',
