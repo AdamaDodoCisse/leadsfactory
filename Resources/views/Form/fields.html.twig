@@ -29,7 +29,7 @@
 {# src/Acme/TaskBundle/Resources/views/Form/fields.html.twig #}
 {% block form_row %}
     {% spaceless %}
-        <div class="form-group">
+        <div class="form-group" id="row-{{ id }}">
             <label for="{{ id }}">{{ form_label(form) }}</label>
             {{ form_widget(form) }}
         </div>
