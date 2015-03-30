@@ -168,4 +168,26 @@ class BaseMapping
 	{
 		return $this->getEntCity($data);
 	}
+
+	public function getEntCorpName($data)
+	{
+		return !empty($data['etablissement']) ? $data['etablissement'] : 'Non renseigné';
+	}
+
+	public function getCpwCorpName($data)
+	{
+		return $this->getEntCorpName($data);
+	}
+
+	public function getEntPhone($data)
+	{
+		return !empty($data['phone']) ? $data['phone'] : 'Non renseigné';
+	}
+
+	public function getPerMail($data)
+	{
+		return !empty($data['email']) ? $data['email'] : 'Non renseigné';
+	}
+
+
 }
