@@ -27,7 +27,7 @@ class EntityLeadsController extends AbstractEntityController
      * @Secure(roles="ROLE_USER")
      * @Route("/leads/list/{page}/{limit}/{keyword}", name="_leads_list")
      */
-    public function indexAction(Request $request, $page=1, $limit=10, $keyword='')
+    public function indexAction(Request $request, $page=1, $limit=25, $keyword='')
     {
 	    $filterForm = $this->getLeadsFilterForm();
 	    $filterForm->handleRequest($request);
@@ -103,8 +103,9 @@ class EntityLeadsController extends AbstractEntityController
 		$form = $this->createFormBuilder(array())
 			->setMethod('GET')
 			->add('form', 'choice', array(
-					'choices' => $this->getUserFormsOptions(),
-					'label' => 'Formulaire',
+					'choices'   => $this->getUserFormsOptions(),
+					'label'     => 'Formulaire',
+					'required'  => false
 				)
 			)
 			->add('firstname', 'text', array('label' => 'Prénom', 'required' => false))
@@ -113,7 +114,7 @@ class EntityLeadsController extends AbstractEntityController
 			->add('datemin', 'date', array('label' => 'Date de début', 'widget'=>'single_text', 'required' => false))
 			->add('datemax', 'date', array('label' => 'Date de fin', 'widget'=>'single_text', 'required' => false))
 			->add('keyword', 'text', array('label' => 'Mot-clé', 'required' => false))
-			->add('Valider', 'submit')
+			->add('valider', 'submit', array('label' => 'Valider'))
 		    ->getForm();
 
 		return $form;
@@ -127,7 +128,7 @@ class EntityLeadsController extends AbstractEntityController
 	protected function getUserFormsOptions()
 	{
 		$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->getUserForms($this->getUser());
-		$options = array();
+		$options = array('' => 'Sélectionnez un formulaire');
 		foreach($forms as $form){
 			$options[$form->getId()] = $form->getName();
 		}
@@ -170,36 +171,41 @@ class EntityLeadsController extends AbstractEntityController
 		$filterParams = json_decode($params['filterparams'], true);
 		$format = $params['format'];
 
-		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getFullList($filterParams);
-
 		$reportMethod = 'generate'.ucfirst($format);
-		 return $this->$reportMethod($leads);
+		 return $this->$reportMethod($filterParams);
 	}
 
 	/**
 	 * Generates CSV report
 	 *
-	 * @param $leads
+	 * @param array $filterParams
 	 *
 	 * @return Response
 	 */
-	public function generateCsv($leads)
+	public function generateCsv($filterParams)
 	{
+		$em = $this->getDoctrine()->getEntityManager();
+		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getFullList($filterParams);
+
 		$handle = fopen('php://memory', 'w');
 
-		fputcsv($handle, array('id', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
+		fputcsv($handle, array('id', 'Form', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
 
-		foreach($leads as $lead){
+		while (false !== ($row = $leads->next())) {
 			fputcsv($handle, array(
-					$lead->getId(),
-					$lead->getFirstname(),
-					$lead->getLastname(),
-					$lead->getEmail(),
-					$lead->getTelephone(),
-					$lead->getData()
+					$row[0]->getId(),
+					$row[0]->getForm()->getName(),
+					$row[0]->getFirstname(),
+					$row[0]->getLastname(),
+					$row[0]->getEmail(),
+					$row[0]->getTelephone(),
+					$row[0]->getData()
 				),
 				';');
+
+			$em->detach($row[0]);
 		}
+
 		rewind($handle);
 		$content = stream_get_contents($handle);
 		fclose($handle);

@@ -22,7 +22,7 @@ class LeadsRepository extends EntityRepository
 	 *
 	 * @return Paginator
 	 */
-	public function getList($page=1, $limit=10, $args=null)
+	public function getList($page=1, $limit=25, $args=null)
 	{
 		$dql = $this->getSqlFilterQuery($args);
 
@@ -35,18 +35,18 @@ class LeadsRepository extends EntityRepository
 	}
 
 	/**
-	 * Returns a list of leads with no pagination
+	 * Returns an iterable query results of leads with no pagination
 	 *
 	 * @param array $args
 	 *
-	 * @return array
+	 * @return \Doctrine\ORM\Internal\Hydration\IterableResult
 	 */
 	public function getFullList($args)
 	{
 		$dql = $this->getSqlFilterQuery($args);
 		$results = $this->getEntityManager()
 		                ->createQuery($dql)
-		                ->getResult();
+						->iterate();
 
 		return $results;
 	}
