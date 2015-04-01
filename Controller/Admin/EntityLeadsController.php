@@ -102,6 +102,7 @@ class EntityLeadsController extends AbstractEntityController
 	{
 		$form = $this->createFormBuilder(array())
 			->setMethod('GET')
+			->setAction($this->generateUrl('_leads_list'))
 			->add('form', 'choice', array(
 					'choices'   => $this->getUserFormsOptions(),
 					'label'     => 'Formulaire',
