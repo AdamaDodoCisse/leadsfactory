@@ -259,6 +259,9 @@ class Chart {
             if(!($form instanceof Form)) {
                 $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
             }
+            if ($form === null) {
+                continue;
+            }
 
             /** @var QueryBuilder $qb */
             $qb = $em->createQueryBuilder();
