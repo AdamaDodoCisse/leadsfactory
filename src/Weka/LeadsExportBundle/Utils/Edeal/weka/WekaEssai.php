@@ -2,10 +2,11 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
-use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
+use Weka\LeadsExportBundle\Utils\Edeal\WekaMapping;
 
-class WekaEssai extends BaseMapping {
 
+class WekaEssai extends WekaMapping
+{
 	public function getCpwCorpName($data)
 	{
 		if(isset($data['type-etablissement']))
@@ -51,26 +52,10 @@ class WekaEssai extends BaseMapping {
 		return $data['product_name'];
 	}
 
-	public function getCpwPaysCode($data)
-	{
-		return 'FR';
-	}
-
 	public function getEntCorpName($data)
 	{
 		if(isset($data['type-etablissement']))
 			return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
 		return 'undefined';
 	}
-
-	public function getEntCtrCode($data)
-	{
-		return 'FR';
-	}
-
-	public function getPerCtrCode($data)
-	{
-		return 'FR';
-	}
-
 }

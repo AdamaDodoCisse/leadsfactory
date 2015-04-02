@@ -2,9 +2,11 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
+use Weka\LeadsExportBundle\Utils\Edeal\WekaMapping;
 
-class Adette {
 
+class Adette extends WekaMapping
+{
     public function getEnterpriseMapping()
     {
         return array(
@@ -24,11 +26,6 @@ class Adette {
 	    return 'undefined';
     }
 
-	public function getEntCtrCode($data)
-	{
-		return 'FR';
-	}
-
     public function getPersonMapping()
     {
         return array(
@@ -42,11 +39,6 @@ class Adette {
             'perServiceCode'    => 'service',
             'perZip'            => 'zip',
         );
-    }
-
-    public function getPerCtrCode($data)
-    {
-        return 'FR';
     }
 
     public function getCouponsWebMapping()
@@ -110,11 +102,6 @@ class Adette {
         return $comment;
     }
 
-    public function getCpwPaysCode($data)
-    {
-        return 'FR';
-    }
-
     public function getCpwOriIDCode($data)
     {
         return 'CLASSIC';
@@ -136,5 +123,4 @@ class Adette {
 			return $data['type-etablissement'] . ' - ' . $data['zip'];
 		return 'undefined';
 	}
-
-} 
+}

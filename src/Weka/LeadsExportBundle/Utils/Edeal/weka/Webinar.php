@@ -2,25 +2,16 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
-use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
+use Weka\LeadsExportBundle\Utils\Edeal\WekaMapping;
 
-class Webinar extends BaseMapping {
 
+class Webinar extends WekaMapping
+{
     public function getEntCorpName($data)
     {
 	    if(isset($data['type-etablissement']))
 		    return $data['type-etablissement'] . ' - ' . $data['zip'];
 	    return 'undefined';
-    }
-
-	public function getEntCtrCode($data)
-	{
-		return 'FR';
-	}
-
-    public function getPerCtrCode($data)
-    {
-        return 'FR';
     }
 
     public function getCpwComment($data)
@@ -31,11 +22,6 @@ class Webinar extends BaseMapping {
             $comment .= "\nType d'établissement : ".$data['type-etablissement'];
 
         return $comment;
-    }
-
-    public function getCpwPaysCode($data)
-    {
-        return 'FR';
     }
 
     public function getCpwOriIDCode($data)
@@ -59,5 +45,4 @@ class Webinar extends BaseMapping {
 	{
 		return 'WEBINAR';
 	}
-
-} 
+}

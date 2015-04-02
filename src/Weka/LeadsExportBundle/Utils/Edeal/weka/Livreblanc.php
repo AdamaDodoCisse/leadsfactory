@@ -2,25 +2,16 @@
 
 namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 
-use Weka\LeadsExportBundle\Utils\Edeal\BaseMapping;
+use Weka\LeadsExportBundle\Utils\Edeal\WekaMapping;
 
-class Livreblanc extends BaseMapping {
 
+class Livreblanc extends WekaMapping
+{
     public function getEntCorpName($data)
     {
 	    if(isset($data['type-etablissement']))
 		    return $data['type-etablissement'] . ' - ' . $data['zip'];
 	    return 'undefined';
-    }
-
-	public function getEntCtrCode($data)
-	{
-		return 'FR';
-	}
-
-    public function getPerCtrCode($data)
-    {
-        return 'FR';
     }
 
     public function getCpwComment($data)
@@ -34,11 +25,6 @@ class Livreblanc extends BaseMapping {
             $comment .= "\nLivre blanc  : ".$data['livre-blanc'];
 
         return $comment;
-    }
-
-    public function getCpwPaysCode($data)
-    {
-        return 'FR';
     }
 
     public function getCpwOriIDCode($data)
@@ -57,4 +43,4 @@ class Livreblanc extends BaseMapping {
 			return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
 		return 'undefined';
 	}
-} 
+}
