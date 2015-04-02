@@ -34,7 +34,7 @@ class WekaContact extends WekaMapping
 
     public function getCpwOriIDCode($data)
     {
-        return 'ESSAI';
+        return 'CLASSIC';
     }
 
     public function getCpwActIDCode($data)
@@ -44,7 +44,7 @@ class WekaContact extends WekaMapping
 
     public function getCpwTypeDemande_($data)
     {
-        return 'Essai';
+        return 'Contact';
     }
 
     public function getCpwSku_($data)
