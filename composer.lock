@@ -1939,12 +1939,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "63277d96e13e5ecb2b122c0642bbe80f91bccf0e"
+                "reference": "b1e292aacdfced2296e51bb9d4b72176fa6a9287"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/63277d96e13e5ecb2b122c0642bbe80f91bccf0e",
-                "reference": "63277d96e13e5ecb2b122c0642bbe80f91bccf0e",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/b1e292aacdfced2296e51bb9d4b72176fa6a9287",
+                "reference": "b1e292aacdfced2296e51bb9d4b72176fa6a9287",
                 "shasum": ""
             },
             "require": {
@@ -1963,6 +1963,9 @@
                 "symfony/swiftmailer-bundle": "~2.3",
                 "symfony/symfony": "~2.4",
                 "twig/extensions": "~1.0"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -1987,7 +1990,7 @@
                 "source": "https://github.com/tellaw/leadsfactory/tree/master",
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
-            "time": "2015-02-20 15:22:44"
+            "time": "2015-04-07 14:23:14"
         },
         {
             "name": "twig/extensions",

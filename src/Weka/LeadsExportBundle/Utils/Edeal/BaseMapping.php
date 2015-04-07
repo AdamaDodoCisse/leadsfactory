@@ -4,14 +4,19 @@ namespace Weka\LeadsExportBundle\Utils\Edeal;
 
 
 use Doctrine\ORM\EntityManager;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElementRepository;
 
 class BaseMapping
 {
 	protected $em;
 
-	public function __construct(EntityManager $entityManager)
+    /** @var ReferenceListElementRepository $list_element_repository */
+    protected $list_element_repository;
+
+	public function __construct(EntityManager $entityManager, ReferenceListElementRepository $list_element_repository)
 	{
 		$this->em = $entityManager;
+        $this->list_element_repository = $list_element_repository;
 	}
 
     public function getEnterpriseMapping()
@@ -110,7 +115,7 @@ class BaseMapping
 
 	protected function getTypeEtablissement($value)
 	{
-		$label = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getNameUsingListCode('type_etablissement', $value);
+		$label = $this->list_element_repository->getNameUsingListCode('type_etablissement', $value);
 
 		return $label;
 	}
@@ -118,8 +123,7 @@ class BaseMapping
 	public function getCpwCin($data)
 	{
 		if(!empty($data['secteur-activite'])){
-			$repository = $this->em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement');
-			return $repository->getNameUsingListCode('ti_secteur_activite', $data['secteur-activite']);
+			return $this->list_element_repository->getNameUsingListCode('ti_secteur_activite', $data['secteur-activite']);
 		}else{
 			return null;
 		}

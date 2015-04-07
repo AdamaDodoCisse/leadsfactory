@@ -176,6 +176,7 @@ class Edeal extends AbstractMethod{
 		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Edeal\\" . $scopePath . ucfirst($form->getCode());
 	    }
 		$em = $this->getContainer()->get('doctrine')->getManager();
-        return (class_exists($className)) ? new $className($em) : null;
+        $list_element_repository = $this->getContainer()->get('leadsfactory.reference_list_element_repository');
+        return (class_exists($className)) ? new $className($em, $list_element_repository) : null;
     }
 }
