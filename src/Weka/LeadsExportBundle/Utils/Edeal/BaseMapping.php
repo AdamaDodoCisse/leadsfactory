@@ -46,7 +46,7 @@ class BaseMapping
     public function getCouponsWebMapping()
     {
         return array(
-            'cpwActIDCode'      => '',
+            'cpwActIDCode'      => 'acteur',
             'cpwAdresse1'       => 'address',
             'cpwAdresse2'       => '',
             'cpwAutresCin'      => '',
