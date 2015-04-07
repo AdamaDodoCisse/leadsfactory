@@ -29,6 +29,9 @@ class ReferenceListElementRepository extends EntityRepository
 	 */
 	public function getNameUsingListCode($list_code, $element_value)
 	{
+        if (empty($element_value)) {
+            return '';
+        }
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('e.name')
 		    ->from('TellawLeadsFactoryBundle:ReferenceListElement', 'e')
@@ -41,7 +44,12 @@ class ReferenceListElementRepository extends EntityRepository
 		;
         $query = $qb->getQuery();
         $this->logger->info($query->getDQL()." | with \$list_code = $list_code and \$element_value = $element_value");
-		$result = $query->getSingleScalarResult();
+        try {
+            $result = $query->getSingleScalarResult();
+        } catch(\Exception $e) {
+            $this->logger->warning($e->getMessage());
+            $result = '';
+        }
         return $result;
 	}
 }
