@@ -154,7 +154,7 @@ class EntityLeadsController extends AbstractEntityController
 	        )
 	    )
 			->add('filterparams', 'hidden', array('data' => json_encode($filterParams)))
-	        ->add('Valider', 'submit')
+			->add('valider', 'submit', array('label' => 'Valider'))
 	        ->getForm();
 
 		return $form;
@@ -190,12 +190,13 @@ class EntityLeadsController extends AbstractEntityController
 
 		$handle = fopen('php://memory', 'w');
 
-		fputcsv($handle, array('id', 'Form', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
+		fputcsv($handle, array('id', 'Form', 'Date', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
 
 		while (false !== ($row = $leads->next())) {
 			fputcsv($handle, array(
 					$row[0]->getId(),
 					$row[0]->getForm()->getName(),
+					$row[0]->getCreatedAt()->format('Y-m-d H:i:s'),
 					$row[0]->getFirstname(),
 					$row[0]->getLastname(),
 					$row[0]->getEmail(),
