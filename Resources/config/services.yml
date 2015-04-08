@@ -110,6 +110,14 @@ services:
     factory_method: getRepository
     arguments: ['TellawLeadsFactoryBundle:ReferenceList']
 
+  leadsfactory.reference_list_element_repository:
+      class: Tellaw\LeadsFactoryBundle\Entity\ReferenceListElementRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['TellawLeadsFactoryBundle:ReferenceListElement']
+      calls:
+       - [setLogger, [@export.logger]]
+
   leadsfactory.client_email_repository:
       class: Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository
       factory_service: doctrine.orm.default_entity_manager
