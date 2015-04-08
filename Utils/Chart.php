@@ -232,7 +232,7 @@ class Chart {
                ->andWhere('l.createdAt >= :minDate')
                ->groupBy($this->_getSqlGroupByClause())
                ->setParameter('format', $this->_getSqlDateFormat())
-               ->setParameter('form_type_id', $form->getId())
+               ->setParameter('form_id', $form->getId())
                ->setParameter('minDate', $minDate)
             ;
             $qb = $this->excludeInternalLeads($qb);
