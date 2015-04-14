@@ -37,6 +37,8 @@ class Edeal extends AbstractMethod{
 	    $logger->info('wsdl : '.$this->_credentials[$scope]['wsdl']);
 	    $logger->info('user : '.$this->_credentials[$scope]['user']);
 
+	    var_dump($this->_credentials[$scope]['wsdl']);
+
         $client  = new \SoapClient($this->_credentials[$scope]['wsdl'], array('soap_version' => SOAP_1_2, 'trace' => true));
         $response = $client->authenticate($this->_credentials[$scope]['user'], $this->_credentials[$scope]['password']);
 
@@ -69,10 +71,10 @@ class Edeal extends AbstractMethod{
 	        $logger->info('job ID : '.$job->getId());
 
             $data = json_decode($job->getLead()->getData(), true);
-//		    var_dump($data);
 
 		    //on dégage si profil étudiant
 		    if(isset($data['profil']) && $data['profil'] == 'ETUDIANT'){
+			    $logger->info('Profil étudiant');
 			    $exportUtils->updateJob($job, $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
 			    $exportUtils->updateLead($job->getLead(), $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
 			    continue;
@@ -150,6 +152,8 @@ class Edeal extends AbstractMethod{
      */
     private function _getEnterprise($data)
     {
+	    $logger = $this->getContainer()->get('export.logger');
+	    $logger->info('_getEnterprise');
 	    return $this->getMappedData($data, $this->_mappingClass->getEnterpriseMapping());
     }
 

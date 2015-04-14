@@ -25,4 +25,11 @@ class Marketing extends BaseMapping
 	{
 		return null;
 	}
+
+	public function getCpwActIDCode($data)
+	{
+		if($data['acteur'] == 'TMK' && !in_array($data['pays'], array('FR', 'BE', 'LU', 'CH', 'MC'))){
+			return 'FMI';
+		}
+	}
 }
