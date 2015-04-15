@@ -36,7 +36,8 @@ class ExportRepository extends EntityRepository
             $dql .= $where;
         }
 
-        $dql .= " ORDER BY e.created_at DESC";
+
+	    $dql .= ' ORDER BY e.created_at DESC';
 
         $query = $this->getEntityManager()
             ->createQuery($dql)

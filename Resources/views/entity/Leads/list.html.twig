@@ -1,5 +1,6 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% form_theme filters_form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
 {% block body %}
 
 
@@ -16,11 +17,10 @@
     <div class="col-md-12">
         <h3 class="custom-heading">Leads enregistrés:</h3>
         <div style="clear:both"></div>
-        <div class="">
+        <div class="col-md-9">
             <div class="streaming-tables">
                 <div>
                     <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
-                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez...">
                     <select name="per_page" class="st_per_page" id="st_per_page">
                         {% for limit in limit_options %}
                             <option value="{{ limit }}">{{ limit }}</option>
@@ -37,7 +37,6 @@
                         <th>email</th>
                         <th>Code action</th>
                         <th>Date de création</th>
-                        <th>Etat</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -51,7 +50,6 @@
                             <td>{{ item.email }}</td>
                             <td>{% if item.utmcampaign == '' %}<span style="color:darkred">Vide</span>{% else %}{{ item.utmcampaign }}{% endif %}</td>
                             <td>{{ item.createdAt|date("d/m/Y h:i:s") }}</td>
-                            <td>{% if item.status == 1 %}Exporté{% else %}En attente d'export{% endif %}</td>
                             <td style="text-align:center">
                                 <center>
                                     <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_leads_edit', {'id': item.id}) }}'">Edit</button>
@@ -62,8 +60,7 @@
                     {% else %}
 
                         <tr>
-                            <td colspan="4">Aucun élément dans cette liste</td>
-
+                            <td colspan="8">Aucun élément dans cette liste</td>
                         </tr>
 
                     {% endfor %}
@@ -74,17 +71,17 @@
                 <div class="st_pagination">
                     <ul class="pagination">
                         {% if pagination.page > 1 %}
-                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword|raw}) }}" class="first">Début</a></li>
-                            <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">&larr; Précédent</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" class="first">Début</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">&larr; Précédent</a></li>
                         {% endif %}
                         {% for i in pagination.pagination_min..pagination.pagination_max %}
                             <li {% if pagination.page == i %}class="active" {% endif %}>
-                                <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
                             </li>
                         {% endfor %}
                         {% if pagination.page < pagination.pages_count %}
-                            <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Suivant &rarr;</a></li>
-                            <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Fin</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Suivant &rarr;</a></li>
+                            <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Fin</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -92,25 +89,25 @@
 
             </div>
         </div>
+        <div class="col-md-3">
+           <div class="widget-body custom-form">
+               <h2>Filtrer la liste</h2>
+               {{ form(filters_form) }}
+           </div>
+           <div  class="widget-body custom-form" style="margin:10px 0 0 0;">
+               <h2>Télécharger la liste</h2>
+               {{ form(export_form) }}
+           </div>
+        </div>
     </div>
 
     <script type="text/javascript">
 
         $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
 
-        $('#st_search').keypress(function(event){
-            if(event.which == 13){
-                event.preventDefault();
-                var route = '{{ path(pagination.route) }}';
-                var keyword = $(this).val() != '' ? '/'+$(this).val() : ''
-                window.location.href = route + '/1/' + {{ pagination.limit }} + keyword;
-            }
-        });
-
         $('#st_per_page').change(function(){
             var route = '{{ path(pagination.route) }}';
-            var keyword = $('#st_search').val() != '' ? '/'+$('#st_search').val() : '';
-            window.location.href = route + '/1/' + $(this).val() + keyword;
+            window.location.href = route + '/1/' + $(this).val();
         });
     </script>
 

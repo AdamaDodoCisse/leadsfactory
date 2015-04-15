@@ -232,7 +232,7 @@ class Chart {
                ->andWhere('l.createdAt >= :minDate')
                ->groupBy($this->_getSqlGroupByClause())
                ->setParameter('format', $this->_getSqlDateFormat())
-               ->setParameter('form_type_id', $form->getId())
+               ->setParameter('form_id', $form->getId())
                ->setParameter('minDate', $minDate)
             ;
             $qb = $this->excludeInternalLeads($qb);
@@ -258,6 +258,9 @@ class Chart {
         foreach ($this->form as $form) {
             if(!($form instanceof Form)) {
                 $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
+            }
+            if ($form === null) {
+                continue;
             }
 
             /** @var QueryBuilder $qb */

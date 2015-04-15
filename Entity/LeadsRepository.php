@@ -18,7 +18,6 @@ class LeadsRepository extends EntityRepository
         $qb = $this->createQueryBuilder($entityAlias);
         return $qb;
     }
-
     /**
      * @param $keyword
      * @param int $page
@@ -28,7 +27,6 @@ class LeadsRepository extends EntityRepository
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
         $dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l';
-
         if(!empty($keyword)){
             $where = ' WHERE';
             $keywords = explode(' ', $keyword);
@@ -39,14 +37,11 @@ class LeadsRepository extends EntityRepository
             }
             $dql .= $where;
         }
-
         $dql .= " ORDER BY l.createdAt DESC";
-
         $query = $this->getEntityManager()
             ->createQuery($dql)
             ->setFirstResult(($page-1) * $limit)
             ->setMaxResults($limit);
-
         return new Paginator($query);
     }
 

@@ -247,4 +247,12 @@ class FormRepository extends EntityRepository
 
     }
 
+	public function getUserForms($user)
+	{
+		$scope = $user->getScope();
+		$forms = $this->findByScope($scope);
+
+		return $forms;
+	}
+
 }
