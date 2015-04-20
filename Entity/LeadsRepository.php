@@ -41,12 +41,27 @@ class LeadsRepository extends EntityRepository
 	 *
 	 * @return \Doctrine\ORM\Internal\Hydration\IterableResult
 	 */
-	public function getFullList($args)
+	public function getIterableList($args)
 	{
 		$dql = $this->getSqlFilterQuery($args);
 		$results = $this->getEntityManager()
 		                ->createQuery($dql)
 						->iterate();
+
+		return $results;
+	}
+
+	/**
+	 * Return an array of leads based on parameters
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function getLeads($args)
+	{
+		$dql = $this->getSqlFilterQuery($args);
+		$results = $this->getEntityManager()->createQuery($dql)->getResult();
 
 		return $results;
 	}

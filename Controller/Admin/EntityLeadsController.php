@@ -186,7 +186,7 @@ class EntityLeadsController extends AbstractEntityController
 	public function generateCsv($filterParams)
 	{
 		$em = $this->getDoctrine()->getEntityManager();
-		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getFullList($filterParams);
+		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
 		$handle = fopen('php://memory', 'w');
 

@@ -93,4 +93,41 @@ class ApiController extends Controller
 
         return new JsonResponse(array('status' => $response_status));
     }
+
+	/**
+	 * Retrieve leads based on creation date
+	 *
+	 * @Route("/leads")
+	 */
+	public function getLeadsAction(Request $request)
+	{
+		$args = array(
+			'datemin'   => array('date' => $request->query->get('datemin')),
+			'datemax'   => array('date' => $request->query->get('datemax'))
+		);
+
+		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
+
+		if(!empty($leads)){
+			$result = array();
+			foreach($leads as $lead){
+				$result['leads'][] = array(
+					'id'        => $lead->getId(),
+					'data'      => $lead->getData(),
+					'status'    => $lead->getStatus(),
+					'form'      => $lead->getForm()->getName(),
+					'created_at'=> $lead->getCreatedAt()
+
+				);
+			}
+			$result = json_encode($result);
+		}else{
+			$result = '{}';
+		}
+
+		$response =  new Response($result);
+		$response->headers->set('content-type', 'application/json');
+
+		return $response;
+	}
 }
