@@ -39,7 +39,7 @@ class WekaEssai extends WekaMapping
 
 	public function getCpwTypeDemande_($data)
 	{
-		return 'ESSAICRATUIT';
+		return 'ESSAIGRATUIT';
 	}
 
 	public function getCpwSku_($data)

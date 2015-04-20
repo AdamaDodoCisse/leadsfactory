@@ -30,6 +30,8 @@ class Marketing extends BaseMapping
 	{
 		if($data['acteur'] == 'TMK' && !in_array($data['pays'], array('FR', 'BE', 'LU', 'CH', 'MC'))){
 			return 'FMI';
+		}else{
+			return $data['acteur'];
 		}
 	}
 }
