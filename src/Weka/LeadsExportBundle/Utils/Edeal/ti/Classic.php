@@ -20,14 +20,4 @@ class Classic extends BaseMapping
 	{
 		return '';
 	}
-
-	public function getCpwSku_($data)
-	{
-		return null;
-	}
-
-	public function getCpwProductTitle_($data)
-	{
-		return null;
-	}
 }
