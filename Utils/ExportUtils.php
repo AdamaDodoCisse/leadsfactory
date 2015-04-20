@@ -235,7 +235,7 @@ class ExportUtils implements ContainerAwareInterface
             'form'      => $form,
             'method'    => $method,
             'now'       => new \DateTime(),
-            'status'    => array(self::$_EXPORT_SUCCESS, self::EXPORT_EMAIL_NOT_CONFIRMED)
+            'status'    => array(self::$_EXPORT_SUCCESS, self::EXPORT_EMAIL_NOT_CONFIRMED, self::$_EXPORT_NOT_SCHEDULED)
         ));
         return $query->getResult();
     }
