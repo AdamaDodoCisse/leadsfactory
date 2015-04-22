@@ -35,7 +35,7 @@ class LeadsRepository extends EntityRepository
 	}
 
 	/**
-	 * Returns an iterable query results of leads with no pagination
+	 * Returns an iterable query result of leads with no pagination
 	 *
 	 * @param array $args
 	 *
@@ -75,13 +75,17 @@ class LeadsRepository extends EntityRepository
 	 */
 	protected function getSqlFilterQuery($args)
 	{
-		$dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l';
+		$dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l JOIN l.form f';
 
 		if(!empty($args)) {
 			$dql .= ' WHERE 1=1';
 
 			if(!empty($args['form'])){
 				$dql .= " AND l.form='{$args['form']}'";
+			}
+
+			if(!empty($args['scope'])){
+				$dql .= " AND f.scope='{$args['scope']}'";
 			}
 
 			if(!empty($args['lastname'])){

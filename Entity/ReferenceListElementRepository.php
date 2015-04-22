@@ -43,11 +43,11 @@ class ReferenceListElementRepository extends EntityRepository
 		    ->setParameter('value', $element_value)
 		;
         $query = $qb->getQuery();
-        $this->logger->info($query->getDQL()." | with \$list_code = $list_code and \$element_value = $element_value");
+        //$this->logger->info($query->getDQL()." | with \$list_code = $list_code and \$element_value = $element_value");
         try {
             $result = $query->getSingleScalarResult();
         } catch(\Exception $e) {
-            $this->logger->warning($e->getMessage());
+            //$this->logger->warning($e->getMessage());
             $result = '';
         }
         return $result;

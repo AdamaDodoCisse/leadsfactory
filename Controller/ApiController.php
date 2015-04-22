@@ -101,23 +101,47 @@ class ApiController extends Controller
 	 */
 	public function getLeadsAction(Request $request)
 	{
+		$scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
+
 		$args = array(
 			'datemin'   => array('date' => $request->query->get('datemin')),
-			'datemax'   => array('date' => $request->query->get('datemax'))
+			'datemax'   => array('date' => $request->query->get('datemax')),
 		);
+
+		if(!is_null($scope)){
+			$scope = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->findOneByCode($scope);
+			$args['scope'] = $scope->getId();
+		}
+
 
 		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
 
 		if(!empty($leads)){
+
 			$result = array();
 			foreach($leads as $lead){
+
+				$data = json_decode($lead->getData());
+				$scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
+
+				// libellé de la fonction
+				$functionListCode = ($scope == 'ti') ? 'ti_fonction' : 'fonction';
+				if(!empty($data->fonction)) {
+					$data->fonction = $this->getDoctrine()->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )->getNameUsingListCode( $functionListCode, $data->fonction );
+				}
+
+				//libellé ville
+				if(!empty($data->ville_id)){
+					$data->ville = $this->getDoctrine()->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )->getNameUsingListCode( 'ville', $data->ville_id );
+				}
+
 				$result['leads'][] = array(
 					'id'        => $lead->getId(),
-					'data'      => $lead->getData(),
+					'data'      => $data,
 					'status'    => $lead->getStatus(),
 					'form'      => $lead->getForm()->getName(),
-					'created_at'=> $lead->getCreatedAt()
-
+					'scope'     => $scope,
+					'created_at'=> $lead->getCreatedAt()->format('Y-m-d')
 				);
 			}
 			$result = json_encode($result);
