@@ -193,5 +193,14 @@ class BaseMapping
 		return !empty($data['email']) ? $data['email'] : 'Non renseigné';
 	}
 
+	public function getEntZip($data)
+	{
+		if(empty($data['zip'])){
+			return '00000';
+		}else{
+			return $data['zip'];
+		}
+	}
+
 
 }

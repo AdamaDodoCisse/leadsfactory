@@ -12,16 +12,19 @@ use Weka\LeadsExportBundle\Utils\Edeal\WekaMapping;
 
 class WekaContact extends WekaMapping
 {
-    public function getCpwCorpName($data)
-    {
-        if(isset($data['type-etablissement']))
-            return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
-        return 'undefined';
+    public function getCpwCorpName($data){
+	    if($data['profil'] == 'PARTICULIER'){
+		    return 'Particulier';
+	    }elseif($data['type-etablissement']) {
+		    return $this->getTypeEtablissement( $data['type-etablissement'] ) . ' - ' . $data['zip'];
+	    }else {
+		    return 'undefined';
+	    }
     }
 
     public function getCpwComment($data)
     {
-        $comment = 'Provient du formulaire Essai Weka';
+        $comment = 'Provient du formulaire Contact Weka';
 
         if(!empty($data['product_name']))
             $comment .= "\nNom produit : " . $data['product_name'];
@@ -47,25 +50,8 @@ class WekaContact extends WekaMapping
         return 'Contact';
     }
 
-    public function getCpwSku_($data)
-    {
-        return $data['product_sku'];
-    }
-
-    public function getCpwProductTitle_($data)
-    {
-        return $data['product_name'];
-    }
-
     public function getEntCorpName($data)
     {
-        if(isset($data['type-etablissement']))
-            return $this->getTypeEtablissement($data['type-etablissement']) . ' - ' . $data['zip'];
-        return 'undefined';
-    }
-
-    public function getCpwProfilCode($data)
-    {
-        return $data['profil'];
+        return $this->getCpwCorpName($data);
     }
 }
