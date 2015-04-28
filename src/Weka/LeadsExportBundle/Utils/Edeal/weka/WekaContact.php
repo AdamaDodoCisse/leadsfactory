@@ -47,7 +47,7 @@ class WekaContact extends WekaMapping
 
     public function getCpwTypeDemande_($data)
     {
-        return 'Contact';
+        return 'CONTACT';
     }
 
     public function getEntCorpName($data)
