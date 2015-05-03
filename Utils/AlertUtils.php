@@ -216,6 +216,14 @@ class AlertUtils
         return $querybuilder->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * setValuesForAlerts
+     *
+     * This method intends to fill Form or FormType object with its status details (Variation, alerts...)
+     * This method uses yesterday and 8 days before value (a week before yesterday)
+     *
+     * @param $item
+     */
     public function setValuesForAlerts($item)
     {
         $form_repository = $this->entity_manager->getRepository('TellawLeadsFactoryBundle:Form');
@@ -249,12 +257,14 @@ class AlertUtils
         // Evaluate the error status of the form / Type.
         $rules = $item->getRules();
 
-
         if(empty($rules)){
             $status = AlertUtils::$_STATUS_UNKNOWN;
         }else{
             $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
         }
+
+        // Set status value in object
+        $item->yesterdayStatus = $status;
 
         if ( $status == AlertUtils::$_STATUS_ERROR ) {
             $item->yesterdayStatusColor = "pink";

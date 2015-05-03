@@ -4,77 +4,142 @@ namespace Tellaw\LeadsFactoryBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\StringInput;
+use Cron\CronExpression;
 
 class CronRunnerCommand extends ContainerAwareCommand {
-	
-	private $cronjobs = array();
-	
-	protected function configure() {
-		$this
-		->setName('leadsfactory:cronjobs:alertsByMail')
-		->setDescription('Cron Job ALERT LeadsFactorty')
-		->addArgument('mode', InputArgument::OPTIONAL, 'set to true to force cronjob execution')
-		;
-	}
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    private $output;
 
-        $dayToTest = new \DateTime();
-        $dayToTest->sub(new \DateInterval('P1D'));
+    protected function configure()
+    {
+        $this
+            ->setName('leadsfactory:crontasks:run')
+            ->setDescription('Runs Cron Tasks if needed')
+        ;
+    }
 
-        $dayForPeriodBefore = new \DateTime();
-        $dayToTest->sub(new \DateInterval('P9D'));
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('<comment>Running Cron Tasks...</comment>');
 
-		// First Iterate over Scopes
-        $scopes = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Scope')->findAll();
+        $schedulerUtils = $this->getContainer()->get('scheduler.utils');
+        $schedulerUtils->updateDatabaseJobs();
 
-        foreach ( $scopes as $scope ) {
+        $this->output = $output;
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $crontasks = $em->getRepository('TellawLeadsFactoryBundle:CronTask')->findAll();
 
-            //$currentScope = return $this->get('security.context')->getToken()->getUser()->getScope()->getId();
+        foreach ($crontasks as $crontask) {
 
-            $typesInError = array();
-            $typesInWarning = array();
+            // If cron is enabled
+            if ($crontask->getEnabled()) {
 
-            // Second iterate over Types
-            $types = $this->getContainer()->get('leadsfactory.form_type_repository')->findByScope($scope->getId());
-            foreach ( $types as $type ) {
+                // Get the last run time of this task, and calculate when it should run next
+                $lastrun = $crontask->getLastRun() ? $crontask->getLastRun() : 0;
 
-                $yesterdayLeads = $this->getTypeLeadsForDay( $dayToTest, $type->getId() );
-                echo ("Number of leads : ".$yesterdayLeads);
+                $cron = CronExpression::factory($crontask->getCronexpression());
+                $nextrun = $cron->getNextRunDate( $lastrun );
 
-            }
+                if (!$crontask->getNextrun()) {
+                    $crontask->setNextrun( $nextrun );
+                    $em->persist($crontask);
+                    $em->flush();
+                }
 
-            $formsInError = array();
-            $formsInWarning = array();
+                // We must run this task if:
+                // * time() is larger or equal to $nextrun
+                $run = @(time() >= $nextrun);
 
-            // Third, iterate over forms
-            $forms = $this->get('leadsfactory.form_repository')->findByScope($scope->getId());
-            foreach ( $forms as $form ) {
+                if ($run) {
+                    $output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask->getName()));
 
-                
+                    // Set $lastrun for this crontask
+                    $crontask->setLastRun(new \DateTime());
+
+                    $commands = $crontask->getCommands();
+                    foreach ($commands as $command) {
+
+                        $output->writeln(sprintf('Executing command <comment>%s</comment>...', $command));
+                        // Run the command
+                        $this->runCommand($command);
+
+                    }
+
+                    $output->writeln('<info>SUCCESS</info>');
+                    $crontask->setLog( "SUCCESS" );
+                    $crontask->setStatus (true);
+
+                    // Persist crontask
+                    $em->persist($crontask);
+                    $em->flush();
+                } else {
+                    $output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask->getName()));
+                }
 
             }
 
         }
 
-        // Done
+        // Flush database changes
+        $em->flush();
 
+        $output->writeln('<comment>Done!</comment>');
+    }
 
-	}
+    private function runCommand($string)
+    {
+        // Split namespace and arguments
+        $namespace = explode(' ', $string)[0];
 
-    private function getTypeLeadsForDay ( $date, $type ) {
+        // Set input
+        $command = $this->getApplication()->find($namespace);
+        $input = new StringInput($string);
 
-        $query = $this->getContainer()->get("doctrine")->getManager()->getConnection()->prepare('SELECT count(1) as count FROM Leads WHERE form_type_id = :formType AND createdAt = :minDate GROUP BY DAY(createdAt)');
-        $query->bindValue('minDate', $date);
-        $query->bindValue('formType', $type);
-        $query->execute();
-        $results = $query->fetchAll();
+        // Send all output to the console
+        $returnCode = $command->run($input, $this->output);
 
-        return $query->getResult();
+        return $returnCode != 0;
+    }
 
+    function getExceptionTraceAsString($exception) {
+        $rtn = "";
+        $count = 0;
+        foreach ($exception->getTrace() as $frame) {
+            $args = "";
+            if (isset($frame['args'])) {
+                $args = array();
+                foreach ($frame['args'] as $arg) {
+                    if (is_string($arg)) {
+                        $args[] = "'" . $arg . "'";
+                    } elseif (is_array($arg)) {
+                        $args[] = "Array";
+                    } elseif (is_null($arg)) {
+                        $args[] = 'NULL';
+                    } elseif (is_bool($arg)) {
+                        $args[] = ($arg) ? "true" : "false";
+                    } elseif (is_object($arg)) {
+                        $args[] = get_class($arg);
+                    } elseif (is_resource($arg)) {
+                        $args[] = get_resource_type($arg);
+                    } else {
+                        $args[] = $arg;
+                    }
+                }
+                $args = join(", ", $args);
+            }
+            $rtn .= sprintf( "#%s %s(%s): %s(%s)\n",
+                $count,
+                $frame['file'],
+                $frame['line'],
+                $frame['function'],
+                $args );
+            $count++;
+        }
+        return $rtn;
     }
 
 }

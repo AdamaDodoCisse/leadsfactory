@@ -306,6 +306,8 @@ class Form {
     public $yesterdayStatusText = null;
     public $yesterdayVariation = null;
 
+    public $yesterdayStatus = null;
+
     public $textualYesterdayDay = null;
     public $textualWeekBeforeDay = null;
 

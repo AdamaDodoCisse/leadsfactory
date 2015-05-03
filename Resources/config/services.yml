@@ -14,6 +14,11 @@ services:
     calls:
                   - [ setContainer, [ @service_container ] ]
 
+  scheduler.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\SchedulerUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   chart:
     class:        Tellaw\LeadsFactoryBundle\Utils\Chart
     calls:
@@ -130,3 +135,7 @@ services:
       factory_method: getRepository
       arguments: ['TellawLeadsFactoryBundle:Export']
 
+  leadsfactory.scheduled_status_history:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\StatusHistoryScheduler
+    tags:
+    - { name: scheduled.job }
