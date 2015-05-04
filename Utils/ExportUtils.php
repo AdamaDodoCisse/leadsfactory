@@ -118,7 +118,7 @@ class ExportUtils implements ContainerAwareInterface
             $job->setMethod($method);
             $job->setLead($lead);
             $job->setForm($lead->getForm());
-            $status = $this->getInitialExportStatus($lead, $methodConfig);
+            $status = $this->getInitialExportStatus($lead, array( 'method' => $method, 'method_config' => $methodConfig));
             $job->setStatus($status);
             $job->setCreatedAt(new \DateTime());
             $job->setScheduledAt($this->getScheduledDate($methodConfig));
@@ -139,14 +139,17 @@ class ExportUtils implements ContainerAwareInterface
     /**
      * @param Leads $lead
      */
-    protected function getInitialExportStatus($lead, $method_config)
+    protected function getInitialExportStatus($lead, $config)
     {
+	    $method_config = $config['method_config'];
+	    $methodObject = $this->getMethod($config['method']);
+
         if (
             array_key_exists('if_email_validated', $method_config)
             && $method_config['if_email_validated'] === true
         ) {
             $email = $lead->getEmail();
-            $validated = $this->client_email_repository->isEmailValidated($email);
+	        $validated = $methodObject->isEmailValidated($lead, $email);
             if ($validated) {
                 return self::$_EXPORT_NOT_PROCESSED;
             } else {
