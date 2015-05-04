@@ -403,7 +403,7 @@ class Leads
      * @return $this
      */
     public function populateFromSearch ( $source, $em ) {
-
+        
         $this->setId( $source->id );
         $this->setFirstname ( $source->firstname );
         $this->setLastname ( $source->lastname );
