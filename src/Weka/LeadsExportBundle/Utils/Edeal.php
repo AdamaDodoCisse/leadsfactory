@@ -183,4 +183,24 @@ class Edeal extends AbstractMethod{
         $list_element_repository = $this->getContainer()->get('leadsfactory.reference_list_element_repository');
         return (class_exists($className)) ? new $className($em, $list_element_repository) : null;
     }
+
+	/**
+	 * Gestion des cas particuliers des exports avec e-mails non validés
+	 *
+	 * @param $lead
+	 * @param $email
+	 *
+	 * @return bool
+	 */
+	public function isEmailValidated($lead, $email)
+	{
+		$form = $lead->getForm()->getCode();
+		$data = json_decode($lead->getData(), true);
+
+		if(in_array($data['pays'], array('FR', 'BE', 'LU', 'CH', 'MC')) && $form == 'ti_extrait'){
+			return true;
+		}else{
+			return parent::isEmailValidated($lead, $email);
+		}
+	}
 }
