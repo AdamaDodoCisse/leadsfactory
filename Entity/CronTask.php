@@ -65,7 +65,7 @@ class CronTask
     private $serviceName;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $status;
     /**

@@ -70,6 +70,11 @@ services:
     class:        Tellaw\LeadsFactoryBundle\Utils\AlertUtils
     arguments:    [@doctrine.orm.entity_manager, %leadsfactory.internal_email_patterns%]
 
+  search.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   leadsfactory.twig_extension:
     class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension
     arguments: [@form_utils, @leadsfactory.reference_list_repository]
@@ -137,5 +142,10 @@ services:
 
   leadsfactory.scheduled_status_history:
     class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\StatusHistoryScheduler
+    tags:
+    - { name: scheduled.job }
+
+  leadsfactory.scheduled_export_job:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\ExportScheduler
     tags:
     - { name: scheduled.job }

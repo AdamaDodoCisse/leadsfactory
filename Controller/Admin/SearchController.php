@@ -29,10 +29,9 @@ class SearchController extends AbstractEntityController {
     {
 
         //$url="curl -XGET 127.0.0.1:9200/_cat/health?v";
-
-        $request = '_cat/health?v';
-
         $searchUtils = $this->get("search.utils");
+
+        $request = '_cluster/health?pretty=true';
         $response = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
 
         if (trim($response) == ""){
@@ -41,17 +40,28 @@ class SearchController extends AbstractEntityController {
             $status = true;
         }
 
-        $request = '_stats/docs';
+        $request = '';
+        $responseVersion = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
 
-        $searchUtils = $this->get("search.utils");
+        $request = '_stats/docs';
         $stats = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
+
+        if (trim($response) != "") {
+            $response = json_decode( $response );
+        }
+
+        if (trim($responseVersion) != "") {
+            $responseVersion = json_decode( $responseVersion );
+        }
+//var_dump ($response);
 
         return $this->render(
 	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
             array (
                 'elasticResponse' => $response,
                 'status' => $status,
-                'stats' => $this->prettyPrint($stats)
+                'stats' => $this->prettyPrint($stats),
+                'version' => $responseVersion
             )
         );
 
@@ -121,6 +131,9 @@ class SearchController extends AbstractEntityController {
     public function runElasticAction () {
 
 
+        if (! file_exists( "../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch" )) {
+            throw new Exception ("ElasticSearch binary not found");
+        }
         $process = new Process('../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
         $process->setTimeout(3600);
         $process->run();

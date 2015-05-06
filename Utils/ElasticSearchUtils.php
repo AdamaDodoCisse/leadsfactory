@@ -13,6 +13,7 @@ class ElasticSearchUtils {
     public static $PROTOCOL_POST = "POST";
     public static $PROTOCOL_GET = "XGET";
     public static $PROTOCOL_DELETE = "DELETE";
+    public $baseUri = "http://localhost:9200/";
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
@@ -21,12 +22,21 @@ class ElasticSearchUtils {
         $this->container = $container;
     }
 
+    /**
+     *
+     * Low level request to the search engine
+     *
+     * @param $protocol
+     * @param $query
+     * @param null $parameters
+     * @param bool $populate
+     * @return mixed|SearchResult
+     * @throws \Exception
+     */
     public function request ( $protocol, $query, $parameters = null, $populate = false ) {
 
-        $baseUri = 'http://localhost:9200/'.$query;
-
         $ci = curl_init();
-        curl_setopt($ci, CURLOPT_URL, $baseUri);
+        curl_setopt($ci, CURLOPT_URL, $this->baseUri.$query);
         curl_setopt($ci, CURLOPT_PORT, '9200');
         curl_setopt($ci, CURLOPT_TIMEOUT, 10);
         curl_setopt($ci, CURLOPT_RETURNTRANSFER, 1);
@@ -43,6 +53,14 @@ class ElasticSearchUtils {
             return $result;
     }
 
+    /**
+     *
+     * Basic search function
+     *
+     * @param $key
+     * @param $value
+     * @return mixed|SearchResult
+     */
     public function search ( $key, $value ) {
 
         $query = "leadsfactory/_search";
@@ -60,6 +78,14 @@ class ElasticSearchUtils {
 
     }
 
+    /**
+     *
+     * Method used to populate objects with search engine content.
+     *
+     * @param $json
+     * @return SearchResult
+     * @throws \Exception
+     */
     public function populateObjectFromSearch ( $json ) {
 
         $em = $this->container->get("doctrine")->getManager();

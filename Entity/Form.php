@@ -352,4 +352,26 @@ class Form {
 	public function setScope( $scope ) {
 		$this->scope = $scope;
 	}
+
+    /**
+     * @param $source   source object from the search
+     * @param $em   entity manager
+     * @return $this
+     */
+    public function populateFromSearch ( $source, $em ) {
+
+        $this->setId ( $source->id );
+        if ($source->type_id) $this->setFormType( $em->getRepository('TellawLeadsFactoryBundle:FormType')->find( $source->type_id ) );
+        $this->setName( $source->name );
+        $this->setDescription( $source->description );
+        $this->setCode( $source->code );
+        $this->setUtmcampaign( $source->utmcampaign );
+        $this->setScope( $source->scope );
+        $this->setScript( $source->script );
+        $this->setSecureKey( $source->secure_key );
+
+        return $this;
+
+    }
+
 }

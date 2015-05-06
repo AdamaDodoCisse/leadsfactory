@@ -71,7 +71,7 @@ class CronRunnerCommand extends ContainerAwareCommand {
 
                     $output->writeln('<info>SUCCESS</info>');
                     $crontask->setLog( "SUCCESS" );
-                    $crontask->setStatus (true);
+                    $crontask->setStatus (1);
 
                     // Persist crontask
                     $em->persist($crontask);

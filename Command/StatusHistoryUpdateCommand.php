@@ -54,13 +54,17 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
 
                 $statusHistory = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:StatusHistory')->findByStatusDateAndForm( $minDate, $form );
                 if (count ($statusHistory)>0) {
+
                     $statusHistory = $statusHistory[0];
+
                 } else {
+
                     $statusHistory = new StatusHistory();
                     $statusHistory->setStatusDate( $minDate );
                     $statusHistory->setForm( $form );
                     $statusHistory->setData( '' );
                     $statusHistory->setCreatedAt( $currentDate );
+
                 }
 
                 $statusHistory->setStatus( $form->yesterdayStatus );
