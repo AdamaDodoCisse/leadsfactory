@@ -26,6 +26,11 @@ class LeadsRepository extends EntityRepository
      */
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
+
+        /*
+         * Extraire les lead's
+         */
+
         $dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l';
         if(!empty($keyword)){
             $where = ' WHERE';
@@ -42,7 +47,9 @@ class LeadsRepository extends EntityRepository
             ->createQuery($dql)
             ->setFirstResult(($page-1) * $limit)
             ->setMaxResults($limit);
+
         return new Paginator($query);
+
     }
 
 }

@@ -31,22 +31,19 @@ class SearchController extends AbstractEntityController {
         //$url="curl -XGET 127.0.0.1:9200/_cat/health?v";
 
 
-        $request = '_cat/health?v';
+        $request = '_cluster/health?pretty=true';
         $searchUtils = $this->get("search.utils");
 
         $response = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
 
+
         if (trim($response) == ""){
             $status = false;
+            echo ("OK");
         } else {
             $status = true;
+            echo ("N OK");
         }
-
-
-        $request = '_stats/docs';
-
-        $searchUtils = $this->get("search.utils");
-        $stats = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
 
         $request = '';
         $responseVersion = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
@@ -61,7 +58,6 @@ class SearchController extends AbstractEntityController {
         if (trim($responseVersion) != "") {
             $responseVersion = json_decode( $responseVersion );
         }
-//var_dump ($response);
 
 
         return $this->render(
@@ -139,18 +135,9 @@ class SearchController extends AbstractEntityController {
      */
     public function runElasticAction () {
 
+        $searchUtils = $this->get("search.utils");
+        $searchUtils->run();
 
-        if (! file_exists( "../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch" )) {
-            throw new Exception ("ElasticSearch binary not found");
-        }
-        $process = new Process('../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
-        $process->setTimeout(3600);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        $messagesUtils = $this->container->get("messages.utils");
         //$messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Démarrage du service de recherche", $process->getOutput() );
 
         return $this->redirect($this->generateUrl('_search_config'));
