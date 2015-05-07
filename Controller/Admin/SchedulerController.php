@@ -7,8 +7,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Tellaw\LeadsFactoryBundle\Entity\CronTask;
 use Tellaw\LeadsFactoryBundle\Entity\Scope;
 use Tellaw\LeadsFactoryBundle\Form\Type\SchedulerType;
+use Tellaw\LeadsFactoryBundle\Form\Type\SchedulerNewType;
+use Tellaw\LeadsFactoryBundle\Form\Type\SchedulerReadOnlyType;
 use Tellaw\LeadsFactoryBundle\Form\Type\ScopeType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -54,9 +57,9 @@ class SchedulerController extends AbstractEntityController
      */
     public function newAction(Request $request)
     {
-        $entity = new Scope();
+        $entity = new CronTask();
 
-        $form = $this->createForm(new ScopeType(), $entity, array(
+        $form = $this->createForm(new SchedulerNewType(), $entity, array(
             'method' => 'POST',
         ));
 
@@ -67,13 +70,15 @@ class SchedulerController extends AbstractEntityController
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('_scope_list'));
+            return $this->redirect($this->generateUrl('_scheduler_list'));
         }
 
         return $this->render( "TellawLeadsFactoryBundle:entity:Scheduler/edit.html.twig", array(
             'title' => 'Ajouter un scope',
             'form'   => $form->createView(),
+            'item'   => new CronTask()
         ));
+
     }
 
     /**
@@ -89,12 +94,25 @@ class SchedulerController extends AbstractEntityController
         // crée une tâche et lui donne quelques données par défaut pour cet exemple
         $data = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:CronTask')->find($id);
 
-        $form = $this->createForm(  new SchedulerType(),
-            $data,
-            array(
-                'method' => 'POST'
-            )
-        );
+        if ($data->getServiceName() != "") {
+
+            $form = $this->createForm(  new SchedulerReadOnlyType(),
+                $data,
+                array(
+                    'method' => 'POST'
+                )
+            );
+
+        } else {
+
+            $form = $this->createForm(  new SchedulerType(),
+                $data,
+                array(
+                    'method' => 'POST'
+                )
+            );
+
+        }
 
         $form->handleRequest($request);
 

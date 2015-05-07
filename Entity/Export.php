@@ -252,4 +252,26 @@ class Export {
     {
         return $this->method;
     }
+
+    /**
+     * @param $source   source object from the search
+     * @param $em   entity manager
+     * @return $this
+     */
+    public function populateFromSearch ( $source, $em ) {
+
+        $this->setId( $source->id );
+        if ($source->lead_id) $this->setLead( $em->getRepository('TellawLeadsFactoryBundle:Lead')->find( $source->lead_id ) );
+        if ($source->form_id) $this->setForm( $em->getRepository('TellawLeadsFactoryBundle:Form')->find( $source->form_id ) );
+        $this->setMethod( $source->method );
+        $this->setCreatedAt( $source->created_at );
+        $this->setScheduledAt( $source->scheduled_at );
+        $this->setExecutedAt( $source->executed_at );
+        $this->setStatus( $source->status );
+        $this->setLog( $source->log );
+
+        return $this;
+
+    }
+
 }

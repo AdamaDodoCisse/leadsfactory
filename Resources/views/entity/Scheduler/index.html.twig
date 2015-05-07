@@ -35,10 +35,12 @@
                     <tbody>
                     {% for item in elements %}
                         <tr>
-                        {% if item.status == false %}
+                        {% if item.status == 2 %}
                             {% set color =  "style=background-color:#F73D56;color:#FFFFFF;" %}
-                        {% else %}
+                        {% elseif item.status == 1 %}
                             {% set color =  "" %}
+                        {% elseif item.status == "" %}
+                            {% set color =  "style=background-color:#e0e0e0" %}
                         {% endif %}
 
                             <td {{ color }}>{{ item.id }}</td>
@@ -46,10 +48,12 @@
                             <td {{ color }}>{{ item.lastrun|date("d/m/Y h:i:s") }}</td>
                             <td {{ color }}>{{ item.nextrun|date("d/m/Y h:i:s") }}</td>
                             <td {{ color }}>
-                                {% if item.status == false %}
+                                {% if item.status == 2 %}
                                     Erreur
-                                {% else %}
-                                    OK
+                                {% elseif item.status == 1 %}
+                                    Ok
+                                {% elseif item.status == "" %}
+                                    Attente d'éxécution
                                 {% endif %}
                             </td>
                             <td {{ color }} style="text-align:center">
@@ -59,7 +63,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="5">Aucun élément dans cette liste</td>
+                            <td colspan="6">Aucun élément dans cette liste</td>
 
                         </tr>
                     {% endfor %}

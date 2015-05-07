@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Cron\CronExpression;
 
 class CronRunnerCommand extends ContainerAwareCommand {
@@ -54,24 +55,37 @@ class CronRunnerCommand extends ContainerAwareCommand {
                 // * time() is larger or equal to $nextrun
                 $run = @(time() >= $nextrun);
 
+                $this->output = new BufferedOutput();
+
                 if ($run) {
                     $output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask->getName()));
 
                     // Set $lastrun for this crontask
                     $crontask->setLastRun(new \DateTime());
+                    try {
 
-                    $commands = $crontask->getCommands();
-                    foreach ($commands as $command) {
+                        $commands = $crontask->getCommands();
+                        foreach ($commands as $command) {
 
-                        $output->writeln(sprintf('Executing command <comment>%s</comment>...', $command));
-                        // Run the command
-                        $this->runCommand($command);
+                            $output->writeln(sprintf('Executing command <comment>%s</comment>...', $command));
+                            // Run the command
+                            $this->runCommand($command);
+
+                        }
+
+                        $output->writeln('<info>SUCCESS</info>');
+                        $crontask->setLog( $this->output->fetch() );
+                        $crontask->setStatus (1);
+
+                    } catch (\Exception $e) {
+
+                        $output->writeln('<error>ERROR</error>');
+                        $output->writeln('<error>'.$e->getMessage().'</error>');
+                        $output->writeln('<error>'.$e->getTraceAsString().'</error>');
+                        $crontask->setStatus (false);
+                        $crontask->setLog( $this->output->fetch() );
 
                     }
-
-                    $output->writeln('<info>SUCCESS</info>');
-                    $crontask->setLog( "SUCCESS" );
-                    $crontask->setStatus (true);
 
                     // Persist crontask
                     $em->persist($crontask);

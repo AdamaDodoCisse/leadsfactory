@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class SchedulerType extends AbstractType
+class SchedulerNewType extends AbstractType
 {
 
     /**
@@ -16,13 +16,11 @@ class SchedulerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enabled',null,array('required' => false))
-            ->add('id', null, array ("read_only" => true ))
+            ->add('enabled')
             ->add('name')
             ->add('commandsAsString')
+            ->add('serviceName')
             ->add('cronexpression')
-
-            ->add('log', null, array ("read_only" => true ))
 
             ->add('save', 'submit')
         ;
