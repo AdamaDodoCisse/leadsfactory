@@ -60,7 +60,7 @@ class ExportController extends AbstractEntityController
      * @route("/export/history/{page}/{limit}/{keyword}", name="_export_history")
      * @Secure(roles="ROLE_USER")
      */
-    public function showHistoryAction($page=1, $limit=10, $keyword='')
+    public function showHistoryAction($page=1, $limit=25, $keyword='')
     {
         $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword);
 

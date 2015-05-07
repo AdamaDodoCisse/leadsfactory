@@ -93,11 +93,15 @@ class ReferenceListFieldType extends AbstractFieldType
     private function _getRadioHtml($tag)
     {
         $id = $tag['attributes']['id'];
+
+	    $validator = !empty($tag['attributes']['validator']) ? $tag['attributes']['validator'] : '';
+	    $validatorClass = !empty($validator) ? "validate[".$validator."]" : '';
+
         $html = '';
         foreach($tag['options'] as $option){
             $html .= '<li class="'.$id.'-item">
-                        <label for="lffield['.$option->getValue().'-'.$option->getId().']">'.$option->getName().'</label>
-                        <input class="input input-radio" name="lffield['.$id.']" id="lffield['.$option->getValue().'-'.$option->getId().']" type="radio" value="'.$option->getValue().'"/>
+                        <label for="lffield['.$id.'-'.$option->getValue().']">'.$option->getName().'</label>
+                        <input class="input input-radio '.$validatorClass.'" name="lffield['.$id.']" id="lffield['.$id.'-'.$option->getValue().']" type="radio" value="'.$option->getValue().'"/>
                       </li>';
         }
         return '<ul id="'.$id.'">'.$html.'</ul>';

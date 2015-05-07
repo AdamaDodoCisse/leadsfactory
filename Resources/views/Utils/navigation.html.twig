@@ -1,31 +1,42 @@
-
 <ul>
-    <li id="intro4"><a href="#" title="" ><i class="fa fa-desktop"></i>Dashboards</a>
-            <ul>
-                <li><a href="{{ path ('_monitoring_dashboard') }}" title="" >Dashboard Groupes</a></li>
-                <li><a href="{{ path ('_monitoring_dashboard_forms') }}" title="">Dashboard Formulaires</a></li>
-            </ul>
-            </li>
-
-    <li id="intro4"><a href="#" title="" ><i class="fa fa-rocket"></i>Formulaires</a>
+    <li>
+        <a href="#" title="" ><i class="fa fa-desktop"></i>Dashboards</a>
+        <ul>
+            <li><a href="{{ path ('_monitoring_dashboard') }}" title="" >Dashboard Groupes</a></li>
+            <li><a href="{{ path ('_monitoring_dashboard_forms') }}" title="">Dashboard Formulaires</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#" title="" ><i class="fa fa-rocket"></i>Formulaires</a>
         <ul>
             <li><a href="{{ path ('_form_list') }}" title="">Formulaires</a></li>
             <li><a href="{{ path ('_formType_list') }}" title="">Groupes</a></li>
             <li><a href="{{ path ('_referenceList_list') }}" title="">Listes de références</a></li>
         </ul>
     </li>
-    <li id="intro5"><a href="#" title="" ><i class="fa fa-heart-o"></i>Données</a>
-    <ul>
-        <li><a href="{{ path ('_leads_list') }}" title="">Leads</a></li>
-        <li><a href="{{ path ('_export_history') }}" title="">Exports</a></li>
-    </ul></li>
-
-
+    <li>
+        <a href="#" title="" ><i class="fa fa-heart-o"></i>Données</a>
+        <ul>
+            <li><a href="{{ path ('_leads_list') }}" title="">Leads</a></li>
+            <li><a href="{{ path ('_export_history') }}" title="">Exports</a></li>
+        </ul>
     </li>
+<<<<<<< HEAD
     <li><a href="form.html" title="" ><i class="fa fa-paperclip"></i>Admin</a>    <ul>
             <li><a href="{{ path ('_users_list') }}" title="">Utilisateurs</a></li>
             <li><a href="{{ path ('_scope_list') }}" title="">Scopes</a></li>
             <li><a href="{{ path ('_search_config') }}" title="">Recherche</a></li>
         </ul></li>
+=======
+    <li>
+        <a href="#" title="" ><i class="fa fa-paperclip"></i>Config</a>
+        <ul>
+            <li><a href="{{ path ('_users_list') }}" title="">Utilisateurs</a></li>
+            <li><a href="{{ path ('_scope_list') }}" title="">Scopes</a></li>
+            <li><a href="{{ path ('_search_config') }}" title="">Moteur de recherche</a></li>
+            <li><a href="{{ path ('_scheduler_list') }}" title="">Tâches planifiées</a></li>
+>>>>>>> 1617018c1663360b01a72c3290f5b3fc4db9bd15
 
+        </ul>
+    </li>
 </ul>

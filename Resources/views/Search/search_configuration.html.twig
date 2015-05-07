@@ -6,6 +6,7 @@
         <div class="heading-sec" id="intro6">
             <h1>Administration <i>du moteur de recherche</i></h1>
             <div style="clear:both"></div>
+<<<<<<< HEAD
             <div class="titleDescription"><em>,,,</em></div>
         </div>
         </div>
@@ -48,6 +49,113 @@
 
 
 </div>
+=======
+            <div class="titleDescription"><em>Espace de configuration du service de recherche elastic Search</em></div>
+        </div>
+        </div>
+	</div>
+    <div class="col-md-8">
+        <h3 class="custom-heading">Administration de la recherche:</h3>
+
+        Etat du service :
+
+        {% if (status) %}
+            <span style="color:#00AA00"><b>OK : Le service de recherche est disponible</b></span>
+        {% else %}
+            <span style="color:#AA0000"><b>KO : Service Indisponible</b></span>
+        {% endif %}
+
+        {% if (status) %}
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                        <tr>
+                            <th>Information</th>
+                            <th>Valeur</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Version du moteur </td>
+                            <td><b>{{ version.version.number }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nom du noeud </td>
+                            <td><b>{{ version.name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nom du cluster </td>
+                            <td><b>{{ version.cluster_name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Version de lucene </td>
+                            <td><b>{{ version.version.lucene_version }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Statut du moteur </td>
+                            <td><b>{{ elasticResponse.status }}</b></td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                    <table id="stream_table" class='table table-striped table-bordered'>
+                        <thead>
+                            <tr>
+                                <th>Information</th>
+                                <th>Valeur</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">Le service de recherche n'est pas disponible </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+
+        {% endif %}
+
+        <div style="margin-top:20px;">
+            <h3 class="custom-heading">Outils & Plugins</h3>
+            <b>Plugins :</b><br/>
+                <ul>
+                    <li>Interface Head : http://&lt;elastic server>:9200/_plugin/head/</li>
+                    <li>Interface GUI : http://&lt;elastic server>:9200/_plugin/gui/index.html</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="col-md-4">
+            <div class="btn-group btn-group-justified">
+                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_run') }}'">Relancer le service de recherche</button>
+            </div>
+            <div class="btn-group btn-group-justified">
+                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_stop') }}'">Stopper le service de recherche</button>
+            </div>
+            <div class="btn-group btn-group-justified">
+                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_create_index') }}'">Créer l'index</button>
+            </div>
+            <div class="btn-group btn-group-justified">
+                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_index_documents') }}'">Demander l'indéxation des documents</button>
+            </div>
+            <div class="btn-group btn-group-justified">
+                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_delete_index') }}'">Supprimer l'index</button>
+            </div>
+
+    </div>
+>>>>>>> 1617018c1663360b01a72c3290f5b3fc4db9bd15
 {% endblock %}
 {% block javascript %}
 
