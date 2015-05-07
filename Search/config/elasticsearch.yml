@@ -265,7 +265,6 @@ node.data: true
 #
 #gateway.expected_nodes: 2
 
-
 ############################# Recovery Throttling #############################
 
 # These settings allow to control the process of shards allocation between

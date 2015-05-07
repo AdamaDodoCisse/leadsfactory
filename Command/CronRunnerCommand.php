@@ -40,16 +40,15 @@ class CronRunnerCommand extends ContainerAwareCommand {
             if ($crontask->getEnabled()) {
 
                 // Get the last run time of this task, and calculate when it should run next
-                $lastrun = $crontask->getLastRun() ? $crontask->getLastRun() : 0;
+                $lastrun = ($crontask->getLastRun()) ? $crontask->getLastRun() : 0;
 
                 $cron = CronExpression::factory($crontask->getCronexpression());
                 $nextrun = $cron->getNextRunDate( $lastrun );
 
-                if (!$crontask->getNextrun()) {
+                    echo ("Saved!\r\n");
                     $crontask->setNextrun( $nextrun );
                     $em->persist($crontask);
                     $em->flush();
-                }
 
                 // We must run this task if:
                 // * time() is larger or equal to $nextrun
