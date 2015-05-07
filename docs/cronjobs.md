@@ -1,5 +1,7 @@
 # LEAD'S FACTORY
 
+[toc]
+
 ## API Taches planifiées
 
 L'api de taches planifiées de la lead's factory permet la programmation et le monitoring de commandes symfony.
