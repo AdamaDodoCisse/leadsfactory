@@ -39,10 +39,8 @@ class SearchController extends AbstractEntityController {
 
         if (trim($response) == ""){
             $status = false;
-            echo ("OK");
         } else {
             $status = true;
-            echo ("N OK");
         }
 
         $request = '';
@@ -59,13 +57,16 @@ class SearchController extends AbstractEntityController {
             $responseVersion = json_decode( $responseVersion );
         }
 
-
+        if (trim($stats) != "") {
+            $stats = json_decode( $stats );
+        }
+var_dump ($stats);
         return $this->render(
 	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
             array (
                 'elasticResponse' => $response,
                 'status' => $status,
-                'stats' => $this->prettyPrint($stats),
+                'stats' => $stats,
                 'version' => $responseVersion
             )
         );
@@ -136,7 +137,7 @@ class SearchController extends AbstractEntityController {
     public function runElasticAction () {
 
         $searchUtils = $this->get("search.utils");
-        $searchUtils->run();
+        $searchUtils->start();
 
         //$messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Démarrage du service de recherche", $process->getOutput() );
 

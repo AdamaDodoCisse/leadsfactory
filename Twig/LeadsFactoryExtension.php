@@ -34,6 +34,7 @@ class LeadsFactoryExtension extends \Twig_Extension
 	public function field($params)
 	{
 		if (isset($params['attributes']['data-list'])) {
+
 			if (isset($params['attributes']['data-parent'])) {
 				$params['options'] = false;
 			} else {
@@ -44,6 +45,7 @@ class LeadsFactoryExtension extends \Twig_Extension
 					$params['options'] = $options;
 				}
 			}
+
 		}
 
 		//classes du champ
@@ -62,6 +64,7 @@ class LeadsFactoryExtension extends \Twig_Extension
 			$params['attributes']['class'] .= ' validate['.$params['attributes']['validator'].']';
 
 		return $this->form_helper->renderTag(null, $params);
+
 	}
 
 	public function getName()
