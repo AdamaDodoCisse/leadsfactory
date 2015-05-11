@@ -53,14 +53,19 @@ class SearchController extends AbstractEntityController {
         if (trim($responseVersion) != "") {
             $responseVersion = json_decode( $responseVersion );
         }
-//var_dump ($response);
+
+        if (trim($stats) != "") {
+            $stats = json_decode( $stats );
+        }
+
+var_dump ($stats);
 
         return $this->render(
 	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
             array (
                 'elasticResponse' => $response,
                 'status' => $status,
-                'stats' => $this->prettyPrint($stats),
+                'stats' => $stats,
                 'version' => $responseVersion
             )
         );

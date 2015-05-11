@@ -53,6 +53,12 @@
                             <td>Statut du moteur </td>
                             <td><b>{{ elasticResponse.status }}</b></td>
                         </tr>
+                        {% for key, value in stats.indices%}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>aa</td>
+                        </tr>
+                        {% endfor %}
                 </tbody>
             </table>
         </div>
