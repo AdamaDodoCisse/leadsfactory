@@ -149,3 +149,8 @@ services:
     class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\ExportScheduler
     tags:
     - { name: scheduled.job }
+
+  leadsfactory.search_watchdog_job:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\SearchWatchdogScheduler
+    tags:
+    - { name: scheduled.job }

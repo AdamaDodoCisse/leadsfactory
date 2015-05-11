@@ -6,6 +6,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Entity\SearchResult;
 use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
+use Symfony\Component\Process\Process;
 
 class ElasticSearchUtils {
 
@@ -13,6 +14,7 @@ class ElasticSearchUtils {
     public static $PROTOCOL_POST = "POST";
     public static $PROTOCOL_GET = "XGET";
     public static $PROTOCOL_DELETE = "DELETE";
+
     public $baseUri = "http://localhost:9200/";
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
@@ -51,6 +53,33 @@ class ElasticSearchUtils {
             return $this->populateObjectFromSearch( $result );
         else
             return $result;
+    }
+
+    /**
+     * Method used to start the ElasticSearch Process
+     * @return bool
+     * @throws Exception
+     */
+    public function start ()
+    {
+
+        if (file_exists("../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
+            $process = new Process('../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
+        } else if (file_exists("vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
+            $process = new Process('vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
+        } else {
+            throw new \Exception ("ElasticSearch binary not found");
+        }
+
+        $process->setTimeout(3600);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException($process->getErrorOutput());
+        }
+
+        return true;
+
     }
 
     /**

@@ -1,15 +1,15 @@
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
 
-	<div class="col-md-12">
+    <div class="col-md-12">
         <div class="col-md-8">
-        <div class="heading-sec" id="intro6">
-            <h1>Administration <i>du moteur de recherche</i></h1>
-            <div style="clear:both"></div>
-            <div class="titleDescription"><em>Espace de configuration du service de recherche elastic Search</em></div>
+            <div class="heading-sec" id="intro6">
+                <h1>Administration <i>du moteur de recherche</i></h1>
+                <div style="clear:both"></div>
+                <div class="titleDescription"><em>Espace de configuration du service de recherche elastic Search</em></div>
+            </div>
         </div>
-        </div>
-	</div>
+    </div>
     <div class="col-md-8">
         <h3 class="custom-heading">Administration de la recherche:</h3>
 
@@ -27,12 +27,13 @@
                 <span id="found" class="label label-info"></span>
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
-                        <tr>
-                            <th>Information</th>
-                            <th>Valeur</th>
-                        </tr>
+                    <tr>
+                        <th>Information</th>
+                        <th>Valeur</th>
+                    </tr>
                     </thead>
                     <tbody>
+
                         <tr>
                             <td>Version du moteur </td>
                             <td><b>{{ version.version.number }}</b></td>
@@ -59,36 +60,38 @@
                             <td>aa</td>
                         </tr>
                         {% endfor %}
-                </tbody>
-            </table>
-        </div>
 
-        {% else %}
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="">
-            <div class="streaming-tables">
-                <span id="found" class="label label-info"></span>
-                    <table id="stream_table" class='table table-striped table-bordered'>
-                        <thead>
+
+            {% else %}
+
+                <div class="">
+                    <div class="streaming-tables">
+                        <span id="found" class="label label-info"></span>
+                        <table id="stream_table" class='table table-striped table-bordered'>
+                            <thead>
                             <tr>
                                 <th>Information</th>
                                 <th>Valeur</th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr>
                                 <td colspan="2">Le service de recherche n'est pas disponible </td>
                             </tr>
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-        </div>
 
-        {% endif %}
+            {% endif %}
 
-        <div style="margin-top:20px;">
-            <h3 class="custom-heading">Outils & Plugins</h3>
-            <b>Plugins :</b><br/>
+            <div style="margin-top:20px;">
+                <h3 class="custom-heading">Outils & Plugins</h3>
+                <b>Plugins :</b><br/>
                 <ul>
                     <li>Interface Head : http://&lt;elastic server>:9200/_plugin/head/</li>
                     <li>Interface GUI : http://&lt;elastic server>:9200/_plugin/gui/index.html</li>
@@ -100,21 +103,21 @@
 
 
     <div class="col-md-4">
-            <div class="btn-group btn-group-justified">
-                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_run') }}'">Relancer le service de recherche</button>
-            </div>
-            <div class="btn-group btn-group-justified">
-                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_stop') }}'">Stopper le service de recherche</button>
-            </div>
-            <div class="btn-group btn-group-justified">
-                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_create_index') }}'">Créer l'index</button>
-            </div>
-            <div class="btn-group btn-group-justified">
-                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_index_documents') }}'">Demander l'indéxation des documents</button>
-            </div>
-            <div class="btn-group btn-group-justified">
-                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_delete_index') }}'">Supprimer l'index</button>
-            </div>
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_run') }}'">Relancer le service de recherche</button>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_stop') }}'">Stopper le service de recherche</button>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_create_index') }}'">Créer l'index</button>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_index_documents') }}'">Demander l'indéxation des documents</button>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_delete_index') }}'">Supprimer l'index</button>
+        </div>
 
     </div>
 {% endblock %}

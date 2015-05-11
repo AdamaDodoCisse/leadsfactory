@@ -13,7 +13,7 @@ class CSV extends AbstractMethod{
      */
     public function export($jobs, $form)
     {
-        $fileName = 'export_'.$form->getFormType().'_'.time().'.csv';
+        $fileName = 'export_'.$form->getCode().'_'.time().'.csv';
         $path = $this->getExportPath();
 
         $logger = $this->getContainer()->get('export.logger');

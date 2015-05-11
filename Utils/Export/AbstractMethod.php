@@ -50,4 +50,17 @@ abstract class AbstractMethod {
         return $path;
     }
 
+	/**
+	 * Teste la validité de l'email
+	 *
+	 * @param $lead
+	 * @param $email
+	 *
+	 * @return mixed
+	 */
+	public function isEmailValidated($lead, $email)
+	{
+		return $this->getContainer()->get('leadsfactory.client_email_repository')->isEmailValidated($email);
+	}
+
 } 

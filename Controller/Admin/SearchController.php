@@ -29,10 +29,13 @@ class SearchController extends AbstractEntityController {
     {
 
         //$url="curl -XGET 127.0.0.1:9200/_cat/health?v";
-        $searchUtils = $this->get("search.utils");
+
 
         $request = '_cluster/health?pretty=true';
+        $searchUtils = $this->get("search.utils");
+
         $response = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
+
 
         if (trim($response) == ""){
             $status = false;
@@ -54,11 +57,10 @@ class SearchController extends AbstractEntityController {
             $responseVersion = json_decode( $responseVersion );
         }
 
+
         if (trim($stats) != "") {
             $stats = json_decode( $stats );
         }
-
-var_dump ($stats);
 
         return $this->render(
 	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
@@ -135,18 +137,9 @@ var_dump ($stats);
      */
     public function runElasticAction () {
 
+        $searchUtils = $this->get("search.utils");
+        $searchUtils->start();
 
-        if (! file_exists( "../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch" )) {
-            throw new Exception ("ElasticSearch binary not found");
-        }
-        $process = new Process('../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
-        $process->setTimeout(3600);
-        $process->run();
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        $messagesUtils = $this->container->get("messages.utils");
         //$messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Démarrage du service de recherche", $process->getOutput() );
 
         return $this->redirect($this->generateUrl('_search_config'));
