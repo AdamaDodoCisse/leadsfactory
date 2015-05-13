@@ -6,6 +6,8 @@ use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Entity\SearchResult;
 use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
 
 class ElasticSearchUtils {
@@ -71,14 +73,17 @@ class ElasticSearchUtils {
             throw new \Exception ("ElasticSearch binary not found");
         }
 
+        $input = new StringInput("");
+        $output = new BufferedOutput();
+
         $process->setTimeout(3600);
-        $process->run();
+        $process->run(null, $output );
 
         if (!$process->isSuccessful()) {
             throw new \RuntimeException($process->getErrorOutput());
         }
 
-        return true;
+        return $output;
 
     }
 

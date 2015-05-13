@@ -138,7 +138,7 @@ class SearchController extends AbstractEntityController {
     public function runElasticAction () {
 
         $searchUtils = $this->get("search.utils");
-        $searchUtils->start();
+        $output = $searchUtils->start();
 
         //$messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Démarrage du service de recherche", $process->getOutput() );
 
