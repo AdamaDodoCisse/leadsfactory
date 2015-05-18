@@ -40,7 +40,7 @@
                         {% elseif item.status == 1 %}
                             {% set color =  "" %}
                         {% elseif item.status == "" %}
-                            {% set color =  "style=background-color:#e0e0e0" %}
+                            {% set color =  "style=background-color:#8855DD;color:#FFFFFF;" %}
                         {% endif %}
 
                             <td {{ color }}>{{ item.id }}</td>
@@ -53,7 +53,7 @@
                                 {% elseif item.status == 1 %}
                                     Ok
                                 {% elseif item.status == "" %}
-                                    Attente d'éxécution
+                                    Attente d'execution
                                 {% endif %}
                             </td>
                             <td {{ color }} style="text-align:center">

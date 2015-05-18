@@ -33,29 +33,38 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>Version du moteur </td>
-                        <td><b>{{ version.version.number }}</b></td>
-                    </tr>
-                    <tr>
-                        <td>Nom du noeud </td>
-                        <td><b>{{ version.name }}</b></td>
-                    </tr>
-                    <tr>
-                        <td>Nom du cluster </td>
-                        <td><b>{{ version.cluster_name }}</b></td>
-                    </tr>
-                    <tr>
-                        <td>Version de lucene </td>
-                        <td><b>{{ version.version.lucene_version }}</b></td>
-                    </tr>
-                    <tr>
-                        <td>Statut du moteur </td>
-                        <td><b>{{ elasticResponse.status }}</b></td>
-                    </tr>
+
+                        <tr>
+                            <td>Version du moteur </td>
+                            <td><b>{{ version.version.number }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nom du noeud </td>
+                            <td><b>{{ version.name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nom du cluster </td>
+                            <td><b>{{ version.cluster_name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Version de lucene </td>
+                            <td><b>{{ version.version.lucene_version }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Statut du moteur </td>
+                            <td><b>{{ elasticResponse.status }}</b></td>
+                        </tr>
+                        {% for key, value in stats.indices%}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>aa</td>
+                        </tr>
+                        {% endfor %}
+
                     </tbody>
                 </table>
             </div>
+
 
             {% else %}
 

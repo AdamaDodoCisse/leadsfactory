@@ -13,3 +13,7 @@
 ## Indexation
 
 L'indéxation utilise Elastic Search comme moteur de recherche.
+
+
+## API de recherche
+

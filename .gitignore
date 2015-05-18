@@ -7,9 +7,9 @@ app/config/parameters.yml
 app/cache
 app/logs
 app/sessions
-bin/
+/bin/
 vendor/
-Search/logs/
+/Search/logs/
 /Search/data/*
 
 # Cache and logs
