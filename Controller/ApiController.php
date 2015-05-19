@@ -31,6 +31,8 @@ class ApiController extends Controller
 
 	        $data = json_decode($data, true);
 	        $data['created_at'] = $lead->getCreatedAt();
+	        $data['lfFormId'] = $lead->getForm()->getId();
+	        $data['form'] = $lead->getForm()->getCode();
 	        $data = json_encode($data);
 
             //check key
