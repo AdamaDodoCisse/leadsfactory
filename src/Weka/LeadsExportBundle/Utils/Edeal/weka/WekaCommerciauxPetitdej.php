@@ -5,7 +5,7 @@ namespace Weka\LeadsExportBundle\Utils\Edeal\weka;
 use Weka\LeadsExportBundle\Utils\Edeal\WekaMapping;
 
 
-class WekaAdvCommerciaux extends WekaMapping
+class WekaCommerciauxPetitdej extends WekaMapping
 {
     public function getEntCorpName($data)
     {
@@ -16,18 +16,18 @@ class WekaAdvCommerciaux extends WekaMapping
 
     public function getCpwComment($data)
     {
-        $comment = 'Créé depuis l\espace "mon compte"';
+        $comment = 'Créé depuis l\'espace "mon compte"';
         return $comment;
     }
 
     public function getCpwOriIDCode($data)
     {
-        return !empty($data['origine']) ? strtoupper($data['origine']) : '';
+        return 'PETITS_DEJEUNERS';
     }
 
 	public function getCpwTypeDemande_($data)
 	{
-		return !empty($data['origine']) ? strtoupper($data['origine']) : '';
+		return 'PETITS_DEJEUNERS';
 	}
 
     public function getCpwStatus_Code($data)
