@@ -109,7 +109,7 @@ class Adette extends WekaMapping
 
     public function getCpwDate($data)
     {
-        return date('m/d/Y');
+	    return date('m/d/Y H:i');
     }
 
     public function getCpwStatus_Code($data)
