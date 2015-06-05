@@ -13,7 +13,16 @@ class Extrait extends BaseMapping{
 
 	public function getCpwActIDCode($data)
 	{
-		return in_array($data['pays'], array('FR', 'BE', 'LU', 'CH', 'MC')) ? 'TMK' : 'FMI';
+		if(in_array($data['pays'], array('FR', 'BE', 'LU', 'CH', 'MC'))){
+			if(!empty($data['deja-client'])){
+				$act = '';
+			}else{
+				$act = 'TMK';
+			}
+		}else{
+			$act = 'FMI';
+		}
+		return $act;
 	}
 
 	public function getCpwTypeDemande_($data)
