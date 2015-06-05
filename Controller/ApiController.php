@@ -103,18 +103,26 @@ class ApiController extends Controller
 	 */
 	public function getLeadsAction(Request $request)
 	{
-		$scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
+		$logger = $this->get('logger');
 
 		$args = array(
-			'datemin'   => array('date' => $request->query->get('datemin')),
-			'datemax'   => array('date' => $request->query->get('datemax')),
+			'datemin'   => $request->query->get('datemin'),
+			'datemax'   => $request->query->get('datemax'),
+			'email'     => $request->query->get('email'),
+			'form'      => $request->query->get('form'),
 		);
 
+		$scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
 		if(!is_null($scope)){
 			$scope = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->findOneByCode($scope);
 			$args['scope'] = $scope->getId();
 		}
 
+		$form_code = $request->query->get('form_code');
+		if(!is_null($form_code)){
+			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
+			$args['form'] = $form->getId();
+		}
 
 		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
 
@@ -142,6 +150,7 @@ class ApiController extends Controller
 					'data'      => $data,
 					'status'    => $lead->getStatus(),
 					'form'      => $lead->getForm()->getName(),
+					'form_id'   => $lead->getForm()->getId(),
 					'scope'     => $scope,
 					'created_at'=> $lead->getCreatedAt()->format('Y-m-d')
 				);
