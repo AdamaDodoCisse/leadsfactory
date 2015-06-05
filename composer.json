@@ -23,7 +23,6 @@
         "mtdowling/cron-expression": "1.0.*",
         "vresh/twilio-bundle": "dev-master",
         "tellaw/LeadsFactoryBundle" : "0.9",
-        //"tellaw/LeadsFactoryBundle" : "dev-master",
         "beberlei/DoctrineExtensions": "@dev"
     },
     "scripts": {
