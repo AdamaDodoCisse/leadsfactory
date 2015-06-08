@@ -9,7 +9,7 @@ class SearchWatchdogScheduler implements IScheduledJob
 
     public function getExpression()
     {
-        return "*/5 * * * * *";
+        return "*/5 * * * *";
     }
 
     public function getName()
