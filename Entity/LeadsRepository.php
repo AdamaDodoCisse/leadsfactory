@@ -13,6 +13,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
  */
 class LeadsRepository extends EntityRepository
 {
+
 	/**
 	 * Returns a paginated list of leads
 	 *
@@ -125,3 +126,4 @@ class LeadsRepository extends EntityRepository
 		return $dql;
 	}
 }
+

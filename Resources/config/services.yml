@@ -14,6 +14,11 @@ services:
     calls:
                   - [ setContainer, [ @service_container ] ]
 
+  scheduler.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\SchedulerUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   chart:
     class:        Tellaw\LeadsFactoryBundle\Utils\Chart
     calls:
@@ -64,6 +69,11 @@ services:
   alertes_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\AlertUtils
     arguments:    [@doctrine.orm.entity_manager, %leadsfactory.internal_email_patterns%]
+
+  search.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
 
   leadsfactory.twig_extension:
     class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension
@@ -129,3 +139,18 @@ services:
       factory_service: doctrine.orm.default_entity_manager
       factory_method: getRepository
       arguments: ['TellawLeadsFactoryBundle:Export']
+
+  leadsfactory.scheduled_status_history:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\StatusHistoryScheduler
+    tags:
+    - { name: scheduled.job }
+
+  leadsfactory.scheduled_export_job:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\ExportScheduler
+    tags:
+    - { name: scheduled.job }
+
+  leadsfactory.search_watchdog_job:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\SearchWatchdogScheduler
+    tags:
+    - { name: scheduled.job }
