@@ -63,4 +63,15 @@ abstract class AbstractMethod {
 		return $this->getContainer()->get('leadsfactory.client_email_repository')->isEmailValidated($email);
 	}
 
+    /**
+     * @param $reason String
+     * @param $form Form
+     * @param $export Export
+     */
+    private function notifyOfExportIssue ( $reason, $form, $export, $currentStatus, $newStatus ) {
+
+
+
+    }
+
 } 
