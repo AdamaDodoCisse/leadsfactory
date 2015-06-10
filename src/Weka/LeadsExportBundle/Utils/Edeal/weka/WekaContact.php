@@ -22,19 +22,6 @@ class WekaContact extends WekaMapping
 	    }
     }
 
-    public function getCpwComment($data)
-    {
-        $comment = 'Provient du formulaire Contact Weka';
-
-        if(!empty($data['product_name']))
-            $comment .= "\nNom produit : " . $data['product_name'];
-
-        if(!empty($data['product_sku']))
-            $comment .= "\nSKU : " . $data['product_sku'];
-
-        return $comment;
-    }
-
     public function getCpwOriIDCode($data)
     {
         return 'CLASSIC';

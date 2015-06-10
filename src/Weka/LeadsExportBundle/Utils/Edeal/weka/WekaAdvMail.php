@@ -14,12 +14,6 @@ class WekaAdvMail extends WekaMapping
 	    return 'undefined';
     }
 
-    public function getCpwComment($data)
-    {
-        $comment = 'Créé depuis l\'espace "mon compte"';
-        return $comment;
-    }
-
     public function getCpwOriIDCode($data)
     {
         return 'EMAIL';
