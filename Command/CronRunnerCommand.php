@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
@@ -30,6 +30,8 @@ class CronRunnerCommand extends ContainerAwareCommand {
         $schedulerUtils = $this->getContainer()->get('scheduler.utils');
         $schedulerUtils->updateDatabaseJobs();
 
+        $now = new \DateTime();
+
         $this->output = $output;
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $crontasks = $em->getRepository('TellawLeadsFactoryBundle:CronTask')->findAll();
@@ -39,24 +41,14 @@ class CronRunnerCommand extends ContainerAwareCommand {
             // If cron is enabled
             if ($crontask->getEnabled()) {
 
-                // Get the last run time of this task, and calculate when it should run next
-                $lastrun = ($crontask->getLastRun()) ? $crontask->getLastRun() : 0;
-
-                $cron = CronExpression::factory($crontask->getCronexpression());
-                $nextrun = $cron->getNextRunDate( $lastrun );
-
-                    echo ("Saved!\r\n");
-                    $crontask->setNextrun( $nextrun );
-                    $em->persist($crontask);
-                    $em->flush();
-
                 // We must run this task if:
                 // * time() is larger or equal to $nextrun
-                $run = @(time() >= $nextrun);
+                //$run = @(time() >= $nextrun);
 
-                $this->output = new BufferedOutput();
 
-                if ($run) {
+                if ( $crontask->getNextrun() <= $now ) {
+
+                    $this->output = new BufferedOutput();
                     $output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask->getName()));
 
                     // Set $lastrun for this crontask
@@ -81,8 +73,8 @@ class CronRunnerCommand extends ContainerAwareCommand {
                         $output->writeln('<error>ERROR</error>');
                         $output->writeln('<error>'.$e->getMessage().'</error>');
                         $output->writeln('<error>'.$e->getTraceAsString().'</error>');
-                        $crontask->setStatus (false);
-                        $crontask->setLog( $this->output->fetch() );
+                        $crontask->setStatus (2);
+                        $crontask->setLog( $this->output->fetch()."\r\n-----------------\r\n".$e->getMessage()."\r\n-----------------\r\n".$e->getTraceAsString() );
 
                     }
 
@@ -93,6 +85,16 @@ class CronRunnerCommand extends ContainerAwareCommand {
                     $output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask->getName()));
                 }
 
+            }
+
+            // Get the last run time of this task, and calculate when it should run next
+            $lastrun = $crontask->getLastRun() ? $crontask->getLastRun() : 0;
+            $cron = CronExpression::factory($crontask->getCronexpression());
+            $nextrun = $cron->getNextRunDate( $lastrun );
+            if (!$crontask->getNextrun() || $crontask->getNextrun() <= $now ) {
+                $crontask->setNextrun( $nextrun );
+                $em->persist($crontask);
+                $em->flush();
             }
 
         }
@@ -154,5 +156,7 @@ class CronRunnerCommand extends ContainerAwareCommand {
         }
         return $rtn;
     }
+
+
 
 }
