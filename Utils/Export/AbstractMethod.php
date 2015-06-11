@@ -64,12 +64,21 @@ abstract class AbstractMethod {
 	}
 
     /**
-     * @param $reason String
-     * @param $form Form
-     * @param $export Export
+     * @param $reason
+     * @param $form
+     * @param $export
+     * @param $currentStatus
+     * @param $newStatus
      */
     private function notifyOfExportIssue ( $reason, $form, $export, $currentStatus, $newStatus ) {
 
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setFrom('send@example.com')
+            ->setTo('recipient@example.com')
+            ->setBody($this->renderView('HelloBundle:Hello:email.txt.twig', array('name' => $name)))
+        ;
+        $this->get('mailer')->send($message);
 
 
     }

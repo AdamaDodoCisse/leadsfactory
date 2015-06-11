@@ -40,6 +40,11 @@ services:
     calls:
                       - [ setContainer, [ @service_container ] ]
 
+  preferences_utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils
+    calls:
+                      - [ setContainer, [ @service_container ] ]
+
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV
     calls:
