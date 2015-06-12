@@ -29,3 +29,4 @@ tasks:
     - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/cache, app/Export, app/logs, app/sessions, datas]}
   post-release:
   post-deploy:
+	- symfony-doctrine-update
