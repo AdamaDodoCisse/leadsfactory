@@ -22,7 +22,7 @@ hosts:
   - 10.25.109.230
 tasks:
   pre-deploy:
-    - composer/install: {dev: false}
+    - composer-install: {dev: false}
   on-deploy:
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
