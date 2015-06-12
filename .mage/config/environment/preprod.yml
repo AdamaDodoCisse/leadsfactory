@@ -6,9 +6,9 @@ deployment:
   to: /data/apps/leads-factory
   excludes:
     - .idea
-	- app/cache
+    - app/cache
     - app/config/parameters.yml
-	- app/Export
+    - app/Export
     - app/logs
     - app/sessions
     - datas
@@ -29,4 +29,4 @@ tasks:
     - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/cache, app/Export, app/logs, app/sessions, datas]}
   post-release:
   post-deploy:
-	- symfony-doctrine-update
+    - symfony-doctrine-update
