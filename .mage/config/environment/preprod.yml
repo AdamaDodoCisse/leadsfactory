@@ -24,9 +24,9 @@ tasks:
   pre-deploy:
     - composer-install: {dev: false}
   on-deploy:
+    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/cache, app/Export, app/logs, app/sessions, datas]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
-    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/cache, app/Export, app/logs, app/sessions, datas]}
   post-release:
   post-deploy:
     - symfony-doctrine-update
