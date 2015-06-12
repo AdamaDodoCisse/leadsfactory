@@ -1,6 +1,7 @@
 #preprod
 deployment:
-  user: ewallet
+  user: jenkins
+  owner : www-data:www-data
   from: ./
   to: /data/apps/leads-factory
   excludes:
@@ -14,9 +15,9 @@ deployment:
 #    - vendor
   strategy: rsync
 releases:
-  enabled: false
-  max: 10
-  symlink: ../
+  enabled: true
+  max: 5
+  symlink: current
   directory: releases
 hosts:
   - 10.25.109.50

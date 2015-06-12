@@ -1,33 +1,32 @@
 #preprod
 deployment:
-  user: ewallet
+  user: jenkins
   from: ./
   to: /data/apps/leads-factory
   excludes:
+    - .idea
     - app/cache
-#    - app/config
     - app/config/parameters.yml
+    - app/Export
     - app/logs
     - app/sessions
     - datas
-#    - web/bundles/tellawleadsfactory
-#    - vendor
-  strategy: rsync
+  strategy: targz
 releases:
-  enabled: false
-  max: 10
-  symlink: ../
+  enabled: true
+  max: 5
+  symlink: current
   directory: releases
 hosts:
   - 10.25.109.230
 tasks:
   pre-deploy:
-    - unlink
+    - composer-install: {dev: false}
   on-deploy:
+    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
-#    - composer/install
-#    - filesystem/link-shared-files: {linked_folders: [app/cache, app/config, app/logs, app/sessions, datas]}
+    - symfony-doctrine-update
   post-release:
   post-deploy:
-    - symlink
+    
