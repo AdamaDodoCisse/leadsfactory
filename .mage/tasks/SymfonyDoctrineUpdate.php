@@ -18,7 +18,7 @@ class SymfonyDoctrineUpdate extends AbstractTask
 
 	public function run()
 	{
-		$result = $this->runCommandLocal('php app/console doctrine:schema:update --force');
+		$result = $this->runCommand('php app/console doctrine:schema:update --force');
 		
 		return $result;
 	}

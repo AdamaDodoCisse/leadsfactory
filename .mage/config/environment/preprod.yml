@@ -27,6 +27,7 @@ tasks:
     - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
+    - symfony-doctrine-update
   post-release:
   post-deploy:
-    - symfony-doctrine-update
+    
