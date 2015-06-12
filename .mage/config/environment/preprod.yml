@@ -1,7 +1,6 @@
 #preprod
 deployment:
   user: jenkins
-  owner : www-data:www-data
   from: ./
   to: /data/apps/leads-factory
   excludes:
