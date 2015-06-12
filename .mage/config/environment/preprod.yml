@@ -4,7 +4,6 @@ deployment:
   from: ./
   to: /data/apps/leads-factory
   excludes:
-    - .idea
     - app/cache
     - app/config/parameters.yml
     - app/Export
