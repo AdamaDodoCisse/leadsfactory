@@ -6,4 +6,4 @@ logging: true
 maxlogs: 30
 ssh_needs_tty: false
 colors : false
-use_sudo :true
+use_sudo : true
