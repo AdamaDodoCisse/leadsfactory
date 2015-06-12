@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "004421d22e5110bff3660c81ed109447",
+    "hash": "473943064dd3af86dac4022665e078c6",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2329,17 +2329,17 @@
         },
         {
             "name": "tellaw/LeadsFactoryBundle",
-            "version": "dev-master",
+            "version": "0.9.2",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "6562fef4b9fc41d408759dbd0beb35a2355886d8"
+                "reference": "78bc9997093f3c4cfb660c84e90db9afbd006db1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/6562fef4b9fc41d408759dbd0beb35a2355886d8",
-                "reference": "6562fef4b9fc41d408759dbd0beb35a2355886d8",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/78bc9997093f3c4cfb660c84e90db9afbd006db1",
+                "reference": "78bc9997093f3c4cfb660c84e90db9afbd006db1",
                 "shasum": ""
             },
             "require": {
@@ -2384,10 +2384,10 @@
                 "Leadsfactory"
             ],
             "support": {
-                "source": "https://github.com/tellaw/leadsfactory/tree/master",
+                "source": "https://github.com/tellaw/leadsfactory/tree/0.9.2",
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
-            "time": "2015-06-11 20:48:41"
+            "time": "2015-06-12 12:45:34"
         },
         {
             "name": "twig/extensions",
@@ -2601,7 +2601,6 @@
     "stability-flags": {
         "jms/security-extra-bundle": 20,
         "vresh/twilio-bundle": 20,
-        "tellaw/leadsfactorybundle": 20,
         "beberlei/doctrineextensions": 20
     },
     "prefer-stable": false,

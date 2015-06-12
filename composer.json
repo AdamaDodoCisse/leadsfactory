@@ -22,7 +22,7 @@
         "jms/security-extra-bundle": "dev-master",
         "mtdowling/cron-expression": "1.0.*",
         "vresh/twilio-bundle": "dev-master",
-        "tellaw/LeadsFactoryBundle" : "0.9",
+        "tellaw/LeadsFactoryBundle" : "0.9.2",
         "beberlei/DoctrineExtensions": "@dev"
     },
     "scripts": {
