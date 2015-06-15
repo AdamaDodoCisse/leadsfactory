@@ -22,7 +22,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Swift_Message;
 
 /**
- * @Route("/client")
+ *
  */
 class FrontController extends Admin\AbstractLeadsController
 {
