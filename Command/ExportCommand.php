@@ -25,7 +25,6 @@ class ExportCommand extends ContainerAwareCommand {
         $doctrine = $this->getContainer()->get('doctrine');
 
         $form = $input->getArgument('form');
-
         if($form){
             $output->writeln('Exporting '.$form.' leads...');
             $forms = $this->getContainer()->get('leadsfactory.form_repository')->findByCode($form);

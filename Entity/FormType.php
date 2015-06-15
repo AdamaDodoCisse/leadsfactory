@@ -225,6 +225,8 @@ class FormType {
     public $textualYesterdayDay = null;
     public $textualWeekBeforeDay = null;
 
+    public $yesterdayStatus = null;
+
     public $nbViews = null;
     public $nbLeads = null;
     public $transformRate = null;

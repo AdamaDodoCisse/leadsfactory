@@ -27,13 +27,26 @@ use Swift_Message;
 class FrontController extends Admin\AbstractLeadsController
 {
 	/**
-	 * @Route("/form/twig/{code}", name="_client_twig")
+	 * @Route("/form/twig/{code}/{utmcampaign}", name="_client_twig")
 	 * @ParamConverter("form")
 	 */
-	public function twigAction(Form $form)
+	public function twigAction(Form $form, $utm_campaign = '')
 	{
 		$post_url = $this->get('router')->generate('_client_post_form', array(), true);
 		$hidden_tags = $this->get('form_utils')->getHiddenTags($form);
+
+        // Track call request
+        /** @var \Tellaw\LeadsFactoryBundle\Entity\Tracking $tracking */
+        $tracking = new Tracking();
+        if (trim($utm_campaign) == '') $utm_campaign =  $form->getUtmcampaign();
+        $tracking->setUtmCampaign( $utm_campaign );
+        $tracking->setForm( $form );
+        $tracking->setCreatedAt( new \DateTime() );
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($tracking);
+        $em->flush();
+
 		$response = $this->render(
 			'TellawLeadsFactoryBundle::form-jquery.js.twig',
 			array(

@@ -396,4 +396,31 @@ class Leads
 	{
 		return $this->email;
 	}
+
+    /**
+     * @param $source   source object from the search
+     * @param $em   entity manager
+     * @return $this
+     */
+    public function populateFromSearch ( $source, $em ) {
+
+        $this->setId( $source->id );
+        $this->setFirstname ( $source->firstname );
+        $this->setLastname ( $source->lastname );
+        $this->setData( json_encode($source->content) );
+        $this->setStatus ( $source->status );
+        $this->setExportdate( $source->exportdate );
+        $this->setLog ( $source->log );
+        $this->setUtmcampaign( $source->utmcampaign );
+        $this->setTelephone( $source->telephone );
+        $this->setCreatedAt( $source->createdAt );
+        if ($source->form_id) $this->setForm( $em->getRepository('TellawLeadsFactoryBundle:Form')->find( $source->form_id ) );
+        $this->setEmail( $source->email );
+        if ($source->entreprise_id) $this->setEntreprise( $em->getRepository('TellawLeadsFactoryBundle:Entreprise')->find( $source->entreprise_id ) );
+        if ($source->client_id) $this->setEntreprise( $em->getRepository('TellawLeadsFactoryBundle:Client')->find( $source->client_id ) );
+
+        return $this;
+
+    }
+
 }

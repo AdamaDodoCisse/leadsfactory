@@ -63,4 +63,24 @@ abstract class AbstractMethod {
 		return $this->getContainer()->get('leadsfactory.client_email_repository')->isEmailValidated($email);
 	}
 
+    /**
+     * @param $reason
+     * @param $form
+     * @param $export
+     * @param $currentStatus
+     * @param $newStatus
+     */
+    private function notifyOfExportIssue ( $reason, $form, $export, $currentStatus, $newStatus ) {
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setFrom('send@example.com')
+            ->setTo('recipient@example.com')
+            ->setBody($this->renderView('HelloBundle:Hello:email.txt.twig', array('name' => $name)))
+        ;
+        $this->get('mailer')->send($message);
+
+
+    }
+
 } 

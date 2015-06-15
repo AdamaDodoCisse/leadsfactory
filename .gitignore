@@ -7,11 +7,10 @@ app/config/parameters.yml
 app/cache
 app/logs
 app/sessions
-bin/
+/bin/
 vendor/
-Search/logs/
-Search/data/elasticsearch/nodes/
-Search/data/
+/Search/logs/
+/Search/data/*
 
 # Cache and logs
 /vendor/*

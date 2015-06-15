@@ -46,15 +46,36 @@
                     </thead>
                     <tbody>
                     {% for item in elements %}
+
+                        <!--
+                            Elements relatifs au variables ExportUtils Statiques.
+                        -->
+                        {% if item.status == 0 %}
+                            {% set statusLibelle = "En attente" %}
+                            {% set color =  "" %}
+                        {% elseif item.status == 1 %}
+                            {% set statusLibelle = "Exporté avec Succès" %}
+                            {% set color =  "style=background-color:#33CC33;color:#FFFFFF;" %}
+                        {% elseif item.status == 2 %}
+                            {% set statusLibelle = "1ere tentative echouée" %}
+                            {% set color =  "style=background-color:#CCCC66;color:#FFFFFF;" %}
+                        {% elseif item.status == 3 %}
+                            {% set statusLibelle = "Problèmes d'exports" %}
+                            {% set color =  "style=background-color:#FF3300;color:#FFFFFF;" %}
+                        {% elseif item.status == 4 %}
+                            {% set statusLibelle = "Non planifié" %}
+                            {% set color =  "" %}
+                        {%  endif %}
+
                         <tr>
-                            <td>{{ item.id }}</td>
-                            <td>{{ item.form.name }}</td>
-                            <td>{{ item.form.formType }}</td>
-                            <td>{{ item.scheduledAt.date }}</td>
-                            <td>{% if item.executedAt != null %}{{ item.executedAt.date }}{% endif %}</td>
-                            <td>{{ item.lead.id }}</td>
-                            <td>{{ item.method }}</td>
-                            <td>{{ item.status }}</td>
+                            <td {{ color }} >{{ item.id }}</td>
+                            <td {{ color }} >{{ item.form.name }}</td>
+                            <td {{ color }} >{{ item.form.formType }}</td>
+                            <td {{ color }} >{{ item.scheduledAt.date }}</td>
+                            <td {{ color }} >{% if item.executedAt != null %}{{ item.executedAt.date }}{% endif %}</td>
+                            <td {{ color }} >{{ item.lead.id }}</td>
+                            <td {{ color }} >{{ item.method }}</td>
+                            <td {{ color }} >{{ statusLibelle }}</td>
                         </tr>
 
                     {% else %}
