@@ -6,7 +6,7 @@ tellaw_leads_factory_homepage:
 tellaw_leads_factory_front:
     resource: "@TellawLeadsFactoryBundle/Controller/FrontController.php"
     type:     annotation
-    prefix:   /
+    prefix:   /client
 
 tellaw_leads_factory_api:
     resource: "@TellawLeadsFactoryBundle/Controller/ApiController.php"
