@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9bb519a81e870af13864a1a6ccaae89a",
+    "hash": "71710cad0cd610332fb60e3f2f41681d",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -608,60 +608,6 @@
                 "string"
             ],
             "time": "2014-12-20 21:24:13"
-        },
-        {
-            "name": "doctrine/instantiator",
-            "version": "1.0.4",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/doctrine/instantiator.git",
-                "reference": "f976e5de371104877ebc89bd8fecb0019ed9c119"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/f976e5de371104877ebc89bd8fecb0019ed9c119",
-                "reference": "f976e5de371104877ebc89bd8fecb0019ed9c119",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3,<8.0-DEV"
-            },
-            "require-dev": {
-                "athletic/athletic": "~0.1.8",
-                "ext-pdo": "*",
-                "ext-phar": "*",
-                "phpunit/phpunit": "~4.0",
-                "squizlabs/php_codesniffer": "2.0.*@ALPHA"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Doctrine\\Instantiator\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marco Pivetta",
-                    "email": "ocramius@gmail.com",
-                    "homepage": "http://ocramius.github.com/"
-                }
-            ],
-            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
-            "homepage": "https://github.com/doctrine/instantiator",
-            "keywords": [
-                "constructor",
-                "instantiate"
-            ],
-            "time": "2014-10-13 12:58:55"
         },
         {
             "name": "doctrine/lexer",
@@ -2325,17 +2271,17 @@
         },
         {
             "name": "tellaw/LeadsFactoryBundle",
-            "version": "0.9.3",
+            "version": "0.9.4",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "6d12d470ff71a0da32a46022f4ba05bc68be7fea"
+                "reference": "5a888013b8e9605ce5b3e78ef782743c619daa7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/6d12d470ff71a0da32a46022f4ba05bc68be7fea",
-                "reference": "6d12d470ff71a0da32a46022f4ba05bc68be7fea",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/5a888013b8e9605ce5b3e78ef782743c619daa7d",
+                "reference": "5a888013b8e9605ce5b3e78ef782743c619daa7d",
                 "shasum": ""
             },
             "require": {
@@ -2380,10 +2326,10 @@
                 "Leadsfactory"
             ],
             "support": {
-                "source": "https://github.com/tellaw/leadsfactory/tree/0.9.3",
+                "source": "https://github.com/tellaw/leadsfactory/tree/0.9.4",
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
-            "time": "2015-06-12 15:05:26"
+            "time": "2015-06-15 09:48:47"
         },
         {
             "name": "twig/extensions",
