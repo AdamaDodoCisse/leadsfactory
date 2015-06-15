@@ -27,7 +27,7 @@ use Swift_Message;
 class FrontController extends Admin\AbstractLeadsController
 {
 	/**
-	 * @Route("/form/twig/{code}/{utmcampaign}", name="_client_twig")
+	 * @Route("/form/twig/{code}/{utm_campaign}", name="_client_twig")
 	 * @ParamConverter("form")
 	 */
 	public function twigAction(Form $form, $utm_campaign = '')
