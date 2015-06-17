@@ -26,6 +26,7 @@ tasks:
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
     - symfony-doctrine-update
+    - chmod
   post-release:
   post-deploy:
     
