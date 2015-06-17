@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6d3d895d1fd5da6f6f019bcaf5d94d7a",
+    "hash": "cc13dc8f31802430c3ab10cdf15fa5d4",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2330,6 +2330,46 @@
                 "issues": "https://github.com/tellaw/leadsfactory/issues"
             },
             "time": "2015-06-15 13:01:52"
+        },
+        {
+            "name": "teodortalov/citrix",
+            "version": "1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/teodortalov/citrix.git",
+                "reference": "d3b7ecda6fb649e7095be4b0e7583c87688bdd63"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/teodortalov/citrix/zipball/d3b7ecda6fb649e7095be4b0e7583c87688bdd63",
+                "reference": "d3b7ecda6fb649e7095be4b0e7583c87688bdd63",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Citrix": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Teodor Talov",
+                    "email": "teodor@talov.com"
+                }
+            ],
+            "description": "PHP wrapper around Citrix - GoToMeeting and GoToWebinar APIs. Forked from teodortalov/citrix.",
+            "keywords": [
+                "Citrix API",
+                "GoToMeeting API",
+                "GoToWebinar",
+                "GoToWebinar API",
+                "citrix"
+            ],
+            "time": "2015-05-08 06:36:56"
         },
         {
             "name": "twig/extensions",

@@ -23,3 +23,10 @@ parameters:
     twilio_authToken:   83a6842dd399473232caccb92159544c
     twilio_retryAttempts:   2
     weka_leads.edeal_credentials: ~
+
+    gotowebinar_credentials:
+            weka:
+                url: https://api.citrixonline.com/G2W/
+                user: admin
+                password: youplas
+                consumer_key: CSJHGK4myenEhRNczrTC5DZ2E8yKf3GU

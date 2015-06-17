@@ -18,3 +18,10 @@ services:
         tags:
           - {name: export.method, alias: edeal}
         arguments: [%weka_leads.edeal_credentials%]
+    gotowebinar_method:
+            class: Weka\LeadsExportBundle\Utils\Gotowebinar
+            calls:
+              - [setContainer, [@service_container]]
+            tags:
+              - {name: export.method, alias: gotowebinar}
+            arguments: [%gotowebinar_credentials%]
