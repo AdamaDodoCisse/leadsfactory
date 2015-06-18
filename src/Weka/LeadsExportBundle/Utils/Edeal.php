@@ -5,6 +5,7 @@ namespace Weka\LeadsExportBundle\Utils;
 use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 
 class Edeal extends AbstractMethod{
@@ -80,32 +81,48 @@ class Edeal extends AbstractMethod{
 			    continue;
 		    }
 
-            $enterprise = $this->_getEnterprise($data);
-		    var_dump($enterprise);
-            $entResponse = $client->createEnterprise($enterprise);
-            $logger->info('Edeal createEnterprise result : '.$entResponse);
+            try {
 
-            $person = $this->_getPerson($data);
-		    var_dump($person);
-            $personResponse = $client->createPerson($person);
-            $logger->info('Edeal createPerson result : '.$personResponse);
+                $enterprise = $this->_getEnterprise($data);
+                var_dump($enterprise);
+                $entResponse = $client->createEnterprise($enterprise);
+                $logger->info('Edeal createEnterprise result : '.$entResponse);
 
-            $couponsWeb = $this->_getCouponsWeb($data);
-		    var_dump($couponsWeb);
-            $cpwResponse = $client->createCouponsWeb_($couponsWeb);
-            $logger->info('Edeal createCouponsWeb_ result : '.$cpwResponse);
+                $person = $this->_getPerson($data);
+                var_dump($person);
+                $personResponse = $client->createPerson($person);
+                $logger->info('Edeal createPerson result : '.$personResponse);
 
-            if($entResponse && $personResponse && $cpwResponse){
-                $log = "Exporté avec succès";
-                $status = $exportUtils::$_EXPORT_SUCCESS;
-            }else{
-                $log = 'Export échoué';
+                $couponsWeb = $this->_getCouponsWeb($data);
+                var_dump($couponsWeb);
+                $cpwResponse = $client->createCouponsWeb_($couponsWeb);
+                $logger->info('Edeal createCouponsWeb_ result : '.$cpwResponse);
+
+                if($entResponse && $personResponse && $cpwResponse){
+                    $log = "Exporté avec succès";
+                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                }else{
+                    $log = 'Export échoué';
+                    $status = $exportUtils->getErrorStatus($job);
+                }
+
+                $exportUtils->updateJob($job, $status, $log);
+                $exportUtils->updateLead($job->getLead(), $status, $log);
+                $logger->info($log);
+
+            } catch (Exception $e) {
+
                 $status = $exportUtils->getErrorStatus($job);
+                $log = $e->getMessage();
+
+                $this->notifyOfExportIssue ( $e->getMessage(), $form, $job, $status );
+
+                $exportUtils->updateJob($job, $status, $log);
+                $exportUtils->updateLead($job->getLead(), $status, $log);
+                $logger->error($log);
+
             }
 
-            $exportUtils->updateJob($job, $status, $log);
-            $exportUtils->updateLead($job->getLead(), $status, $log);
-            $logger->info($log);
         }
     }
 
