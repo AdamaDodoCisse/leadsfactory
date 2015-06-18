@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ use Tellaw\LeadsFactoryBundle\Entity\ClientEmail;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
 
 class ApiController extends Controller
 {
@@ -121,7 +123,8 @@ class ApiController extends Controller
 		$form_code = $request->query->get('form_code');
 		if(!is_null($form_code)){
 			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
-			$args['form'] = $form->getId();
+			if(!empty($form))
+				$args['form'] = $form->getId();
 		}
 
 		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
@@ -152,6 +155,7 @@ class ApiController extends Controller
 					'form'      => $lead->getForm()->getName(),
 					'form_id'   => $lead->getForm()->getId(),
 					'scope'     => $scope,
+					'key'       => $this->get("form_utils")->getApiKey($lead->getForm()),
 					'created_at'=> $lead->getCreatedAt()->format('Y-m-d')
 				);
 			}
@@ -164,5 +168,61 @@ class ApiController extends Controller
 		$response->headers->set('content-type', 'application/json');
 
 		return $response;
+	}
+
+	/**
+	 * Enregistre une DI
+	 *
+	 * @Route("/lead/post")
+	 * @Method("POST")
+	 */
+	public function postLeadAction(Request $request)
+	{
+		$exportUtils = $this->get('export_utils');
+		$logger = $this->get('logger');
+
+		$logger->info('API post lead');
+
+		$data = $request->getcontent();
+		$logger->info($data);
+		$data = json_decode($data, true);
+
+		try{
+			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($data['formCode']);
+
+			$jsonContent = json_encode($data);
+
+			$leads = new Leads();
+			$leads->setFirstname(@$data['firstName']);
+			$leads->setLastname(@$data['lastName']);
+			$leads->setData($jsonContent);
+			$leads->setLog("leads importée le : ".date('Y-m-d h:s'));
+			$leads->setUtmcampaign(@$data["utmCampaign"]);
+			$leads->setForm($form);
+			$leads->setTelephone(@$data["phone"]);
+			$leads->setEmail(@$data['email']);
+
+			$status = $exportUtils->hasScheduledExport($form->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
+			$leads->setStatus($status);
+
+			$leads->setCreatedAt( new \DateTime() );
+
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($leads);
+			$em->flush();
+
+			// Create export job(s)
+			if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
+				$exportUtils->createJob($leads);
+			}
+
+			return new Response(1);
+
+		}catch(Exception $e){
+			$logger->error($e->getMessage());
+			return new Response(0);
+		}
+
+
 	}
 }
