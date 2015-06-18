@@ -197,7 +197,7 @@ class ApiController extends Controller
 			$leads->setLastname(@$data['lastName']);
 			$leads->setData($jsonContent);
 			$leads->setLog("leads importée le : ".date('Y-m-d h:s'));
-			$leads->setUtmcampaign(@$data["utmCampaign"]);
+			$leads->setUtmcampaign(@$data["utmcampaign"]);
 			$leads->setForm($form);
 			$leads->setTelephone(@$data["phone"]);
 			$leads->setEmail(@$data['email']);
