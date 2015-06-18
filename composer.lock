@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "cc13dc8f31802430c3ab10cdf15fa5d4",
+    "hash": "174a32add114dbb10c3f5602d2236819",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2270,18 +2270,18 @@
             "time": "2015-06-11 21:15:28"
         },
         {
-            "name": "tellaw/LeadsFactoryBundle",
-            "version": "v0.9.6",
+            "name": "tellaw/leadsfactory",
+            "version": "0.9.7",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "a1a0275cc3383d1beebf13088650b7156be892f7"
+                "reference": "8ed8675c025a56f4d5d87a1e1428b6185eb0de1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/a1a0275cc3383d1beebf13088650b7156be892f7",
-                "reference": "a1a0275cc3383d1beebf13088650b7156be892f7",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/8ed8675c025a56f4d5d87a1e1428b6185eb0de1a",
+                "reference": "8ed8675c025a56f4d5d87a1e1428b6185eb0de1a",
                 "shasum": ""
             },
             "require": {
@@ -2312,6 +2312,7 @@
                     "Tellaw\\LeadsFactoryBundle": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2325,11 +2326,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "support": {
-                "source": "https://github.com/tellaw/leadsfactory/tree/v0.9.6",
-                "issues": "https://github.com/tellaw/leadsfactory/issues"
-            },
-            "time": "2015-06-15 13:01:52"
+            "time": "2015-06-18 10:13:50"
         },
         {
             "name": "teodortalov/citrix",
