@@ -1,8 +1,8 @@
 {
-    "name": "tellaw/LeadsFactoryBundle",
+    "name": "tellaw/leadsfactory",
     "license": "MIT",
     "type": "project",
-    "description": "LeadsFactory Bundle Project",
+    "description": "LeadsFactory Core Bundle Project",
     "type" : "symfony-bundle",
     "authors" : [{
         "name" : "Eric Wallet",
