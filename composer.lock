@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "174a32add114dbb10c3f5602d2236819",
+    "hash": "4be2a558daf8235d7b107834c8cf312e",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2271,17 +2271,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "0.9.7",
+            "version": "v0.9.8",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "8ed8675c025a56f4d5d87a1e1428b6185eb0de1a"
+                "reference": "f6a7e1abd745fff2311e308f96a92e50e52380f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/8ed8675c025a56f4d5d87a1e1428b6185eb0de1a",
-                "reference": "8ed8675c025a56f4d5d87a1e1428b6185eb0de1a",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/f6a7e1abd745fff2311e308f96a92e50e52380f6",
+                "reference": "f6a7e1abd745fff2311e308f96a92e50e52380f6",
                 "shasum": ""
             },
             "require": {
@@ -2312,7 +2312,6 @@
                     "Tellaw\\LeadsFactoryBundle": ""
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2322,11 +2321,15 @@
                     "email": "ewalletfr@gmail.com"
                 }
             ],
-            "description": "LeadsFactory Bundle Project",
+            "description": "LeadsFactory Core Bundle Project",
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2015-06-18 10:13:50"
+            "support": {
+                "source": "https://github.com/tellaw/leadsfactory/tree/v0.9.8",
+                "issues": "https://github.com/tellaw/leadsfactory/issues"
+            },
+            "time": "2015-06-18 13:38:13"
         },
         {
             "name": "teodortalov/citrix",
