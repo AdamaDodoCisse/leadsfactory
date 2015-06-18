@@ -13,14 +13,12 @@ use Doctrine\ORM\EntityManagerInterface;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils
  */
-class PreferencesUtils
-{
+class PreferencesUtils {
 
     /** @var EntityManagerInterface */
     protected $entity_manager;
 
-    public function __construct(EntityManagerInterface $entity_manager)
-    {
+    public function __construct(EntityManagerInterface $entity_manager) {
         $this->entity_manager = $entity_manager;
     }
 
@@ -37,7 +35,7 @@ class PreferencesUtils
     }
 
     public function setApplicationPreference ( $key, $value ) {
-        
+
     }
 
 }

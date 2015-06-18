@@ -159,3 +159,27 @@ services:
     class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\SearchWatchdogScheduler
     tags:
     - { name: scheduled.job }
+
+  leadsfactory.export_mock_success:
+    class: Tellaw\LeadsFactoryBundle\Utils\Export\MockExport
+    calls:
+      - [setContainer, [@service_container]]
+    tags:
+      - {name: export.method, alias: mockExportSuccess}
+    arguments: ['1']
+
+  leadsfactory.export_mock_error:
+    class: Tellaw\LeadsFactoryBundle\Utils\Export\MockExport
+    calls:
+      - [setContainer, [@service_container]]
+    tags:
+      - {name: export.method, alias: mockExportError}
+    arguments: ['-1']
+
+  leadsfactory.export_mock_exception:
+    class: Tellaw\LeadsFactoryBundle\Utils\Export\MockExport
+    calls:
+      - [setContainer, [@service_container]]
+    tags:
+      - {name: export.method, alias: mockExportException}
+    arguments: ['2']

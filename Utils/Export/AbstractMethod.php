@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 
 use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 
 abstract class AbstractMethod {
@@ -70,16 +71,26 @@ abstract class AbstractMethod {
      * @param $currentStatus
      * @param $newStatus
      */
-    private function notifyOfExportIssue ( $reason, $form, $export, $currentStatus, $newStatus ) {
+    protected function notifyOfExportIssue ( $reason, $form, $job, $newStatus, $forceNotification = false ) {
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('Hello Email')
-            ->setFrom('send@example.com')
-            ->setTo('recipient@example.com')
-            ->setBody($this->renderView('HelloBundle:Hello:email.txt.twig', array('name' => $name)))
-        ;
-        $this->get('mailer')->send($message);
+        if ( $job->getStatus() == ExportUtils::$_EXPORT_ONE_TRY_ERROR || $forceNotification ) {
 
+            $logger = $this->getContainer()->get('export.logger');
+
+            $templatingService = $this->container->get('templating');
+            $dest = $this->container->getParameter("export_notification_dest");
+
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Lead\'s : Incident d\'export')
+                ->setFrom($this->container->getParameter("export_notification_from"))
+                ->setTo( $dest )
+                ->setBody($templatingService->render('TellawLeadsFactoryBundle:emails:export_notification.txt.twig', array('reason' => $reason,'form'=>$form,'job'=>$job,'status'=>$newStatus)))
+            ;
+            $this->container->get('mailer')->send($message);
+
+            $logger->info("Notification mail sent to  : ". $dest);
+
+        }
 
     }
 
