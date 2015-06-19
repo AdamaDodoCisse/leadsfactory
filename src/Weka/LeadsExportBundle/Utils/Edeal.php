@@ -110,7 +110,7 @@ class Edeal extends AbstractMethod{
                 $exportUtils->updateLead($job->getLead(), $status, $log);
                 $logger->info($log);
 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
 
                 $status = $exportUtils->getErrorStatus($job);
                 $log = $e->getMessage();
