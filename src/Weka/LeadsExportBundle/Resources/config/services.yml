@@ -2,6 +2,7 @@ parameters:
     weka_leads_export.athena.class: Weka\LeadsExportBundle\Utils\Athena
     athena_url: http://athena.host-athena-dev1.captivea.net/index.php
     weka_leads_export.edeal.class: Weka\LeadsExportBundle\Utils\Edeal
+    weka_leads_export.athenav2.class: Weka\LeadsExportBundle\Utils\AthenaV2
 
 services:
     athena_method:
@@ -11,6 +12,7 @@ services:
         tags:
           - {name: export.method, alias: athena}
         arguments: [%athena_url%]
+
     edeal_method:
         class: %weka_leads_export.edeal.class%
         calls:
@@ -18,6 +20,14 @@ services:
         tags:
           - {name: export.method, alias: edeal}
         arguments: [%weka_leads.edeal_credentials%]
+
+    athenav2_method:
+        class: %weka_leads_export.athenav2.class%
+        calls:
+          - [setContainer, [@service_container]]
+        tags:
+          - {name: export.method, alias: athenaV2}
+        arguments: [%athena_url%]
     gotowebinar_method:
             class: Weka\LeadsExportBundle\Utils\Gotowebinar
             calls:
