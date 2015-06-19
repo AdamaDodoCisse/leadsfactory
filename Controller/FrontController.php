@@ -50,6 +50,7 @@ class FrontController extends Admin\AbstractLeadsController
 		$response = $this->render(
 			'TellawLeadsFactoryBundle::form-jquery.js.twig',
 			array(
+                'formAction' => $this->container->get('router')->generate("_client_post_form", array(), true),
 				'form' => $form,
 				'post_url' => $post_url,
 				'hidden_tags' => $hidden_tags,
@@ -136,7 +137,10 @@ class FrontController extends Admin\AbstractLeadsController
         try {
 
             $formTypeObject = $this->get('leadsfactory.form_type_repository')->find((string)$request->get ("lfFormType"));
-            $formObject = $this->get('leadsfactory.form_repository')->find($request->get("lfFormId"));
+            $formId = $request->get("lfFormId");
+            $logger->info ("Id FORM Posted : ".$formId);
+
+            $formObject = $this->get('leadsfactory.form_repository')->find($formId);
 
             // Read configuration to map attributes correctly
             $config = $formObject->getConfig();
