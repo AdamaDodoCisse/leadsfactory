@@ -24,3 +24,6 @@ vendor/
 
 # Composer PHAR
 /composer.phar
+
+/datas/
+/licence/*
