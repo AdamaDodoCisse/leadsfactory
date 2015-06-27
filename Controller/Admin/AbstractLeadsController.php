@@ -22,4 +22,6 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 
 abstract class AbstractLeadsController extends Controller
 {
+
+
 }

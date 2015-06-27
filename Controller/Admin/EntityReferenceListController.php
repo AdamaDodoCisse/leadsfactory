@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListType;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListElementType;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -24,8 +25,12 @@ use Symfony\Component\HttpFoundation\Response;
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityReferenceListController extends AbstractEntityController
+class EntityReferenceListController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+    }
 
     /**
      *
@@ -35,6 +40,10 @@ class EntityReferenceListController extends AbstractEntityController
      */
     public function indexAction($page=1, $limit=10, $keyword='')
     {
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         $list = $this->getList ('TellawLeadsFactoryBundle:ReferenceList', $page, $limit, $keyword, array () );
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();

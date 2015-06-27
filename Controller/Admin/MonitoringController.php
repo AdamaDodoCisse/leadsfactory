@@ -9,13 +9,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\Bookmark;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\Chart;
 use \Tellaw\LeadsFactoryBundle\Utils\AlertUtils;
 
 /**
  * @Route("/monitoring")
  */
-class MonitoringController extends AbstractLeadsController{
+class MonitoringController extends CoreController {
+
+    public function __construct () {
+        parent::__construct();
+
+    }
 
     /**
      * @route("/dashboard", name="_monitoring_dashboard")
@@ -23,6 +29,10 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function dashboardAction(Request $request)
     {
+
+        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         // Logged User
         $user_id = $this->get('security.context')->getToken()->getUser()->getId();
@@ -46,6 +56,10 @@ class MonitoringController extends AbstractLeadsController{
     public function dashboardFormsAction(Request $request)
     {
         $data = array();
+
+        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         $formBuilder = $this->createFormBuilder($data);
         $formBuilder->setMethod('POST')
@@ -86,6 +100,10 @@ class MonitoringController extends AbstractLeadsController{
     public function dashboardTypePageAction( Request $request, $type_id )
     {
 
+        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $entity = $this->get('leadsfactory.form_type_repository')->find( $type_id );
 
         $data = array();
@@ -123,6 +141,11 @@ class MonitoringController extends AbstractLeadsController{
      */
     public function dashboardFormPageAction( Request $request, $form_id )
     {
+
+        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $entity = $this->get('leadsfactory.form_repository')->find( $form_id );
 
         $data = array();
@@ -161,6 +184,10 @@ class MonitoringController extends AbstractLeadsController{
     public function dashboardUtmPageAction( Request $request, $utm )
     {
 
+        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $data = array();
 
         $formBuilder = $this->createFormBuilder($data);
@@ -190,6 +217,10 @@ class MonitoringController extends AbstractLeadsController{
      * @Secure(roles="ROLE_USER")
      */
     public function getUtmLinkedToFormAction ( $form_id ) {
+
+        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
         $utils = $this->container->get('lf.utils');

@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Form {
 
+    public $type = "form";
+
 	/**
 	 * @var integer $id
 	 *
@@ -91,6 +93,10 @@ class Form {
 	 * @ORM\Column(type="string", nullable=true, name="secure_key")
 	 */
 	protected $secureKey;
+
+    public function getType() {
+        return $this->type;
+    }
 
     /**
      * @param mixed $formType

@@ -12,11 +12,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tellaw\LeadsFactoryBundle\Entity\ClientEmail;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 
-class ApiController extends Controller
+class ApiController extends CoreController
 {
 
     /**

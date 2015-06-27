@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,8 +20,12 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityUsersController extends AbstractEntityController
+class EntityUsersController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+    }
 
     /**
      * @Route("/users/list/{page}/{limit}/{keyword}", name="_users_list")
@@ -28,6 +33,10 @@ class EntityUsersController extends AbstractEntityController
      */
     public function indexAction($page=1, $limit=10, $keyword='')
     {
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $list = $this->getList ('TellawLeadsFactoryBundle:Users', $page, $limit, $keyword, array () );
 
         return $this->render(

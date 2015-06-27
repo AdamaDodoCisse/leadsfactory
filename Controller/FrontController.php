@@ -9,6 +9,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\FormUtils;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 
@@ -24,7 +25,7 @@ use Swift_Message;
 /**
  *
  */
-class FrontController extends Admin\AbstractLeadsController
+class FrontController extends CoreController
 {
 	/**
 	 * @Route("/form/twig/{code}/{utm_campaign}", name="_client_twig")

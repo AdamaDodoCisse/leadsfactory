@@ -1,0 +1,7 @@
+<?php
+namespace Tellaw\LeadsFactoryBundle\Shared; class JsUtilsShared { public function buildAndWrapForm(FormEntity $sp395da8) { $spcf3536 = $this->container->get('form_utils'); $sp4284f3 = $spcf3536->buildHtmlForm($sp395da8); $spa2717a = $this->sp3cf466($sp4284f3); $spa2717a .= $this->sp866024($sp395da8->getSource()); return $spa2717a; } private function sp3cf466($sp55a532) { $sp3b688b = str_replace('"', '\\"', $sp55a532); $sp3b688b = str_replace('	', '', $sp3b688b); $sp3b688b = str_replace('
+', '', $sp3b688b); $sp3b688b = str_replace('', '', $sp3b688b); $spcb003e = 'var leadsfactory = new Object();
+leadsfactory.render= function() { var frmObj="' . $sp3b688b . '";document.writeln(frmObj);};
+'; return $spcb003e; } private function sp866024($spa7f9f5) { $sp00899f = $this->container->get('form_utils')->parseTags($spa7f9f5); $sp18a6d2 = ''; foreach ($sp00899f as $sp0bb1af => $spe1b3be) { $sp18a6d2 .= $this->spdeca82($sp0bb1af); } return $sp18a6d2; } private function spdeca82($sp0bb1af) { $sp6f6799 = StringHelper::camelize($sp0bb1af); return 'leadsfactory.set' . $sp6f6799 . '= function (value){document.getElementById("lffield[' . $sp0bb1af . ']").value=value;};
+leadsfactory.get' . $sp6f6799 . ' = function(){return document.getElementById("lffield[' . $sp0bb1af . ']").value;};
+'; } }

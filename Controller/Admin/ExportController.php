@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 use Tellaw\LeadsFactoryBundle\Entity;
 
@@ -20,8 +21,12 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class ExportController extends AbstractEntityController
+class ExportController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+    }
 
     /**
      * Start export
@@ -31,6 +36,10 @@ class ExportController extends AbstractEntityController
      */
     public function exportAction(Request $request)
     {
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $formId = $request->query->get('id');
         $redirectUrl = $request->query->get('redirect_url') ? $request->query->get('redirect_url') : '_export_history';
 

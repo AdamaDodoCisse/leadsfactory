@@ -5,10 +5,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
-class SecurityController extends AbstractLeadsController
+class SecurityController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+    }
+
 	/**
 	 * @Route("/login", name="_security_login")
 	 */
@@ -31,4 +42,5 @@ class SecurityController extends AbstractLeadsController
             'error'         => $error,
         ));
     }
+
 }

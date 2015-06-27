@@ -14,13 +14,18 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
 /**
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityReferenceListElementController extends AbstractLeadsController
+class EntityReferenceListElementController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+    }
 
     /**
      * @Route("/referenceListElement/list/{id}", name="_referenceListElement_list")
@@ -28,6 +33,10 @@ class EntityReferenceListElementController extends AbstractLeadsController
      */
     public function indexAction(Request $request, $id)
     {
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         $em = $this->getDoctrine()->getManager();
 

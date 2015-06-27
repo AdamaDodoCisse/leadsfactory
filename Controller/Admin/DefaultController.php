@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,8 +19,13 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  *
  */
-class DefaultController extends AbstractLeadsController
+class DefaultController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+
+    }
 
     /**
      *
@@ -30,7 +36,9 @@ class DefaultController extends AbstractLeadsController
      */
     public function indexAction(Request $request)
     {
-
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
         return $this->redirect($this->generateUrl('_monitoring_dashboard'));
 
     }

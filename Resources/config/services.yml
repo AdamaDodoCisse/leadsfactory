@@ -45,6 +45,11 @@ services:
     calls:
                       - [ setContainer, [ @service_container ] ]
 
+  core_manager:
+    class:        Tellaw\LeadsFactoryBundle\Shared\CoreManager
+    calls:
+                      - [ setContainer, [ @service_container ] ]
+
   csv_method:
     class:        Tellaw\LeadsFactoryBundle\Utils\Export\CSV
     calls:

@@ -12,6 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class FormType {
 
+    public $type = "formType";
+
     /**
      * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Form", mappedBy="formType")
      */
@@ -21,6 +23,10 @@ class FormType {
     {
         $this->forms = new ArrayCollection();
         $this->leads = new ArrayCollection();
+    }
+
+    public function getType() {
+        return $this->type;
     }
 
 	/**

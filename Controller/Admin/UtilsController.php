@@ -14,12 +14,52 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Tellaw\LeadsFactoryBundle\Shared\CoreManager;
 
 /**
  * @Route("/utils")
  */
-class UtilsController extends AbstractLeadsController
+class UtilsController extends CoreController
 {
+
+
+
+    public function __construct () {
+        parent::__construct();
+    }
+
+    /**
+     * @Route("/licenceError", name="_security_licence_error")
+     * @Secure(roles="ROLE_USER")
+     * @Template()
+     */
+    public function licenceAction(){
+
+        $informations = CoreManager::getLicenceInfos();
+
+        return $this->render('TellawLeadsFactoryBundle:Security:licenceError.html.twig', array(
+            // last username entered by the user
+            'information'         => $informations
+        ));
+
+    }
+
+    /**
+     * @Route("/licence", name="_security_licence")
+     * @Secure(roles="ROLE_USER")
+     * @Template()
+     */
+    public function licenceErrorAction(){
+
+        $informations = CoreManager::getLicenceInfos();
+        return $this->render('TellawLeadsFactoryBundle:Security:licenceDetail.html.twig', array(
+            // last username entered by the user
+            'information'         => $informations
+        ));
+
+    }
+
 
     /**
      * @Route("/messages/{parentRoute}", name="_utils_messages")

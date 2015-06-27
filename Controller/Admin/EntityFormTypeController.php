@@ -13,13 +13,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
 /**
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
-class EntityFormTypeController extends AbstractEntityController
+class EntityFormTypeController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+
+    }
 
     /**
      *
@@ -29,6 +35,11 @@ class EntityFormTypeController extends AbstractEntityController
      */
     public function indexAction($page=1, $limit=10, $keyword='')
     {
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $list = $this->getList ('TellawLeadsFactoryBundle:FormType', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
         $bookmarks = $this->get('leadsfactory.form_type_repository')->getBookmarkedFormsForUser( $this->getUser()->getId() );
 

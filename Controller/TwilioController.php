@@ -9,8 +9,9 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
-class TwilioController extends Controller
+class TwilioController extends CoreController
 {
 
     /**

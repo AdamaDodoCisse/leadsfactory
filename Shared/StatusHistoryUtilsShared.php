@@ -1,0 +1,2 @@
+<?php
+namespace Tellaw\LeadsFactoryBundle\Shared; use Symfony\Component\DependencyInjection\ContainerAwareInterface; class StatusHistoryUtilsShared implements ContainerAwareInterface { protected $container; public function __construct() { } public function setContainer(ContainerInterface $sp63c3a2 = null) { $this->container = $sp63c3a2; } protected function getContainer() { return $this->container; } public function getCurrentStatusForMonitor($spb08edc) { } public function getActualStatusDurationForMonitor($spb08edc) { } }

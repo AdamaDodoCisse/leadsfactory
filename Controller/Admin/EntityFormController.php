@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,7 +19,13 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity")
  */
-class EntityFormController extends AbstractEntityController {
+class EntityFormController extends CoreController {
+
+    public function __construct () {
+        parent::__construct();
+
+    }
+
     /**
      *
      * @Route("/form/list/{page}/{limit}/{keyword}", name="_form_list")
@@ -27,6 +34,10 @@ class EntityFormController extends AbstractEntityController {
      */
     public function indexAction($page=1, $limit=10, $keyword='')
     {
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
         $bookmarks = $this->get('leadsfactory.form_repository')->getBookmarkedFormsForUser( $this->getUser()->getId() );
@@ -63,6 +74,11 @@ class EntityFormController extends AbstractEntityController {
 
         $form->handleRequest($request);
         if ($form->isValid()) {
+
+            if (!$this->get("core_manager")->isNewFormAccepted ()) {
+                return $this->redirect($this->generateUrl('_security_licence_error'));
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();

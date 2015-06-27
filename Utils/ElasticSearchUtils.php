@@ -9,8 +9,9 @@ use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
+use Tellaw\LeadsFactoryBundle\Shared\SearchShared;
 
-class ElasticSearchUtils {
+class ElasticSearchUtils extends SearchShared {
 
     public static $PROTOCOL_PUT = "PUT";
     public static $PROTOCOL_POST = "POST";
@@ -21,6 +22,10 @@ class ElasticSearchUtils {
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
+
+    public function __construct () {
+        parent::__construct();
+    }
 
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
         $this->container = $container;

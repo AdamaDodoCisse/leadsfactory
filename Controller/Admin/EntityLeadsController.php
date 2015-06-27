@@ -16,12 +16,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
 /**
  * @Route("/entity")
  */
-class EntityLeadsController extends AbstractEntityController
+class EntityLeadsController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+    }
 
     /**
      * @Secure(roles="ROLE_USER")
@@ -29,7 +34,12 @@ class EntityLeadsController extends AbstractEntityController
      */
     public function indexAction(Request $request, $page=1, $limit=25, $keyword='')
     {
-	    $filterForm = $this->getLeadsFilterForm();
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
+        $filterForm = $this->getLeadsFilterForm();
 	    $filterForm->handleRequest($request);
 
 	    $filterParams = null;

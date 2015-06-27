@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
 
 /**
@@ -21,8 +22,13 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
  *
  * @Route("/entity")
  */
-class PreferenceController extends AbstractEntityController
+class PreferenceController extends CoreController
 {
+
+    public function __construct () {
+        parent::__construct();
+
+    }
 
     /**
      * Lists all Scope entities.
@@ -33,6 +39,11 @@ class PreferenceController extends AbstractEntityController
      */
     public function indexAction($page=1, $limit=10, $keyword='')
     {
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
+
         $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
 
         return $this->render(

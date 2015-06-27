@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
@@ -20,7 +21,12 @@ use Symfony\Component\Process\Process;
 /**
  * @Route("/search")
  */
-class SearchController extends AbstractEntityController {
+class SearchController extends CoreController {
+
+    public function __construct () {
+        parent::__construct();
+    }
+
     /**
      * @Route("/index", name="_search_config")
      * @Secure(roles="ROLE_USER")
@@ -29,7 +35,9 @@ class SearchController extends AbstractEntityController {
     {
 
         //$url="curl -XGET 127.0.0.1:9200/_cat/health?v";
-
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         $request = '_cluster/health?pretty=true';
         $searchUtils = $this->get("search.utils");
