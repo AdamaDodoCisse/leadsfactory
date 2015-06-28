@@ -12,7 +12,12 @@ var leadsfactory = {
                 field.val(value);
             }
         });
+        form.insertAfter ("<img src='{{ trackingAction }}/"+form_id+"/"+this.codeAction+"'/> height='1' width='1'");
         {{ form.script|raw }}
+    },
+    codeAction:"{{ utm_campaign }}",
+    setCodeAction : function (codeAction) {
+        this.codeAction = codeAction;
     }
 };
 {#</script>#}

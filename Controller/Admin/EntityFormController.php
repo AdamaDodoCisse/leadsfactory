@@ -110,6 +110,12 @@ class EntityFormController extends CoreController {
 
         $form->handleRequest($request);
         if ($form->isValid()) {
+
+            $cacheFileName = "../app/cache/templates/".$id.".js";
+            if (file_exists( $cacheFileName )) {
+                unlink ($cacheFileName);
+            }
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
@@ -138,6 +144,11 @@ class EntityFormController extends CoreController {
          * This is the deletion action
          */
         $object = $this->get('leadsfactory.form_repository')->find($id);
+
+        $cacheFileName = "../app/cache/templates/".$id.".js";
+        if (file_exists( $cacheFileName )) {
+            unlink ($cacheFileName);
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);

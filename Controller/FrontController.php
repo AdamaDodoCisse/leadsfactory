@@ -27,19 +27,21 @@ use Swift_Message;
  */
 class FrontController extends CoreController
 {
-	/**
-	 * @Route("/form/twig/{code}/{utm_campaign}", name="_client_twig")
-	 * @ParamConverter("form")
-	 */
-	public function twigAction(Form $form, $utm_campaign = '')
-	{
-		$post_url = $this->get('router')->generate('_client_post_form', array(), true);
-		$hidden_tags = $this->get('form_utils')->getHiddenTags($form);
+
+    /**
+     * Tracking callback method
+     * @Route("/form/trck", name="_client_form_tracking")
+     * @Route("/form/trck/{code}/{utm_campaign}")
+     */
+    public function trackingAction( Form $form, $utm_campaign = '' ){
 
         // Track call request
         /** @var \Tellaw\LeadsFactoryBundle\Entity\Tracking $tracking */
         $tracking = new Tracking();
-        if (trim($utm_campaign) == '') $utm_campaign =  $form->getUtmcampaign();
+        if (trim($utm_campaign) == '') {
+            $utm_campaign =  $form->getUtmcampaign();
+        }
+
         $tracking->setUtmCampaign( $utm_campaign );
         $tracking->setForm( $form );
         $tracking->setCreatedAt( new \DateTime() );
@@ -48,15 +50,46 @@ class FrontController extends CoreController
         $em->persist($tracking);
         $em->flush();
 
-		$response = $this->render(
-			'TellawLeadsFactoryBundle::form-jquery.js.twig',
-			array(
-                'formAction' => $this->container->get('router')->generate("_client_post_form", array(), true),
-				'form' => $form,
-				'post_url' => $post_url,
-				'hidden_tags' => $hidden_tags,
-			)
-		);
+        return new Response();
+
+    }
+
+
+    /**
+     * @Route("/form/twig/{code}/{utm_campaign}", name="_client_twig")
+     * @ParamConverter("form")
+     */
+    public function twigAction(Form $form, $utm_campaign = '')
+	{
+		$post_url = $this->get('router')->generate('_client_post_form', array(), true);
+		$hidden_tags = $this->get('form_utils')->getHiddenTags($form);
+
+        $cacheFileName = "../app/cache/templates/".$form->getId().".js";
+
+        if (!is_dir("../app/cache/templates")) {
+            mkdir("../app/cache/templates");
+        }
+
+        if (file_exists( $cacheFileName ) && $utm_campaign == "") {
+            $view = implode ("", file ($cacheFileName));
+        } else {
+            $view = $this->renderView(
+                'TellawLeadsFactoryBundle::form-jquery.js.twig',
+                array(
+                    'formAction' => $this->container->get('router')->generate("_client_post_form", array(), true),
+                    'trackingAction'=> $this->container->get('router')->generate("_client_form_tracking"),
+                    'utm_campaign' => $utm_campaign, // Used for compatibility of old forms. Do not REMOVE
+                    'form' => $form,
+                    'post_url' => $post_url,
+                    'hidden_tags' => $hidden_tags,
+                ) );
+            $fp = fopen($cacheFileName, 'w');
+            fwrite($fp, $view);
+            fclose($fp);
+
+        }
+
+        $response = new Response( $view );
 		$response->headers->set('Content-Type', 'application/javascript');
 		return $response;
 	}
@@ -86,6 +119,7 @@ class FrontController extends CoreController
     }
 
     /**
+     * @deprecated
      * @Route("/form/js/{code}/{utm_campaign}", name="_client_get_form_js")
      * @ParamConverter("form")
      */
