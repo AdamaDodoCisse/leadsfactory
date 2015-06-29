@@ -2,6 +2,7 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Tellaw\LeadsFactoryBundle\Entity\FormType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils
  */
-class PreferencesUtils extends ContainerAwareInterface {
+class PreferencesUtils implements ContainerAwareInterface {
 
     /** @var EntityManagerInterface */
     protected $entity_manager;
