@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils
  */
-class PreferencesUtils {
+class PreferencesUtils extends ContainerAwareInterface {
 
     /** @var EntityManagerInterface */
     protected $entity_manager;
@@ -22,19 +22,38 @@ class PreferencesUtils {
         $this->entity_manager = $entity_manager;
     }
 
-    public function getUserPreferenceByKey ( $key ) {
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
+    /**
+     * @param ContainerInterface $container
+     *
+     */
+    public function setContainer(ContainerInterface $container = null) {
+
+        $this->container = $container;
+        $this->logger = $this->container->get("logger");
     }
 
-    public function setUserPreference ( $key, $value ) {
-
+    /**
+     * @return ContainerInterface
+     */
+    protected function getContainer()
+    {
+        return $this->container;
     }
 
-    public function getApplicationPreferenceByKey ( $key ) {
+    public function getUserPreferenceByKey ( $key, $scope = "" ) {
 
-    }
+        if ($scope == "") {
+            $preferenceCollection = $this->container->getRepository('TellawLeadsFactoryBundle:Preference')->findByKey ($key);
+        } else {
+            $preferenceCollection = $this->container->getRepository('TellawLeadsFactoryBundle:Preference')->findByKeyAndScope ($key, $scope);
+        }
 
-    public function setApplicationPreference ( $key, $value ) {
+        return $preferenceCollection;
 
     }
 

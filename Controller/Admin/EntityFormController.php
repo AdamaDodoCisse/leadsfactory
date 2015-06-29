@@ -39,7 +39,7 @@ class EntityFormController extends CoreController {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
+        $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user'=>$this->getUser()));
         $bookmarks = $this->get('leadsfactory.form_repository')->getBookmarkedFormsForUser( $this->getUser()->getId() );
 
         $formatedBookmarks = array();

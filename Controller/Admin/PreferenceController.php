@@ -7,7 +7,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Tellaw\LeadsFactoryBundle\Entity\Preference;
 use Tellaw\LeadsFactoryBundle\Entity\Scope;
+use Tellaw\LeadsFactoryBundle\Form\Type\PreferenceType;
 use Tellaw\LeadsFactoryBundle\Form\Type\ScopeType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -44,10 +46,10 @@ class PreferenceController extends CoreController
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
+        $list = $this->getList ('TellawLeadsFactoryBundle:Preference', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Scope:index.html.twig',
+            'TellawLeadsFactoryBundle:entity/Preference:entity_list.html.twig',
             array(
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
@@ -59,14 +61,14 @@ class PreferenceController extends CoreController
     /**
      * Creates a new Scope entity.
      *
-     * @Route("/scope/new", name="_scope_new")
+     * @Route("/preference/new", name="_preference_new")
      * @Secure(roles="ROLE_USER")
      */
     public function newAction(Request $request)
     {
-        $entity = new Scope();
+        $entity = new Preference();
 
-        $form = $this->createForm(new ScopeType(), $entity, array(
+        $form = $this->createForm(new PreferenceType(), $entity, array(
             'method' => 'POST',
         ));
 
@@ -74,20 +76,21 @@ class PreferenceController extends CoreController
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            $entity->setCreatedAt( new \DateTime());
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('_scope_list'));
+            return $this->redirect($this->generateUrl('_preference_list'));
         }
 
-        return $this->render( "TellawLeadsFactoryBundle:entity:Scope/edit.html.twig", array(
-            'title' => 'Ajouter un scope',
+        return $this->render( "TellawLeadsFactoryBundle:entity:Preference/entity_edit.html.twig", array(
+            'title' => 'Ajouter une valeur',
             'form'   => $form->createView(),
         ));
     }
 
     /**
-     * @Route("/scope/edit/{id}", name="_scope_edit")
+     * @Route("/preference/edit/{id}", name="_preference_edit")
      * @Secure(roles="ROLE_USER")
      */
     public function editAction( Request $request, $id )
@@ -97,9 +100,9 @@ class PreferenceController extends CoreController
          */
 
         // crée une tâche et lui donne quelques données par défaut pour cet exemple
-        $scopeData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->find($id);
+        $scopeData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Preference')->find($id);
 
-        $form = $this->createForm(  new ScopeType(),
+        $form = $this->createForm(  new PreferenceType(),
             $scopeData,
             array(
                 'method' => 'POST'
@@ -115,18 +118,18 @@ class PreferenceController extends CoreController
             $em->persist($form->getData());
             $em->flush();
 
-            return $this->redirect($this->generateUrl('_scope_list'));
+            return $this->redirect($this->generateUrl('_preference_list'));
         }
 
-        return $this->render("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
-                       'title' => "Edition d'un scope"
+        return $this->render("TellawLeadsFactoryBundle:entity/Preference:entity_edit.html.twig", array(  'form' => $form->createView(),
+                       'title' => "Edition d'une valeur"
         ));
 
     }
 
 
     /**
-     * @Route("/scope/delete/{id}", name="_scope_delete")
+     * @Route("/preference/delete/{id}", name="_preference_delete")
      * @Secure(roles="ROLE_USER")
      */
     public function deleteAction ( $id )
@@ -134,13 +137,13 @@ class PreferenceController extends CoreController
         /**
          * This is the deletion action
          */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->find($id);
+        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Preference')->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('_scope_list'));
+        return $this->redirect($this->generateUrl('_preference_list'));
 
     }
 }

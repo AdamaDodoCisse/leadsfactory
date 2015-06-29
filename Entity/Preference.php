@@ -5,14 +5,44 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
- * Tellaw\LeadsFactoryBundle\Entity\User
+ * Tellaw\LeadsFactoryBundle\Entity\Preference
  * 
- * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\UserRepository")
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\PreferenceRepository")
  */
 class Preference {
+    /**
+     * @return longtext
+     */
+    public function getKeyval()
+    {
+        return $this->keyval;
+    }
 
-    public static $_SCOPE_USER = 1;
-    public static $_SCOPE_APPLICATION = 2;
+    /**
+     * @param longtext $keyval
+     */
+    public function setKeyval($keyval)
+    {
+        $this->keyval = $keyval;
+    }
+
+
+
+    /**
+     * @return mixed
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param mixed $scope
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
+    }
 
 	/**
 	 * @var integer $id
@@ -24,10 +54,10 @@ class Preference {
     protected $id;
 
     /**
-     * @var longtext $key
+     * @var longtext $keyval
      * @ORM\Column(type="string", nullable=true)
      */
-    protected $key;
+    protected $keyval;
 
     /**
      * @var longtext value
@@ -36,7 +66,8 @@ class Preference {
     protected $value;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
      */
     protected $scope;
 
@@ -44,12 +75,6 @@ class Preference {
      * @ORM\Column(type="datetime", nullable=false, name="created_at")
      */
     protected $created_at;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Users")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     */
-    protected $user;
 
     /**
      * @return int
@@ -70,22 +95,6 @@ class Preference {
     /**
      * @return longtext
      */
-    public function getKey()
-    {
-        return $this->key;
-    }
-
-    /**
-     * @param longtext $key
-     */
-    public function setKey($key)
-    {
-        $this->key = $key;
-    }
-
-    /**
-     * @return longtext
-     */
     public function getValue()
     {
         return $this->value;
@@ -97,22 +106,6 @@ class Preference {
     public function setValue($value)
     {
         $this->value = $value;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getScope()
-    {
-        return $this->scope;
-    }
-
-    /**
-     * @param mixed $scope
-     */
-    public function setScope($scope)
-    {
-        $this->scope = $scope;
     }
 
     /**

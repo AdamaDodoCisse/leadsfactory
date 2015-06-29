@@ -23,7 +23,7 @@ class PreferenceRepository extends EntityRepository
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Preference p';
+        $dql = 'SELECT p FROM TellawLeadsFactoryBundle:Preference p';
 
         if(!empty($keyword)){
             $where = ' WHERE';
@@ -31,7 +31,7 @@ class PreferenceRepository extends EntityRepository
             foreach($keywords as $key => $keyword){
                 if($key>0)
                     $where .= ' AND';
-                $where .= " f.key LIKE '%".$keyword."%' OR f.value LIKE '%".$keyword."%'";
+                $where .= " p.keyval LIKE '%".$keyword."%' OR p.value LIKE '%".$keyword."%'";
             }
             $dql .= $where;
         }
@@ -42,6 +42,28 @@ class PreferenceRepository extends EntityRepository
             ->setMaxResults($limit);
 
         return new Paginator($query);
+    }
+
+    public function findByKey ( $key ) {
+
+        $dql = 'SELECT p FROM TellawLeadsFactoryBundle:Preference p WHERE p.keyval = :key';
+
+        $query = $this  ->getEntityManager()
+                        ->createQuery($dql)
+                        ->setParameters( array ( "key"=>$key ) );
+
+        return $query->execute();
+    }
+
+    public function findByKeyAndScope ( $key, $scopeId ) {
+
+        $dql = 'SELECT p FROM TellawLeadsFactoryBundle:Preference p WHERE p.keyval = :key AND p.scope = :$scopeId';
+
+        $query = $this  ->getEntityManager()
+                        ->createQuery($dql)
+                        ->setParameters( array ( "key"=>$key , "scopeId" => $scopeId ) );
+
+        return $query->execute();
     }
 
 }
