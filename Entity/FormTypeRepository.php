@@ -24,7 +24,16 @@ class FormTypeRepository extends EntityRepository
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
 
+        //Get User scope
+        $user = $params["user"];
+
         $dql = 'SELECT f FROM TellawLeadsFactoryBundle:FormType f';
+
+        if ($user->getScope() != null) {
+            $where = ' WHERE f.scope = '.$user->getScope()->getId();
+        }else {
+            $where = "";
+        }
 
         if(!empty($keyword)){
             $where = ' WHERE';
@@ -34,8 +43,10 @@ class FormTypeRepository extends EntityRepository
                     $where .= ' AND';
                 $where .= " f.name LIKE '%".$keyword."%'";
             }
-            $dql .= $where;
+
         }
+
+        $dql .= $where;
 
         $query = $this->getEntityManager()
             ->createQuery($dql)

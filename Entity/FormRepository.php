@@ -27,7 +27,6 @@ class FormRepository extends EntityRepository
     {
 
         //Get User scope
-
         $user = $params["user"];
 
         $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Form f';

@@ -22,8 +22,8 @@ abstract class AbstractEntityController extends CoreController {
         parent::__construct();
     }
 
-	public function getList($repository, $page, $limit, $params=null) {
-		$collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $params);
+	public function getList($repository, $page, $limit, $keyword, $params=null) {
+		$collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $keyword, $params);
 
 		$total = $collection->count();
 		$pages_count = ceil($total/$limit);

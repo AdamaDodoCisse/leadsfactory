@@ -53,6 +53,29 @@ class ReferenceList {
      */
     protected $description;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     */
+    protected $scope;
+
+    /**
+     * @return mixed
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param mixed $scope
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
+    }
+
+
 
     /**
      * @param string $code

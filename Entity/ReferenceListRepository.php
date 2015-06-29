@@ -23,7 +23,16 @@ class ReferenceListRepository extends EntityRepository
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
 
+        //Get User scope
+        $user = $params["user"];
+
         $dql = 'SELECT f FROM TellawLeadsFactoryBundle:ReferenceList f';
+
+        if ($user->getScope() != null) {
+            $where = ' WHERE f.scope = '.$user->getScope()->getId();
+        }else {
+            $where = "";
+        }
 
         if(!empty($keyword)){
             $where = ' WHERE';
@@ -33,8 +42,10 @@ class ReferenceListRepository extends EntityRepository
                     $where .= ' AND';
                 $where .= " f.name LIKE '%".$keyword."%'";
             }
-            $dql .= $where;
+
         }
+
+        $dql .= $where;
 
         $query = $this->getEntityManager()
             ->createQuery($dql)

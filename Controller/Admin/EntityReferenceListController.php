@@ -45,7 +45,7 @@ class EntityReferenceListController extends CoreController
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:ReferenceList', $page, $limit, $keyword, array () );
+        $list = $this->getList ('TellawLeadsFactoryBundle:ReferenceList', $page, $limit, $keyword, array ('user'=>$this->getUser()) );
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
 
         return $this->render(
@@ -175,15 +175,17 @@ class EntityReferenceListController extends CoreController
             //$jsonElements = $form->get('json')->getData();
             //$this->get("lf.utils")->updateListElements( $jsonElements );
 
-            $file = $form->get('attachment')->getData()->openFile('r');
-            $jsonElements = "";
-            while (!$file->eof()) {
-                $jsonElements .= $file->current();
-                //do what you have to do with $line...
-                $file->next();
-            }
+            if ( $form->get('attachment')->getData() != "" ) {
+                $file = $form->get('attachment')->getData()->openFile('r');
+                $jsonElements = "";
+                while (!$file->eof()) {
+                    $jsonElements .= $file->current();
+                    //do what you have to do with $line...
+                    $file->next();
+                }
 
-            $this->get("lf.utils")->updateListElements( $jsonElements );
+                $this->get("lf.utils")->updateListElements( $jsonElements );
+            }
 
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
