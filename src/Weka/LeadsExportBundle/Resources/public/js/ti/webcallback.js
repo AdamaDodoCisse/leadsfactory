@@ -60,6 +60,7 @@ var webcallback = {
                 jQuery('#callback-step2').hide();
                 jQuery('#callback-step3').hide();
                 jQuery('#callback-submit').hide();
+                jQuery('#phone-prefix').html('+'+webcallback.phoneUtil.getCountryCodeForRegion(webcallback.countryCode));
                 jQuery('#phone-txt').hide(); // téléchargement extrait
                 jQuery('#di-msg').show();
                 var redirect_url = webcallback.getRedirectUrl();
