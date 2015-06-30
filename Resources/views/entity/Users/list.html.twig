@@ -36,6 +36,7 @@
                         <th>Id</th>
                         <th>Nom</th>
                         <th>Prenom</th>
+                        <th>Rôle</th>
                         <th>Action</th>
                     </tr>
                     </thead>
@@ -45,6 +46,17 @@
                             <td>{{ item.id }}</td>
                             <td>{{ item.lastname }}</td>
                             <td>{{ item.firstname }}</td>
+                            <td>
+                            {% if item.role == "ROLE_ADMINISTRATEUR" %}
+                            Administrateur
+                            {% elseif item.role == "ROLE_DEV" %}
+                                Développeur
+                            {% elseif item.role == "ROLE_REPORTING" %}
+                                Reporting et statistiques
+                            {% else %}
+                                Aucun
+                            {% endif %}
+                            </td>
                             <td style="text-align:center">
                                 <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_edit', {'id': item.id}) }}'">Editer</button>
                                 <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_users_delete', {'id': item.id}) }}'">Supprimer</button>
