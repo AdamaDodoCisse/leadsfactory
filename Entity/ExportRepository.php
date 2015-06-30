@@ -23,7 +23,17 @@ class ExportRepository extends EntityRepository
      */
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
-        $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e';
+
+        //Get User scope
+        $user = $params["user"];
+
+        $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e JOIN e.form f';
+
+        if ($user->getScope() != null) {
+            $where = ' WHERE f.scope = '.$user->getScope()->getId();
+        }else {
+            $where = " WHERE 1=1";
+        }
 
         if(!empty($keyword)){
             $where = ' WHERE';
@@ -33,9 +43,10 @@ class ExportRepository extends EntityRepository
                     $where .= ' AND';
                 $where .= " e.method LIKE '%".$keyword."%'";
             }
-            $dql .= $where;
+
         }
 
+        $dql .= $where;
 
 	    $dql .= ' ORDER BY e.created_at DESC';
 

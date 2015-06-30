@@ -39,16 +39,18 @@ class EntityLeadsController extends CoreController
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
+
+
         $filterForm = $this->getLeadsFilterForm();
 	    $filterForm->handleRequest($request);
 
-	    $filterParams = null;
+	    $filterParams =  array ('user'=>$this->getUser());
 
 	    if ($filterForm->isValid()) {
-		    $filterParams = $filterForm->getData();
-		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $filterParams);
+		    $filterParams[] = $filterForm->getData();
+		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }else{
-		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit);
+		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }
 
         return $this->render(

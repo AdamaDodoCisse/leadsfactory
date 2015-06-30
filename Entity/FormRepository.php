@@ -34,7 +34,7 @@ class FormRepository extends EntityRepository
         if ($user->getScope() != null) {
             $where = ' WHERE f.scope = '.$user->getScope()->getId();
         }else {
-            $where = "";
+            $where = " WHERE 1=1";
         }
 
         if(!empty($keyword)){

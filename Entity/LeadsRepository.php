@@ -23,8 +23,10 @@ class LeadsRepository extends EntityRepository
 	 *
 	 * @return Paginator
 	 */
-	public function getList($page=1, $limit=25, $args=null)
+	public function getList($page=1, $limit=25, $keyword='',  $args=null )
 	{
+
+
 		$dql = $this->getSqlFilterQuery($args);
 
 		$query = $this->getEntityManager()
@@ -81,7 +83,11 @@ class LeadsRepository extends EntityRepository
 		if(!empty($args)) {
 			$dql .= ' WHERE 1=1';
 
-			if(!empty($args['form'])){
+            if(!empty($args['user']) && $args['user']->getScope() != null){
+                $dql .= " AND f.scope = ".$args['user']->getScope()->getId();
+            }
+
+            if(!empty($args['form'])){
 				$dql .= " AND l.form='{$args['form']}'";
 			}
 

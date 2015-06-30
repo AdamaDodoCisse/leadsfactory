@@ -71,7 +71,7 @@ class ExportController extends CoreController
      */
     public function showHistoryAction($page=1, $limit=25, $keyword='')
     {
-        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword);
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser()));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
