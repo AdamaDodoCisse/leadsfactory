@@ -12,6 +12,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Users implements UserInterface {
 
+    public static $_ROLES = array (
+        "ROLE_ADMIN" => "Administrateur",
+        "ROLE_DEV" => "Developpeur",
+        "ROLE_REPORTING" => "Responsable Reporting"
+    );
+
 	/**
 	 * @var integer $id
 	 *
@@ -51,6 +57,12 @@ class Users implements UserInterface {
      * @ORM\JoinColumn(name="scope", referencedColumnName="id")
      */
     protected $scope;
+
+    /**
+     * @var string $role
+     * @ORM\Column(type="string", nullable=true, name="role")
+     */
+    protected $role;
 
     /**
      * @param string $fistname
@@ -135,6 +147,24 @@ class Users implements UserInterface {
     public function getRoles() {
         return array('ROLE_ADMIN');
     }
+
+    /**
+     * @return string
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * @param string $role
+     */
+    public function setRole($role)
+    {
+        $this->role = $role;
+    }
+
+
 
     public function getSalt() {
         return null;

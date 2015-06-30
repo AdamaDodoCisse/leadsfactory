@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Tellaw\LeadsFactoryBundle\Entity\Users;
 
 class UsersType extends AbstractType
 {
@@ -34,7 +35,14 @@ class UsersType extends AbstractType
         $builder->add('firstname');
         $builder->add('lastname');
         $builder->add('login');
-        $builder->add('password', 'password');
+        // $builder->add('password', 'password', array ("label" => "mot de passe", "required" => false));
+
+        $builder->add('role', 'choice', array(
+            'choices'  =>  Users::$_ROLES,
+            'label' => "Rôle",
+            'required' => false
+            )
+        );
 
         $builder->add('scope');
 
