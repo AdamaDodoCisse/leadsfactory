@@ -140,10 +140,7 @@ class ApiController extends CoreController
 
 				$data = json_decode($lead->getData());
 				$scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
-
-                /**
-                 * TODO : Refaire cette partie en Utilisant FormUtils getFieldsAsArrayByFormId afin de retirer le nom des listes en 'dur'
-                 */
+                
 				// libellé de la fonction
 				$functionListCode = ($scope == 'ti') ? 'ti_fonction' : 'fonction';
 				if(!empty($data->fonction)) {
@@ -229,9 +226,6 @@ class ApiController extends CoreController
                 $data = json_decode($lead->getData());
                 $scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
 
-                /**
-                 * TODO : Refaire cette partie en Utilisant FormUtils getFieldsAsArrayByFormId afin de retirer le nom des listes en 'dur'
-                 */
                 // Remplacement des id de listes par les valeurs
                 if (!isset( $formsFieldsDescriptions[$lead->getForm()->getId()] )) {
                     $fields = $utils->getReferenceListsFieldsByFormId($lead->getForm()->getId());
@@ -247,8 +241,13 @@ class ApiController extends CoreController
                     $data->$fieldIdName = $data->$id;
 
                     // Put value in the field [formid] = value
-                    $data->$id = $this->getDoctrine()->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )->getNameUsingListCode( $field["attributes"]["data-list"], $data->$id );
-                    
+                    $data->$id =    $this   ->getDoctrine()
+                                            ->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )
+                                            ->getNameUsingListCode(
+                                                                    $field["attributes"]["data-list"],
+                                                                    $data->$id
+                                                                    );
+
                 }
 
                 $result['leads'][] = array(
