@@ -14,7 +14,9 @@
 
 ### Documentation téchnique
 1. [Les tags de formulaires](formulaires_templating.md "Description des tags de formulaires")
-2. [Les tâches planifiées](cronjobs.md "Description des cronjobs, facultatif")
+2. [Le tag de formulaire sur votre site](formulaires_tag_site.md "")
+3. [Les tâches planifiées](cronjobs.md "Description des cronjobs, facultatif")
+4. [API Services](api.md "Description des méthodes de l'API Services, facultatif")
 
 
 
@@ -23,4 +25,4 @@
 
 
 ### En cours
-- [Poser un tag de formulaire sur votre site](formulaires_tag_site.md "")
+- [

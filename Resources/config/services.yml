@@ -67,6 +67,8 @@ services:
     class:        Tellaw\LeadsFactoryBundle\Utils\FormUtils
     arguments:    [@leadsfactory.reference_list_repository, @router, @leadsfactory.field_factory]
     configurator: ["@leadsfactory.time_configurator", configure]
+    calls:
+                  - [ setContainer, [ @service_container ] ]
 
   leadsfactory.field_factory:
     class:        Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory

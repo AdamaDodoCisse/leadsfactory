@@ -43,7 +43,6 @@ class ExportUtils extends ExportUtilsShared {
     public function __construct(ClientEmailRepository $client_email_repository)
     {
         $this->client_email_repository = $client_email_repository;
-        parent::__construct();
     }
 
     /**

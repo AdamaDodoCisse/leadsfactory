@@ -8,8 +8,10 @@ use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory;
 use Tellaw\LeadsFactoryBundle\DependencyInjection\TimeConfiguratorAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class FormUtils implements TimeConfiguratorAwareInterface
+class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterface
 {
     /** @var ReferenceListRepository */
     protected $reference_list_repository;
@@ -23,12 +25,26 @@ class FormUtils implements TimeConfiguratorAwareInterface
     /** @var \DateTime */
     protected $time;
 
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
     public function __construct(ReferenceListRepository $reference_list_repository, Router $router, FieldFactory $field_factory)
     {
         $this->reference_list_repository = $reference_list_repository;
         $this->router = $router;
         $this->field_factory = $field_factory;
     }
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function setContainer (ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
 
     public function setTime(\DateTime $time)
     {
@@ -272,6 +288,106 @@ class FormUtils implements TimeConfiguratorAwareInterface
         } else {
             return false;
         }
+
+    }
+
+    public function getUsedReferenceListByFieldId ( $fieldId, $formId ) {
+
+        $datas = $this->getFieldsAsArrayByFormId( $formId );
+
+       if ( isset ($datas[$fieldId]) ) {
+
+           if (isset ($datas[$fieldId]["attributed"]["data-list"])){
+               return $datas[$fieldId]["attributed"]["data-list"];
+           } else {
+               return null;
+           }
+
+       } else {
+           return null;
+       }
+
+    }
+
+    /**
+     *
+     * Method used to extract an array of fields from source with only reference lists elements
+     *
+     * @param $formId
+     * @return array
+     */
+    public function getReferenceListsFieldsByFormId ( $formId ) {
+
+        $datas = $this->getFieldsAsArrayByFormId( $formId );
+        $fields = array();
+        foreach ( $datas as $id => $field ) {
+            if ( $field["type"] == "reference-list" || $field["type"] == "linked-reference-list") {
+                $fields[$id] = $field;
+            }
+        }
+        return $fields;
+    }
+
+    /**
+     *
+     * Method used to extract all fields from source by form CODE
+     *
+     * @param $form_code
+     * @return array
+     */
+    public function getFieldsAsArrayByFormCode ( $form_code ) {
+        $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
+        return $this->getFieldsAsArray( $form->getSource() );
+    }
+
+    /**
+     *
+     * Method used to extract all fields from source by form ID
+     *
+     * @param $formId
+     * @return array
+     */
+    public function getFieldsAsArrayByFormId ( $formId ) {
+
+        $form = $this->container->get('leadsfactory.form_repository')->find ($formId);
+
+        $fields = $this->getFieldsAsArray( $form->getSource() );
+
+        return $fields;
+
+    }
+
+    /**
+     *
+     * Method used to extract all fields from source
+     *
+     * @param $form_source
+     * @return array
+     */
+    public function getFieldsAsArray ( $form_source ) {
+
+        $matches = "";
+        $result = preg_match_all( "/field\(([^)]*)\)/",$form_source, $matches );
+
+        $fields = array();
+
+        foreach ( $matches[1] as $item ) {
+            $content = str_replace ("'","\"",$item);
+            $item = json_decode($content, true);
+
+            if (isset ($item["attributes"]["id"])) {
+                $fields[$item["attributes"]["id"]] = $item;
+            } else if (isset ($item["attributes"]["name"])) {
+                $fields[$item["attributes"]["name"]] = $item;
+            } else {
+                echo ("Erreur : ");
+                var_dump ($item);
+            }
+
+        }
+
+
+        return $fields;
 
     }
 

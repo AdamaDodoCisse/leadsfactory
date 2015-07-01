@@ -40,7 +40,7 @@ class ApiController extends CoreController
 
             //check key
             if(!$formUtils->checkApiKey($lead->getForm(), $apikey)){
-                //throw new AccessDeniedHttpException('Invalid form key');
+                throw new AccessDeniedHttpException('Invalid form key');
             }
         }else{
             $data = '{}';
@@ -58,6 +58,8 @@ class ApiController extends CoreController
      *
      * @Route("/email/validate")
      * @Method("POST")
+     *
+     * TODO : Securisation methode appel
      */
     public function validateEmailAction(Request $request)
     {
@@ -101,7 +103,8 @@ class ApiController extends CoreController
 
 	/**
 	 * Retrieve leads based on creation date
-	 *
+	 * TODO : getLeadsAction sécurisation des données
+     * @deprecated au profit getLeadsServiceAction
 	 * @Route("/leads")
 	 */
 	public function getLeadsAction(Request $request)
@@ -138,6 +141,9 @@ class ApiController extends CoreController
 				$data = json_decode($lead->getData());
 				$scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
 
+                /**
+                 * TODO : Refaire cette partie en Utilisant FormUtils getFieldsAsArrayByFormId afin de retirer le nom des listes en 'dur'
+                 */
 				// libellé de la fonction
 				$functionListCode = ($scope == 'ti') ? 'ti_fonction' : 'fonction';
 				if(!empty($data->fonction)) {
@@ -171,9 +177,106 @@ class ApiController extends CoreController
 		return $response;
 	}
 
+    /**
+     * Retrieve leads based on creation date
+     * TODO : getLeadsAction sécurisation des données
+     * @deprecated au profit getLeadsServiceAction
+     * @Route("/getLeads")
+     */
+    public function getLeadsServiceAction(Request $request)
+    {
+
+        $logger = $this->get('logger');
+        $utils = $this->get ("form_utils");
+        /* Debug purpose */
+        $args = array (
+            'datemin'   => '2010-01-01',
+            'datemax'   => '2017-01-01',
+            'email'     => 'ewallet@weka.fr',
+            'form'      => '13',
+        );
+
+/*
+        $args = array(
+            'datemin'   => $request->query->get('datemin'),
+            'datemax'   => $request->query->get('datemax'),
+            'email'     => $request->query->get('email'),
+            'form'      => $request->query->get('form'),
+        );
+*/
+        $scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
+        if(!is_null($scope)){
+            $scope = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->findOneByCode($scope);
+            $args['scope'] = $scope->getId();
+        }
+
+        $form_code = $request->query->get('form_code');
+        if(!is_null($form_code)){
+            $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
+            if(!empty($form))
+                $args['form'] = $form->getId();
+        }
+
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
+
+        $formsFieldsDescriptions = array();
+
+        if(!empty($leads)){
+
+            $result = array();
+            foreach($leads as $lead){
+
+                $data = json_decode($lead->getData());
+                $scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
+
+                /**
+                 * TODO : Refaire cette partie en Utilisant FormUtils getFieldsAsArrayByFormId afin de retirer le nom des listes en 'dur'
+                 */
+                // Remplacement des id de listes par les valeurs
+                if (!isset( $formsFieldsDescriptions[$lead->getForm()->getId()] )) {
+                    $fields = $utils->getReferenceListsFieldsByFormId($lead->getForm()->getId());
+                    $formsFieldsDescriptions[$lead->getForm()->getId()] = $fields;
+                } else {
+                    $fields = $formsFieldsDescriptions[$lead->getForm()->getId()];
+                }
+
+                foreach ($fields as $id => $field) {
+
+                    // Create a field [formid]_index = the index of reference list
+                    $fieldIdName = $id."_index";
+                    $data->$fieldIdName = $data->$id;
+
+                    // Put value in the field [formid] = value
+                    $data->$id = $this->getDoctrine()->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )->getNameUsingListCode( $field["attributes"]["data-list"], $data->$id );
+                    
+                }
+
+                $result['leads'][] = array(
+                    'id'        => $lead->getId(),
+                    'data'      => $data,
+                    'status'    => $lead->getStatus(),
+                    'form'      => $lead->getForm()->getName(),
+                    'form_id'   => $lead->getForm()->getId(),
+                    'scope'     => $scope,
+                    'key'       => $this->get("form_utils")->getApiKey($lead->getForm()),
+                    'created_at'=> $lead->getCreatedAt()->format('Y-m-d')
+                );
+            }
+            $result = json_encode($result);
+        }else{
+            $result = '{}';
+        }
+
+        $response =  new Response($result);
+        $response->headers->set('content-type', 'application/json');
+
+        return $response;
+    }
+
+
 	/**
 	 * Enregistre une DI
-	 *
+	 * TODO : postLeadAction Securisation des données
 	 * @Route("/lead/post")
 	 * @Method("POST")
 	 */
