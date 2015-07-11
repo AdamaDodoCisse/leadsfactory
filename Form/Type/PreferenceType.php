@@ -30,8 +30,8 @@ class PreferenceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('keyval');
-        $builder->add('value');
+        $builder->add('keyval', null, array('label' => 'Clée'));
+        $builder->add('value', null, array('label' => 'Valeur'));
 
         $builder->add ( 'scope', null, array('label' => 'Scope du formulaire') );
 

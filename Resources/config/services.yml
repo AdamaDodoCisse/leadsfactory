@@ -120,6 +120,13 @@ services:
     calls:
       - [setInternalEmailPatterns, [%leadsfactory.internal_email_patterns%]]
 
+  leadsfactory.preference_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\PreferenceRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Preference']
+
+
   leadsfactory.extract_field_command:
     class: Tellaw\LeadsFactoryBundle\Command\ExtractFieldCommand
     arguments: [@doctrine.orm.entity_manager]

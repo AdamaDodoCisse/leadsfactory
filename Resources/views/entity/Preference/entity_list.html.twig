@@ -45,7 +45,13 @@
                             <td style="vertical-align: middle;">{{ item.id }}</td>
                             <td style="vertical-align: middle;">{{ item.keyval }}</td>
                             <td style="vertical-align: middle;">{{ item.value }}</td>
-                            <td style="vertical-align: middle;">{{ item.scope }}</td>
+                            <td style="vertical-align: middle;">
+                                {% if (item.scope) %}
+                                {{ item.scope }}
+                                {% else %}
+                                Global
+                                {% endif %}
+                            </td>
                             <td style="text-align:center">
                                 <a href="{{ path('_preference_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
                                 <a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_preference_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/supprimer.png') }}"/></a>
@@ -55,7 +61,7 @@
                     {% else %}
 
                         <tr>
-                            <td colspan="4">Aucun élément dans cette liste</td>
+                            <td colspan="5">Aucun élément dans cette liste</td>
                         </tr>
 
                     {% endfor %}

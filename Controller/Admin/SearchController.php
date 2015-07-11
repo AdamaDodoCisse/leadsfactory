@@ -23,6 +23,8 @@ use Symfony\Component\Process\Process;
  */
 class SearchController extends CoreController {
 
+    public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT__ELASTICSEARCH";
+
     public function __construct () {
         parent::__construct();
     }
@@ -33,6 +35,9 @@ class SearchController extends CoreController {
      */
     public function indexAction()
     {
+
+        $preferences = $this->get ("preferences_utils");
+        $searchEngineUrlAndPort = $preferences->getUserPreferenceByKey ( SearchController::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE );
 
         //$url="curl -XGET 127.0.0.1:9200/_cat/health?v";
         if ($this->get("core_manager")->isDomainAccepted ()) {
@@ -76,7 +81,8 @@ class SearchController extends CoreController {
                 'elasticResponse' => $response,
                 'status' => $status,
                 'stats' => $stats,
-                'version' => $responseVersion
+                'version' => $responseVersion,
+                'searchEngineUrl' => $searchEngineUrlAndPort
             )
         );
 

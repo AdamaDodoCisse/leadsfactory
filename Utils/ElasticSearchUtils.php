@@ -24,7 +24,7 @@ class ElasticSearchUtils extends SearchShared {
     private $container;
 
     public function __construct () {
-        parent::__construct();
+
     }
 
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
@@ -70,10 +70,10 @@ class ElasticSearchUtils extends SearchShared {
     public function start ()
     {
 
-        if (file_exists("../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
-            $process = new Process('../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
-        } else if (file_exists("vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
-            $process = new Process('vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
+        if (file_exists("../vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
+            $process = new Process('../vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
+        } else if (file_exists("vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
+            $process = new Process('vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
         } else {
             throw new \Exception ("ElasticSearch binary not found");
         }
@@ -89,6 +89,45 @@ class ElasticSearchUtils extends SearchShared {
         }
 
         return $output;
+
+    }
+
+    /**
+     *
+     * Basic search function
+     *
+     * @param $key
+     * @param $value
+     * @return mixed|SearchResult
+     */
+    public function searchQueryString ( $queryString ) {
+
+        $query = "_search";
+
+        $parameters = '{"query":{"bool":{"must":[{"query_string":{"query":"'.$queryString.'"}}],"must_not":[],"should":[]}},"from":0,"size":10,"sort":[],"facets":{}}';
+
+        /*$parameters = '{ "query_string": {
+                                "default_field" : "leads",
+                                "query" : "'.$queryString.'"
+                            }
+                        }';*/
+var_dump($parameters);
+        $result = $this->request ( ElasticSearchUtils::$PROTOCOL_POST , $query, $parameters );
+
+        return $result;
+
+    }
+
+    public function getIndexFields ( ) {
+
+        $query = "leadsfactory/_mapping";
+
+        $parameters = '';
+
+        $result = $this->request( ElasticSearchUtils::$PROTOCOL_GET , $query, $parameters );
+
+        return $result;
+
 
     }
 

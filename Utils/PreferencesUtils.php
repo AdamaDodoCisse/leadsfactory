@@ -16,11 +16,10 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class PreferencesUtils implements ContainerAwareInterface {
 
-    /** @var EntityManagerInterface */
-    protected $entity_manager;
+    public static $_SCOPE_GLOBAL = "GLOBAL";
 
-    public function __construct(EntityManagerInterface $entity_manager) {
-        $this->entity_manager = $entity_manager;
+    public function __construct() {
+
     }
 
     /**
@@ -46,15 +45,22 @@ class PreferencesUtils implements ContainerAwareInterface {
         return $this->container;
     }
 
-    public function getUserPreferenceByKey ( $key, $scope = "" ) {
+    public function getUserPreferenceByKey ( $key, $scope = "", $notifyIfNotFound = true )
+    {
 
         if ($scope == "") {
-            $preferenceCollection = $this->container->getRepository('TellawLeadsFactoryBundle:Preference')->findByKey ($key);
-        } else {
-            $preferenceCollection = $this->container->getRepository('TellawLeadsFactoryBundle:Preference')->findByKeyAndScope ($key, $scope);
+            $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyval($key);
+        } else if ( $scope == PreferencesUtils::$_SCOPE_GLOBAL ) {
+            $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyvalAndScope ($key, "");
+        }else {
+            $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyvalAndScope ($key, $scope);
         }
 
-        return $preferenceCollection;
+        if ($preference != null ) {
+            return $preference->getValue();
+        } else {
+            return null;
+        }
 
     }
 
