@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4be2a558daf8235d7b107834c8cf312e",
+    "hash": "07f56b2f1fc4183945a7b6ee62a0742c",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1179,7 +1179,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSSecurityExtraBundle/zipball/9e9a697fd39c8cd2f6af73fbe4762227848f8e31",
+                "url": "https://api.github.com/repos/schmittjoh/JMSSecurityExtraBundle/zipball/75bd0f773b1c645d70eb6174fff67ba5779a291e",
                 "reference": "9e9a697fd39c8cd2f6af73fbe4762227848f8e31",
                 "shasum": ""
             },
@@ -2271,17 +2271,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "v0.9.8",
+            "version": "v0.9.10",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "f6a7e1abd745fff2311e308f96a92e50e52380f6"
+                "reference": "46ae34aaee03e26804830ce4a740635b9d38f3c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/f6a7e1abd745fff2311e308f96a92e50e52380f6",
-                "reference": "f6a7e1abd745fff2311e308f96a92e50e52380f6",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/46ae34aaee03e26804830ce4a740635b9d38f3c3",
+                "reference": "46ae34aaee03e26804830ce4a740635b9d38f3c3",
                 "shasum": ""
             },
             "require": {
@@ -2312,6 +2312,7 @@
                     "Tellaw\\LeadsFactoryBundle": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2325,11 +2326,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "support": {
-                "source": "https://github.com/tellaw/leadsfactory/tree/v0.9.8",
-                "issues": "https://github.com/tellaw/leadsfactory/issues"
-            },
-            "time": "2015-06-18 13:38:13"
+            "time": "2015-07-11 19:02:15"
         },
         {
             "name": "teodortalov/citrix",
