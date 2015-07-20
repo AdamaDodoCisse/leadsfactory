@@ -41,44 +41,65 @@ class Gotowebinar extends AbstractMethod{
             $logger->error($error);
         }
 
-	    $client = new Direct($this->_credentials[$scope]['consumer_key']);
-	    $client->auth($this->_credentials[$scope]['user'], $this->_credentials[$scope]['password']);
-	    $goToWebinar = new \Citrix\GoToWebinar($client);
+	    //try {
+		    $client = new Direct( $this->_credentials[ $scope ]['consumer_key'] );
+		    $client->auth( $this->_credentials[ $scope ]['user'], $this->_credentials[ $scope ]['password'] );
+		    $goToWebinar = new \Citrix\GoToWebinar( $client );
+	    //}catch(\Exception $e){
+		//    $logger->error($e->getMessage());
+	    //}
 
 	    /** @var Export $job */
 	    foreach($jobs as $job){
 
-            if(!empty($error)){
-                $job->setLog($error);
-                $job->setStatus($exportUtils->getErrorStatus($job));
+		    try{
+			    if(!empty($error)){
+				    $job->setLog($error);
+				    $job->setStatus($exportUtils->getErrorStatus($job));
 
-                $em = $this->getContainer()->get('doctrine')->getManager();
-                $em->persist($job);
-                $em->flush();
+				    $em = $this->getContainer()->get('doctrine')->getManager();
+				    $em->persist($job);
+				    $em->flush();
 
-                continue;
-            }
+				    continue;
+			    }
 
-	        $logger->info('job ID : '.$job->getId());
+			    $logger->info('job ID : '.$job->getId());
 
-            $data = json_decode($job->getLead()->getData(), true);
-		    $webinarKey = $data['gotowebinar_key'];
+			    $data = json_decode($job->getLead()->getData(), true);
+			    $webinarKey = $data['gotowebinar_key'];
 
-		    $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
-			$registration = $goToWebinar->register($webinarKey, $registrantData);
+			    $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
+			    //var_dump($registrantData);
+			    $registration = $goToWebinar->register($webinarKey, $registrantData);
 
-			if(!$registration->hasErrors()){
-				$log = "Exporté avec succès";
-				$status = $exportUtils::$_EXPORT_SUCCESS;
-			}else{
-				$error = $registration->getErrors();
-				$log = $error[0];
-				$status = $exportUtils->getErrorStatus($job);
-			}
+			    if(!$registration->hasErrors()){
+				    $log = "Exporté avec succès";
+				    $status = $exportUtils::$_EXPORT_SUCCESS;
+			    }else{
+				    $gtw_errors = $registration->getErrors();
+				    $log = $gtw_errors[0];
+				    $status = $exportUtils->getErrorStatus($job);
+			    }
 
-            $exportUtils->updateJob($job, $status, $log);
-            $exportUtils->updateLead($job->getLead(), $status, $log);
-            $logger->info($log);
+			    $exportUtils->updateJob($job, $status, $log);
+			    $exportUtils->updateLead($job->getLead(), $status, $log);
+			    $logger->info($log);
+
+		    }catch (\Exception $e) {
+
+			    $status = $exportUtils->getErrorStatus($job);
+			    $log = $e->getMessage();
+
+			    $this->notifyOfExportIssue ( $e->getMessage(), $form, $job, $status );
+
+			    $exportUtils->updateJob($job, $status, $log);
+			    $exportUtils->updateLead($job->getLead(), $status, $log);
+			    $logger->error($log);
+
+		    }
+
+
         }
     }
 
