@@ -12,8 +12,8 @@ use Weka\LeadsExportBundle\Utils\AthenaV2\AthenaV2BaseMapping;
 
 class Classic extends AthenaV2BaseMapping {
 
-    protected function getType_demande ( $data ) {
-        return "ti_classique";
+    public function getType_demande ( $data ) {
+        return "classic";
     }
 
 }

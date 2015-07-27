@@ -24,7 +24,7 @@ class AthenaV2BaseMapping {
         $this->list_element_repository = $list_element_repository;
     }
 
-    protected function getProduitMapping () {
+    public function getProduitMapping () {
 
         return array (
 
@@ -38,17 +38,17 @@ class AthenaV2BaseMapping {
 
     }
 
-    protected function getCompteMapping (  ) {
+    public function getCompteMapping (  ) {
 
         return array (
 
             "id_athena"                 => "",  // Vide
-            "id-sap"                    => "",  // Vide (Prevoir evolution si connecte)
+            "id_sap"                    => "",  // Vide (Prevoir evolution si connecte)
             "id_sogec"                  => "",  // Vide
             "raison_sociale"            => "etablissement",
             "id_campagne"               => "",  // Methode de récupération de la données
             "rue_facturation"           => "",
-            "code_postal_faturation"    => "zip",
+            "code_postal_facturation"    => "zip",
             "dep_region_facturation"    => "",  // Vide
             "ville_facturation"         => "ville",
             "pays_facturation"          => "pays",
@@ -84,13 +84,16 @@ class AthenaV2BaseMapping {
 
     }
 
-    protected function getContactMapping () {
+    public function getContactMapping () {
 
         return array (
 
             "id_athena"                 => "",  // Vide
-            "id-sap"                    => "",  // Vide
+            "id_sap"                    => "",  // Vide
             "id_sogec"                  => "",  // Vide
+            "membre_chsct"              => "",  // Vide
+            "delegue_perso"             => "", // Vide
+            "membre_dup"                => "", // Vide
             "civilite"                  => "",  // Methode de récupération des données
             "id_campagne"               => "",  // Methode de récupération des données
             "prenom"                    => "firstName",
@@ -118,13 +121,13 @@ class AthenaV2BaseMapping {
 
     }
 
-    protected function getDRCMapping () {
+    public function getDRCMapping () {
 
         $dateTime = new \DateTime();
 
         return array (
 
-            "detail_demande"            => "",  // Vide
+            "detail_demande"            => "comment",  // Vide
             "marque"                    => "",  // Vide
             "deja_client"               => "",  // Vide
             "id_sogec"                  => "",  // Boolean
@@ -153,13 +156,18 @@ class AthenaV2BaseMapping {
             "contexte"                  => "",  // Vide
             "langue"                    => "",  // Vide
             "systeme_exploitation"      => "",  // Vide
-            "id_assignation"            => ""   // Vide
+            "id_assignation"            => "",   // Vide
+            "version"                   => ""   // Methode de récupération des données
 
         );
 
     }
 
-    protected function getAffaireMapping () {
+    public function getVersion () {
+        return "1.0";
+    }
+
+    public function getAffaireMapping () {
 
         return array (
 
@@ -169,31 +177,12 @@ class AthenaV2BaseMapping {
 
     }
 
-    protected function getArticleMapping () {
+    public function getArticleMapping () {
 
     }
 
-    /**
-     * Methodes Custom pour reformater les données
-     */
-
-    protected function getId_campagne($data) {
-        return $this->id_campagne;
-    }
-
-    protected function getId_compte ( $data ) {
-        return $this->id_compte;
-    }
-
-    protected function getId_contact ( $data ) {
-        return $this->id_contact;
-    }
-
-    protected function getId_produit ( $data ) {
-        return $this->id_produit;
-    }
-
-    protected function getSecteur_activite_weka ($data){
+    /*
+    public function getSecteur_activite_weka ($data){
 
         $secteurs = array (
             "14"    => "academie",
@@ -219,7 +208,7 @@ class AthenaV2BaseMapping {
         return $secteurs[$data['type-etablissement']];
     }
 
-    protected function getSecteur_activite_tissot_ti_cctp ($data){
+    public function getSecteur_activite_tissot_ti_cctp ($data){
 
         $secteurs = array (
             "12"    => "Autre",
@@ -240,8 +229,8 @@ class AthenaV2BaseMapping {
         );
         return $secteurs[$data['secteur-activite']];
     }
-
-    protected function getTab_contact ( $data ) {
+*/
+    public function getTab_contact ( $data ) {
 
         $contact = array (
 
@@ -252,11 +241,11 @@ class AthenaV2BaseMapping {
 
         );
 
-        return json_encode( $contact );
+        return $contact;
 
     }
 
-    protected function getCivilite ( $data ) {
+    public function getCivilite ( $data ) {
 
         $civilite = array (
 
@@ -270,7 +259,7 @@ class AthenaV2BaseMapping {
     }
 
     // TODO : A terminer
-    protected function getFonction_marketing ( $data ) {
+    public function getFonction_marketing ( $data ) {
 
         $fonctions = array (
 

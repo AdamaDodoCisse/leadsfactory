@@ -8,6 +8,7 @@ deployment:
     - app/config/parameters.yml
     - app/Export
     - app/logs
+    - licence
     - app/sessions
     - datas
   strategy: targz
@@ -22,11 +23,10 @@ tasks:
   pre-deploy:
     - composer-install: {dev: false}
   on-deploy:
-    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas]}
+    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas, licence]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
     - symfony-doctrine-update
     - chmod
   post-release:
   post-deploy:
-    
