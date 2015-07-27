@@ -37,33 +37,41 @@ class MarketingController extends CoreController
     public function searchAction(Request $request)
     {
 
-        if ($request->get("query") != null) {
-            var_dump ("request");
+        $searchUtils = $this->get ("search.utils");
+        $results = $searchUtils->getIndexFields();
+        $results = json_decode( $results, true );
+        $fields = $results["leadsfactory"]["mappings"]["leads"]["properties"];
 
-            $searchUtils = $this->get ("search.utils");
+        $leadsContent = array();
 
-            /*
-             * {"leadsfactory":{"mappings":{"form":{"properties":{"code":{"type":"string"},"description":{"type":"string"},"name":{"type":"string"},"scope":{"type":"long"},"script":{"type":"string"},"secure_key":{"type":"string"},"utmcampaign":{"type":"string"}}},"export":{"properties":{"created_at":{"type":"date","format":"dateOptionalTime"},"executed_at":{"type":"date","format":"dateOptionalTime"},"form_id":{"type":"long"},"lead_id":{"type":"long"},"log":{"type":"string"},"method":{"type":"string"},"scheduled_at":{"type":"date","format":"dateOptionalTime"},"status":{"type":"long"}}},"leads":{"properties":{"content":{"properties":{"acteur":{"type":"string"},"address":{"type":"string"},"clause":{"type":"string"},"cnilPartners":{"type":"string"},"cnilTi":{"type":"string"},"comment":{"type":"string"},"commentaire":{"type":"string"},"deja-client":{"type":"string"},"demande-rdv":{"type":"string"},"email":{"type":"string"},"etablissement":{"type":"string"},"evenement":{"type":"string"},"firstName":{"type":"string"},"fonction":{"type":"string"},"lastName":{"type":"string"},"livre-blanc":{"type":"string"},"nom-etablissement":{"type":"string"},"pack":{"type":"string"},"pays":{"type":"string"},"phone":{"type":"string"},"product_name":{"type":"string"},"product_sku":{"type":"string"},"profil":{"type":"string"},"redirect_url":{"type":"string"},"referrer_url":{"type":"string"},"salutation":{"type":"string"},"secteur-activite":{"type":"string"},"service":{"type":"string"},"thematique":{"type":"string"},"timestamp":{"type":"string"},"trackingOrigin":{"type":"string"},"twilio_validation":{"type":"string"},"type-etablissement":{"type":"string"},"utmcampaign":{"type":"string"},"utmcontent":{"type":"string"},"utmmedium":{"type":"string"},"utmsource":{"type":"string"},"ville":{"type":"string"},"ville_id":{"type":"string"},"ville_text":{"type":"string"},"wcb_type":{"type":"string"},"wk-cgv":{"type":"string"},"wk-partners":{"type":"string"},"zip":{"type":"string"}}},"createdAt":{"type":"date","format":"dateOptionalTime"},"email":{"type":"string"},"exportdate":{"type":"date","format":"dateOptionalTime"},"firstname":{"type":"string"},"form_id":{"type":"long"},"form_type_id":{"type":"long"},"id":{"type":"long"},"lastname":{"type":"string"},"log":{"type":"string"},"status":{"type":"long"},"telephone":{"type":"string"},"utmcampaign":{"type":"string"}}}}}}
-             */
-            $results = $searchUtils->getIndexFields();
-            $results = json_decode( $results, true );
-            $fields = $results["leadsfactory"]["mappings"]["leads"]["properties"];
+        foreach ( $fields["content"]["properties"] as $key => $element ) {
+            $leadsContent[] = "content.".$key;
+        }
 
-            $leadsContent = array();
+        unset ($fields["content"]);
+        foreach ( $fields as $key=>$element ) {
+            $leadsContent[] = $key;
+        }
 
-            foreach ( $fields["content"]["properties"] as $key => $element ) {
-                $leadsContent[] = "content.".$key;
-            }
+        //var_dump ($leadsContent);
 
-            unset ($fields["content"]);
-            foreach ( $fields as $key=>$element ) {
-                $leadsContent[] = $key;
-            }
+        $q = $request->get("q");
+        $field = $request->get("field");
+        $fieldsToDisplayRaw = $request->get ("fieldstodisplay");
+        $fieldsToDisplay = explode(";",$fieldsToDisplayRaw);
 
-            var_dump ($leadsContent);
+        $results = null;
 
-            $results = $searchUtils->searchQueryString( $request->get("query") );
-            var_dump($results);
+        if ( $q != null) {
+            //var_dump ("request");
+
+/*
+ * /72/WW/WBZ0001
+ * http://local.dev/weka-leadsfactory/web/app_dev.php/admin/marketing/search?field=content.utmcampaign&q=%2F72%2FWW%2FWBZ0001&fieldstodisplay=id%3Bcontent.firstName%3Bcontent.lastName
+ */
+
+            $results = $searchUtils->searchQueryString( $q,$field );
+            //var_dump($results);
 
         } else {
             $results = null;
@@ -76,7 +84,12 @@ class MarketingController extends CoreController
             'TellawLeadsFactoryBundle:marketing:index.html.twig',
             array(
                 "results" => $results,
-
+                "leadsfields" => $leadsContent,
+                "q" => $q,
+                "field" => $field,
+                "fieldsToDisplayRaw" => $fieldsToDisplayRaw,
+                "fieldsToDisplay" => $fieldsToDisplay,
+                "results" => json_decode($results)
             )
         );
 

@@ -36,12 +36,12 @@
                     <tr>
                         <th>Id</th>
                         <th>Formulaire</th>
-                        <th>Type</th>
                         <th>Planifié le</th>
                         <th>Exécuté le</th>
                         <th>Lead_Id</th>
                         <th>Méthode</th>
                         <th>Status</th>
+                        <th>Log</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -70,12 +70,12 @@
                         <tr>
                             <td {{ color }} >{{ item.id }}</td>
                             <td {{ color }} >{{ item.form.name }}</td>
-                            <td {{ color }} >{{ item.form.formType }}</td>
                             <td {{ color }} >{{ item.scheduledAt.date }}</td>
                             <td {{ color }} >{% if item.executedAt != null %}{{ item.executedAt.date }}{% endif %}</td>
                             <td {{ color }} >{{ item.lead.id }}</td>
                             <td {{ color }} >{{ item.method }}</td>
                             <td {{ color }} >{{ statusLibelle }}</td>
+                            <td {{ color }} >{{ item.log }}</td>
                         </tr>
 
                     {% else %}

@@ -28,7 +28,25 @@ class LeadsFactoryExtension extends \Twig_Extension
 	{
 		return array(
 			new \Twig_SimpleFunction('field', array($this, 'field'), array('is_safe' => array('html'))),
+			new \Twig_SimpleFunction('objectget', array($this, 'objectget'), array('is_safe' => array('html'))),
 		);
+	}
+
+	public function objectget ($params) {
+
+
+		$leadsource = $params["leadsource"];
+		$headerrow = $params["header"];
+
+		if (trim($headerrow)!="") {
+			if (strstr($headerrow,"content.")) {
+				$headerrow = str_replace("content.","",$headerrow);
+				$obj = $leadsource->content;
+				echo ($obj->$headerrow);
+			} else {
+				echo ($leadsource->$headerrow);
+			}
+		}
 	}
 
 	public function field($params)

@@ -18,13 +18,15 @@ class ElasticSearchUtils extends SearchShared {
     public static $PROTOCOL_GET = "XGET";
     public static $PROTOCOL_DELETE = "DELETE";
 
+    public static $_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH = "SEARCH_BINARY_PATH";
+
     public $baseUri = "http://localhost:9200/";
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
     public function __construct () {
-
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH, "Path to the binary file of elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
     }
 
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
@@ -70,10 +72,16 @@ class ElasticSearchUtils extends SearchShared {
     public function start ()
     {
 
-        if (file_exists("../vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
-            $process = new Process('../vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
-        } else if (file_exists("vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch")) {
-            $process = new Process('vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Search/bin/elasticsearch -d');
+        // get preference used to find elastic search
+        $preferences = $this->container->get ("preferences_utils");
+        $searchEnginePath = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH );
+
+        if ( trim ($searchEnginePath) == "" ) {
+            throw new \Exception ("Configuration option not found : ".ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH);
+        }
+
+        if (file_exists( $searchEnginePath )) {
+            $process = new Process( $searchEnginePath . ' -d');
         } else {
             throw new \Exception ("ElasticSearch binary not found");
         }
@@ -100,18 +108,11 @@ class ElasticSearchUtils extends SearchShared {
      * @param $value
      * @return mixed|SearchResult
      */
-    public function searchQueryString ( $queryString ) {
+    public function searchQueryString ( $q, $field ) {
 
         $query = "_search";
 
-        $parameters = '{"query":{"bool":{"must":[{"query_string":{"query":"'.$queryString.'"}}],"must_not":[],"should":[]}},"from":0,"size":10,"sort":[],"facets":{}}';
-
-        /*$parameters = '{ "query_string": {
-                                "default_field" : "leads",
-                                "query" : "'.$queryString.'"
-                            }
-                        }';*/
-var_dump($parameters);
+        $parameters = '{"query":{"bool":{"must":[{"query_string":{"query":"'.$field.':\"'.$q.'\""}}],"must_not":[],"should":[]}},"from":0,"size":10,"sort":[],"facets":{}}';
         $result = $this->request ( ElasticSearchUtils::$PROTOCOL_POST , $query, $parameters );
 
         return $result;

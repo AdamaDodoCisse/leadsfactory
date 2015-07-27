@@ -10,34 +10,69 @@
             <div class="titleDescription"><em>xxx </em></div>
         </div>
         </div>
-        <div class="col-md-4">
-        <div class="btn-group btn-group-justified">
-            <a class="btn blue" href="{{ path ('_form_new') }}">Créer un formulaire</a>
-        </div>
-        </div>
 	</div>
     <div class="col-md-12">
-        <h3 class="custom-heading">Formulaires disponibles:</h3>
-        <div class="">
-        <p>
-            Objets :
-            <ul>
-                <li>leads</li>
-                <li>form</li>
-                <li>export</li>
-            </ul>
-        </p>
-            <form>
-            Recherche à mettre en place :
-            <textarea name="query"></textarea><br/><br/>
-            Champs :
-            <textarea name="fields">*</textarea><br/>
-            <input type="submit"/>
+
+        <div class="col-md-3">
+
+            <form class="form-horizontal row-fluid">
+                <div id="form">
+
+                    <div class="form-group" id="row-form_name">
+                        <label for="form_name"><label for="form_name">Attribut</label></label>
+                        <select name="field" class="form-control">
+                        {% for leadsfield in leadsfields %}
+                            {% if ( field == leadsfield ) %}
+                            <option value="{{ leadsfield }}" selected="selected">{{ leadsfield }}</option>
+                            {% else %}
+                            <option value="{{ leadsfield }}">{{ leadsfield }}</option>
+                            {% endif %}
+                        {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="row-form_name">
+                        <label for="form_name"><label for="form_name">Recherche</label></label>
+                        <input type="text" name="q" value="{{ q }}" class="form-control"/>
+                    </div>
+
+                    <div class="form-group" id="row-form_name">
+                        <label for="form_name"><label for="form_name">Champs à afficher</label></label>
+                        <textarea name="fieldstodisplay"  class="form-control">{{ fieldsToDisplayRaw }}</textarea>
+                    </div>
+
+                    <input type="submit" class="btns blue sml-btn"/>
+                </div>
             </form>
+
         </div>
+
+        {% if (results) %}
+        <div class="col-md-5">
+            <div class="">
+            <table id="stream_table" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        {% for header in fieldsToDisplay %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for lead in results.hits.hits %}
+                    <tr>
+                        {% for header in fieldsToDisplay %}
+                           <td> {{ objectget({'leadsource':lead._source, 'header':header}) }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        {% endif %}
+
     </div>
-
-
 
 </div>
 {% endblock %}

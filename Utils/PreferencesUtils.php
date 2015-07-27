@@ -18,7 +18,42 @@ class PreferencesUtils implements ContainerAwareInterface {
 
     public static $_SCOPE_GLOBAL = "GLOBAL";
 
+    public static $_PRIORITY_OPTIONNAL = "1";
+    public static $_PRIORITY_REQUIRED = "2";
+
+    public static $_REGISTERED_KEYS  = array();
+
     public function __construct() {
+
+    }
+
+    /**
+     *
+     * Function used to register a new preference service.
+     *
+     * @param $key              // Is the key used to load the preference
+     * @param $description      // Literal desription of the service, used for error feedbacks
+     * @param $priority         // Priority defines whenever key is required to exist in the application instance or not
+     * @param $scope            // Scope defines the application scope.
+     * @param $is_uniq          // Is uniq defines that if the same key is tryied to be registered twice, an Exception will be raised
+     * @throws \Exception
+     */
+    public static function registerKey (    $key,
+                                            $description,
+                                            $priority,
+                                            $scope,
+                                            $is_uniq
+                                        ) {
+
+        if ( $is_uniq && array_key_exists( $key, PreferencesUtils::$_REGISTERED_KEYS )) {
+            throw new \Exception ("Registered preference key must be unique, but is already declared : ".$key);
+        }
+
+        PreferencesUtils::$_REGISTERED_KEYS [ $key ] = array (  "key" => $key,
+                                                                "description" => $description,
+                                                                "priority" => $priority,
+                                                                "scope" => $scope
+                                                            );
 
     }
 
