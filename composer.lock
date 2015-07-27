@@ -2271,7 +2271,7 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "v0.9.21",
+            "version": "0.9.24",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
