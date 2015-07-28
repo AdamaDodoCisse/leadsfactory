@@ -12,7 +12,17 @@ var leadsfactory = {
                 field.val(value);
             }
         });
-        form.insertAfter ("<img src='{{ trackingAction }}/"+form_id+"/"+this.codeAction+"'/> height='1' width='1'");
+
+        var imageSrc = "{{ trackingAction }}/{{ formId }}/"+this.codeAction;
+
+        var trackingImage = $('<img/>', {
+            id : 'trackingImage',
+            src : imageSrc,
+            height:1,
+            width:1
+        });
+        form.after ( trackingImage );
+        //form.insertAfter ("<img src='{{ trackingAction }}/"+form_id+"/"+this.codeAction+"'/> height='1' width='1'");
         {{ form.script|raw }}
     },
     codeAction:"{{ utm_campaign }}",

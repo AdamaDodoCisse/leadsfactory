@@ -9,6 +9,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
+use Tellaw\LeadsFactoryBundle\Response\TransparentPixelResponse;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\FormUtils;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
@@ -31,6 +32,7 @@ class FrontController extends CoreController
     /**
      * Tracking callback method
      * @Route("/form/trck", name="_client_form_tracking")
+     * @Route("/form/trck/{code}/")
      * @Route("/form/trck/{code}/{utm_campaign}")
      */
     public function trackingAction( Form $form, $utm_campaign = '' ){
@@ -50,7 +52,7 @@ class FrontController extends CoreController
         $em->persist($tracking);
         $em->flush();
 
-        return new Response();
+        return new TransparentPixelResponse();
 
     }
 
@@ -76,6 +78,7 @@ class FrontController extends CoreController
             $view = $this->renderView(
                 'TellawLeadsFactoryBundle::form-jquery.js.twig',
                 array(
+                    'formId' => $form->getCode(),
                     'formAction' => $this->container->get('router')->generate("_client_post_form", array(), true),
                     'trackingAction'=> $this->container->get('router')->generate("_client_form_tracking"),
                     'utm_campaign' => $utm_campaign, // Used for compatibility of old forms. Do not REMOVE
