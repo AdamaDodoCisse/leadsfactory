@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
+use Tellaw\LeadsFactoryBundle\Form\Type\UsersCreationType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
@@ -57,7 +58,7 @@ class EntityUsersController extends CoreController
     public function newAction( Request $request )
     {
 
-        $type = new UsersType();
+        $type = new UsersCreationType();
 
         $form = $this->createForm(  $type,
             null,
@@ -65,6 +66,8 @@ class EntityUsersController extends CoreController
                 'method' => 'POST'
             )
         );
+
+
 
         $form->handleRequest($request);
 
@@ -75,8 +78,10 @@ class EntityUsersController extends CoreController
             $em->persist($form->getData());
             $em->flush();
 
+
             return $this->redirect($this->generateUrl('_users_list'));
         }
+
 
         return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
                                                                                                     'title' => "Création d'un utilisateur"));
@@ -141,6 +146,43 @@ class EntityUsersController extends CoreController
         $em->flush();
 
         return $this->redirect($this->generateUrl('_users_list'));
+
+    }
+
+
+    /**
+     * @Route("/users/generatepassword/{id}", name="_users_generate_password")
+     * @Secure(roles="ROLE_USER")
+     * @Method("GET")
+     * @Template()
+     */
+    public function generatepasswordAction ( $id ) {
+
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_-=+;:,.?";
+        $password = substr( str_shuffle( $chars ), 0, 8 );
+
+        /**
+         * This is the deletion action
+         */
+        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
+
+        $object->setPassword ( $password );
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($object);
+        $em->flush();
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject('Hello Email')
+            ->setTo($object->getEmail())
+            ->setFrom($this->container->get("preferences_utils")->getUserPreferenceByKey("EXPORT_NOTIFICATION_FROM"))
+            ->setBody($this->renderView('TellawLeadsFactoryBundle:emails:password.txt.twig', array('password' => $password, 'login' => $object->getLogin())))
+        ;
+        $this->get('mailer')->send($message);
+
+        return $this->render('TellawLeadsFactoryBundle:entity/Users:password.html.twig', array(     'login' => $object->getLogin(),
+                                                                                                    'password' => $password,
+                                                                                                    'title' => "Génération d'un mot de passe utilisateur"));
 
     }
 

@@ -65,6 +65,28 @@ class Users implements UserInterface {
     protected $role;
 
     /**
+     * @var string $email
+     * @ORM\Column(type="string", nullable=true, name="email")
+     */
+    protected $email;
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
      * @param string $fistname
      */
     public function setFirstname($firstname)

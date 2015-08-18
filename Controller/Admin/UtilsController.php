@@ -331,6 +331,7 @@ class UtilsController extends CoreController
     /**
      * @Route("/version/{parentRoute}", name="_utils_version")
      * @Secure(roles="ROLE_USER")
+     * @Cache(expires="tomorrow")
      * @template()
      */
     public function versionAction(Request $request, $parentRoute)
@@ -347,6 +348,7 @@ class UtilsController extends CoreController
     /**
      * @Route("/navigation/{parentRoute}", name="_utils_navigation")
      * @Secure(roles="ROLE_USER")
+     * @Cache(expires="tomorrow")
      * @template()
      */
     public function navigationAction(Request $request, $parentRoute)

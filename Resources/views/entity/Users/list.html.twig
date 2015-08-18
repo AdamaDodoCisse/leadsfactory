@@ -36,6 +36,7 @@
                         <th>Id</th>
                         <th>Nom</th>
                         <th>Prenom</th>
+                        <th>Email</th>
                         <th>Rôle</th>
                         <th>Action</th>
                     </tr>
@@ -46,6 +47,7 @@
                             <td>{{ item.id }}</td>
                             <td>{{ item.lastname }}</td>
                             <td>{{ item.firstname }}</td>
+                            <td>{{ item.email }}</td>
                             <td>
                             {% if item.role == "ROLE_ADMINISTRATEUR" %}
                             Administrateur
@@ -59,6 +61,7 @@
                             </td>
                             <td style="text-align:center">
                                 <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_edit', {'id': item.id}) }}'">Editer</button>
+                                <button type="button" class="btns  green  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_generate_password', {'id': item.id}) }}'">Générer un mot de passe</button>
                                 <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_users_delete', {'id': item.id}) }}'">Supprimer</button>
                             </td>
                         </tr>
@@ -73,10 +76,25 @@
                     {% endfor %}
                     </tbody>
                 </table>
-                <div id="summary">
-                    <div>
+                {% if pagination.pages_count > 1 %}
+                    <div class="st_pagination">
+                        <ul class="pagination">
+                            {% if pagination.page > 1 %}
+                                <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword|raw}) }}" class="first">Début</a></li>
+                                <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">&larr; Précédent</a></li>
+                            {% endif %}
+                            {% for i in pagination.pagination_min..pagination.pagination_max %}
+                                <li {% if pagination.page == i %}class="active" {% endif %}>
+                                    <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if pagination.page < pagination.pages_count %}
+                                <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Suivant &rarr;</a></li>
+                                <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Fin</a></li>
+                            {% endif %}
+                        </ul>
                     </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

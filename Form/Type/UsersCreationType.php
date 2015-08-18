@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Tellaw\LeadsFactoryBundle\Entity\Users;
 
-class UsersType extends AbstractType
+class UsersCreationType extends AbstractType
 {
 
     private $entity = "users";
@@ -32,10 +32,10 @@ class UsersType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('firstname');
-        $builder->add('lastname');
-        $builder->add('login');
-        // $builder->add('password', 'password', array ("label" => "mot de passe", "required" => false));
+        $builder->add('firstname',null, array("required" => true));
+        $builder->add('lastname',null, array("required" => true));
+        $builder->add('login',null, array("required" => true));
+        $builder->add('password', 'password', array ("label" => "mot de passe", "required" => true));
 
         $builder->add('role', 'choice', array(
             'choices'  =>  Users::$_ROLES,
@@ -45,7 +45,7 @@ class UsersType extends AbstractType
         );
 
         $builder->add('scope');
-        $builder->add('email');
+        $builder->add('email',null, array("required" => true));
 
         $builder->add('save', 'submit');
 
