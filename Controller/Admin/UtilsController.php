@@ -329,6 +329,22 @@ class UtilsController extends CoreController
     }
 
     /**
+     * @Route("/version/{parentRoute}", name="_utils_version")
+     * @Secure(roles="ROLE_USER")
+     * @template()
+     */
+    public function versionAction(Request $request, $parentRoute)
+    {
+
+        $version = implode ('',file('../vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/version.txt'));
+        list ($date, $version) = explode (";", $version);
+        $date = str_replace (" CEST","",$date);
+        return $this->render('TellawLeadsFactoryBundle:Utils:version.html.twig', array ("date" => $date, "version" => $version));
+
+    }
+
+
+    /**
      * @Route("/navigation/{parentRoute}", name="_utils_navigation")
      * @Secure(roles="ROLE_USER")
      * @template()

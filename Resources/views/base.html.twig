@@ -103,6 +103,7 @@
         <span><i class="fa fa-plus"></i></span>
         <div class="menu-profile-hover">
             <h1><i>{{ app.user.firstname }}</i> {{ app.user.lastname }}</h1>
+            <p><em>{{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:version', { "parentRoute" : app.request.attributes.get('_route') } )) }}</em></p>
             <a href="{{ path('_security_logout') }}" title=""><i class="fa fa-power-off"></i></a>
             <div class="menu-profile-btns">
 
