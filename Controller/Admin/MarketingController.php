@@ -29,6 +29,26 @@ class MarketingController extends CoreController
     }
 
     /**
+     *
+     * @Route("/segmentation/list/{page}/{limit}/{keyword}", name="_mkg_segmentation_list")
+     * @Secure(roles="ROLE_USER")
+     *
+     */
+    public function indexAction($page=1, $limit=10, $keyword='')
+    {
+
+        $list = $this->getList ('TellawLeadsFactoryBundle:MkgSegmentation', $page, $limit, $keyword, array ('user'=>$this->getUser()));
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:marketing/entity:segmentation_list.html.twig',
+            array(
+            )
+        );
+
+    }
+
+
+    /**
      * Start export
      *
      * @Route("/search", name="_marketing_index")
