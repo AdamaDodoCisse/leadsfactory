@@ -37,6 +37,7 @@
                         <th>Nom</th>
                         <th>Prenom</th>
                         <th>Email</th>
+                        <th>Scope</th>
                         <th>Rôle</th>
                         <th>Action</th>
                     </tr>
@@ -49,6 +50,13 @@
                             <td>{{ item.firstname }}</td>
                             <td>{{ item.email }}</td>
                             <td>
+                                {% if item.scope %}
+                                {{ item.scope.name }}
+                                {% else %}
+                                    <em>Aucun</em>
+                                {% endif %}
+                            </td>
+                            <td>
                             {% if item.role == "ROLE_ADMINISTRATEUR" %}
                             Administrateur
                             {% elseif item.role == "ROLE_DEV" %}
@@ -56,7 +64,7 @@
                             {% elseif item.role == "ROLE_REPORTING" %}
                                 Reporting et statistiques
                             {% else %}
-                                Aucun
+                                <em>Aucun</em>
                             {% endif %}
                             </td>
                             <td style="text-align:center">

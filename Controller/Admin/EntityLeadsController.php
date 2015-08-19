@@ -39,8 +39,6 @@ class EntityLeadsController extends CoreController
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-
-
         $filterForm = $this->getLeadsFilterForm();
 	    $filterForm->handleRequest($request);
 

@@ -165,6 +165,7 @@ class FrontController extends CoreController
         $formUtils = $this->get("form_utils");
 
         $fields = $request->get ("lffield");
+        var_dump ($fields);
         $json = json_encode( $fields );
 
         $exportUtils = $this->get('export_utils');
@@ -365,6 +366,7 @@ class FrontController extends CoreController
         $subject = $this->renderTemplate($params['subject'], $data);
 
         $template = $form->getConfirmationEmailSource();
+
         $body = $this->renderTemplate($template, $data);
 
         $message = Swift_Message::newInstance()
