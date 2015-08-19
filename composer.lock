@@ -4,46 +4,82 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d668a75ef3720fbfec231d5149ab5f3",
+    "hash": "5367f77778380484ade6f6b562e3404d",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
-            "version": "v0.2-alpha",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beberlei/DoctrineExtensions.git",
-                "reference": "5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc"
+                "reference": "f57bf9a135f9f31231473c6cc67d06515006b8ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc",
-                "reference": "5e4ec9c3ec3434151e1c73144b4ab87ae30aefbc",
+                "url": "https://api.github.com/repos/beberlei/DoctrineExtensions/zipball/f57bf9a135f9f31231473c6cc67d06515006b8ca",
+                "reference": "f57bf9a135f9f31231473c6cc67d06515006b8ca",
                 "shasum": ""
             },
             "require": {
-                "doctrine/orm": "*"
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "doctrine/orm": "~2.1",
+                "nesbot/carbon": "*",
+                "phpunit/phpunit": "~4.5",
+                "symfony/yaml": "~2.6",
+                "zf1/zend-date": "~1.12",
+                "zf1/zend-registry": "~1.12"
+            },
+            "suggest": {
+                "nesbot/carbon": "Alternative to DateTime",
+                "zf1/zend-date": "Alternative to DateTime"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
             "autoload": {
-                "psr-0": {
-                    "DoctrineExtensions": "lib/"
+                "psr-4": {
+                    "DoctrineExtensions\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2013-12-20 22:02:19"
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Eberlei",
+                    "email": "kontakt@beberlei.de"
+                },
+                {
+                    "name": "Steve Lacey",
+                    "email": "steve@stevelacey.net"
+                }
+            ],
+            "description": "A set of extensions to Doctrine 2 that add support for additional query functions available in MySQL and Oracle.",
+            "keywords": [
+                "database",
+                "doctrine",
+                "orm"
+            ],
+            "time": "2015-03-15 16:14:21"
         },
         {
             "name": "doctrine/annotations",
-            "version": "v1.2.4",
+            "version": "v1.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/annotations.git",
-                "reference": "b5202eb9e83f8db52e0e58867e0a46e63be8332e"
+                "reference": "f4a91702ca3cd2e568c3736aa031ed00c3752af4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/annotations/zipball/b5202eb9e83f8db52e0e58867e0a46e63be8332e",
-                "reference": "b5202eb9e83f8db52e0e58867e0a46e63be8332e",
+                "url": "https://api.github.com/repos/doctrine/annotations/zipball/f4a91702ca3cd2e568c3736aa031ed00c3752af4",
+                "reference": "f4a91702ca3cd2e568c3736aa031ed00c3752af4",
                 "shasum": ""
             },
             "require": {
@@ -98,7 +134,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2014-12-23 22:40:37"
+            "time": "2015-06-17 12:21:22"
         },
         {
             "name": "doctrine/cache",
@@ -1170,17 +1206,17 @@
         },
         {
             "name": "jms/security-extra-bundle",
-            "version": "dev-master",
+            "version": "1.5.1",
             "target-dir": "JMS/SecurityExtraBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSSecurityExtraBundle.git",
-                "reference": "9e9a697fd39c8cd2f6af73fbe4762227848f8e31"
+                "reference": "f5f6c6df69ceae8b709e57b49fcc2a42d9280bcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSSecurityExtraBundle/zipball/75bd0f773b1c645d70eb6174fff67ba5779a291e",
-                "reference": "9e9a697fd39c8cd2f6af73fbe4762227848f8e31",
+                "url": "https://api.github.com/repos/schmittjoh/JMSSecurityExtraBundle/zipball/f5f6c6df69ceae8b709e57b49fcc2a42d9280bcc",
+                "reference": "f5f6c6df69ceae8b709e57b49fcc2a42d9280bcc",
                 "shasum": ""
             },
             "require": {
@@ -1208,7 +1244,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.4-dev"
                 }
             },
             "autoload": {
@@ -1222,8 +1258,10 @@
             ],
             "authors": [
                 {
-                    "name": "Johannes M. Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
             "description": "Enhances the Symfony2 Security Component by adding several new features",
@@ -1235,7 +1273,7 @@
                 "secure",
                 "security"
             ],
-            "time": "2015-06-11 16:55:49"
+            "time": "2013-06-09 10:29:54"
         },
         {
             "name": "jms/serializer",
@@ -1453,16 +1491,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.13.1",
+            "version": "1.16.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "c31a2c4e8db5da8b46c74cf275d7f109c0f249ac"
+                "reference": "c0c0b4bee3aabce7182876b0d912ef2595563db7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c31a2c4e8db5da8b46c74cf275d7f109c0f249ac",
-                "reference": "c31a2c4e8db5da8b46c74cf275d7f109c0f249ac",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c0c0b4bee3aabce7182876b0d912ef2595563db7",
+                "reference": "c0c0b4bee3aabce7182876b0d912ef2595563db7",
                 "shasum": ""
             },
             "require": {
@@ -1473,12 +1511,14 @@
                 "psr/log-implementation": "1.0.0"
             },
             "require-dev": {
-                "aws/aws-sdk-php": "~2.4, >2.4.8",
+                "aws/aws-sdk-php": "^2.4.9",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
-                "phpunit/phpunit": "~4.0",
-                "raven/raven": "~0.5",
-                "ruflin/elastica": "0.90.*",
+                "php-console/php-console": "^3.1.3",
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "2.3.0",
+                "raven/raven": "~0.8",
+                "ruflin/elastica": ">=0.90 <3.0",
                 "swiftmailer/swiftmailer": "~5.3",
                 "videlalvaro/php-amqplib": "~2.4"
             },
@@ -1488,6 +1528,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
                 "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
@@ -1496,7 +1537,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.13.x-dev"
+                    "dev-master": "1.16.x-dev"
                 }
             },
             "autoload": {
@@ -1522,7 +1563,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-03-09 09:58:04"
+            "time": "2015-08-09 17:44:44"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -2149,16 +2190,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.1",
+            "version": "v2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "932b6e7499c670f4db6d0b871477a4a3ca161e74"
+                "reference": "969d709ad428076bf1084e386dc26dd904d9fb84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/932b6e7499c670f4db6d0b871477a4a3ca161e74",
-                "reference": "932b6e7499c670f4db6d0b871477a4a3ca161e74",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/969d709ad428076bf1084e386dc26dd904d9fb84",
+                "reference": "969d709ad428076bf1084e386dc26dd904d9fb84",
                 "shasum": ""
             },
             "require": {
@@ -2267,41 +2308,40 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2015-06-11 21:15:28"
+            "time": "2015-07-13 19:27:49"
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "0.9.24",
+            "version": "0.9.28",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "bb57c8711a54730dda7459dd90c93f6ca6bc8bf9"
+                "reference": "adde0a460cb57acf20d1456e890ec2b8d5d7c9b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/bb57c8711a54730dda7459dd90c93f6ca6bc8bf9",
-                "reference": "bb57c8711a54730dda7459dd90c93f6ca6bc8bf9",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/adde0a460cb57acf20d1456e890ec2b8d5d7c9b5",
+                "reference": "adde0a460cb57acf20d1456e890ec2b8d5d7c9b5",
                 "shasum": ""
             },
             "require": {
-                "beberlei/doctrineextensions": "0.2-alpha",
-                "doctrine/doctrine-bundle": "~1.2",
-                "doctrine/orm": "~2.2,>=2.2.3",
+                "doctrine/doctrine-bundle": "v1.5.0",
+                "doctrine/orm": "v2.4.7",
                 "friendsofsymfony/elastica-bundle": "3.0.8",
-                "incenteev/composer-parameter-handler": "~2.0",
-                "jms/security-extra-bundle": "dev-master",
+                "incenteev/composer-parameter-handler": "v2.1.1",
+                "jms/security-extra-bundle": "1.5.1",
                 "jms/serializer-bundle": "0.13.0",
-                "mtdowling/cron-expression": "1.0.*",
+                "mtdowling/cron-expression": "v1.0.4",
                 "php": ">=5.3.3",
-                "sensio/distribution-bundle": "~2.3",
-                "sensio/framework-extra-bundle": "~3.0",
-                "sensio/generator-bundle": "~2.3",
-                "symfony/assetic-bundle": "~2.3",
-                "symfony/monolog-bundle": "~2.4",
-                "symfony/swiftmailer-bundle": "~2.3",
-                "symfony/symfony": "~2.4",
-                "twig/extensions": "~1.0"
+                "sensio/distribution-bundle": "v2.3.22",
+                "sensio/framework-extra-bundle": "v3.0.9",
+                "sensio/generator-bundle": "v2.5.3",
+                "symfony/assetic-bundle": "v2.6.1",
+                "symfony/monolog-bundle": "v2.7.1",
+                "symfony/swiftmailer-bundle": "v2.3.8",
+                "symfony/symfony": "2.7.2",
+                "twig/extensions": "v1.2.0"
             },
             "require-dev": {
                 "phpspec/phpspec": "~2.0"
@@ -2326,7 +2366,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2015-06-18 15:58:17"
+            "time": "2015-08-19 09:35:23"
         },
         {
             "name": "teodortalov/citrix",
@@ -2422,16 +2462,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.18.2",
+            "version": "v1.20.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602"
+                "reference": "1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e8e6575abf6102af53ec283f7f14b89e304fa602",
-                "reference": "e8e6575abf6102af53ec283f7f14b89e304fa602",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844",
+                "reference": "1ea4e5f81c6d005fe84d0b38e1c4f1955eb86844",
                 "shasum": ""
             },
             "require": {
@@ -2440,7 +2480,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-master": "1.20-dev"
                 }
             },
             "autoload": {
@@ -2475,20 +2515,20 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-06-06 23:31:24"
+            "time": "2015-08-12 15:56:39"
         },
         {
             "name": "twilio/sdk",
-            "version": "4.2.1",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "558c96789bf84740d7957aa7fde91014d703261c"
+                "reference": "9b83e2f1c480e3fb4e05a833b325c5afa43520fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/558c96789bf84740d7957aa7fde91014d703261c",
-                "reference": "558c96789bf84740d7957aa7fde91014d703261c",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/9b83e2f1c480e3fb4e05a833b325c5afa43520fb",
+                "reference": "9b83e2f1c480e3fb4e05a833b325c5afa43520fb",
                 "shasum": ""
             },
             "require": {
@@ -2525,21 +2565,21 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2015-06-09 17:41:09"
+            "time": "2015-08-11 17:19:55"
         },
         {
             "name": "vresh/twilio-bundle",
-            "version": "dev-master",
+            "version": "0.4.3",
             "target-dir": "Vresh/TwilioBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fridolin-koch/VreshTwilioBundle.git",
-                "reference": "52c1138220ed7994ebb313803339c312599d257b"
+                "reference": "eb24113168dd84fdef73e06cfd9cbbd87ee9b687"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fridolin-koch/VreshTwilioBundle/zipball/52c1138220ed7994ebb313803339c312599d257b",
-                "reference": "52c1138220ed7994ebb313803339c312599d257b",
+                "url": "https://api.github.com/repos/fridolin-koch/VreshTwilioBundle/zipball/eb24113168dd84fdef73e06cfd9cbbd87ee9b687",
+                "reference": "eb24113168dd84fdef73e06cfd9cbbd87ee9b687",
                 "shasum": ""
             },
             "require": {
@@ -2563,7 +2603,9 @@
             "authors": [
                 {
                     "name": "Fridolin Koch",
-                    "email": "info@fridokoch.de"
+                    "email": "info@fridokoch.de",
+                    "homepage": "http://fridokoch.de",
+                    "role": "Developer, Maintainer"
                 }
             ],
             "description": "A simple Symfony2 bundle for the official sdk provided by Twilio.",
@@ -2571,17 +2613,13 @@
             "keywords": [
                 "twilio"
             ],
-            "time": "2015-05-21 17:11:28"
+            "time": "2014-07-16 09:27:37"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "jms/security-extra-bundle": 20,
-        "vresh/twilio-bundle": 20,
-        "beberlei/doctrineextensions": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
