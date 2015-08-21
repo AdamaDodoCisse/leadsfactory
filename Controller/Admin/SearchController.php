@@ -181,7 +181,7 @@ class SearchController extends CoreController {
      */
     public function deleteIndex () {
 
-        $request = '_all';
+        $request = '/leadsfactory';
 
         $searchUtils = $this->get("search.utils");
         $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_DELETE , $request );
@@ -204,7 +204,7 @@ class SearchController extends CoreController {
 
     private function createLeadsIndex () {
 
-        $request = 'leadsfactory';
+        $request = '/leadsfactory';
 
 
         $parameters =    '{
@@ -245,9 +245,9 @@ class SearchController extends CoreController {
                                     "utmcampaign": { "type": "string"},
                                     "scope":       { "type": "integer"},
                                     "script":      { "type": "string"},
-                                    "secure_key":   { "type": "integer"},
+                                    "secure_key":   { "type": "integer"}
                                 }
-                            }
+                            },
                             "export" : {
                                 "dynamic":      "strict",
                                 "properties": {
@@ -260,7 +260,7 @@ class SearchController extends CoreController {
                                     "scheduled_at": { "type": "date"},
                                     "executed_at":  { "type": "date"},
                                     "status":       { "type": "integer"},
-                                    "log":          { "type": "string"},
+                                    "log":          { "type": "string"}
                                 }
                             }
                         }

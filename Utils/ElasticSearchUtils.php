@@ -19,14 +19,18 @@ class ElasticSearchUtils extends SearchShared {
     public static $PROTOCOL_DELETE = "DELETE";
 
     public static $_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH = "SEARCH_BINARY_PATH";
+    public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT__ELASTICSEARCH";
 
-    public $baseUri = "http://localhost:9200/";
+    //public $baseUri = "http://localhost:9200/";
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
     public function __construct () {
         PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH, "Path to the binary file of elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE, "Url to elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
+
+
     }
 
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
@@ -46,8 +50,11 @@ class ElasticSearchUtils extends SearchShared {
      */
     public function request ( $protocol, $query, $parameters = null, $populate = false ) {
 
+        $preferences = $this->container->get ("preferences_utils");
+        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE );
+
         $ci = curl_init();
-        curl_setopt($ci, CURLOPT_URL, $this->baseUri.$query);
+        curl_setopt($ci, CURLOPT_URL, $baseUri.$query);
         curl_setopt($ci, CURLOPT_PORT, '9200');
         curl_setopt($ci, CURLOPT_TIMEOUT, 10);
         curl_setopt($ci, CURLOPT_RETURNTRANSFER, 1);
@@ -56,12 +63,25 @@ class ElasticSearchUtils extends SearchShared {
         if ($parameters) {
             curl_setopt($ci, CURLOPT_POSTFIELDS, $parameters);
         }
+        curl_setopt($ci, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ci);
+        $error = curl_error($ci);
+        curl_close($ci);
+
+        if ($result) {
+            $result = json_decode( $result);
+            if (method_exists($result,"error")) {
+                echo ("ERROR :");
+                var_dump ($result);die();
+            }
+        }
+
+        var_dump ($result);die();
 
         if ($populate)
             return $this->populateObjectFromSearch( $result );
         else
-            return $result;
+            return json_encode( $result );
     }
 
     /**
