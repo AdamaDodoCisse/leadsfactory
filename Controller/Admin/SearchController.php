@@ -204,9 +204,6 @@ class SearchController extends CoreController {
 
     private function createLeadsIndex () {
 
-        $request = '/leadsfactory';
-
-
         $parameters =    '{
                         "mappings": {
                             "leads": {
@@ -266,9 +263,17 @@ class SearchController extends CoreController {
                         }
                     }';
 
+        // Create an Index for each Scopes
+        $repository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope');
+        $scopes = $repository->findAll();
 
-        $searchUtils = $this->get("search.utils");
-        $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
+        foreach ($scopes as $scope) {
+
+            $request = '/leadsfactory-'.$scope->getId();
+            $searchUtils = $this->get("search.utils");
+            $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
+
+        }
 
 
     }

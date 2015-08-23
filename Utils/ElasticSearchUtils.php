@@ -71,12 +71,12 @@ class ElasticSearchUtils extends SearchShared {
         if ($result) {
             $result = json_decode( $result);
             if (method_exists($result,"error")) {
-                echo ("ERROR :");
+                echo ("ERROR : ".$baseUri.$query);
                 var_dump ($result);die();
             }
         }
 
-        var_dump ($result);die();
+        //var_dump ($result);die();
 
         if ($populate)
             return $this->populateObjectFromSearch( $result );
@@ -117,6 +117,56 @@ class ElasticSearchUtils extends SearchShared {
         }
 
         return $output;
+
+    }
+
+    /**
+     * @param $fields Array of fields to represent Lead object
+     */
+    public function indexLeadObject ( $fields, $scopeId, $leadObject = null ) {
+
+        $exportDate = "";
+        $createdAt = "";
+
+        if ($leadObject != null) {
+
+            die();
+
+        } else {
+
+            $data = array();
+            if ($fields["exportdate"] != "") {
+                $exportDate = \DateTime::createFromFormat('Y-m-j H:i:s', $fields["exportdate"]);
+                $data["exportdate"] = $exportDate->format("c");
+            }
+            if ($fields["createdAt"] != "") {
+                $createdAt = \DateTime::createFromFormat('Y-m-j H:i:s', $fields["createdAt"]);
+                $data["createdAt"] = $createdAt->format("c");
+            }
+
+            $data["id"] = $fields["id"];
+            $data["_id"] = $fields["id"];
+            $data["firstname"] = ($fields["firstname"]);
+            $data["lastname"] = ($fields["lastname"]);
+            $data["status"] = $fields["status"];
+            $data["log"] = $fields["log"];
+            $data["formTyped"] = $fields["form_type_id"];
+            $data["form"] = $fields["form_id"];
+            $data["utmcampaign"] = $fields["utmcampaign"];
+            $data["telephone"] = $fields["telephone"];
+            $data["email"] = $fields["email"];
+            $data["client"] = $fields["client_id"];
+            $data["entreprise"] = $fields["entreprise_id"];
+            $data["content"] = json_decode($fields["content"]);
+
+        }
+        $response = $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/leads/".$fields["id"], json_encode($data), false );
+
+        unset ($data);
+        unset ($exportDate);
+        unset ($createdAt);
+
+        //var_dump ($response);
 
     }
 
