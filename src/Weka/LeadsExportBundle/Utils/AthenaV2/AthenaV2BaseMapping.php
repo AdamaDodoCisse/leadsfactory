@@ -28,7 +28,7 @@ class AthenaV2BaseMapping {
 
         return array (
 
-            "id_athena"         =>  "", // Vide
+            "id_athena"         => "", // Vide
             "athena_unique_id"  => "",  // Vide ou ID Session si formation
             "code_sap_mpf"      => "",  // Vide
             "code_sap_mi"       => "",  // Vide
@@ -99,7 +99,7 @@ class AthenaV2BaseMapping {
             "prenom"                    => "firstName",
             "nom"                       => "lastName",
             "fonction_marketing"        => "",  // Methode de récupération des données
-            "service"                   => "",  // TODO
+            "service"                   => "",  // Methode de récupération des données
             "telephone"                 => "phone",
             "portable"                  => "",  // Vide
             "fax"                       => "",  // Vide
@@ -108,7 +108,7 @@ class AthenaV2BaseMapping {
             "type_utilisation"          => "",  // Vide
             "id_web"                    => "",  // Vide
             "membre_ce"                 => "",  // Vide
-            "profil_ti"                 => "",
+            "profil_ti"                 => "",  // Methode de récupération des données
             "interets_ti"               => "",
             "interets_tissot"           => "",  // Vide
             "profil_weka"               => "",
@@ -139,7 +139,7 @@ class AthenaV2BaseMapping {
             "objectif_principal"        => "",  // Vide
             "presentation_projet"       => "",  // Vide
             "attente_eti"               => "",  // Vide
-            "rdv_conseiller"            => "",  // Boolean
+            "rdv_conseiller"            => "demande-rdv",  // Boolean / 
             "id_compte"                 => "",  // Methode de récupération des données
             "id_contact"                => "",  // Methode de récupération des données
             "type_demande"              => "",  // Methode de récupération des données
@@ -162,9 +162,27 @@ class AthenaV2BaseMapping {
         );
 
     }
+    
+//    public function getRdv_conseiller( $data ){
+//        $demandeRDV = array (
+//            "1"      => "TRUE",
+//            "0"     => "FALSE"
+//        );
+//                
+//        var_dump($data["demande-rdv"]);
+//        
+//        if (array_key_exists("demande-rdv",$data)) {
+//            if($data["demande-rdv"]){
+//                return "TRUE";
+//            }
+//        } else {
+//            return "";
+//        }        
+//    }
 
     public function getVersion () {
-        return "1.0";
+        return "";
+//        return "1.0";
     }
 
     public function getAffaireMapping () {
@@ -205,9 +223,11 @@ class AthenaV2BaseMapping {
             "7"     => "SEM",
             "6"     => "sivom"
         );
-     
-        if (array_key_exists("type-etablissement",$secteurs)) {
-            return $secteurs[$data['type-etablissement']];
+//        var_dump($data['type-etablissement']);
+        if (array_key_exists("type-etablissement",$data)) {
+            if($data['type-etablissement']){
+                return $secteurs[$data['type-etablissement']];
+            }
         } else {
             return "";
         }
@@ -234,13 +254,19 @@ class AthenaV2BaseMapping {
             "9"     => "TechnologiesDeLInformation",
             "14"    => "Transports",
         );
-        if (array_key_exists("secteur-activite",$secteurs)) {
-            return $secteurs[$data["secteur-activite"]];
+        
+//        var_dump($data["secteur-activite"]);
+        
+        if (array_key_exists("secteur-activite",$data)) {
+            if($data["secteur-activite"]){
+                return $secteurs[$data["secteur-activite"]];
+            }
         } else {
             return "";
         }
     }
 
+    
     public function getTab_contact ( $data ) {
 
         $contact = array (
@@ -264,12 +290,33 @@ class AthenaV2BaseMapping {
             "MRS"   => "mme"
 
         );
-        if (array_key_exists("salutation",$civilite)) {
+        
+        if (array_key_exists("salutation",$data)) {
             return $civilite[$data["salutation"]];
         } else {
             return "";
         }
     }
+    
+    public function getProfil_ti ( $data ) {
+
+        $profil_ti = array (
+
+            "ETUDIANT"      => "ETUDIANT",
+            "PROFESSIONNEL" => "PROFESSIONNEL"
+
+        );
+        
+        
+        if (array_key_exists("profil",$data)) {
+            if($data["profil"]){
+                return $profil_ti[$data["profil"]];
+            }
+        } else {
+            return "";
+        }
+    }
+    
 
     public function getService($data){
         $fonctions = array(
@@ -300,13 +347,15 @@ class AthenaV2BaseMapping {
             "sante_au_travail_prevention" => "sante_au_travail_prevention",
             "services_techniques" => "services_techniques",
         );
-        if (array_key_exists("service",$fonctions)) {
+        
+        if (array_key_exists("service",$data)) {
             return $fonctions[$data["service"]];
         } else {
             return "";
-        }
-        
+        }        
     }
+    
+
 
     // TODO : A terminer
     public function getFonction_marketing ( $data ) {
@@ -479,8 +528,8 @@ class AthenaV2BaseMapping {
             "travailleur_social" =>"travailleur_social",
             
             ////////////////////// TI            
-            "animateur_sst_correspondant__scurit" =>"animateur_sst_correspondant__scurit",
-            "architecte_matre_duvre" =>"architecte_matre_duvre",
+            "animateur_sst_correspondant__scurit " => "animateur_sst_correspondant__scurit",
+            "architecte_matre_duvre " => "architecte_matre_duvre",
             "assistant_qhse" =>"assistant_qhse",
             "AssistantResponsableFormation" =>"AssistantResponsableFormation",
             "AssistantRH"    =>"AssistantRH",
@@ -554,8 +603,12 @@ class AthenaV2BaseMapping {
             "toxicologue" =>"toxicologue"
             
         );
-        if (array_key_exists("fonction",$fonctions)) {
-            return $fonctions[$data["fonction"]];
+        
+        
+        if (array_key_exists("fonction",$data)) {
+            if($data["fonction"]){
+                return $fonctions[$data["fonction"]];
+            }
         } else {
             return "";
         }
