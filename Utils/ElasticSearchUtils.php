@@ -21,6 +21,11 @@ class ElasticSearchUtils extends SearchShared {
     public static $_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH = "SEARCH_BINARY_PATH";
     public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT__ELASTICSEARCH";
 
+    public static $_PREFERENCE_SEARCH_KIBANA_ENABLE = "SEARCH_KIBANA_ENABLE";
+    public static $_PREFERENCE_SEARCH_KIBANA_URL = "SEARCH_KIBANA_URL";
+    public static $_PREFERENCE_SEARCH_KIBANA_BINARY_PATH = "SEARCH_KIBANA_BINARY_PATH";
+    public static $_PREFERENCE_SEARCH_KIBANA_INDEX_NAME = "SEARCH_KIBANA_INDEX_NAME";
+
     //public $baseUri = "http://localhost:9200/";
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
@@ -76,12 +81,10 @@ class ElasticSearchUtils extends SearchShared {
             }
         }
 
-        //var_dump ($result);die();
-
         if ($populate)
             return $this->populateObjectFromSearch( $result );
         else
-            return json_encode( $result );
+            return $result;
     }
 
     /**
@@ -157,6 +160,7 @@ class ElasticSearchUtils extends SearchShared {
             $data["email"] = $fields["email"];
             $data["client"] = $fields["client_id"];
             $data["entreprise"] = $fields["entreprise_id"];
+            $data["scope"] = $scopeId;
             $data["content"] = json_decode($fields["content"]);
 
         }
@@ -169,6 +173,22 @@ class ElasticSearchUtils extends SearchShared {
         //var_dump ($response);
 
     }
+
+    public function getKibanaDashboards () {
+
+        $request = "";
+
+        $dashboards = $this->request( ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/dashboard/_search?q=*", $request );
+
+        //var_dump( $dashboards->hits->hits );
+
+        return $dashboards->hits->hits;
+    }
+
+
+    /**
+     * I believe bellow methods are all deprecated due to KIBANA USAGE
+     */
 
     /**
      *

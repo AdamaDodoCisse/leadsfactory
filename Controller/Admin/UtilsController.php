@@ -219,6 +219,8 @@ class UtilsController extends CoreController
 
         $sections = array();
 
+        $displayBreadCrumb = true;
+
         $sections[] = array (   "name" => "Accueil", "url" => $this->get('router')->generate('_monitoring_dashboard'));
 
         if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_type_page")) == "_monitoring_dashboard_type_page") {
@@ -322,9 +324,13 @@ class UtilsController extends CoreController
             $sections[] = array (   "name" => "Scopes utilisateurs", "url" => $this->get('router')->generate('_scope_list'));
             $sections[] = array (   "name" => "edition d'un scope", "url" => "");
 
+        } else if (substr ($parentRoute, 0, strlen ("_scope_edit")) == "_marketing_kibana") {
+
+            $displayBreadCrumb = false;
+
         }
 
-        return $this->render('TellawLeadsFactoryBundle:Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute));
+        return $this->render('TellawLeadsFactoryBundle:Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute, "displayBreadCrumb" => $displayBreadCrumb));
 
     }
 

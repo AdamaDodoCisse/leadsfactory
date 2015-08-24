@@ -7,6 +7,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 use Tellaw\LeadsFactoryBundle\Entity;
 
@@ -47,6 +48,66 @@ class MarketingController extends CoreController
 
     }
 
+    /**
+     *
+     * Kibana page for browsing data
+     *
+     * @param Request $request
+     * @Route("/kibana-browse", name="_marketing_kibana_index")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaBrowserAction (Request $request) {
+
+        $preferences = $this->container->get ("preferences_utils");
+        $kibanaUrl = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL );
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:marketing:kibana-index.html.twig',
+            array(
+                "kibana_url" => $kibanaUrl
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana-dashboards", name="_marketing_list_kibana_dashboards")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaDashboardsAction ( Request $request ) {
+
+        $search = $this->container->get ("search.utils");
+        $dashboards = $search->getKibanaDashboards();
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:marketing:kibana-dashboards.html.twig',
+            array(
+                "dashboards" => $dashboards
+            )
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana-dashboards-edit/{id}", name="_marketing_kibana_dashboard_edit")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaDashboardEditAction ( Request $request, $id ) {
+
+        $preferences = $this->container->get ("preferences_utils");
+        $kibanaUrl = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL );
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:marketing:kibana-dashboard.html.twig',
+            array(
+                "kibana_url" => $kibanaUrl."#/dashboard/".$id
+            )
+        );
+
+    }
 
     /**
      * Start export
