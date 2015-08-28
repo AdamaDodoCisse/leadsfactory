@@ -23,6 +23,8 @@ class AthenaV2BaseMapping {
         $this->em = $entityManager;
         $this->list_element_repository = $list_element_repository;
     }
+    
+
 
     public function getProduitMapping () {
 
@@ -38,7 +40,7 @@ class AthenaV2BaseMapping {
 
     }
 
-    public function getCompteMapping (  ) {
+    public function getCompteMapping ( ) {
 
         return array (
 
@@ -48,9 +50,10 @@ class AthenaV2BaseMapping {
             "raison_sociale"            => "etablissement",
             "id_campagne"               => "",  // Methode de récupération de la données
             "rue_facturation"           => "address",
-            "code_postal_facturation"    => "zip",
+            "code_postal_facturation"   => "zip",
             "dep_region_facturation"    => "",  // Vide
-            "ville_facturation"         => "ville",
+            "ville_facturation"         => "ville_text",  // Méthode de récupération de la données
+            "nb_habitants"              => "",
             "pays_facturation"          => "pays",
             "rue_livraison"             => "",
             "code_postal_livraison"     => "",  // Vide
@@ -71,7 +74,6 @@ class AthenaV2BaseMapping {
             "type_compte"               => "",  // Vide
             "date_prochaine_election_ce" => "", // Vide
             "nb_lits"                   => "",  // Vide
-            "nb_habitants"              => "",  // Vide
             "tranche_lits"              => "",  // Vide
             "tranche_effectifs"         => "",  // Vide
             "tranche_population"        => "",  // Vide
@@ -79,7 +81,6 @@ class AthenaV2BaseMapping {
             "type_client_ec"            => "",  // Vide
             "numero_tva_intra"          => "",  // Vide
             "tab_contact"               => ""   // Methode de récupération des données
-
         );
 
     }
@@ -108,6 +109,8 @@ class AthenaV2BaseMapping {
             "type_utilisation"          => "",  // Vide
             "id_web"                    => "",  // Vide
             "membre_ce"                 => "",  // Vide
+            "cnilTi"                    => "",  // Methode de récupération des données
+            "cnilPartners"              => "",  // Methode de récupération des données
             "profil_ti"                 => "",  // Methode de récupération des données
             "interets_ti"               => "",
             "interets_tissot"           => "",  // Vide
@@ -126,7 +129,7 @@ class AthenaV2BaseMapping {
         $dateTime = new \DateTime();
 
         return array (
-
+            "id_leadsfactory"           => "id_leadsfactory",
             "detail_demande"            => "comment",  // Vide
             "marque"                    => "",  // Vide
             "deja_client"               => "",  // Vide
@@ -162,28 +165,72 @@ class AthenaV2BaseMapping {
         );
 
     }
-    
-//    public function getRdv_conseiller( $data ){
-//        $demandeRDV = array (
-//            "1"      => "TRUE",
-//            "0"     => "FALSE"
-//        );
-//                
-//        var_dump($data["demande-rdv"]);
-//        
-//        if (array_key_exists("demande-rdv",$data)) {
-//            if($data["demande-rdv"]){
-//                return "TRUE";
-//            }
-//        } else {
-//            return "";
-//        }        
-//    }
-
-    public function getVersion () {
-        return "";
-//        return "1.0";
+    public function getVille_facturation($data){
+        if(array_key_exists('ville_id', $data) && $data['ville_id']){
+            $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("5", $data['ville_id']);
+        } else if (array_key_exists("ville", $data) && $data['ville']){
+            $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("5", $data['ville']);
+        } else if(array_key_exists("ville_text", $data) && $data['ville_text']){
+            $ma_ville =$data['ville_text'];            
+        } else {
+            return "";
+        }
+        return $ma_ville;           // a vérifier la taille du champs ville facturation
     }
+    public function getNb_habitants($data){
+        var_dump($data['ville_text']);
+        if(array_key_exists('ville_id', $data) && $data['ville_id']){
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $data['ville_id']);   
+        } else if(array_key_exists('ville', $data) && $data['ville']){
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $data['ville']);  
+        } else if(array_key_exists('ville_text', $data) && $data['ville_text']){
+            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("5", $data['ville_text']);   
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $ville_id);
+        } else {
+            return "";
+        }
+        return $population;
+    }
+    
+    public function getCnilTi($data){
+        if (array_key_exists("cnilTi",$data)) {
+            if ($data["cnilTi"]) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    
+    public function getCnilPartners($data){
+        if (array_key_exists("cnilPartners",$data)) {
+            if ($data["cnilPartners"]) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function getRdv_conseiller( $data ){
+        if (array_key_exists("demande-rdv",$data)) {
+            if ($data["demande-rdv"]) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+//    public function getVersion () {
+//        return "1.0";
+//    }
 
     public function getAffaireMapping () {
 
@@ -223,7 +270,7 @@ class AthenaV2BaseMapping {
             "7"     => "SEM",
             "6"     => "sivom"
         );
-//        var_dump($data['type-etablissement']);
+        
         if (array_key_exists("type-etablissement",$data)) {
             if($data['type-etablissement']){
                 return $secteurs[$data['type-etablissement']];
@@ -239,7 +286,7 @@ class AthenaV2BaseMapping {
 
         $secteurs = array (
             "12"    => "Autre",
-            "15"    => "Autre", // Biomedical Pharma
+            "15"    => "Autre", // ce champs est manquant dans le liste ti_titles_list
             "3"     => "Construction",
             "13"    => "ElectroniqueAutomatique",
             "4"     => "Energies",
@@ -255,7 +302,6 @@ class AthenaV2BaseMapping {
             "14"    => "Transports",
         );
         
-//        var_dump($data["secteur-activite"]);
         
         if (array_key_exists("secteur-activite",$data)) {
             if($data["secteur-activite"]){
