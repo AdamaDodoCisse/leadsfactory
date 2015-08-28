@@ -178,7 +178,7 @@ class AthenaV2BaseMapping {
         return $ma_ville;           // a vérifier la taille du champs ville facturation
     }
     public function getNb_habitants($data){
-        var_dump($data['ville_text']);
+//        var_dump($data['ville_text']);
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $data['ville_id']);   
         } else if(array_key_exists('ville', $data) && $data['ville']){
