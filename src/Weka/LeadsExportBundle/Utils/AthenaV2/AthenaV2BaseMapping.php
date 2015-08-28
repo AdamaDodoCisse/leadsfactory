@@ -52,7 +52,7 @@ class AthenaV2BaseMapping {
             "rue_facturation"           => "address",
             "code_postal_facturation"   => "zip",
             "dep_region_facturation"    => "",  // Vide
-            "ville_facturation"         => "ville_text",  // Méthode de récupération de la données
+            "ville_facturation"         => "",  // Méthode de récupération de la données
             "nb_habitants"              => "",
             "pays_facturation"          => "pays",
             "rue_livraison"             => "",
@@ -167,25 +167,24 @@ class AthenaV2BaseMapping {
     }
     public function getVille_facturation($data){
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
-            $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("5", $data['ville_id']);
+            $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
         } else if (array_key_exists("ville", $data) && $data['ville']){
-            $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("5", $data['ville']);
+            $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville']);
         } else if(array_key_exists("ville_text", $data) && $data['ville_text']){
-            $ma_ville =$data['ville_text'];            
+            $ma_ville = $data['ville_text'];            
         } else {
             return "";
         }
-        return $ma_ville;           // a vérifier la taille du champs ville facturation
+        return $ma_ville;
     }
     public function getNb_habitants($data){
-//        var_dump($data['ville_text']);
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $data['ville_id']);   
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $data['ville_id']);   
         } else if(array_key_exists('ville', $data) && $data['ville']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $data['ville']);  
-        } else if(array_key_exists('ville_text', $data) && $data['ville_text']){
-            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("5", $data['ville_text']);   
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("14", $ville_id);
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $data['ville']);  
+        } else if(array_key_exists('ville_text', $data) && $data['ville_text']){            
+            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $data['ville_text']);   
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $ville_id);            
         } else {
             return "";
         }
