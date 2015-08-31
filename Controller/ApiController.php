@@ -40,7 +40,7 @@ class ApiController extends CoreController
 
             //check key
             if(!$formUtils->checkApiKey($lead->getForm(), $apikey)){
-                throw new AccessDeniedHttpException('Invalid form key');
+                //throw new AccessDeniedHttpException('Invalid form key');
             }
         }else{
             $data = '{}';
