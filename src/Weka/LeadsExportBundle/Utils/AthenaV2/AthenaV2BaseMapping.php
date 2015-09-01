@@ -188,6 +188,7 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
+        
         return $population;
     }
     
