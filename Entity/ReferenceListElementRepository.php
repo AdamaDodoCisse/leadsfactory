@@ -51,7 +51,6 @@ class ReferenceListElementRepository extends EntityRepository {
         return $result;
     }
     
-    // get nom ville :      list_code   
     public function getNameUsingListCodeAndValue($list_code, $element_value) {
         if (empty($element_value)) {
             return '';
@@ -69,16 +68,13 @@ class ReferenceListElementRepository extends EntityRepository {
         $query = $qb->getQuery();
         
         try {
-            $result = $query->getSingleScalarResult();
+            $result = $query->getResult();            
         } catch (\Exception $e) {
             $result = '';
         }
-        
         return $result;
     }
     
-    
-    //      ("nbhabitants", $data['ville'])
     public function getValueUsingListCodeAndName($list_code, $element_value) {
         if (empty($element_value)) {
             return '';
@@ -95,11 +91,10 @@ class ReferenceListElementRepository extends EntityRepository {
         
         $query = $qb->getQuery();
         try {
-            $result = $query->getSingleScalarResult();
+            $result = $query->getResult();
         } catch (\Exception $e) {
             $result = '';
         }        
         return $result;
     }
-
 }
