@@ -188,7 +188,7 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        
+        $population = $population[0]['value'] ? $population[0]['value'] : "";
         return $population;
     }
     
