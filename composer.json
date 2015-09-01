@@ -22,7 +22,7 @@
 	"jms/security-extra-bundle": "1.5.1",
 	"mtdowling/cron-expression": "v1.0.4",
 	"vresh/twilio-bundle": "0.4.3",
-	"tellaw/leadsfactory" : "0.9.31",
+	"tellaw/leadsfactory" : "0.9.34",
 	"beberlei/DoctrineExtensions": "v1.0.1",
 	"teodortalov/citrix": "1.1"
   },
@@ -54,5 +54,14 @@
 	"branch-alias": {
 	  "dev-master": "2.4-dev"
 	}
-  }
+  },
+  	"repositories": [
+	  {
+		"type": "vcs",
+		"url": "https://github.com/tellaw/leadsfactory.git"
+	  }
+	],
+	"require": {
+	  "tellaw/leadsfactory": "0.9.33"
+	}
 }
