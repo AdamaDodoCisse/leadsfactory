@@ -54,14 +54,5 @@
 	"branch-alias": {
 	  "dev-master": "2.4-dev"
 	}
-  },
-  	"repositories": [
-	  {
-		"type": "vcs",
-		"url": "https://github.com/tellaw/leadsfactory.git"
-	  }
-	],
-	"require": {
-	  "tellaw/leadsfactory": "0.9.33"
-	}
+  }
 }

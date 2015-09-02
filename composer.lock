@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f106db97a1959dbc2a41657efc6bd70",
+    "hash": "18891f99e4348a569f4e952751ce81f9",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2317,17 +2317,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "0.9.33",
+            "version": "0.9.34",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "92f469fec063472ded8382f357ff329d62772e3d"
+                "reference": "3ecfe1aa6a0d87f5b0ebb2fa9717ae22713cf769"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/92f469fec063472ded8382f357ff329d62772e3d",
-                "reference": "92f469fec063472ded8382f357ff329d62772e3d",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/3ecfe1aa6a0d87f5b0ebb2fa9717ae22713cf769",
+                "reference": "3ecfe1aa6a0d87f5b0ebb2fa9717ae22713cf769",
                 "shasum": ""
             },
             "require": {
@@ -2357,6 +2357,7 @@
                     "Tellaw\\LeadsFactoryBundle": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2370,11 +2371,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "support": {
-                "source": "https://github.com/tellaw/leadsfactory/tree/0.9.33",
-                "issues": "https://github.com/tellaw/leadsfactory/issues"
-            },
-            "time": "2015-09-01 13:37:59"
+            "time": "2015-09-01 14:50:14"
         },
         {
             "name": "teodortalov/citrix",
@@ -2634,6 +2631,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.3.3"
+    },
     "platform-dev": []
 }
