@@ -35,9 +35,8 @@ class ReferenceListElementRepository extends EntityRepository {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('e.name')
             ->from('TellawLeadsFactoryBundle:ReferenceListElement', 'e')
-            ->join('TellawLeadsFactoryBundle:ReferenceList', 'l')
+            ->join('e.referenceList', 'l')
             ->where('l.code = :code')
-            ->andWhere('e.referencelist_id = l.id')
             ->andWhere('e.value = :value')
             ->setParameter('code', $list_code)
             ->setParameter('value', $element_value)
