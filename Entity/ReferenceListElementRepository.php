@@ -45,7 +45,14 @@ class ReferenceListElementRepository extends EntityRepository {
 
         try {
             if (!$return_type) {
-                $result = $query->getSingleScalarResult();
+                $result = $query->getResult();
+	            if(count($result)>=1){
+		            $result = array_shift($result);
+		            $result = $result['name'];
+	            }else{
+		            $result = '';
+	            }
+
             } else{
                 $result = $query->getResult();
             }
