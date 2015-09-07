@@ -232,7 +232,7 @@ class AthenaV2BaseMapping {
     public function getDetail_demande($data){
         if (array_key_exists("product_name",$data) && $data["product_name"]) {
             if (array_key_exists("comment",$data) && $data["comment"]) {
-                $detail = $data["product_name"]."".$data["comment"];
+                $detail = $data["product_name"]." - ".$data["comment"];
             } else $detail = $data["product_name"];
             return $detail;
         } else {
