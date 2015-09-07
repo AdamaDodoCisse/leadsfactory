@@ -129,7 +129,7 @@ class AthenaV2BaseMapping {
 
         return array (
             "id_leadsfactory"           => "id_leadsfactory",
-            "detail_demande"            => "product_name",  // Vide
+            "detail_demande"            => "",  // Vide
             "marque"                    => "",  // Vide
             "deja_client"               => "",  // Vide
             "id_sogec"                  => "",  // Boolean
@@ -164,6 +164,7 @@ class AthenaV2BaseMapping {
         );
 
     }
+
     public function getVille_facturation($data){        
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
@@ -178,12 +179,25 @@ class AthenaV2BaseMapping {
         return $ville;
     }
     public function getNb_habitants($data){
+        
+        $first_str = substr($data['zip'], 0, 1);
+        if($first_str == 0){
+            $zip_code =  substr($data['zip'], 1); 
+        } else {
+            $zip_code = $data['zip'];
+        }
+//        
+//        $zip_ = substr($data['zip'], 1) ? ( $data['zip'][0] == 0) : $data['zip'];
+//        
+//        var_dump($zip_code);
+//        var_dump($zip_);
+//                
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $data['zip']."-".$data['ville_id']);   
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);   
         } else if(array_key_exists('ville', $data) && $data['ville']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $data['zip']."-".$data['ville']);  
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville']);  
         } else if(array_key_exists('ville_text', $data) && $data['ville_text']){
-            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $data['zip']."-".$data['ville_text']);   
+            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $zip_code."-".$data['ville_text']);   
             $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $ville_id);            
         } else {
             return "";
@@ -213,6 +227,16 @@ class AthenaV2BaseMapping {
             }
         } else {
             return FALSE;
+        }
+    }
+    public function getDetail_demande($data){
+        if (array_key_exists("product_name",$data) && $data["product_name"]) {
+            if (array_key_exists("comment",$data) && $data["comment"]) {
+                $detail = $data["product_name"].$data["comment"];
+            } else $detail = $data["product_name"];
+            return $detail;
+        } else {
+            return "";
         }
     }
 
