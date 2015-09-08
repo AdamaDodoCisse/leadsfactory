@@ -175,11 +175,13 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        if($ma_ville[0]['name']){
+        
+        if(is_array($ma_ville)){
             $ville = $ma_ville[0]['name'];
-        } else if(is_string ($ma_ville)){
+        } else if(is_string($ma_ville)){
             $ville = $ma_ville;
-        } else $ville = "nc";        
+        } else $ville = "";
+        
         return $ville;
     }
     public function getNb_habitants($data){
