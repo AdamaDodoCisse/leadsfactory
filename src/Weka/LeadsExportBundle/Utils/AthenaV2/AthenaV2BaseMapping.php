@@ -190,12 +190,7 @@ class AthenaV2BaseMapping {
         } else {
             $zip_code = $data['zip'];
         }
-//        
-//        $zip_ = substr($data['zip'], 1) ? ( $data['zip'][0] == 0) : $data['zip'];
-//        
-//        var_dump($zip_code);
-//        var_dump($zip_);
-//            
+        
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);   
         } else if(array_key_exists('ville', $data) && $data['ville']){
