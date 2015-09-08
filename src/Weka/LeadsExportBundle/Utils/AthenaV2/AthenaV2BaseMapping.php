@@ -180,8 +180,6 @@ class AthenaV2BaseMapping {
         } else if(is_string ($ma_ville)){
             $ville = $ma_ville;
         } else $ville = "nc";        
-        var_dump($ville);
-        
         return $ville;
     }
     public function getNb_habitants($data){
