@@ -175,7 +175,11 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        $ville = $ma_ville[0]['name'] ? $ma_ville[0]['name'] : "";
+        if($ma_ville[0]['name']){
+            $ville = $ma_ville[0]['name'] ? : "";
+        } else if(is_string ($ma_ville)){
+            $ville = $ma_ville;
+        } else $ville = "nc";        
         return $ville;
     }
     public function getNb_habitants($data){
@@ -191,7 +195,7 @@ class AthenaV2BaseMapping {
 //        
 //        var_dump($zip_code);
 //        var_dump($zip_);
-//                
+//            
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);   
         } else if(array_key_exists('ville', $data) && $data['ville']){
