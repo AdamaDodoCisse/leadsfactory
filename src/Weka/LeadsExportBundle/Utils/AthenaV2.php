@@ -107,7 +107,7 @@ class AthenaV2 extends AbstractMethod{
 
                 // Get ID Contact
                 $logger->info("Calling Athena GetContact");
-                $id_contact = $this->getContact( $id_remplissage, $source, $data, $id_compte );
+                $id_contact = $this->getContact( $id_remplissage, $source, $data, $id_compte, $id_campagne );
 
                 // Send Request createDRC or createAffaire
                 if ( $this->_formConfig["export"]["athenaV2"]["method"] == "drc" ) {
@@ -127,12 +127,12 @@ class AthenaV2 extends AbstractMethod{
                     $logger->info("Exporté avec succès");
                     $status = $exportUtils::$_EXPORT_SUCCESS;
                 }else{
-                    $log = json_encode($result->errors);
+                    $log = json_encode($results->errors);
                     $logger->info("Erreur d'export : ".$log);
                     $status = $exportUtils->getErrorStatus($job); 
                 }
-                $exportUtils->updateJob($job, $status, $log);
-                $exportUtils->updateLead($job->getLead(), $status, $log);
+//                $exportUtils->updateJob($job, $status, $log);
+//                $exportUtils->updateLead($job->getLead(), $status, $log);
                 $logger->info($log);
 
             }
@@ -279,26 +279,32 @@ class AthenaV2 extends AbstractMethod{
     }
 
     private function getProduit ( $idRemplissage, $source, $data ) {
+        
+        if ( array_key_exists("product_sku", $data) && trim($data["product_sku"])!="") {
+        
+            $this->getLogger()->info( "[getProduit] ***");
+            $this->getLogger()->info( "[getProduit] *** PRODUIT");
+            $this->getLogger()->info( "[getProduit] ***");
 
-        $this->getLogger()->info( "[getProduit] ***");
-        $this->getLogger()->info( "[getProduit] *** PRODUIT");
-        $this->getLogger()->info( "[getProduit] ***");
+            $requestData = $this->getMappedData($data, $this->_mappingClass->getProduitMapping());
 
-        $requestData = $this->getMappedData($data, $this->_mappingClass->getProduitMapping());
+            // ID used for Athena Linking.
+            $requestData->id_remplissage = $idRemplissage;
 
-        // ID used for Athena Linking.
-        $requestData->id_remplissage = $idRemplissage;
+            $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_PRODUIT, $requestData, $source );
 
-        $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_PRODUIT, $requestData, $source );
+            if (isset($results->result->id_athena)) {
+                $id_produit = $results->result->id_athena;
+            } else {
+                $id_produit = "";
+            }
 
-        if (isset($results->result->id_athena)) {
-            $id_produit = $results->result->id_athena;
+            $this->getLogger()->info( "[getProduit] ******** => ID ATHENA : ".$id_produit);
+
         } else {
-            $id_produit = "";
+            return false;
         }
-
-        $this->getLogger()->info( "[getProduit] ******** => ID ATHENA : ".$id_produit);
-
+        
         return $id_produit;
 
     }
@@ -313,6 +319,7 @@ class AthenaV2 extends AbstractMethod{
 
         // ID used for Athena Linking.
         $requestData->id_remplissage = $idRemplissage;
+        $requestData->id_campagne = $id_campagne;
 
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_COMPTE, $requestData, $source);
         $id_compte = $results->result->id_athena;
@@ -322,7 +329,7 @@ class AthenaV2 extends AbstractMethod{
 
     }
 
-    private function getContact($idRemplissage, $source, $data, $id_compte) {
+    private function getContact($idRemplissage, $source, $data, $id_compte, $id_campagne) {
 
         $this->getLogger()->info("[getContact] ***");
         $this->getLogger()->info("[getContact] *** CONTACT");
@@ -333,6 +340,7 @@ class AthenaV2 extends AbstractMethod{
         // ID used for Athena Linking.
         $requestData->id_remplissage = $idRemplissage;
         $requestData->id_compte = $id_compte;
+        $requestData->id_campagne = $id_campagne;
 
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_CONTACT, $requestData, $source);
         $id_contact = $results->result->id_athena;
@@ -351,18 +359,22 @@ class AthenaV2 extends AbstractMethod{
         // ID used for Athena Linking.
         $requestData->id_remplissage = $idRemplissage;
         $requestData->id_campagne = $id_campagne;
-        $requestData->id_produit = $id_produit;
+        if ($id_produit) {
+            $requestData->id_produit = $id_produit;
+            $this->_logger->info( "[createdrc] : Produit : ".$id_produit);
+        } else {
+            $this->_logger->info( "[createdrc] : Pas de produit");
+        }
         $requestData->id_compte = $id_compte;
         $requestData->id_contact = $id_contact;
         $requestData->id_leadsfactory = $id_leadsfactory;
 
-        $this->_logger->info( "[createdrc] : id_produit : ".$id_produit);
+        
         $this->_logger->info( "[createdrc] : id_compte : ".$id_compte);
         $this->_logger->info( "[createdrc] : id_contact : ".$id_contact);
         $this->_logger->info( "[createdrc] : id_leadsfactory : ".$id_leadsfactory);
         
-        $version = "1.0";
-        $results = $this->sendRequest( AthenaV2::$_POST_METHOD_CREATE_DRC, $requestData, $source, $version );
+        $results = $this->sendRequest( AthenaV2::$_POST_METHOD_CREATE_DRC, $requestData, $source );
         $id_drc = $results->result->id_athena;
         $this->getLogger()->info( "[createdrc] : ******** => ID ATHENA : ".$id_drc);
 
