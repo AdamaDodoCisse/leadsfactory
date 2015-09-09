@@ -52,7 +52,7 @@ class AthenaV2BaseMapping {
             "code_postal_facturation"   => "zip",
             "dep_region_facturation"    => "",  // Vide
             "ville_facturation"         => "",  // Méthode de récupération de la données
-            "nb_habitants"              => "",
+            "nb_habitants"              => "",  // Méthode de récupération de la données
             "pays_facturation"          => "pays",
             "rue_livraison"             => "",
             "code_postal_livraison"     => "",  // Vide
@@ -164,8 +164,8 @@ class AthenaV2BaseMapping {
         );
 
     }
-
-    public function getVille_facturation($data){        
+        
+    public function getVille_facturation($data){
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
         } else if (array_key_exists("ville", $data) && $data['ville']){
@@ -203,11 +203,20 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        $population = $population[0]['value'] ? $population[0]['value'] : "";
-        return $population;
+        
+        if(is_array($population)){
+            $pop = $population[0]['value'];
+        } else if (is_string($population)) {
+            $pop = $population;
+        } else {
+            $pop = "";
+        }
+        
+        return $pop;
     }
     
     public function getCnilTi($data){
+        
         if (array_key_exists("cnilTi",$data)) {
             if ($data["cnilTi"]) {
                 return TRUE;
@@ -599,8 +608,8 @@ class AthenaV2BaseMapping {
             "travailleur_social" =>"travailleur_social",
             
             ////////////////////// TI            
-            "animateur_sst_correspondant__scurit " => "animateur_sst_correspondant__scurit",
-            "architecte_matre_duvre " => "architecte_matre_duvre",
+            "animateur_sst_correspondant__scurit" => "animateur_sst_correspondant__scurit",
+            "architecte_matre_duvre" => "architecte_matre_duvre",
             "assistant_qhse" =>"assistant_qhse",
             "AssistantResponsableFormation" =>"AssistantResponsableFormation",
             "AssistantRH"    =>"AssistantRH",
@@ -675,10 +684,9 @@ class AthenaV2BaseMapping {
             
         );
         
-        
         if (array_key_exists("fonction",$data)) {
             if($data["fonction"]){
-                return $fonctions[$data["fonction"]];
+                return $fonctions[trim($data["fonction"])];
             }
         } else {
             return "";
