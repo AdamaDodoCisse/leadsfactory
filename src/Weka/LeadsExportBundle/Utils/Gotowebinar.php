@@ -70,7 +70,7 @@ class Gotowebinar extends AbstractMethod{
 			    $webinarKey = $data['gotowebinar_key'];
 
 			    $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
-			    //var_dump($registrantData);
+			    var_dump($registrantData);
 			    $registration = $goToWebinar->register($webinarKey, $registrantData);
 
 			    if(!$registration->hasErrors()){

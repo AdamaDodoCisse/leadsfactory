@@ -22,6 +22,6 @@ class WekaCommerciauxWebconf extends BaseMapping{
 	public function getJobTitle($data)
 	{
 		$label = $this->list_element_repository->getNameUsingListCode('fonction', $data['fonction']);
-		return $label;
+		return !empty($label) ? $label : 'inconnu' ;
 	}
 }
