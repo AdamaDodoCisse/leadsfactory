@@ -320,7 +320,7 @@ class AthenaV2BaseMapping {
 
         $secteurs = array (
             "12"    => "Autre",
-            "15"    => "Autre", // ce champs est manquant dans le liste ti_titles_list
+            "15"    => "BiomedicalPharma", // ce champs est manquant dans le liste ti_titles_list
             "3"     => "Construction",
             "13"    => "ElectroniqueAutomatique",
             "4"     => "Energies",
