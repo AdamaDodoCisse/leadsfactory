@@ -216,7 +216,6 @@ class AthenaV2BaseMapping {
     }
     
     public function getCnilTi($data){
-        var_dump($data);
         if (array_key_exists("cnilTi",$data)) {
             if ($data["cnilTi"]) {
                 return TRUE;
