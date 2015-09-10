@@ -21,10 +21,12 @@
 
             </div>
 
+{#            liste des utm #}
             <div class="col-md-12">
                 {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getUtmLinkedToForm', {"form_id" : entity.id})) }}
             </div>
 
+{#            statistiques nb views, nb leads, etc      #}
             <div class="col-md-12">
                 {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormViewStatistics', {"form_id" : entity.id})) }}
             </div>
@@ -34,10 +36,11 @@
         <div class="col-md-4" style="margin-top:20px;">
 
             <div class="col-md-12">
+{#                Configuration périodique      #}
                 <div class="widget-body custom-form">
                     {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
                 </div>
-
+{#
                 <div class="widget-body custom-form" style="padding-top:10px;">
                     <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser un autre formulaire :</b></div>
 
@@ -49,17 +52,25 @@
                     </select>
 
                 </div>
-
+#}
             </div>
-
+            
+            <div class="col-md-12">
+{#                a mettre ici les graphes #}              
+                <div class="col-md-12">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getStatsForFomPage', {"form_id" : entity.id})) }}
+                </div>  
+            </div>
 
 
             <script>
                 var skycons = new Skycons({"color": "white"});
             </script>
+            {#
             <div class="col-md-12">
                 {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForForm', {"form_id" : entity.id})) }}
             </div>
+            #}
             <script>
                 skycons.play();
             </script>
@@ -109,5 +120,7 @@
             scrollTop: $(dest).offset().top - 60
         }, 'slow');
     });
+    
 </script>
+{#{% include 'pieChartInFormPage.html.twig' %}#}
 {% endblock %}
