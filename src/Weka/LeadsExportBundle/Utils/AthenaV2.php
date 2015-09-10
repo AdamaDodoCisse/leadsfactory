@@ -131,8 +131,8 @@ class AthenaV2 extends AbstractMethod{
                     $logger->info("Erreur d'export : ".$log);
                     $status = $exportUtils->getErrorStatus($job); 
                 }
-//                $exportUtils->updateJob($job, $status, $log);
-//                $exportUtils->updateLead($job->getLead(), $status, $log);
+                $exportUtils->updateJob($job, $status, $log);
+                $exportUtils->updateLead($job->getLead(), $status, $log);
                 $logger->info($log);
 
             }
