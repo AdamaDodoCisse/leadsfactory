@@ -117,7 +117,7 @@ class AthenaV2BaseMapping {
             "interets_weka"             => "",
             "type_compte_cctp"          => "",  // Vide
             "responsable_prescription_cctp" => "",  // Vide
-            "email_valide"              => ""   // Vide
+            "email_valide"              => ""   // Methode de récupération des données
 
         );
 
@@ -216,7 +216,7 @@ class AthenaV2BaseMapping {
     }
     
     public function getCnilTi($data){
-        
+        var_dump($data);
         if (array_key_exists("cnilTi",$data)) {
             if ($data["cnilTi"]) {
                 return TRUE;
@@ -265,6 +265,11 @@ class AthenaV2BaseMapping {
 //    public function getVersion () {
 //        return "1.0";
 //    }
+    
+    public function getEmail_valide(){
+        return TRUE;
+    }
+
 
     public function getAffaireMapping () {
 
@@ -317,7 +322,7 @@ class AthenaV2BaseMapping {
 
     
     public function getSecteur_activite_tissot_ti_cctp ($data){
-
+        
         $secteurs = array (
             "12"    => "Autre",
             "15"    => "BiomedicalPharma", // ce champs est manquant dans le liste ti_titles_list
