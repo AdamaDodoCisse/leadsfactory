@@ -108,9 +108,9 @@ class AthenaV2BaseMapping {
             "type_utilisation"          => "",  // Vide
             "id_web"                    => "",  // Vide
             "membre_ce"                 => "",  // Vide
-//            "cnilTi"                    => "",  // Methode de récupération des données
-//            "cnilPartners"              => "",  // Methode de récupération des données
-            "stop_email"                => "",
+//            "cnilTi"                    => "",  // Methode STOP_email
+//            "cnilPartners"              => "",  // Methode STOP_email
+            "stop_email"                => "",  // Methode de récupération des données
             "profil_ti"                 => "",  // Methode de récupération des données
             "interets_ti"               => "",
             "interets_tissot"           => "",  // Vide
@@ -215,42 +215,25 @@ class AthenaV2BaseMapping {
         
         return $pop;
     }
-    public function getCnilTi($data) {        
-        if (array_key_exists("cnilTi",$data)) {
-            if ($data["cnilTi"]) {
-                return TRUE;
+
+    public function getStop_email($data) {
+        $Stop_email = array(
+            "0" => "0",
+            "1" => "1",
+            "2" => "2"
+        );
+        if (array_key_exists('cnilTi', $data) && $data['cnilTi'] == 1) {
+            if (array_key_exists('cnilPartners', $data) && $data['cnilPartners'] == 1) {
+                $return = $Stop_email['2'];
             } else {
-                return FALSE;
+                $return = $Stop_email['1'];
             }
         } else {
-            return FALSE;
+            $return = $Stop_email['0'];
         }
+        return $return;
     }
-    
-    public function getStop_email($data){
-        if (array_key_exists("cnilTi",$data)) {
-            if ($data["cnilTi"]) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
-        } else {
-            return FALSE;
-        }
-        return TRUE;
-    }
-    
-//    public function getCnilPartners($data){
-//        if (array_key_exists("cnilPartners",$data)) {
-//            if ($data["cnilPartners"]) {
-//                return TRUE;
-//            } else {
-//                return FALSE;
-//            }
-//        } else {
-//            return FALSE;
-//        }
-//    }
+
     public function getDetail_demande($data){
         if (array_key_exists("product_name",$data) && $data["product_name"]) {
             if (array_key_exists("comment",$data) && $data["comment"]) {
