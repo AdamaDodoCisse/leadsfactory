@@ -44,44 +44,26 @@ class SearchController extends CoreController {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $request = '_cluster/health?pretty=true';
+        $request = '';
         $searchUtils = $this->get("search.utils");
-
         $response = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
 
-
-        if (trim($response) == ""){
+        if (!is_object($response)){
             $status = false;
         } else {
             $status = true;
         }
 
-        $request = '';
-        $responseVersion = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
-
-        $request = '_stats/docs';
-        $stats = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
-
-        if (trim($response) != "") {
+        if (is_null($response) != "") {
             $response = json_decode( $response );
         }
 
-        if (trim($responseVersion) != "") {
-            $responseVersion = json_decode( $responseVersion );
-        }
-
-
-        if (trim($stats) != "") {
-            $stats = json_decode( $stats );
-        }
 
         return $this->render(
 	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
             array (
                 'elasticResponse' => $response,
                 'status' => $status,
-                'stats' => $stats,
-                'version' => $responseVersion,
                 'searchEngineUrl' => $searchEngineUrlAndPort
             )
         );

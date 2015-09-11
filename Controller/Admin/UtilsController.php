@@ -324,10 +324,32 @@ class UtilsController extends CoreController
             $sections[] = array (   "name" => "Scopes utilisateurs", "url" => $this->get('router')->generate('_scope_list'));
             $sections[] = array (   "name" => "edition d'un scope", "url" => "");
 
-        } else if (substr ($parentRoute, 0, strlen ("_scope_edit")) == "_marketing_kibana") {
+        } else if (substr ($parentRoute, 0, strlen ("_mkg_segmentation_list")) == "_marketing_kibana_exports_list") {
 
-            $displayBreadCrumb = false;
+            $sections[] = array (   "name" => "Gestion des exports de segments", "url" => "");
 
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_kibana_dashboard_view")) == "_marketing_kibana_dashboard_view") {
+
+            $sections[] = array (   "name" => "Gestion des exports de segments", "url" => $this->get('router')->generate('_marketing_kibana_exports_list'));
+            $sections[] = array (   "name" => "Visualisation d'un ségment", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_kibana_dashboard_edit")) == "_marketing_kibana_dashboard_edit") {
+
+            $sections[] = array (   "name" => "Gestion des exports de segments", "url" => $this->get('router')->generate('_marketing_kibana_exports_list'));
+            $sections[] = array (   "name" => "Edition d'un ségment", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_kibana_dashboard_new")) == "_marketing_kibana_dashboard_new") {
+
+            $sections[] = array (   "name" => "Gestion des exports de segments", "url" => $this->get('router')->generate('_marketing_kibana_exports_list'));
+            $sections[] = array (   "name" => "Création d'un ségment", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_list_kibana_dashboards")) == "_marketing_list_kibana_dashboards") {
+
+            $sections[] = array (   "name" => "Dashboards Marketing", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_kibana")) == "_marketing_kibana") {
+
+            $sections[] = array (   "name" => "Gestion des exports de segments", "url" => "");
         }
 
         return $this->render('TellawLeadsFactoryBundle:Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute, "displayBreadCrumb" => $displayBreadCrumb));

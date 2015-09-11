@@ -34,18 +34,22 @@ class LeadsFactoryExtension extends \Twig_Extension
 
 	public function objectget ($params) {
 
-
 		$leadsource = $params["leadsource"];
 		$headerrow = $params["header"];
 
-		if (trim($headerrow)!="") {
-			if (strstr($headerrow,"content.")) {
-				$headerrow = str_replace("content.","",$headerrow);
-				$obj = $leadsource->content;
-				echo ($obj->$headerrow);
-			} else {
-				echo ($leadsource->$headerrow);
+		try {
+			if (trim($headerrow)!="") {
+				if (strstr($headerrow,"content.")) {
+					$headerrow = str_replace("content.","",$headerrow);
+					$obj = $leadsource->content;
+					echo ($obj->$headerrow);
+				} else {
+					echo ($leadsource->$headerrow);
+				}
 			}
+		} catch (\Exception $e) {
+			//var_dump ($e->getMessage());
+			//var_dump ($leadsource);
 		}
 	}
 

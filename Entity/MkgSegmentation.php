@@ -39,6 +39,12 @@ class MkgSegmentation {
     protected $code;
 
     /**
+     * @var string $nbDays
+     * @ORM\Column(type="string", nullable=true, name="nbdays")
+     */
+    protected $nbDays;
+
+    /**
      * @var string $utmcampaign
      * @ORM\Column(type="string", nullable=true, name="utmcampaign")
      */
@@ -70,6 +76,22 @@ class MkgSegmentation {
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNbDays()
+    {
+        return $this->nbDays;
+    }
+
+    /**
+     * @param string $nbDays
+     */
+    public function setNbDays($nbDays)
+    {
+        $this->nbDays = $nbDays;
     }
 
     /**
