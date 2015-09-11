@@ -124,9 +124,76 @@ class FormRepository extends EntityRepository
         $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->getResult();
 
         return $result;
-
     }
 
+    public function getStatisticsForUtmForms($forms, $utils){
+        $utm = array();
+        $userPreferences = $utils->getUserPreferences();
+
+        $minDate = $userPreferences->getDataPeriodMinDate();
+        $maxDate = $userPreferences->getDataPeriodMaxDate();
+        
+        foreach ( $forms as $cpt => $form){
+            $utm_campaign = $form->getUtmcampaign();
+            if($utm_campaign){
+                $qb = $this->getEntityManager()->createQueryBuilder();
+                $qb->select('count(t.utm_campaign)')
+                        ->from('TellawLeadsFactoryBundle:Tracking', 't')
+                        ->join('t.form', 'f')
+                        ->where('t.utm_campaign = :utm_campaign')
+                        ->andWhere('t.created_at >= :minDate')
+                        ->andWhere('t.created_at <= :maxDate')
+                        ->setParameter('utm_campaign', $utm_campaign)
+                        ->setParameter('minDate', $minDate )
+                        ->setParameter('maxDate', $maxDate )
+                ;
+                $query = $qb->getQuery();
+                $results = $query->getSingleScalarResult();
+                
+                $utm[$cpt]['label'] = $utm_campaign;
+                $utm[$cpt]['value'] = $results;
+    }
+        }
+        return $utm;
+    }
+
+    public function getStatisticsForUtmBookmarks($forms, $bookmarks, $utils){
+        $utm = array();
+        $userPreferences = $utils->getUserPreferences();
+
+        $minDate = $userPreferences->getDataPeriodMinDate();
+        $maxDate = $userPreferences->getDataPeriodMaxDate();
+        $tmp = array();
+        foreach ($forms as $form){
+            foreach ($bookmarks as $bookmark)
+                if($form->getName() == $bookmark->getForm()->getName()) $tmp = $form;     
+                $my_bookmark[] = $tmp;
+        }
+        
+        foreach ( $my_bookmark as $cpt => $form){
+            $utm_campaign = $form->getUtmcampaign();
+            if($utm_campaign){
+                $qb = $this->getEntityManager()->createQueryBuilder();
+                $qb->select('count(t.utm_campaign)')
+                        ->from('TellawLeadsFactoryBundle:Tracking', 't')
+                        ->join('t.form', 'f')
+                        ->where('t.utm_campaign = :utm_campaign')
+                        ->andWhere('t.created_at >= :minDate')
+                        ->andWhere('t.created_at <= :maxDate')
+                        ->setParameter('utm_campaign', $utm_campaign)
+                        ->setParameter('minDate', $minDate )
+                        ->setParameter('maxDate', $maxDate )
+                ;
+                $query = $qb->getQuery();
+                $results = $query->getSingleScalarResult();
+                
+                $utm[$cpt]['label'] = $utm_campaign;
+                $utm[$cpt]['value'] = $results;
+            }
+        }
+        return $utm;
+    }
+    
     public function getStatisticsForUtmInForm ( $utm, $form_id, $utils ) {
 
         $item = array();

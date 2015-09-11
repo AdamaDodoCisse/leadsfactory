@@ -9,31 +9,87 @@
         </div>
     </div>
 
-    <div class="col-md-12">
+    <div class="row">
 
         <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
             <div id="demo-chart" class="widget-body blue" style="height:500px;">
                 <!-- This div will hold the chart generated in the footer -->
             </div>
-        </div>
-
-        <div class="col-md-4" style="margin-top:20px;">
-            <div class="widget-body custom-form">
-                {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
+            
+            
+{#            Second table here#}
+            <span id="found" class="label label-info">{{ forms|length }} formulaire(s)</span> et
+            <span id="found" class="label label-info">{{ bookmarks|length }} formulaire(s) favoris</span> 
+            <div style="float: right;">
+                <input type="text" id="search" placeholder="Rechercher ...">
             </div>
+            <br/><br/>
+{#                search for item here  #}
+            
+            <table id="myTable" class='table table-bordered'>
+                <thead>
+                    <tr class="country-table-head">
+                        <th>Nom</th>
+                        <th>Nombre de pages</th>
+                        <th>Nombre de  leads</th>
+                        <th>Taux de transformation</th>
+                        <th>Status</th>
+                        <th>Action </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in forms %}
+                    <tr>
+                        <td>
+                            <a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">
+                                {% for bookmark in bookmarks %}
+                                    {% if form.name == bookmark.form.name %}
+                                        <i class="fa fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                {{ form.name }}
+                            </a>
+                        </td>
+            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormStatisticsValues', {"form_id" : form.id})) }}
+                        <td>
+            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getStatusForForm', {"form_id" : form.id})) }}
+                        </td>
+                        <td>
+                            <a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}"  alt="Voir les statistiques">
+                                <img title="Voir les statistiques" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>	                 
         </div>
-
+            {#
         <div class="col-md-4" style="margin-top:10px;">
             <div class="widget-body custom-form" style="padding-top:10px;">
                 <div style="margin-left:10px;margin-bottom:5px;">Vos formulaires favoris :</div>
                 <ul>
                     {% for bookmark in bookmarks %}
                         <li><a href="#type-{{ bookmark.form.id }}">{{ bookmark.form.name }}</a></li>
-                    {% endfor %}
+                        {% endfor %}
                 </ul>
             </div>
-        </div>
-        <div class="col-md-4" style="margin-top:10px;">
+        </div>#}
+{#    </div>#}
+
+        <div class="col-md-4" style="float: right;">
+            <div class="widget-body custom-form">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
+            </div>
+            <div id="pieChart" class="chart"></div>
+            <div id="pieChart2" class="chart"></div>
+            
+            <div id="pieChart3" class="chart"></div>
+            <div id="pieChart4" class="chart"></div>
+        </div>      
+    </div>
+        {#        
+    <div class="col-md-4" style="margin-top:10px;">
         <div class="widget-body custom-form" style="padding-top:10px;">
             <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser un formulaire :</b></div>
 
@@ -43,12 +99,12 @@
                     <option value="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">{{ form.name }}</option>
                 {% endfor %}
             </select>
-
         </div>
-            </div>
-
-    </div>
-
+    </div>#}
+            
+            
+            
+                
     <!-- Chart -->
     {% if(app.request.get('form')) %}
         {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
@@ -72,43 +128,25 @@
             render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measureDashboard')) }}
     </div>
 -->
+
     <script>
         var skycons = new Skycons({"color": "white"});
     </script>
-
+{#
     {% for bookmark in bookmarks %}
-
+        <div style="">
         <div class="col-md-12" style="padding:20px 0px 20px 0px;margin-bottom:20px;border:1px dashed #a0a0a0">
             <a id="type-{{ bookmark.form.id }}"/>
-            <div class="col-md-8">
-
-                <div class="col-md-12" >
-                    <div class="heading-sec" id="intro6">
-                        <h1>{{ bookmark.form.name }} : <i> &laquo; formulaire &raquo;</i></h1>
-                    </div>
-                </div>
-
-                <div class="col-md-12" >
-                    {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormViewStatistics', {"form_id" : bookmark.form.id})) }}
-                </div>
-
-
-                <div class="col-md-12" style="margin-top:10px;" >
-                    <div class="col-md-8" >
-                    </div>
-                    <div class="col-md-4" style="text-align:right">
-                            <a class="btn blue" href="{{ path('_monitoring_dashboard_form_page', {'form_id': bookmark.form.id}) }}">Voir le détail du formulaire</a>
-                    </div>
-                </div>
-            </div>
             <div class="col-md-4">
             <!-- Render the Alert Widget -->
-            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForForm', {"form_id" : bookmark.form.id})) }}
+            
+            
             </div>
+        </div>
         </div>
 
     {% endfor %}
-
+#}
     <script>
         skycons.play();
     </script>
@@ -117,12 +155,323 @@
 {% endblock %}
 {% block javascript %}
 <script>
-    $("a[href^=#]").click(function(e) {
-        e.preventDefault();
-        var dest = $(this).attr('href');
-        $('html,body').animate({
-            scrollTop: $(dest).offset().top - 60
-        }, 'slow');
+$("a[href^=#]").click(function(e) {
+    e.preventDefault();
+    var dest = $(this).attr('href');
+    $('html,body').animate({
+        scrollTop: $(dest).offset().top - 60
+    }, 'slow');
+});
+
+// Configuration for first graph : All forms
+var data = {{ utmForms | json_encode | raw }};
+var tmp1 = [];
+$.each(data, function(k,v){
+    data[k].value = JSON.parse(data[k].value);
+    tmp1.push(v);    
+});
+
+// Configuration for second graph : this belongs to bookmarks forms
+var data2 = {{ utmBookmarks | json_encode | raw }};
+var tmp2 = [];
+$.each(data2, function(k,v){
+    data2[k].value = JSON.parse(data2[k].value);
+    tmp2.push(v);    
+});
+
+// Configuration for third graph : this belongs to nb_vues
+var data3 = {{ nbviews | json_encode | raw }};
+var tmp3 = [];
+$.each(data3, function(k,v){
+    data3[k].value = JSON.parse(data3[k].value);
+    tmp3.push(v);    
+});
+
+// Configuration for 4th graph : this belongs to nb leads
+var data4 = {{ nbLeads | json_encode | raw }};
+var tmp4 = [];
+$.each(data4, function(k,v){
+    data4[k].value = JSON.parse(data4[k].value);
+    tmp4.push(v);    
+});
+
+
+// First graph : pie chart for all forms
+var pie = new d3pie("pieChart", {
+	"header": {
+		"title": {
+			"text": "Tout les formulaires",
+			"fontSize": 24,
+			"font": "open sans"
+		}
+	},
+	"footer": {
+		"color": "#999999",
+		"fontSize": 10,
+		"font": "open sans",
+		"location": "bottom-left"
+	},
+	"size": {
+		"canvasHeight": 400,
+		"canvasWidth": 500,
+		"pieOuterRadius": "70%"
+	},
+	"data": {
+		"sortOrder": "value-desc",
+		"content": tmp1
+	},
+	"labels": {
+		"outer": {
+			"pieDistance": 20
+		},
+		"inner": {
+			"hideWhenLessThanPercentage": 3
+		},
+		"mainLabel": {
+			"fontSize": 11
+		},
+		"percentage": {
+			"color": "#ffffff",
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#adadad",
+			"fontSize": 11
+		},
+		"lines": {
+			"enabled": true
+		},
+		"truncation": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"pullOutSegmentOnClick": {
+			"effect": "linear",
+			"speed": 400,
+			"size": 8
+		}
+	},
+	"misc": {
+		"gradient": {
+			"enabled": true,
+			"percentage": 100
+		}
+	}
+});
+
+// Second graph : pie chart for bookmarks
+var pie2 = new d3pie("pieChart2", {
+	"header": {
+		"title": {
+			"text": "Formulaires Favoris",
+			"fontSize": 24,
+			"font": "open sans"
+		}
+	},
+	"footer": {
+		"color": "#999999",
+		"fontSize": 10,
+		"font": "open sans",
+		"location": "bottom-left"
+	},
+	"size": {
+		"canvasHeight": 400,
+		"canvasWidth": 500,
+		"pieOuterRadius": "70%"
+	},
+	"data": {
+		"sortOrder": "value-desc",
+		"content": tmp2
+	},
+	"labels": {
+		"outer": {
+			"pieDistance": 20
+		},
+		"inner": {
+			"hideWhenLessThanPercentage": 3
+		},
+		"mainLabel": {
+			"fontSize": 11
+		},
+		"percentage": {
+			"color": "#ffffff",
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#adadad",
+			"fontSize": 11
+		},
+		"lines": {
+			"enabled": true
+		},
+		"truncation": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"pullOutSegmentOnClick": {
+			"effect": "linear",
+			"speed": 400,
+			"size": 8
+		}
+	},
+	"misc": {
+		"gradient": {
+			"enabled": true,
+			"percentage": 100
+		}
+	}
+});
+
+// Third graph : pie chart for views
+var pie3 = new d3pie("pieChart3", {
+	"header": {
+		"title": {
+			"text": "Nombre de pages",
+			"fontSize": 24,
+			"font": "open sans"
+		}
+	},
+	"footer": {
+		"color": "#999999",
+		"fontSize": 10,
+		"font": "open sans",
+		"location": "bottom-left"
+	},
+	"size": {
+		"canvasHeight": 400,
+		"canvasWidth": 500,
+		"pieOuterRadius": "70%"
+	},
+	"data": {
+		"sortOrder": "value-asc",
+		"smallSegmentGrouping": {
+			"enabled": true,
+			"value": 2
+		},
+		"content": tmp3
+	},
+	"labels": {
+		"outer": {
+			"pieDistance": 20
+		},
+		"inner": {
+			"hideWhenLessThanPercentage": 3
+		},
+		"mainLabel": {
+			"fontSize": 11
+		},
+		"percentage": {
+			"color": "#ffffff",
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#adadad",
+			"fontSize": 11
+		},
+		"lines": {
+			"enabled": true
+		},
+		"truncation": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"pullOutSegmentOnClick": {
+			"effect": "linear",
+			"speed": 400,
+			"size": 8
+		}
+	},
+	"misc": {
+		"gradient": {
+			"enabled": true,
+			"percentage": 100
+		}
+	}
+});
+
+// 4th graph : pie chart for leads
+var pie4 = new d3pie("pieChart4", {
+	"header": {
+		"title": {
+			"text": "Nombre de leads",
+			"fontSize": 24,
+			"font": "open sans"
+		}
+	},
+	"footer": {
+		"color": "#999999",
+		"fontSize": 10,
+		"font": "open sans",
+		"location": "bottom-left"
+	},
+	"size": {
+		"canvasHeight": 400,
+		"canvasWidth": 500,
+		"pieOuterRadius": "70%"
+	},
+	"data": {
+		"sortOrder": "value-asc",
+		"smallSegmentGrouping": {
+			"enabled": true,
+			"value": 3
+		},
+		"content": tmp4
+	},
+	"labels": {
+		"outer": {
+			"pieDistance": 20
+		},
+		"inner": {
+			"hideWhenLessThanPercentage": 3
+		},
+		"mainLabel": {
+			"fontSize": 11
+		},
+		"percentage": {
+			"color": "#ffffff",
+			"decimalPlaces": 0
+		},
+		"value": {
+			"color": "#adadad",
+			"fontSize": 11
+		},
+		"lines": {
+			"enabled": true
+		},
+		"truncation": {
+			"enabled": true
+		}
+	},
+	"effects": {
+		"pullOutSegmentOnClick": {
+			"effect": "linear",
+			"speed": 400,
+			"size": 8
+		}
+	},
+	"misc": {
+		"gradient": {
+			"enabled": true,
+			"percentage": 100
+		}
+	}
+});
+
+    // Table live search
+$("#search").keyup(function() {
+    var value = this.value.toUpperCase();
+    console.log(value);
+    $("#myTable").find("tr").each(function(index) {
+        if (index === 0) return;
+        var id = $(this).find("td").first().text().toUpperCase();
+        $(this).toggle(id.indexOf(value) !== -1);
     });
+});
+
+$("#myTable").tablesorter();
+
 </script>
 {% endblock %}

@@ -39,7 +39,7 @@ class DefaultController extends CoreController
         if ($this->get("core_manager")->isDomainAccepted ()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
-        return $this->redirect($this->generateUrl('_monitoring_dashboard'));
+        return $this->redirect($this->generateUrl('_monitoring_dashboard_forms'));
 
     }
 
