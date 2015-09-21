@@ -48,6 +48,8 @@ class MarketingController extends CoreController
 
     }
 
+
+
     /**
      *
      * Kibana page for browsing data
