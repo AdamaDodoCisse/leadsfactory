@@ -104,6 +104,12 @@ services:
     factory_method: getRepository
     arguments: ['TellawLeadsFactoryBundle:Leads']
 
+  leadsfactory.mkgsegmentation_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\MkgSegmentationRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:MkgSegmentation']
+
   leadsfactory.form_repository:
     class: Tellaw\LeadsFactoryBundle\Entity\FormRepository
     factory_service: doctrine.orm.default_entity_manager

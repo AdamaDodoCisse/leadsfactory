@@ -1,14 +1,4 @@
-$(function(){
-  $("#pieChart").drawPieChart([
-    { title: "Google Chrome",         value : 180,  color: "#02B3E7" },
-    { title: "Firefox", value:  60,   color: "#CFD3D6" },
-    { title: "Opera",        value : 50,   color: "#736D79" },
-    { title: "Safari",      value:  30,   color: "#776068" },
-    { title: "IE",        value : 20,   color: "#EB0D42" },
-    { title: "Rockmelt",        value : 20,   color: "#FFEC62" },
-    { title: "Social",         value : 7,    color: "#04374E" }
-  ]);
-});
+
 
 /*!
  * jquery.drawPieChart.js

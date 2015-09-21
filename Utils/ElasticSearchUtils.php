@@ -2,6 +2,7 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\KibanaSearch;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Entity\SearchResult;
@@ -31,6 +32,8 @@ class ElasticSearchUtils extends SearchShared {
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
+    private $logger;
+
     public function __construct () {
         PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH, "Path to the binary file of elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
         PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE, "Url to elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
@@ -40,6 +43,90 @@ class ElasticSearchUtils extends SearchShared {
 
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
         $this->container = $container;
+        $this->logger = $this->container->get("logger");
+    }
+
+    /**
+     * Load saved search from Kibana
+     *
+     */
+    public function getKibanaSavedSearch ( $searchId, $nbDays ) {
+
+        $query = "
+        {
+          \"query\": {
+            \"match\": {
+              \"_id\": \"".$searchId."\"
+            }
+          },
+          \"aggs\": {}
+        }
+        ";
+
+        $savedSearch = $this->request(  ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/_search?q=_id:test-eric", $query );
+
+        try {
+
+            $result = $savedSearch->hits->hits;
+            $result = $result[0];
+
+            $kibanaSearch = new KibanaSearch();
+            $kibanaSearch->setId( $result->_id );
+            $kibanaSearch->setTitle( $result->_source->title );
+            $kibanaSearch->setDescription( $result->_source->description );
+            $kibanaSearch->setHits( $result->_source->hits );
+            $kibanaSearch->setColumns( $result->_source->columns );
+            $kibanaSearch->setSort( $result->_source->sort );
+            $kibanaSearch->setQuery( $this->formatKibanaSavedObject( $result->_source->kibanaSavedObjectMeta->searchSourceJSON, $nbDays ) );
+            $kibanaSearch->setVersion( $result->_source->version );
+
+        } catch (\Exception $e) {
+
+            $this->logger->error($e->getMessage());
+            return null;
+
+        }
+
+        return $kibanaSearch;
+
+    }
+
+    /**
+     * Method used to reformat data inside the request of Kibana.
+     * - Remove of Highlights
+     * - Add of date range filter
+     *
+     * @param $strSavedSearch
+     */
+    private function formatKibanaSavedObject ( $strSavedSearch, $nbDays ) {
+
+        if ($nbDays == "" || $nbDays == "0") {
+            $nbDays = "360";
+        }
+
+        $jsonSavedSearch = json_decode( $strSavedSearch, true );
+
+        // Remove of highlights
+        unset ($jsonSavedSearch["highlight"]);
+
+        // Unset Index
+        unset ($jsonSavedSearch["index"]);
+
+        $date = new \DateTime();
+        $date->sub(new \DateInterval('P'.$nbDays.'D'));
+        $firstDay = $date->format('Y-m-d');
+
+        $rangeFilter = array (
+            "range" => array( "createdAt" => array ( "gte" => $firstDay, "lte" => "now", "time_zone" => "+1:00" ))
+        );
+
+        $jsonSavedSearch["filter"] = $rangeFilter;
+
+        $query = json_encode( $jsonSavedSearch );
+
+        return $query;
+
+
     }
 
     /**
@@ -75,6 +162,7 @@ class ElasticSearchUtils extends SearchShared {
 
         if ($result) {
             $result = json_decode( $result);
+
             if (method_exists($result,"error")) {
                 echo ("ERROR : ".$baseUri.$query);
                 var_dump ($result);die();

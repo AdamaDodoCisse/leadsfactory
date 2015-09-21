@@ -1,0 +1,66 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {% if id is defined %}
+            <h3 class="custom-heading">Actions:</h3>
+            <div>
+                <button type="button" class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" onClick="window.location.href='{{ path('_marketing_kibana_download_csv', {'id': id}) }}'">Télécharger le CSV</button>
+
+            </div>
+            <div style="clear:both"></div>
+        {% endif %}
+
+    </div>
+
+    <div class="col-md-12">
+        {{ error }}
+    </div>
+
+
+    {% if (searchResults) %}
+
+        <div class="col-md-12">
+            <div class="">
+                <table id="stream_table" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        {% for header in fieldsToDisplay %}
+                            <th>{{ header }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for lead in searchResults %}
+                        <tr>
+                            {% for header in fieldsToDisplay %}
+                                <td> {{ objectget({'leadsource':lead._source, 'header':header}) }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="{{ nbFieldsToDisplay }}"> Aucun résultat sur la période </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

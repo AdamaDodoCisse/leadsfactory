@@ -16,13 +16,13 @@ use Tellaw\LeadsFactoryBundle\Shared\SchedulerUtilsShared;
 class SchedulerUtils extends SchedulerUtilsShared
 {
 
-    private $scheduledJobs = array();
+    public $scheduledJobs = array();
 
-    private $organisedScheduledJobs = null;
+    public $organisedScheduledJobs = null;
 
     public function __construct()
     {
-        parent::__construct();
+        //parent::__construct();
     }
 
     /**

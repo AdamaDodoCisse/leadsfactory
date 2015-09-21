@@ -35,20 +35,24 @@
                     <tbody>
 
                         <tr>
-                            <td>Version du moteur </td>
-                            <td><b>{{ version.version.number }}</b></td>
+                            <td>Nom du moteur </td>
+                            <td><b>{{ elasticResponse.name }}</b></td>
                         </tr>
                         <tr>
-                            <td>Nom du noeud </td>
-                            <td><b>{{ version.name }}</b></td>
+                            <td>Nom du cluster </td>
+                            <td><b>{{ elasticResponse.cluster_name }}</b></td>
                         </tr>
                         <tr>
-                            <td>Version de lucene </td>
-                            <td><b>{{ version.version.lucene_version }}</b></td>
+                            <td>Version de elastic search </td>
+                            <td><b>{{ elasticResponse.version.number }}</b></td>
                         </tr>
                         <tr>
                             <td>Statut du moteur </td>
                             <td><b>{{ elasticResponse.status }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Adresse du moteur </td>
+                            <td><b><a href="{{ searchEngineUrl }}" target="_blank">{{ searchEngineUrl }}</a></b></td>
                         </tr>
 
                     </tbody>
