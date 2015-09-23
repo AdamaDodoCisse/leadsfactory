@@ -26,7 +26,7 @@ class MonitoringController extends CoreController {
     /**
      * @route("/dashboard", name="_monitoring_dashboard")
      * @Secure(roles="ROLE_USER")
-     */
+     *//*
     public function dashboardAction(Request $request)
     {
 
@@ -48,7 +48,7 @@ class MonitoringController extends CoreController {
             'bookmarks' => $bookmarks
         ));
     }
-
+*/
     /**
      * @route("/index", name="_monitoring_dashboard_forms")
      * @Secure(roles="ROLE_USER")

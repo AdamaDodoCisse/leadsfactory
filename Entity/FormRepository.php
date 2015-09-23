@@ -126,13 +126,32 @@ class FormRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     * Method used to extract count for best UTMS
+     * @param $forms
+     * @param $utils
+     * @return array
+     */
     public function getStatisticsForUtmForms($forms, $utils){
         $utm = array();
         $userPreferences = $utils->getUserPreferences();
 
         $minDate = $userPreferences->getDataPeriodMinDate();
         $maxDate = $userPreferences->getDataPeriodMaxDate();
-        
+
+        // La requette doit extraire le top 10 des UTM
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb ->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
+            ->from('TellawLeadsFactoryBundle:Tracking', 't')
+            ->where('t.created_at >= :minDate')
+            ->andWhere('t.created_at <= :maxDate')
+            ->groupBy('t.utm_campaign')
+            ;
+
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+
+        /*
         foreach ( $forms as $cpt => $form){
             $utm_campaign = $form->getUtmcampaign();
             if($utm_campaign){
@@ -152,8 +171,11 @@ class FormRepository extends EntityRepository
                 
                 $utm[$cpt]['label'] = $utm_campaign;
                 $utm[$cpt]['value'] = $results;
-    }
-        }
+            }
+        }*/
+
+        var_dump( $results );
+
         return $utm;
     }
 
