@@ -90,7 +90,18 @@ class MonitoringController extends CoreController {
         
         $utmForms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForUtmForms($forms, $utils);
         $utmBookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForUtmBookmarks($forms, $bookmarks, $utils);
-        
+
+        $results = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForForms( array(), $utils);
+
+        $views = $results;
+        unset ($views["NB_LEADS"]);
+        unset ($views["id"]);
+
+        $nbLeads = $results;
+        unset ($views["PAGES_VIEWS"]);
+        unset ($views["id"]);
+
+/*
         // get table for nb views graphs
         foreach ($forms as $cpt => $forma){
             $nb_view = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->setStatisticsForId($forma->getId(), $utils);
@@ -101,7 +112,7 @@ class MonitoringController extends CoreController {
             $nbLeads[$cpt]['label'] = $forma->getName();
             $nbLeads[$cpt]['value'] = $nb_view->nbLeads;
         }
-        
+  */
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
             'form'          =>  $form->createView(),
             'bookmarks'     =>  $bookmarks,
