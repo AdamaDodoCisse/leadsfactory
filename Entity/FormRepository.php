@@ -206,15 +206,9 @@ class FormRepository extends EntityRepository
             }
         }*/
 
-<<<<<<< HEAD
-        var_dump( $results );
-
-        return $utm;
-=======
-
 
         return $results;
->>>>>>> 5bc693c7edf4ba271b02e0153bacebeb761e64f2
+
     }
 
     public function getStatisticsForUtmBookmarks($forms, $bookmarks, $utils){
