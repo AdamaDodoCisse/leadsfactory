@@ -168,6 +168,7 @@ class FormRepository extends EntityRepository
         $minDate = $userPreferences->getDataPeriodMinDate();
         $maxDate = $userPreferences->getDataPeriodMaxDate();
 
+
         // La requette doit extraire le top des UTM
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb ->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
@@ -206,8 +207,8 @@ class FormRepository extends EntityRepository
         }*/
 
 
-
         return $results;
+
     }
 
     public function getStatisticsForUtmBookmarks($forms, $bookmarks, $utils){

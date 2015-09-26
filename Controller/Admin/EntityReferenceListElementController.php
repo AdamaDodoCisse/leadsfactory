@@ -17,6 +17,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
 /**
+ * test
  * @Route("/entity")
  * @Cache(expires="tomorrow")
  */
