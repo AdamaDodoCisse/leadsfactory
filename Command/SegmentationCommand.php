@@ -40,6 +40,4 @@ class SegmentationCommand extends ContainerAwareCommand {
         }
 	}
 
-
-
 }
