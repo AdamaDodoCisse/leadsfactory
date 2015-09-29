@@ -52,7 +52,7 @@ class AthenaV2BaseMapping {
             "code_postal_facturation"   => "zip",
             "dep_region_facturation"    => "",  // Vide
             "ville_facturation"         => "",  // Méthode de récupération de la données
-            "nb_habitants"              => "",
+            "nb_habitants"              => "",  // Méthode de récupération de la données
             "pays_facturation"          => "pays",
             "rue_livraison"             => "",
             "code_postal_livraison"     => "",  // Vide
@@ -108,8 +108,9 @@ class AthenaV2BaseMapping {
             "type_utilisation"          => "",  // Vide
             "id_web"                    => "",  // Vide
             "membre_ce"                 => "",  // Vide
-            "cnilTi"                    => "",  // Methode de récupération des données
-            "cnilPartners"              => "",  // Methode de récupération des données
+//            "cnilTi"                    => "",  // Methode STOP_email
+//            "cnilPartners"              => "",  // Methode STOP_email
+            "stop_email"                => "",  // Methode de récupération des données
             "profil_ti"                 => "",  // Methode de récupération des données
             "interets_ti"               => "",
             "interets_tissot"           => "",  // Vide
@@ -117,7 +118,7 @@ class AthenaV2BaseMapping {
             "interets_weka"             => "",
             "type_compte_cctp"          => "",  // Vide
             "responsable_prescription_cctp" => "",  // Vide
-            "email_valide"              => ""   // Vide
+            "email_valide"              => ""   // Methode de récupération des données
 
         );
 
@@ -129,7 +130,7 @@ class AthenaV2BaseMapping {
 
         return array (
             "id_leadsfactory"           => "id_leadsfactory",
-            "detail_demande"            => "product_name",  // Vide
+            "detail_demande"            => "",  // Vide
             "marque"                    => "",  // Vide
             "deja_client"               => "",  // Vide
             "id_sogec"                  => "",  // Boolean
@@ -164,7 +165,8 @@ class AthenaV2BaseMapping {
         );
 
     }
-    public function getVille_facturation($data){        
+        
+    public function getVille_facturation($data){
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
         } else if (array_key_exists("ville", $data) && $data['ville']){
@@ -174,45 +176,72 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        $ville = $ma_ville[0]['name'] ? $ma_ville[0]['name'] : "";
+        
+        if(is_array($ma_ville)){
+            $ville = $ma_ville[0]['name'];
+        } else if(is_string($ma_ville)){
+            $ville = $ma_ville;
+        } else $ville = "";
+        
         return $ville;
     }
     public function getNb_habitants($data){
+        
+        $first_str = substr($data['zip'], 0, 1);
+        if($first_str == 0){
+            $zip_code =  substr($data['zip'], 1); 
+        } else {
+            $zip_code = $data['zip'];
+        }
+        
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $data['zip']."-".$data['ville_id']);   
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);   
         } else if(array_key_exists('ville', $data) && $data['ville']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $data['zip']."-".$data['ville']);  
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville']);  
         } else if(array_key_exists('ville_text', $data) && $data['ville_text']){
-            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $data['zip']."-".$data['ville_text']);   
+            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $zip_code."-".$data['ville_text']);   
             $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $ville_id);            
         } else {
             return "";
         }
-        $population = $population[0]['value'] ? $population[0]['value'] : "";
-        return $population;
-    }
-    
-    public function getCnilTi($data){
-        if (array_key_exists("cnilTi",$data)) {
-            if ($data["cnilTi"]) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
+        
+        if(is_array($population)){
+            $pop = $population[0]['value'];
+        } else if (is_string($population)) {
+            $pop = $population;
         } else {
-            return FALSE;
+            $pop = "";
         }
+        
+        return $pop;
     }
-    
-    public function getCnilPartners($data){
-        if (array_key_exists("cnilPartners",$data)) {
-            if ($data["cnilPartners"]) {
-                return TRUE;
+
+    public function getStop_email($data) {
+        $Stop_email = array(
+            "0" => "0",
+            "1" => "1",
+            "2" => "2"
+        );
+        if (array_key_exists('cnilTi', $data) && $data['cnilTi'] == 1) {
+            if (array_key_exists('cnilPartners', $data) && $data['cnilPartners'] == 1) {
+                $return = $Stop_email['2'];
             } else {
-                return FALSE;
+                $return = $Stop_email['1'];
             }
         } else {
-            return FALSE;
+            $return = $Stop_email['0'];
+        }
+        return $return;
+    }
+
+    public function getDetail_demande($data){
+        if (array_key_exists("product_name",$data) && $data["product_name"]) {
+            if (array_key_exists("comment",$data) && $data["comment"]) {
+                $detail = $data["product_name"]." - ".$data["comment"];
+            } else $detail = $data["product_name"];
+            return $detail;
+        } else {
+            return "";
         }
     }
 
@@ -231,6 +260,11 @@ class AthenaV2BaseMapping {
 //    public function getVersion () {
 //        return "1.0";
 //    }
+    
+    public function getEmail_valide(){
+        return TRUE;
+    }
+
 
     public function getAffaireMapping () {
 
@@ -283,10 +317,10 @@ class AthenaV2BaseMapping {
 
     
     public function getSecteur_activite_tissot_ti_cctp ($data){
-
+        
         $secteurs = array (
             "12"    => "Autre",
-            "15"    => "Autre", // ce champs est manquant dans le liste ti_titles_list
+            "15"    => "BiomedicalPharma", // ce champs est manquant dans le liste ti_titles_list
             "3"     => "Construction",
             "13"    => "ElectroniqueAutomatique",
             "4"     => "Energies",
@@ -574,8 +608,8 @@ class AthenaV2BaseMapping {
             "travailleur_social" =>"travailleur_social",
             
             ////////////////////// TI            
-            "animateur_sst_correspondant__scurit " => "animateur_sst_correspondant__scurit",
-            "architecte_matre_duvre " => "architecte_matre_duvre",
+            "animateur_sst_correspondant__scurit" => "animateur_sst_correspondant__scurit",
+            "architecte_matre_duvre" => "architecte_matre_duvre",
             "assistant_qhse" =>"assistant_qhse",
             "AssistantResponsableFormation" =>"AssistantResponsableFormation",
             "AssistantRH"    =>"AssistantRH",
@@ -650,10 +684,9 @@ class AthenaV2BaseMapping {
             
         );
         
-        
         if (array_key_exists("fonction",$data)) {
             if($data["fonction"]){
-                return $fonctions[$data["fonction"]];
+                return $fonctions[trim($data["fonction"])];
             }
         } else {
             return "";
