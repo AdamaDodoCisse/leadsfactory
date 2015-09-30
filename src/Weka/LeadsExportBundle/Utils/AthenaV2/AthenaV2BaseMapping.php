@@ -166,6 +166,34 @@ class AthenaV2BaseMapping {
 
     }
 
+
+    // #########################################################################################
+    // OVERRIDE DES GETTERS
+    // #########################################################################################
+
+    public function getTelephone($data) {
+        if (array_key_exists("phone",$data) && $data["phone"]) {
+            switch ($data['pays'])
+            {
+                case 'FR':
+                    $data['phone'] = '+33' . $data['phone'];
+                    break;
+                case 'BE':
+                    $data['phone'] = '+32' . $data['phone'];
+                    break;
+                case 'MC':
+                    $data['phone'] = '+377' . $data['phone'];
+                    break;
+                case 'LU':
+                    $data['phone'] = '+352' . $data['phone'];
+                    break;
+                case 'CH':
+                    $data['phone'] = '+41' . $data['phone'];
+            }
+        }
+        return $data['phone'];
+    }
+
     public function getVille_facturation($data){
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
@@ -267,17 +295,10 @@ class AthenaV2BaseMapping {
 
 
     public function getAffaireMapping () {
-
-        return array (
-
-        );
-
-
-
+        return array ();
     }
 
     public function getArticleMapping () {
-
     }
 
   
@@ -312,7 +333,6 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        
     }
 
     
@@ -357,9 +377,7 @@ class AthenaV2BaseMapping {
             "id_contact"    => ""
 
         );
-
         return $contact;
-
     }
 
     public function getCivilite ( $data ) {
@@ -386,8 +404,6 @@ class AthenaV2BaseMapping {
             "PROFESSIONNEL" => "PROFESSIONNEL"
 
         );
-        
-        
         if (array_key_exists("profil",$data)) {
             if($data["profil"]){
                 return $profil_ti[$data["profil"]];

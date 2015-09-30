@@ -245,7 +245,7 @@ class AthenaV2 extends AbstractMethod{
         $requestData = array();
         $requestData["date_formulaire"] = $dateTime->format("c");
         $requestData["adresse_ip"] = "0.0.0.0"; // Pas obligatoire
-        $requestData["user_agent"] = "La mere a titi"; // Pas obligatoire
+        $requestData["user_agent"] = "Non renseigné"; // Pas obligatoire
 
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_REMPLISSAGE, $requestData, $source);
         $idRemplissage = $results->result->id_remplissage;
