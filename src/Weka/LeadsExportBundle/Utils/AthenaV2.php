@@ -108,7 +108,6 @@ class AthenaV2 extends AbstractMethod{
                 // Get ID Contact
                 $logger->info("Calling Athena GetContact");
                 $id_contact = $this->getContact( $id_remplissage, $source, $data, $id_compte, $id_campagne );
-
                 // Send Request createDRC or createAffaire
                 if ( $this->_formConfig["export"]["athenaV2"]["method"] == "drc" ) {
                     $logger->info("Calling Athena CreateDRC");
@@ -351,6 +350,7 @@ class AthenaV2 extends AbstractMethod{
     }
 
     private function createDrc($idRemplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source, $id_leadsfactory) {
+
         $this->getLogger()->info( "[createdrc] : ***");
         $this->getLogger()->info( "[createdrc] : *** DRC");
         $this->getLogger()->info( "[createdrc] : ***");

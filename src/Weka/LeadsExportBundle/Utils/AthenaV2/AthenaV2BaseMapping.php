@@ -165,7 +165,7 @@ class AthenaV2BaseMapping {
         );
 
     }
-        
+
     public function getVille_facturation($data){
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
