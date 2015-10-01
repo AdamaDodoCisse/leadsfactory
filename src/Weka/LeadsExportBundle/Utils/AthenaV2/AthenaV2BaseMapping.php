@@ -23,13 +23,12 @@ class AthenaV2BaseMapping {
         $this->em = $entityManager;
         $this->list_element_repository = $list_element_repository;
     }
-    
+
 
 
     public function getProduitMapping () {
 
         return array (
-
             "id_athena"         => "", // Vide
             "athena_unique_id"  => "",  // Vide ou ID Session si formation
             "code_sap_mpf"      => "",  // Vide
@@ -42,7 +41,6 @@ class AthenaV2BaseMapping {
     public function getCompteMapping ( ) {
 
         return array (
-
             "id_athena"                 => "",  // Vide
             "id_sap"                    => "",  // Vide (Prevoir evolution si connecte)
             "id_sogec"                  => "",  // Vide
@@ -79,7 +77,12 @@ class AthenaV2BaseMapping {
             "presence_dup"              => "",  // Vide
             "type_client_ec"            => "",  // Vide
             "numero_tva_intra"          => "",  // Vide
-            "tab_contact"               => ""   // Methode de récupération des données
+            "tab_contact"               => "",   // Methode de récupération des données
+            "stop_email"                => "",  // Methode de récupération des données
+            "stop_mail"                 => "",
+            "stop_fax"                  => "",
+            "stop_phoning"              => "",
+            "stop_global"               => "",
         );
 
     }
@@ -87,7 +90,6 @@ class AthenaV2BaseMapping {
     public function getContactMapping () {
 
         return array (
-
             "id_athena"                 => "",  // Vide
             "id_sap"                    => "",  // Vide
             "id_sogec"                  => "",  // Vide
@@ -108,9 +110,11 @@ class AthenaV2BaseMapping {
             "type_utilisation"          => "",  // Vide
             "id_web"                    => "",  // Vide
             "membre_ce"                 => "",  // Vide
-//            "cnilTi"                    => "",  // Methode STOP_email
-//            "cnilPartners"              => "",  // Methode STOP_email
             "stop_email"                => "",  // Methode de récupération des données
+            "stop_mail"                 => "",
+            "stop_fax"                  => "",
+            "stop_phoning"              => "",
+            "stop_global"               => "",
             "profil_ti"                 => "",  // Methode de récupération des données
             "interets_ti"               => "",
             "interets_tissot"           => "",  // Vide
@@ -118,7 +122,14 @@ class AthenaV2BaseMapping {
             "interets_weka"             => "",
             "type_compte_cctp"          => "",  // Vide
             "responsable_prescription_cctp" => "",  // Vide
-            "email_valide"              => ""   // Methode de récupération des données
+            "email_valide"              => "",   // Methode de récupération des données
+            "tissot_panel_membre"       => "",
+            "tissot_panel_inscription"   => "",
+            "tissot_panel_gamme"        => "",
+            "tissot_panel_rdv"          => "",
+            "tissot_panel_appels"       => "",
+            "tissot_panel_groupe"       => "",
+            "tissot_panel_date_sollicitation" => "",
 
         );
 
@@ -142,7 +153,7 @@ class AthenaV2BaseMapping {
             "objectif_principal"        => "",  // Vide
             "presentation_projet"       => "",  // Vide
             "attente_eti"               => "",  // Vide
-            "rdv_conseiller"            => "demande-rdv",  // Boolean / 
+            "rdv_conseiller"            => "demande-rdv",  // Boolean /
             "id_compte"                 => "",  // Methode de récupération des données
             "id_contact"                => "",  // Methode de récupération des données
             "type_demande"              => "",  // Methode de récupération des données
@@ -160,7 +171,12 @@ class AthenaV2BaseMapping {
             "langue"                    => "",  // Vide
             "systeme_exploitation"      => "",  // Vide
             "id_assignation"            => "",   // Vide
-            "version"                   => ""   // Methode de récupération des données
+            "version"                   => "",   // Methode de récupération des données
+            "utmmedium"                 => "",   //
+            "utmcontent"                => "",   //
+            "referrer_url"              => "",   //
+            "redirect_url"              => "",   //
+            "trackin_origin"            => "",   //
 
         );
 
@@ -204,35 +220,35 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        
+
         if(is_array($ma_ville)){
             $ville = $ma_ville[0]['name'];
         } else if(is_string($ma_ville)){
             $ville = $ma_ville;
         } else $ville = "";
-        
+
         return $ville;
     }
     public function getNb_habitants($data){
-        
+
         $first_str = substr($data['zip'], 0, 1);
         if($first_str == 0){
-            $zip_code =  substr($data['zip'], 1); 
+            $zip_code =  substr($data['zip'], 1);
         } else {
             $zip_code = $data['zip'];
         }
-        
+
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);   
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);
         } else if(array_key_exists('ville', $data) && $data['ville']){
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville']);  
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville']);
         } else if(array_key_exists('ville_text', $data) && $data['ville_text']){
-            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $zip_code."-".$data['ville_text']);   
-            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $ville_id);            
+            $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $zip_code."-".$data['ville_text']);
+            $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $ville_id);
         } else {
             return "";
         }
-        
+
         if(is_array($population)){
             $pop = $population[0]['value'];
         } else if (is_string($population)) {
@@ -240,7 +256,7 @@ class AthenaV2BaseMapping {
         } else {
             $pop = "";
         }
-        
+
         return $pop;
     }
 
@@ -289,7 +305,7 @@ class AthenaV2BaseMapping {
     public function getVersion () {
         return "2.0";
     }
-    
+
     public function getEmail_valide(){
         return TRUE;
     }
@@ -302,7 +318,7 @@ class AthenaV2BaseMapping {
     public function getArticleMapping () {
     }
 
-  
+
     public function getSecteur_activite_weka ($data){
 
         $secteurs = array (
@@ -326,7 +342,7 @@ class AthenaV2BaseMapping {
             "7"     => "SEM",
             "6"     => "sivom"
         );
-        
+
         if (array_key_exists("type-etablissement",$data)) {
             if($data['type-etablissement']){
                 return $secteurs[$data['type-etablissement']];
@@ -336,9 +352,9 @@ class AthenaV2BaseMapping {
         }
     }
 
-    
+
     public function getSecteur_activite_tissot_ti_cctp ($data){
-        
+
         $secteurs = array (
             "12"    => "Autre",
             "15"    => "BiomedicalPharma", // ce champs est manquant dans le liste ti_titles_list
@@ -356,8 +372,8 @@ class AthenaV2BaseMapping {
             "9"     => "TechnologiesDeLInformation",
             "14"    => "Transports",
         );
-        
-        
+
+
         if (array_key_exists("secteur-activite",$data)) {
             if($data["secteur-activite"]){
                 return $secteurs[$data["secteur-activite"]];
@@ -367,7 +383,7 @@ class AthenaV2BaseMapping {
         }
     }
 
-    
+
     public function getTab_contact ( $data ) {
 
         $contact = array (
@@ -389,14 +405,14 @@ class AthenaV2BaseMapping {
             "MRS"   => "mme"
 
         );
-        
+
         if (array_key_exists("salutation",$data)) {
             return $civilite[$data["salutation"]];
         } else {
             return "";
         }
     }
-    
+
     public function getProfil_ti ( $data ) {
 
         $profil_ti = array (
@@ -413,7 +429,7 @@ class AthenaV2BaseMapping {
             return "";
         }
     }
-    
+
 
     public function getService($data){
         $fonctions = array(
@@ -444,14 +460,14 @@ class AthenaV2BaseMapping {
             "sante_au_travail_prevention" => "sante_au_travail_prevention",
             "services_techniques" => "services_techniques",
         );
-        
+
         if (array_key_exists("service",$data)) {
             return $fonctions[$data["service"]];
         } else {
             return "";
-        }        
+        }
     }
-    
+
 
 
     // TODO : A terminer
@@ -623,7 +639,7 @@ class AthenaV2BaseMapping {
             "secrtaireassistant" =>"secrtaireassistant",
             "surveillante_gnrale" =>"surveillante_gnrale",
             "travailleur_social" =>"travailleur_social",
-            
+
             ////////////////////// TI            
             "animateur_sst_correspondant__scurit" => "animateur_sst_correspondant__scurit",
             "architecte_matre_duvre" => "architecte_matre_duvre",
@@ -698,9 +714,9 @@ class AthenaV2BaseMapping {
             "technicien_hse" =>"technicien_hse",
             "technicien_oprateur" =>"technicien_oprateur",
             "toxicologue" =>"toxicologue"
-            
+
         );
-        
+
         if (array_key_exists("fonction",$data)) {
             if($data["fonction"]){
                 return $fonctions[trim($data["fonction"])];

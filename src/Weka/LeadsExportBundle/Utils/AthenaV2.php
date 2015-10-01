@@ -222,7 +222,8 @@ class AthenaV2 extends AbstractMethod{
         return $result;
     }
 
-    private function sendRequest($method, $requestData, $source, $version ="1.0") {  // vesrion dans request et passer en paramétres la variable dans le reste des fonctions
+    private function sendRequest($method, $requestData, $source, $version ="2.0")
+    {  // version dans request et passer en paramétres la variable dans le reste des fonctions
 
         $request = array(
             "source"    => $source,
