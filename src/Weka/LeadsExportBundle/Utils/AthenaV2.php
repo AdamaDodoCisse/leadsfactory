@@ -108,7 +108,6 @@ class AthenaV2 extends AbstractMethod{
                 // Get ID Contact
                 $logger->info("Calling Athena GetContact");
                 $id_contact = $this->getContact( $id_remplissage, $source, $data, $id_compte, $id_campagne );
-
                 // Send Request createDRC or createAffaire
                 if ( $this->_formConfig["export"]["athenaV2"]["method"] == "drc" ) {
                     $logger->info("Calling Athena CreateDRC");
@@ -246,7 +245,7 @@ class AthenaV2 extends AbstractMethod{
         $requestData = array();
         $requestData["date_formulaire"] = $dateTime->format("c");
         $requestData["adresse_ip"] = "0.0.0.0"; // Pas obligatoire
-        $requestData["user_agent"] = "La mere a titi"; // Pas obligatoire
+        $requestData["user_agent"] = "Non renseigné"; // Pas obligatoire
 
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_REMPLISSAGE, $requestData, $source);
         $idRemplissage = $results->result->id_remplissage;
@@ -351,6 +350,7 @@ class AthenaV2 extends AbstractMethod{
     }
 
     private function createDrc($idRemplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source, $id_leadsfactory) {
+
         $this->getLogger()->info( "[createdrc] : ***");
         $this->getLogger()->info( "[createdrc] : *** DRC");
         $this->getLogger()->info( "[createdrc] : ***");

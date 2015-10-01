@@ -165,7 +165,35 @@ class AthenaV2BaseMapping {
         );
 
     }
-        
+
+
+    // #########################################################################################
+    // OVERRIDE DES GETTERS
+    // #########################################################################################
+
+    public function getTelephone($data) {
+        if (array_key_exists("phone",$data) && $data["phone"]) {
+            switch ($data['pays'])
+            {
+                case 'FR':
+                    $data['phone'] = '+33' . $data['phone'];
+                    break;
+                case 'BE':
+                    $data['phone'] = '+32' . $data['phone'];
+                    break;
+                case 'MC':
+                    $data['phone'] = '+377' . $data['phone'];
+                    break;
+                case 'LU':
+                    $data['phone'] = '+352' . $data['phone'];
+                    break;
+                case 'CH':
+                    $data['phone'] = '+41' . $data['phone'];
+            }
+        }
+        return $data['phone'];
+    }
+
     public function getVille_facturation($data){
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
@@ -235,14 +263,15 @@ class AthenaV2BaseMapping {
     }
 
     public function getDetail_demande($data){
+        $comment = "";
         if (array_key_exists("product_name",$data) && $data["product_name"]) {
-            if (array_key_exists("comment",$data) && $data["comment"]) {
-                $detail = $data["product_name"]." - ".$data["comment"];
-            } else $detail = $data["product_name"];
-            return $detail;
-        } else {
-            return "";
+            $comment .= "Produit : ".$data["product_name"]." --- ";
         }
+        if (array_key_exists("comment",$data) && $data["comment"]) {
+            $comment .= "Commentaire : ".$data["comment"];
+        }
+        echo $comment."\n";
+        return $comment;
     }
 
     public function getRdv_conseiller( $data ){
@@ -257,9 +286,9 @@ class AthenaV2BaseMapping {
         }
     }
 
-//    public function getVersion () {
-//        return "1.0";
-//    }
+    public function getVersion () {
+        return "2.0";
+    }
     
     public function getEmail_valide(){
         return TRUE;
@@ -267,17 +296,10 @@ class AthenaV2BaseMapping {
 
 
     public function getAffaireMapping () {
-
-        return array (
-
-        );
-
-
-
+        return array ();
     }
 
     public function getArticleMapping () {
-
     }
 
   
@@ -312,7 +334,6 @@ class AthenaV2BaseMapping {
         } else {
             return "";
         }
-        
     }
 
     
@@ -357,9 +378,7 @@ class AthenaV2BaseMapping {
             "id_contact"    => ""
 
         );
-
         return $contact;
-
     }
 
     public function getCivilite ( $data ) {
@@ -386,8 +405,6 @@ class AthenaV2BaseMapping {
             "PROFESSIONNEL" => "PROFESSIONNEL"
 
         );
-        
-        
         if (array_key_exists("profil",$data)) {
             if($data["profil"]){
                 return $profil_ti[$data["profil"]];
