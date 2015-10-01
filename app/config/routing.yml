@@ -1,3 +1,7 @@
+homepage:
+    pattern:   /
+    defaults:  { _controller: TellawLeadsFactoryBundle:Front:index }
+
 tellaw_leads_factory_theme:
     resource: "@TellawLeadsFactoryBundle/Controller/"
     type:     annotation
@@ -14,3 +18,4 @@ login_check:
 
 _security_logout:
     pattern:  /admin/logout
+

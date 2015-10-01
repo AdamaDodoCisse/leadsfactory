@@ -17,7 +17,7 @@ security:
             form_login:
                 check_path: /admin/login_check
                 login_path: /admin/login
-                default_target_path: /admin/monitoring/dashboard
+                default_target_path: /admin/index
             logout:
                 path:   /admin/logout
 
