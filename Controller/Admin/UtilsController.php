@@ -221,7 +221,7 @@ class UtilsController extends CoreController
 
         $displayBreadCrumb = true;
 
-        $sections[] = array (   "name" => "Accueil", "url" => $this->get('router')->generate('_monitoring_dashboard'));
+        $sections[] = array (   "name" => "Accueil", "url" => $this->get('router')->generate('_monitoring_dashboard_forms'));
 
         if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_type_page")) == "_monitoring_dashboard_type_page") {
 
@@ -236,10 +236,10 @@ class UtilsController extends CoreController
         } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard_forms")) == "_monitoring_dashboard_forms") {
 
             $sections[] = array (   "name" => "Dashboard des formulaires", "url" => "");
-
+/*
         } else if (substr ($parentRoute, 0, strlen ("_monitoring_dashboard")) == "_monitoring_dashboard") {
 
-            $sections[] = array (   "name" => "Dashboard des groupements de formulaires", "url" => "");
+            $sections[] = array (   "name" => "Dashboard des groupements de formulaires", "url" => "");*/
 
         } else if (substr ($parentRoute, 0, strlen ("_form_list")) == "_form_list") {
 
