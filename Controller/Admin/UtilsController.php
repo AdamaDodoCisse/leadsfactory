@@ -324,7 +324,7 @@ class UtilsController extends CoreController
             $sections[] = array (   "name" => "Scopes utilisateurs", "url" => $this->get('router')->generate('_scope_list'));
             $sections[] = array (   "name" => "edition d'un scope", "url" => "");
 
-        } else if (substr ($parentRoute, 0, strlen ("_mkg_segmentation_list")) == "_marketing_kibana_exports_list") {
+        } else if (substr ($parentRoute, 0, strlen ("_mkg_segmentation_list")) == "_mkg_segmentation_list") {
 
             $sections[] = array (   "name" => "Gestion des exports de segments", "url" => "");
 
