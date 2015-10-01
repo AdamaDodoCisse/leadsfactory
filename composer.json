@@ -22,7 +22,7 @@
 	"jms/security-extra-bundle": "1.5.1",
 	"mtdowling/cron-expression": "v1.0.4",
 	"vresh/twilio-bundle": "0.4.3",
-	"tellaw/leadsfactory" : "0.9.35",
+	"tellaw/leadsfactory" : "0.9.36",
 	"beberlei/DoctrineExtensions": "v1.0.1",
 	"teodortalov/citrix": "1.1"
   },
