@@ -28,6 +28,13 @@ use Swift_Message;
  */
 class FrontController extends CoreController
 {
+    /**
+     * Index Redirect
+     * @Route("/", name="website_index")
+     */
+    public function indexAction () {
+        return $this->redirectToRoute('_monitoring_dashboard_forms', array(), 301);
+    }
 
     /**
      * Tracking callback method
