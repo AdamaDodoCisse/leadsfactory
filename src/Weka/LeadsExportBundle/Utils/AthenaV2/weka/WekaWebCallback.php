@@ -25,7 +25,7 @@ class WekaWebCallback extends AthenaV2BaseMapping {
                 case 'FR':
                     $telephone = '+33' . $data['phone'];
                     break;
-                case 'BE':  
+                case 'BE':
                     $telephone = '+32' . $data['phone'];
                     break;
                 case 'MC':

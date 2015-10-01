@@ -263,14 +263,15 @@ class AthenaV2BaseMapping {
     }
 
     public function getDetail_demande($data){
+        $comment = "";
         if (array_key_exists("product_name",$data) && $data["product_name"]) {
-            if (array_key_exists("comment",$data) && $data["comment"]) {
-                $detail = $data["product_name"]." - ".$data["comment"];
-            } else $detail = $data["product_name"];
-            return $detail;
-        } else {
-            return "";
+            $comment .= "Produit : ".$data["product_name"]." --- ";
         }
+        if (array_key_exists("comment",$data) && $data["comment"]) {
+            $comment .= "Commentaire : ".$data["comment"];
+        }
+        echo $comment."\n";
+        return $comment;
     }
 
     public function getRdv_conseiller( $data ){
@@ -285,9 +286,9 @@ class AthenaV2BaseMapping {
         }
     }
 
-//    public function getVersion () {
-//        return "1.0";
-//    }
+    public function getVersion () {
+        return "2.0";
+    }
     
     public function getEmail_valide(){
         return TRUE;
