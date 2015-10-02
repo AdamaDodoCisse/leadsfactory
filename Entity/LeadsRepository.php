@@ -88,7 +88,7 @@ class LeadsRepository extends EntityRepository
                 $dql .= " AND f.scope = ".$args['user']->getScope()->getId();
             }
 
-            if(!empty($args[0]['form'])){
+            if(!empty($args['form'])){
 				$dql .= " AND l.form='{$args[0]['form']}'";
 			}
 
@@ -97,20 +97,20 @@ class LeadsRepository extends EntityRepository
 				$dql .= " AND f.scope='{$args['scope']}'";
 			}*/
 
-			if(!empty($args[0]['lastname'])){
+			if(!empty($args['lastname'])){
 				$dql .= " AND l.lastname LIKE '%{$args[0]['lastname']}%'";
 			}
 
-			if(!empty($args[0]['firstname'])){
+			if(!empty($args['firstname'])){
 				$dql .= " AND l.firstname LIKE '%{$args[0]['firstname']}%'";
 			}
 
-			if(!empty($args[0]['email'])){
+			if(!empty($args['email'])){
 				$dql .= " AND l.email LIKE '%{$args[0]['email']}%'";
 			}
 
-			if(!empty($args[0]['keyword'])){
-				$keywords = explode(' ', $args[0]['keyword']);
+			if(!empty($args['keyword'])){
+				$keywords = explode(' ', $args['keyword']);
 				foreach($keywords as $key => $keyword){
 					//if($key>0)
 					$dql .= ' AND';
@@ -118,13 +118,13 @@ class LeadsRepository extends EntityRepository
 				}
 			}
 
-			if(!empty($args[0]['datemin'])){
-				$datemin = is_object($args[0]['datemin']) ? $args[0]['datemin']->format('Y-m-d') : $args[0]['datemin'];
+			if(!empty($args['datemin'])){
+				$datemin = is_object($args['datemin']) ? $args['datemin']->format('Y-m-d') : $args['datemin'];
 				$dql .= " AND l.createdAt >= '$datemin'";
 			}
 
-			if(!empty($args[0]['datemax'])){
-				$datemax = is_object($args[0]['datemax']) ? $args[0]['datemax']->format('Y-m-d') : $args[0]['datemax'];
+			if(!empty($args['datemax'])){
+				$datemax = is_object($args['datemax']) ? $args['datemax']->format('Y-m-d') : $args['datemax'];
 				$dql .= " AND l.createdAt <= '$datemax'";
 			}
 		}

@@ -42,12 +42,12 @@ class EntityLeadsController extends CoreController
         $filterForm = $this->getLeadsFilterForm();
 	    $filterForm->handleRequest($request);
 
-	    $filterParams =  array ('user'=>$this->getUser());
-
 	    if ($filterForm->isValid()) {
-		    $filterParams[] = $filterForm->getData();
+		    $filterParams = $filterForm->getData();
+			$filterParams["user"] = $this->getUser();
 		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }else{
+			$filterParams =  array ('user'=>$this->getUser());
 		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }
 
