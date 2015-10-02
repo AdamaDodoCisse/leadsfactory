@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "36c989bdc5ec2b976852b8823e481a2f",
-    "content-hash": "2c6854020d793321154351052faaa1e5",
+    "hash": "dca8c8d8d19762a579e61efcccec1a9c",
+    "content-hash": "559bc12b3817760e367be6cfc406fd56",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2019,12 +2019,12 @@
             "version": "v2.6.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/AsseticBundle.git",
+                "url": "https://github.com/symfony/assetic-bundle.git",
                 "reference": "422b0add2110f0cf9bc7a873a386ea053f4a89f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/AsseticBundle/zipball/422b0add2110f0cf9bc7a873a386ea053f4a89f0",
+                "url": "https://api.github.com/repos/symfony/assetic-bundle/zipball/422b0add2110f0cf9bc7a873a386ea053f4a89f0",
                 "reference": "422b0add2110f0cf9bc7a873a386ea053f4a89f0",
                 "shasum": ""
             },
@@ -2084,12 +2084,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/MonologBundle.git",
+                "url": "https://github.com/symfony/monolog-bundle.git",
                 "reference": "9320b6863404c70ebe111e9040dab96f251de7ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/9320b6863404c70ebe111e9040dab96f251de7ac",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/9320b6863404c70ebe111e9040dab96f251de7ac",
                 "reference": "9320b6863404c70ebe111e9040dab96f251de7ac",
                 "shasum": ""
             },
@@ -2143,12 +2143,12 @@
             "version": "v2.3.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/SwiftmailerBundle.git",
+                "url": "https://github.com/symfony/swiftmailer-bundle.git",
                 "reference": "970b13d01871207e81d17b17ddda025e7e21e797"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/970b13d01871207e81d17b17ddda025e7e21e797",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/970b13d01871207e81d17b17ddda025e7e21e797",
                 "reference": "970b13d01871207e81d17b17ddda025e7e21e797",
                 "shasum": ""
             },
@@ -2319,17 +2319,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "0.9.37",
+            "version": "0.9.38",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "e8ec7181b3373f1a3885e29f632a3f2e77fc27ee"
+                "reference": "87b8b4a1719c1e83221a498477e19e9d7e13c78a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/e8ec7181b3373f1a3885e29f632a3f2e77fc27ee",
-                "reference": "e8ec7181b3373f1a3885e29f632a3f2e77fc27ee",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/87b8b4a1719c1e83221a498477e19e9d7e13c78a",
+                "reference": "87b8b4a1719c1e83221a498477e19e9d7e13c78a",
                 "shasum": ""
             },
             "require": {
@@ -2373,7 +2373,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2015-10-01 11:21:36"
+            "time": "2015-10-02 09:28:24"
         },
         {
             "name": "teodortalov/citrix",
