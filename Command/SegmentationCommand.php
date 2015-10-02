@@ -7,6 +7,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Cron\CronExpression;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
+use Swift_Message;
+
 
 class SegmentationCommand extends ContainerAwareCommand {
 	
@@ -18,26 +23,169 @@ class SegmentationCommand extends ContainerAwareCommand {
 		;
 	}
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln('<comment>Running Segmentation exports Tasks...</comment>');
 
-        $logger = $this->getContainer()->get('export.logger');
-        $doctrine = $this->getContainer()->get('doctrine');
+        $now = new \DateTime();
+        $this->output = $output;
 
-        $output->writeln('Exporting all segments...');
-        $forms = $this->getContainer()->get('leadsfactory.form_repository')->findAll();
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $segmentations = $this->getContainer()->get('leadsfactory.mkgsegmentation_repository')->findAll();
 
-        foreach($forms as $form){
-            $output->writeln($form->getName());
-            try{
-                $this->getContainer()->get('export_utils')->export($form);
-                $output->writeln('Done');
-            }catch(\Exception $e){
-                $output->writeln('Error : '.$e->getMessage());
-	            $output->writeln('Error : '.$e->getTraceAsString());
-	            $logger->error('Export '.$form->getName(). ' error : '.$e->getMessage());
-	            $logger->error($e->getTraceAsString());
+        foreach ($segmentations as $segment) {
+
+            // If cron is enabled
+            if ($segment->getEnabled() && trim($segment->getCronExpression()) != "") {
+
+                // We must run this task if:
+                // * time() is larger or equal to $nextrun
+                //$run = @(time() >= $nextrun);
+
+
+                if ( $segment->getNextrun() <= $now ) {
+
+                    $this->output = new BufferedOutput();
+                    $output->writeln(sprintf('Running Cron Task <info>%s</info>', $segment->getName()));
+
+                    // Set $lastrun for this crontask
+                    $segment->setLastRun(new \DateTime());
+                    try {
+
+                        //$commands = $crontask->getCommands();
+                        // Execute request
+                        $this->exportSegment( $segment, $output );
+
+                        $output->writeln('<info>SUCCESS EXPORT SEGMENT</info>');
+                        $segment->setLog( $this->output->fetch() );
+                        $segment->setStatus (1);
+
+                    } catch (\Exception $e) {
+
+                        $output->writeln('<error>ERROR EXPORT SEGMENT</error>');
+                        $output->writeln('<error>'.$e->getMessage().'</error>');
+                        $output->writeln('<error>'.$e->getTraceAsString().'</error>');
+                        $segment->setStatus (2);
+                        $segment->setLog( $this->output->fetch()."\r\n-----------------\r\n".$e->getMessage()."\r\n-----------------\r\n".$e->getTraceAsString() );
+
+                    }
+
+                    // Persist crontask
+                    $em->persist($segment);
+                    $em->flush();
+                } else {
+                    $output->writeln(sprintf('Skipping Segmentation Task <info>%s</info>', $segment->getName()));
+                }
+
+                // Get the last run time of this task, and calculate when it should run next
+                $lastrun = $segment->getLastRun() ? $segment->getLastRun() : 0;
+                $cron = CronExpression::factory($segment->getCronexpression());
+                $nextrun = $cron->getNextRunDate( $lastrun );
+                if (!$segment->getNextrun() || $segment->getNextrun() <= $now ) {
+                    $segment->setNextrun( $nextrun );
+                    $em->persist($segment);
+                    $em->flush();
+                }
+
             }
+
         }
-	}
+
+        // Flush database changes
+        $em->flush();
+
+        $output->writeln('<comment>Done!</comment>');
+    }
+
+    private function exportSegment ( $segment, $output ) {
+
+        $result = "";
+        $query = "";
+        $fieldsToDisplayRaw = "";
+        $fieldsToDisplay = array();
+        $searchUtils = $this->getContainer()->get ("search.utils");
+        $exportUtils =  $this->getContainer()->get('export_utils');
+        $logger = $this->getContainer()->get('logger');
+
+        if($segment->getCode()) {
+
+            $savedSearch = $searchUtils->getKibanaSavedSearch ( $segment->getCode(),$segment->getNbDays()  );
+            $query = $savedSearch->getQuery();
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+
+            $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
+            $fieldsToDisplay = $savedSearch->getColumns();
+        }
+
+        if (!is_dir("datas/segments")) {
+            mkdir("datas/segments");
+        }
+
+        $handle = fopen('datas/segments/segment-'.$segment->getId()."-".$segment->getCode().".csv", 'w');
+        fputcsv( $handle, $fieldsToDisplay, ";", "\"", "\\" );
+        $elements = $result->hits->hits;
+
+        foreach ( $elements as $row)  {
+
+            $leadsource = $row->_source;
+
+            $content = array ();
+            foreach ( $fieldsToDisplay as $fied ) {
+
+                try {
+                    if (trim($fied)!="") {
+                        if (strstr($fied,"content.")) {
+                            $headerrow = str_replace("content.","",$fied);
+                            $obj = $leadsource->content;
+                            $content[] = $obj->$headerrow;
+                        } else {
+                            $content[] = $leadsource->$fied;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $content[] = "";
+                }
+
+            }
+
+            fputcsv( $handle, $content, ";", "\"", "\\" );
+
+        }
+
+        fclose($handle);
+
+        if (trim($segment->getEmails()) != "") {
+
+            $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
+
+            $emails = explode (";", $segment->getEmails());
+
+            foreach ( $emails as $email ) {
+                // Sending email
+                $message = Swift_Message::newInstance()
+                    ->setSubject($segment->getConfirmationemailssubjects())
+                    ->setFrom($from)
+                    ->setTo($email)
+                    ->setBody($segment->getConfirmationEmailSource());
+
+
+                $message->attach(
+                    \Swift_Attachment::fromPath('datas/segments/segment-'.$segment->getId()."-".$segment->getCode().".csv")->setFilename('segment-'.$segment->getId()."-".$segment->getCode().".csv")
+                );
+                try{
+                    $output->writeln ("Sending mail for segment ".$segment->getName()." to ".$email);
+                    $output->writeln('<info>Sending mail for segment '.$segment->getName().' to '.$email.'</info>');
+                    $result = $this->getContainer()->get('mailer')->send($message);
+                }catch(Exception $e){
+                    $output->writeln ($e->getMessage());
+                    $logger->error($e->getMessage());
+                }
+            }
+
+        }
+
+
+
+    }
 
 }

@@ -46,7 +46,7 @@ class MkgSegmentation {
 
     /**
      * @var string $utmcampaign
-     * @ORM\Column(type="string", nullable=true, name="utmcampaign")
+     * @ORM\Column(type="string", nullable=true, name="searchQuery")
      */
     protected $searchQuery;
 
@@ -61,6 +61,52 @@ class MkgSegmentation {
 	 * @ORM\JoinColumn(name="scope", referencedColumnName="id")
 	 */
 	protected $scope;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $cronexpression;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $emails;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $enabled;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastrun;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $nextrun;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $confirmationemailssubjects;
+
+    /**
+     * @var longtext $source
+     * @ORM\Column(type="text", nullable=true, name="conf_email_source")
+     */
+    protected $confirmationEmailSource;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $log;
 
     /**
      * @return int
@@ -190,6 +236,148 @@ class MkgSegmentation {
         $this->scope = $scope;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCronexpression()
+    {
+        return $this->cronexpression;
+    }
 
+    /**
+     * @param mixed $cronexpression
+     */
+    public function setCronexpression($cronexpression)
+    {
+        $this->cronexpression = $cronexpression;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnabled()
+    {
+        return $this->enabled;
+    }
+
+    /**
+     * @param mixed $enabled
+     */
+    public function setEnabled($enabled)
+    {
+        $this->enabled = $enabled;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastrun()
+    {
+        return $this->lastrun;
+    }
+
+    /**
+     * @param mixed $lastrun
+     */
+    public function setLastrun($lastrun)
+    {
+        $this->lastrun = $lastrun;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNextrun()
+    {
+        return $this->nextrun;
+    }
+
+    /**
+     * @param mixed $nextrun
+     */
+    public function setNextrun($nextrun)
+    {
+        $this->nextrun = $nextrun;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * @param mixed $log
+     */
+    public function setLog($log)
+    {
+        $this->log = $log;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmails()
+    {
+        return $this->emails;
+    }
+
+    /**
+     * @param mixed $emails
+     */
+    public function setEmails($emails)
+    {
+        $this->emails = $emails;
+    }
+
+    /**
+     * @return longtext
+     */
+    public function getConfirmationEmailSource()
+    {
+        return $this->confirmationEmailSource;
+    }
+
+    /**
+     * @param longtext $confirmationEmailSource
+     */
+    public function setConfirmationEmailSource($confirmationEmailSource)
+    {
+        $this->confirmationEmailSource = $confirmationEmailSource;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConfirmationemailssubjects()
+    {
+        return $this->confirmationemailssubjects;
+    }
+
+    /**
+     * @param mixed $confirmationemailssubjects
+     */
+    public function setConfirmationemailssubjects($confirmationemailssubjects)
+    {
+        $this->confirmationemailssubjects = $confirmationemailssubjects;
+    }
 
 }

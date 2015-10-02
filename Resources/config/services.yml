@@ -175,6 +175,11 @@ services:
     tags:
     - { name: scheduled.job }
 
+  leadsfactory.scheduled_segmentation_job:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\SegmentationScheduler
+    tags:
+    - { name: scheduled.job }
+
   leadsfactory.search_watchdog_job:
     class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\SearchWatchdogScheduler
     tags:

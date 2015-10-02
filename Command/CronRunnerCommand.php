@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Cron\CronExpression;
+use Tellaw\LeadsFactoryBundle\Entity\CronTask;
 
 class CronRunnerCommand extends ContainerAwareCommand {
 

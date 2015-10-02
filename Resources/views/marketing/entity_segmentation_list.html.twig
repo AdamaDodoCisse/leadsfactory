@@ -35,6 +35,8 @@
                         <th>id</th>
                         <th>Nom</th>
                         <th>Description</th>
+                        <th>Dernière éxécution</th>
+                        <th>Prochaine éxéctuion</th>
                         <th>Actions</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -45,6 +47,8 @@
                             <td style="vertical-align: middle;">{{ item.id }}</td>
                             <td style="vertical-align: middle;">{{ item.name }}</td>
                             <td style="vertical-align: middle;">{{ item.description }}</td>
+                            <td style="vertical-align: middle;">{{ item.lastrun|date("d/m/Y h:i:s") }}</td>
+                            <td style="vertical-align: middle;">{{ item.nextrun|date("d/m/Y h:i:s") }}</td>
                             <td style="text-align:center">
                                 <a href="{{ path('_form_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
                                 <a href="{{ path('_form_duplicate', {'id': item.id}) }}" alt="Dupliquer"><img title="Dupliquer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/dupliquer.png') }}"/></a>
@@ -60,7 +64,7 @@
                     {% else %}
 
                         <tr>
-                            <td colspan="5">Aucun élément dans cette liste</td>
+                            <td colspan="6">Aucun élément dans cette liste</td>
 
                         </tr>
 

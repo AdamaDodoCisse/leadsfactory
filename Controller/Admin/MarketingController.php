@@ -5,7 +5,9 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Form\Type\MkgSegmentationType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
@@ -31,27 +33,6 @@ class MarketingController extends CoreController
 
     /**
      *
-     * @Route("/segmentation/list/{page}/{limit}/{keyword}", name="_mkg_segmentation_list")
-     * @Secure(roles="ROLE_USER")
-     *
-     */
-    public function indexAction($page=1, $limit=10, $keyword='')
-    {
-
-        $list = $this->getList ('TellawLeadsFactoryBundle:MkgSegmentation', $page, $limit, $keyword, array ('user'=>$this->getUser()));
-
-        return $this->render(
-            'TellawLeadsFactoryBundle:marketing/entity:segmentation_list.html.twig',
-            array(
-            )
-        );
-
-    }
-
-
-
-    /**
-     *
      * Kibana page for browsing data
      *
      * @param Request $request
@@ -61,6 +42,12 @@ class MarketingController extends CoreController
     public function kibanaBrowserAction (Request $request) {
 
         $preferences = $this->container->get ("preferences_utils");
+
+        $search = $this->container->get ("search.utils");
+        if (!$search->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
+
         $kibanaUrl = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL );
 
         return $this->render(
@@ -74,12 +61,16 @@ class MarketingController extends CoreController
     /**
      * @param Request $request
      * @return mixed
-     * @Route("/kibana-dashboards", name="_marketing_list_kibana_dashboards")
+     * @Route("/kibana/dashboards", name="_marketing_list_kibana_dashboards")
      * @Secure(roles="ROLE_USER")
      */
     public function kibanaDashboardsAction ( Request $request ) {
 
         $search = $this->container->get ("search.utils");
+        if (!$search->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
+
         $dashboards = $search->getKibanaDashboards();
 
         return $this->render(
@@ -94,10 +85,250 @@ class MarketingController extends CoreController
     /**
      * @param Request $request
      * @return mixed
-     * @Route("/kibana-dashboards-edit/{id}", name="_marketing_kibana_dashboard_edit")
+     * @Route("/kibana/dashboards/edit/{id}", name="_marketing_kibana_dashboard_edit")
      * @Secure(roles="ROLE_USER")
      */
     public function kibanaDashboardEditAction ( Request $request, $id ) {
+
+        $searchUtils = $this->get ("search.utils");
+        if (!$searchUtils->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
+
+        $searches = $searchUtils->getKibanaSavedSearches();
+
+        $formEntity = $this->get('leadsfactory.mkgsegmentation_repository')->find($id);
+        $form = $this->createForm(
+            new MkgSegmentationType($searches),
+            $formEntity,
+            array('method' => 'POST')
+        );
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($form->getData());
+            $em->flush();
+
+        }
+
+        $hits = "";
+        $query = "";
+        $fieldsToDisplayRaw = "";
+        $fieldsToDisplay = array();
+        $error = null;
+
+        if($formEntity->getCode()) {
+
+            try {
+
+                $savedSearch = $searchUtils->getKibanaSavedSearch ( $formEntity->getCode(),$formEntity->getNbDays()  );
+
+                if (!is_null( $savedSearch )) {
+                    $query = $savedSearch->getQuery();
+                    $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+                    $hits = $result->hits->hits;
+                    $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
+                    $fieldsToDisplay = $savedSearch->getColumns();
+                } else {
+                    $error = "Chargement impossible de la recherche sauvegardée";
+                }
+            } catch ( \Exception $e) {
+                $this->get("logger")->error ( $e->getMessage() );
+                $error = "Chargement impossible de la recherche sauvegardée";
+            }
+        }
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Marketing:entity_edit.html.twig',
+            array(
+                "error" => $error,
+                "query" => $query,
+                "nbFieldsToDisplay" => count ($fieldsToDisplay),
+                "fieldsToDisplayRaw" => $fieldsToDisplayRaw,
+                "fieldsToDisplay" => $fieldsToDisplay,
+                'searchResults' => $hits,
+                'id' => $id,
+                'form' => $form->createView(),
+                'title' => "Edition d'un ségment"
+            )
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/dashboards/view/{id}", name="_marketing_kibana_dashboard_view")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaDashboardViewAction ( Request $request, $id ) {
+
+        $searchUtils = $this->get ("search.utils");
+        if (!$searchUtils->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
+
+        $formEntity = $this->get('leadsfactory.mkgsegmentation_repository')->find($id);
+
+        $result = "";
+        $query = "";
+        $fieldsToDisplayRaw = "";
+        $fieldsToDisplay = array();
+        if($formEntity->getCode()) {
+
+            $savedSearch = $searchUtils->getKibanaSavedSearch ( $formEntity->getCode(),$formEntity->getNbDays()  );
+            $query = $savedSearch->getQuery();
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+
+            $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
+            $fieldsToDisplay = $savedSearch->getColumns();
+        }
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Marketing:entity_view.html.twig',
+            array(
+                "query" => $query,
+                "nbFieldsToDisplay" => count ($fieldsToDisplay),
+                "fieldsToDisplayRaw" => $fieldsToDisplayRaw,
+                "fieldsToDisplay" => $fieldsToDisplay,
+                'searchResults' => $result->hits->hits,
+                'id' => $id,
+                'title' => "Visualisation d'un ségment"
+            )
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/download/csv/{id}", name="_marketing_kibana_download_csv")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaDownloadCsv ( Request $request, $id ) {
+
+        $searchUtils = $this->get ("search.utils");
+        if (!$searchUtils->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
+
+
+        $formEntity = $this->get('leadsfactory.mkgsegmentation_repository')->find($id);
+
+        $result = "";
+        $query = "";
+        $fieldsToDisplayRaw = "";
+        $fieldsToDisplay = array();
+
+        if($formEntity->getCode()) {
+
+            $savedSearch = $searchUtils->getKibanaSavedSearch ( $formEntity->getCode(),$formEntity->getNbDays()  );
+            $query = $savedSearch->getQuery();
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+
+            $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
+            $fieldsToDisplay = $savedSearch->getColumns();
+        }
+
+
+        $handle = fopen('php://temp', 'w');
+        fputcsv( $handle, $fieldsToDisplay, ";", "\"", "\\" );
+        $elements = $result->hits->hits;
+
+        foreach ( $elements as $row)  {
+
+            $leadsource = $row->_source;
+
+            $content = array ();
+            foreach ( $fieldsToDisplay as $fied ) {
+
+                try {
+                    if (trim($fied)!="") {
+                        if (strstr($fied,"content.")) {
+                            $headerrow = str_replace("content.","",$fied);
+                            $obj = $leadsource->content;
+                            $content[] = $obj->$headerrow;
+                        } else {
+                            $content[] = $leadsource->$fied;
+                        }
+                    }
+                } catch (\Exception $e) {
+                    $content[] = "";
+                }
+
+            }
+
+            fputcsv( $handle, $content, ";", "\"", "\\" );
+
+        }
+
+        rewind($handle);
+        $content = stream_get_contents($handle);
+        fclose($handle);
+
+        $response =  new Response($content);
+        $response->headers->set('content-type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
+
+        return $response;
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/dashboards/new", name="_marketing_kibana_dashboard_new")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaDashboardNewAction ( Request $request ) {
+
+        $searchUtils = $this->get ("search.utils");
+        if (!$searchUtils->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
+
+        $searches = $searchUtils->getKibanaSavedSearches();
+
+        $form = $this->createForm(
+            new MkgSegmentationType($searches),
+            null,
+            array('method' => 'POST')
+        );
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($form->getData());
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('_marketing_kibana_exports_list'));
+        }
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Marketing:entity_edit.html.twig',
+            array(
+                'error' => '',
+                'searchResults' => '',
+                'form' => $form->createView(),
+                'title' => "Création d'un Ségment"
+            )
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/dashboards/open/{id}", name="_marketing_kibana_dashboard_open")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaDashboardOpenAction ( Request $request, $id ) {
+
+        $searchUtils = $this->get ("search.utils");
+        if (!$searchUtils->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
+        }
 
         $preferences = $this->container->get ("preferences_utils");
         $kibanaUrl = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL );
@@ -112,67 +343,87 @@ class MarketingController extends CoreController
     }
 
     /**
-     * Start export
-     *
-     * @Route("/search", name="_marketing_index")
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/dashboards/delete/{id}", name="_marketing_kibana_dashboard_delete")
      * @Secure(roles="ROLE_USER")
      */
-    public function searchAction(Request $request)
-    {
+    public function kibanaDashboardDeleteAction ( Request $request, $id ) {
+
+        /**
+         * This is the deletion action
+         */
+        $object = $this->get('leadsfactory.mkgsegmentation_repository')->find($id);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($object);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('_marketing_kibana_exports_list'));
+
+    }
+
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/exports/list/{page}/{limit}/{keyword}", name="_marketing_kibana_exports_list")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaExportListAction ( $page=1, $limit=10, $keyword='' ) {
+
+        if ($this->get("core_manager")->isDomainAccepted ()) {
+            return $this->redirect($this->generateUrl('_security_licence_error'));
+        }
 
         $searchUtils = $this->get ("search.utils");
-        $results = $searchUtils->getIndexFields();
-        $results = json_decode( $results, true );
-        $fields = $results["leadsfactory"]["mappings"]["leads"]["properties"];
-
-        $leadsContent = array();
-
-        foreach ( $fields["content"]["properties"] as $key => $element ) {
-            $leadsContent[] = "content.".$key;
+        if (!$searchUtils->isKibanaAlive()) {
+            return $this->redirectToRoute('_marketing_kibana_error');
         }
 
-        unset ($fields["content"]);
-        foreach ( $fields as $key=>$element ) {
-            $leadsContent[] = $key;
-        }
-
-        //var_dump ($leadsContent);
-
-        $q = $request->get("q");
-        $field = $request->get("field");
-        $fieldsToDisplayRaw = $request->get ("fieldstodisplay");
-        $fieldsToDisplay = explode(";",$fieldsToDisplayRaw);
-
-        $results = null;
-
-        if ( $q != null) {
-            //var_dump ("request");
-
-/*
- * /72/WW/WBZ0001
- * http://local.dev/weka-leadsfactory/web/app_dev.php/admin/marketing/search?field=content.utmcampaign&q=%2F72%2FWW%2FWBZ0001&fieldstodisplay=id%3Bcontent.firstName%3Bcontent.lastName
- */
-
-            $results = $searchUtils->searchQueryString( $q,$field );
-            //var_dump($results);
-
-        } else {
-            $results = null;
-        }
-
-        // https://www.elastic.co/guide/en/elasticsearch/guide/current/search-lite.html
-        // https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax
+        $list = $this->getList ('TellawLeadsFactoryBundle:MkgSegmentation', $page, $limit, $keyword, array ('user'=>$this->getUser()));
 
         return $this->render(
-            'TellawLeadsFactoryBundle:marketing:index.html.twig',
+            'TellawLeadsFactoryBundle:entity/Marketing:entity_list.html.twig',
             array(
-                "results" => $results,
-                "leadsfields" => $leadsContent,
-                "q" => $q,
-                "field" => $field,
-                "fieldsToDisplayRaw" => $fieldsToDisplayRaw,
-                "fieldsToDisplay" => $fieldsToDisplay,
-                "results" => json_decode($results)
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options'],
+                'list'     => $list
+            )
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/kibana/error", name="_marketing_kibana_error")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function kibanaErrorAction ( ) {
+        $this->get("logger")->error ( "KIBANA Process may not be running" );
+        return $this->render(
+            'TellawLeadsFactoryBundle:Utils:kibana_error.html.twig',
+            array(
+
+            )
+        );
+
+    }
+
+    /**
+     * @param Request $request
+     * @return mixed
+     * @Route("/search/error", name="_marketing_search_error")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function elasticSearchErrorAction ( ) {
+        $this->get("logger")->error ( "elasticSearch Process may not be running" );
+        return $this->render(
+            'TellawLeadsFactoryBundle:Utils:kibana_error.html.twig',
+            array(
+
             )
         );
 

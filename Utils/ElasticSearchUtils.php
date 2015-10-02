@@ -34,6 +34,7 @@ class ElasticSearchUtils extends SearchShared {
 
     private $logger;
 
+
     public function __construct () {
         PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH, "Path to the binary file of elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
         PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE, "Url to elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
@@ -44,6 +45,57 @@ class ElasticSearchUtils extends SearchShared {
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
         $this->container = $container;
         $this->logger = $this->container->get("logger");
+    }
+
+    public function isKibanaAlive () {
+        $preferences = $this->container->get ("preferences_utils");
+        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL );
+        if (@file ($baseUri  )) {
+            return true;
+        }
+        return false;
+    }
+
+    public function isElasticSearchAlive () {
+        $preferences = $this->container->get ("preferences_utils");
+        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE );
+        if (@file ($baseUri  )) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Load saved search from Kibana
+     *
+     */
+    public function getKibanaSavedSearches () {
+
+        $query = "
+        {
+          \"query\": {
+            \"match\": {
+              \"_type\": \"search\"
+            }
+          },
+          \"aggs\": {}
+        }
+        ";
+        $savedSearch = $this->request(  ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/search/_search?", $query );
+
+        if (!is_null( $savedSearch->hits ))
+            $hits = $savedSearch->hits;
+        else
+            $hits=array();
+
+        $results = array();
+
+        foreach( $hits->hits as $hit ) {
+            $results[$hit->_id] = $hit->_source->title;
+        }
+
+        return $results;
+
     }
 
     /**
@@ -63,7 +115,7 @@ class ElasticSearchUtils extends SearchShared {
         }
         ";
 
-        $savedSearch = $this->request(  ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/_search?q=_id:test-eric", $query );
+        $savedSearch = $this->request(  ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/search/_search?q=_id:".$searchId, null );
 
         try {
 
@@ -83,6 +135,7 @@ class ElasticSearchUtils extends SearchShared {
         } catch (\Exception $e) {
 
             $this->logger->error($e->getMessage());
+            var_dump ($e->getMessage());
             return null;
 
         }

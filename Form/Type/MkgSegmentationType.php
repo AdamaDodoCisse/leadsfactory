@@ -8,12 +8,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class MkgSegmentationType extends AbstractType
 {
 
+    private $searches = null;
+
+    public function __construct ( $searches ) {
+        $this->searches = $searches;
+    }
+
     public function setDefaultOptions(OptionsResolverInterface $resolver) {
 
         $resolver->setDefaults(
             array(
                 'data_class' => 'Tellaw\LeadsFactoryBundle\Entity\MkgSegmentation',
-                'attr' => array('id' => 'form-form'
+                'attr' => array('id' => 'form-form',
+                    'onSubmit' => 'validateFormAction();'
                 )
             )
         );
@@ -28,7 +35,16 @@ class MkgSegmentationType extends AbstractType
         $builder->add('nbDays',null, array('label' => 'Nombre de jours à embarquer dans l\'export'));
 
         $builder->add('scope',null, array('label' => 'Scope de l\'export (aucun impact sur la requete)'));
-        $builder->add('code' ,null, array('label' => 'Identifiant Kibana de la requete') );
+        $builder->add('code' ,'choice', array('choices'  => $this->searches,'label' => 'Identifiant Kibana de la requete'));
+
+        $builder->add('enabled',null, array('label' => 'Activation de l\'export automatique', 'required' => false));
+        $builder->add('emails',null, array('label' => 'Emails des destinataires séparés par des point-virgules', 'required' => false));
+        $builder->add('cronexpression',null, array('label' => 'Cron expression de l\'export', 'required' => false));
+
+        $builder->add('confirmationemailssubjects', null, array('label' => 'Sujet du mail', 'required' => false));
+        $builder->add('confirmationEmailSource', 'textarea', array('label' => 'Source du mail', 'required' => false));
+
+        $builder->add('log', null, array ("read_only" => true ));
 
         $builder->add('save', 'submit');
 
