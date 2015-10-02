@@ -188,7 +188,7 @@ class AthenaV2BaseMapping {
     // #########################################################################################
 
     public function getTelephone($data) {
-        if (array_key_exists("phone",$data) && $data["phone"]) {
+        if (array_key_exists("pays",$data) && $data["pays"] && array_key_exists("phone",$data) && $data["phone"]) {
             switch ($data['pays'])
             {
                 case 'FR':
