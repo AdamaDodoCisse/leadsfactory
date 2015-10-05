@@ -209,6 +209,8 @@ class FrontController extends CoreController
 
             // Create new Leads Entity Object
             $leads = new Leads();
+            $leads->setIpadress($this->get('request')->server->get("REMOTE_ADDR"));
+            $leads->setUserAgent($this->get('request')->server->get("HTTP_USER_AGENT"));
             $leads->setFirstname( @$fields["firstname"] );
             $leads->setLastname( @$fields["lastname"] );
             $leads->setData( $json );

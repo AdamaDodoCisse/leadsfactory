@@ -88,6 +88,16 @@ class Leads
 	private $email = true;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $ipadress;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $userAgent;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Client", inversedBy="leads")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
@@ -396,6 +406,38 @@ class Leads
 	{
 		return $this->email;
 	}
+
+    /**
+     * @return mixed
+     */
+    public function getIpadress()
+    {
+        return $this->ipadress;
+    }
+
+    /**
+     * @param mixed $ipadress
+     */
+    public function setIpadress($ipadress)
+    {
+        $this->ipadress = $ipadress;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserAgent()
+    {
+        return $this->userAgent;
+    }
+
+    /**
+     * @param mixed $userAgent
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
+    }
 
     /**
      * @param $source   source object from the search
