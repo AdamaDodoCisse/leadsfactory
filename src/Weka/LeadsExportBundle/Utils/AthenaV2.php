@@ -74,6 +74,12 @@ class AthenaV2 extends AbstractMethod{
         // Find the ID of the form
         $source = $this->_formConfig["export"]["athenaV2"]["source"];
 
+        // Get destination
+        $id_assignation = '';
+        if(array_key_exists('id_assignation', $this->_formConfig["export"]["athenaV2"])){
+            $id_assignation = $this->_formConfig["export"]["athenaV2"]["id_assignation"];
+        }
+
         // Loop over export jobs
         foreach($jobs as $job){ 
             if(is_null($this->_mappingClass)){
@@ -85,6 +91,7 @@ class AthenaV2 extends AbstractMethod{
             } else {
                 $data = json_decode($job->getLead()->getData(), true);
 
+                // Get leads' id
                 $id_leadsfactory = $job->getLead()->getId();
                 
                 // Start Session to Athena
@@ -111,7 +118,8 @@ class AthenaV2 extends AbstractMethod{
                 // Send Request createDRC or createAffaire
                 if ( $this->_formConfig["export"]["athenaV2"]["method"] == "drc" ) {
                     $logger->info("Calling Athena CreateDRC");
-                    $results = $this->createDrc( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source, $id_leadsfactory);
+                    $results = $this->createDrc( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte,
+                                                $id_contact, $source, $id_leadsfactory, $id_assignation);
                 } else {
                     $logger->info("Calling Athena CreateAffaire");
                     $results = $this->createAffaire( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source );
@@ -350,7 +358,8 @@ class AthenaV2 extends AbstractMethod{
         return $id_contact;
     }
 
-    private function createDrc($idRemplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source, $id_leadsfactory) {
+    private function createDrc($idRemplissage, $data, $id_campagne, $id_produit,
+                               $id_compte, $id_contact, $source, $id_leadsfactory, $id_assignation) {
 
         $this->getLogger()->info( "[createdrc] : ***");
         $this->getLogger()->info( "[createdrc] : *** DRC");
@@ -369,6 +378,7 @@ class AthenaV2 extends AbstractMethod{
         $requestData->id_compte = $id_compte;
         $requestData->id_contact = $id_contact;
         $requestData->id_leadsfactory = $id_leadsfactory;
+        $requestData->id_assignation = $id_assignation;
 
         
         $this->_logger->info( "[createdrc] : id_compte : ".$id_compte);
@@ -389,6 +399,7 @@ class AthenaV2 extends AbstractMethod{
         $this->getLogger()->info( "[affaire] : *** AFFAIRE");
         $this->getLogger()->info( "[affaire] : ***");
 
+        return true;
     }
 
     private function closeAthenaConnection ( $id_remplissage, $source, $data ) {
