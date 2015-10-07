@@ -1,3 +1,4 @@
+bin/doctrine-dbal
 .idea
 .DS_Store
 /web/bundles/
