@@ -27,7 +27,6 @@ services:
           - [setContainer, [@service_container]]
         tags:
           - {name: export.method, alias: athenaV2}
-        arguments: [%athena_url%]
     gotowebinar_method:
             class: Weka\LeadsExportBundle\Utils\Gotowebinar
             calls:

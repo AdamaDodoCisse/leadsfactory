@@ -47,9 +47,9 @@ class AthenaV2 extends AbstractMethod{
         return $this->_logger;
     }
 
-    public function __construct($athenaUrl)
+    public function __construct()
     {
-        $this->_athenaUrl = $athenaUrl;
+	    $this->_athenaUrl = $this->get ("preferences_utils")->getUserPreferenceByKey ('ATHENA_URL');
     }
 
     /**
