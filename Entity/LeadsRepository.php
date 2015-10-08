@@ -25,8 +25,6 @@ class LeadsRepository extends EntityRepository
 	 */
 	public function getList($page=1, $limit=25, $keyword='',  $args=null )
 	{
-
-
 		$dql = $this->getSqlFilterQuery($args);
 
 		$query = $this->getEntityManager()
@@ -89,24 +87,23 @@ class LeadsRepository extends EntityRepository
             }
 
             if(!empty($args['form'])){
-				$dql .= " AND l.form='{$args[0]['form']}'";
+				$dql .= " AND l.form='{$args['form']}'";
 			}
 
-			/*
-			if(!empty($args[0]['scope'])){
+			if(!empty($args['scope'])){
 				$dql .= " AND f.scope='{$args['scope']}'";
-			}*/
+			}
 
 			if(!empty($args['lastname'])){
-				$dql .= " AND l.lastname LIKE '%{$args[0]['lastname']}%'";
+				$dql .= " AND l.lastname LIKE '%{$args['lastname']}%'";
 			}
 
 			if(!empty($args['firstname'])){
-				$dql .= " AND l.firstname LIKE '%{$args[0]['firstname']}%'";
+				$dql .= " AND l.firstname LIKE '%{$args['firstname']}%'";
 			}
 
 			if(!empty($args['email'])){
-				$dql .= " AND l.email LIKE '%{$args[0]['email']}%'";
+				$dql .= " AND l.email LIKE '%{$args['email']}%'";
 			}
 
 			if(!empty($args['keyword'])){
