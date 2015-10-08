@@ -65,6 +65,7 @@ class AthenaV2 extends AbstractMethod{
         $logger = $this->getLogger();
         $this->_logger = $logger;
 
+
         $this->_formConfig = $form->getConfig();
 
         // Recuperation de la mapping class
@@ -83,20 +84,29 @@ class AthenaV2 extends AbstractMethod{
         // Loop over export jobs
         foreach($jobs as $job){ 
             if(is_null($this->_mappingClass)){
+
                 $error = 'Mapping ATHENAV2 inexistant pour '.$form->getCode();
                 $logger->error("Erreur d'export : ".$error);
                 $status = $exportUtils->getErrorStatus($job);
                 $exportUtils->updateJob($job, $status, $error);
                 $exportUtils->updateLead($job->getLead(), $status, $error);
+
+
             } else {
+
                 $data = json_decode($job->getLead()->getData(), true);
 
                 // Get leads' id
                 $id_leadsfactory = $job->getLead()->getId();
-                
+
+                // Client informations
+                $logger->info("########################################################## START!#############################");
+                $ip_adr = $job->getLead()->getIpadress();
+                $user_agent = $job->getLead()->getUserAgent();
+
                 // Start Session to Athena
                 $logger->info("Calling Athena GetRemplissage");
-                $id_remplissage = $this->getAthenaRemplissage( $source, $data );
+                $id_remplissage = $this->getAthenaRemplissage( $source, $data, $ip_adr, $user_agent );
                 $this->_mappingClass->id_remplissage = $id_remplissage;
 
                 // Get ID Campagne
@@ -244,7 +254,7 @@ class AthenaV2 extends AbstractMethod{
         return json_decode($this->_postToAthena($jsonRequest));
     }
 
-    private function getAthenaRemplissage($source, $data) {
+    private function getAthenaRemplissage($source, $data, $ip_adr, $user_agent) {
 
         $this->getLogger()->info("[remplissage] : ***");
         $this->getLogger()->info("[remplissage] : *** REMPLISSAGE");
@@ -253,9 +263,9 @@ class AthenaV2 extends AbstractMethod{
 
         $requestData = array();
         $requestData["date_formulaire"] = $dateTime->format("c");
-        $requestData["adresse_ip"] = "0.0.0.0"; // Pas obligatoire
-        $requestData["user_agent"] = "Non renseigné"; // Pas obligatoire
-
+        $requestData["adresse_ip"] = $ip_adr ? $ip_adr : "0.0.0.0"; // Pas obligatoire
+        $requestData["user_agent"] = $user_agent ? $user_agent : "Non renseigné"; // Pas obligatoire
+        
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_REMPLISSAGE, $requestData, $source);
         $idRemplissage = $results->result->id_remplissage;
 
