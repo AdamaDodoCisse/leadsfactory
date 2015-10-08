@@ -17,7 +17,7 @@
 </style>
 <script>
 
-    <!-- http://c3js.org/examples.html  -->
+    //    http://c3js.org/examples.html
 
     var chart = c3.generate({
         bindto: '#demo-chart',
@@ -49,14 +49,12 @@
         {% else %}
         {% endif %}
 
-
-
         axis: {
             x: {
                 type: 'category',
                 tick: {
                     culling : {
-                      max : 30
+                        max : 30
                     },
                     rotate: 75,
                     multiline: false

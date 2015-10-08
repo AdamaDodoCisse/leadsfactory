@@ -69,26 +69,35 @@ class FormRepository extends EntityRepository
      * Method used to extract form ID, Page Views, Number of Leads and Transform Rate
      * @param $array_of_forms
      * @param $utils
+     * @return array|\Doctrine\ORM\Query
      */
     public function getStatisticsForForms ( $array_of_forms, $utils ) {
 
-        /*
-        // La requette doit extraire le top 10 des UTM
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb ->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
-            ->from('TellawLeadsFactoryBundle:Tracking', 't')
-            ->where('t.created_at >= :minDate')
-            ->andWhere('t.created_at <= :maxDate')
-            ->groupBy('t.utm_campaign')
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-        ;
-*/
-        // SELECT id, (SELECT count(T.id) FROM Tracking T WHERE T.form_id = F.id)  AS PAGEVIEWS, (SELECT count(L.id) FROM Leads L WHERE L.form_id = F.id) AS NBLEADS  FROM Form F
-        $dql = "SELECT f.id, f.name, (SELECT count (t.id) FROM TellawLeadsFactoryBundle:Tracking t WHERE t.form = f) AS PAGES_VIEWS, ( SELECT count (l.id) FROM TellawLeadsFactoryBundle:Leads l WHERE l.form = f ) AS NB_LEADS FROM TellawLeadsFactoryBundle:Form f";
-        $result = $this->getEntityManager()->createQuery($dql);
-        $result = $result->getResult();
+        $userPreferences = $utils->getUserPreferences();
 
+        $minDate = $userPreferences->getDataPeriodMinDate();
+        $maxDate = $userPreferences->getDataPeriodMaxDate();
+
+        $q = "SELECT f.id, f.name,
+                    (SELECT count (t.id)
+                    FROM TellawLeadsFactoryBundle:Tracking t
+                    WHERE t.form = f
+                      AND DATE_FORMAT(t.created_at, '%Y-%m-%d') >= '" . date_format($minDate, 'Y-m-d') . "'
+                      AND DATE_FORMAT(t.created_at, '%Y-%m-%d') <= '" . date_format($maxDate, 'Y-m-d') . "')
+                    AS PAGES_VIEWS,
+                    (SELECT count (l.id)
+                    FROM TellawLeadsFactoryBundle:Leads l
+                    WHERE l.form = f
+                        AND DATE_FORMAT(l.createdAt, '%Y-%m-%d') >= '" . date_format($minDate, 'Y-m-d') . "'
+                        AND DATE_FORMAT(l.createdAt, '%Y-%m-%d') <= '" . date_format($maxDate, 'Y-m-d') . "')
+                    AS NB_LEADS
+                FROM TellawLeadsFactoryBundle:Form f";
+
+        $result = $this->getEntityManager()->createQuery($q);
+        $result = $result->getResult();
+//        echo "<pre>";
+//        print_r($result); exit;
+//        echo "</pre>";
         return $result;
 
     }
