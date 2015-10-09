@@ -47,11 +47,6 @@ class AthenaV2 extends AbstractMethod{
         return $this->_logger;
     }
 
-    public function __construct()
-    {
-	    $this->_athenaUrl = $this->get ("preferences_utils")->getUserPreferenceByKey ('ATHENA_URL');
-    }
-
     /**
      * Process export
      *
@@ -60,6 +55,8 @@ class AthenaV2 extends AbstractMethod{
      */
     public function export($jobs, $form)
     {
+	    $this->_athenaUrl = $this->getContainer()->get("preferences_utils")->getUserPreferenceByKey ('ATHENA_URL');
+
         // Get Utils & Logger
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getLogger();
