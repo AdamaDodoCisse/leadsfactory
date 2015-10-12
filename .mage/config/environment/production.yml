@@ -17,7 +17,7 @@ releases:
   symlink: current
   directory: releases
 hosts:
-  - 10.25.109.50
+  - 10.25.109.61
 tasks:
   pre-deploy:
     - composer-install: {dev: false}
