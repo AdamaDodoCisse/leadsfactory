@@ -80,18 +80,27 @@ class MonitoringController extends CoreController {
         // Logged User
         $user_id = $this->get('security.context')->getToken()->getUser()->getId();
 
+        // Get user scope
+        $user_scope = $this->get('security.context')->getToken()->getUser()->getScope();
+
         // Get All Types in the scope
-        $forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
+        $raw_forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
+
+        // Filter forms
+        $forms = array();
+        foreach($raw_forms as $f) {
+            if ($f->getScope() == $user_scope)
+                $forms[] = $f;
+        }
+
         // Load bookmarked forms for user
         $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getFormsForUser( $user_id );
-
-
         $utils = $this->container->get('lf.utils');
+        $utmForms = $this->get('leadsfactory.form_repository')->getStatisticsForUtmForms($forms, $utils);
+        $utmBookmarks = $this->get('leadsfactory.form_repository')->getStatisticsForUtmBookmarks($forms, $bookmarks, $utils);
 
-        $utmForms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForUtmForms($forms, $utils);
-        $utmBookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForUtmBookmarks($forms, $bookmarks, $utils);
-
-        $results = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getStatisticsForForms( array(), $utils);
+        // Load comparative statistics for forms
+        $results = $this->get('leadsfactory.form_repository')->getStatisticsForForms($forms, $utils);
 
         $views = $results;
         unset ($views["NB_LEADS"]);
@@ -362,8 +371,9 @@ class MonitoringController extends CoreController {
      * Controlleur dédié à la création des graphiques.
      * Il doit prendre en paramètres :
      * 1 ) $mode => FormType ou Form : Définit le type d'objet à afficher sur le graph.
-     * 2 ) $objects => array : Tableau d'elements à afficher sur le graph. Attention si le mode est sur Form le tableau sera des objets Form et si mode est sur FormType,
-     *     il sera alors un tableau d'objets FormType
+     * 2 ) $objects => array : Tableau d'elements à afficher sur le graph.
+     *      Attention si le mode est sur Form le tableau sera des objets Form et si mode est sur FormType,
+     *      il sera alors un tableau d'objets FormType
      *
      * @Secure(roles="ROLE_USER")
      */
@@ -377,34 +387,29 @@ class MonitoringController extends CoreController {
         $chart = $this->get('chart');
         $chart->setPeriod($period);
 
-
-        // Get Bookmarks of object's type FormType
-        if( $mode == 'FormType' && $objects == null ){
-
-            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b WHERE b.formType = f.id AND b.user ='.$user->getId());
+        if( $mode == 'FormType' && $objects == null ){ // Get Bookmarks of object's type FormType
+            $query = $em->createQuery('SELECT f
+                                      FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b
+                                      WHERE b.formType = f.id AND b.user ='.$user->getId());
             $formTypes = $query->getResult();
             $chart->setFormType($formTypes);
 
-            // Get Bookmarks of object's type Form
-        } else if ( $mode == 'Form' && $objects == null ) {
-
-            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:Bookmark b WHERE b.form = f.id AND b.user ='.$user->getId());
+        } else if ( $mode == 'Form' && $objects == null ) { // Get Bookmarks of object's type Form
+            $query = $em->createQuery('SELECT f
+                                      FROM TellawLeadsFactoryBundle:Form f
+                                        JOIN TellawLeadsFactoryBundle:Scope s WITH s.id = f.scope,
+                                      TellawLeadsFactoryBundle:Bookmark b
+                                      WHERE b.form = f.id AND b.user ='.$user->getId());
             $forms = $query->getResult();
             $chart->setForm($forms);
 
-            // Get Array of objects of object's type FormType
-        } else if ($mode == 'FormType' && $objects != null ) {
-
+        } else if ($mode == 'FormType' && $objects != null ) { // Get Array of objects of object's type FormType
             $chart->setFormType ( $objects );
 
-            // Get Array of objects of object's type Form
-        } else if ( $mode == 'Form' && $objects != null ) {
-
+        } else if ( $mode == 'Form' && $objects != null ) { // Get Array of objects of object's type Form$
             $chart->setForm ( $objects );
 
-
-            // Throw exception for wrong state
-        } else {
+        } else { // Throw exception for wrong state
             throw new \Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
         }
 
@@ -534,8 +539,11 @@ class MonitoringController extends CoreController {
             'form' => $formEntity,
         ));
     }
+
+
     /**
      * @Secure(roles="ROLE_USER")
+     * TODO DEPRECATED : THIS FUNCTION IS NOW USELESS
      */
     public function getFormStatisticsValuesAction($form_id)
     {
@@ -633,6 +641,7 @@ class MonitoringController extends CoreController {
      * @var string period
      * @var mixed formType
      * @var mixed form
+     * @return Response
      */
     public function chartAction($period='year', $formType=null, $form=null)
     {
@@ -699,9 +708,11 @@ class MonitoringController extends CoreController {
      * @route("/bookmark", name="_monitoring_bookmark")
      * @Secure(roles="ROLE_USER")
      *
-     * @param string $entity Form|FormType
-     * @param int $id
-     * @param bool $status
+     * @param Request $request
+     * @return Response
+     * @internal param string $entity Form|FormType
+     * @internal param int $id
+     * @internal param bool $status
      */
     public function bookmarkAction(Request $request)
     {

@@ -67,39 +67,49 @@ class FormRepository extends EntityRepository
 
     /**
      * Method used to extract form ID, Page Views, Number of Leads and Transform Rate
-     * @param $array_of_forms
+     * @param $forms
      * @param $utils
      * @return array|\Doctrine\ORM\Query
      */
-    public function getStatisticsForForms ( $array_of_forms, $utils ) {
+    public function getStatisticsForForms($forms, $utils ) {
 
         $userPreferences = $utils->getUserPreferences();
 
-        $minDate = $userPreferences->getDataPeriodMinDate();
-        $maxDate = $userPreferences->getDataPeriodMaxDate();
+        $minDate = date_format($userPreferences->getDataPeriodMinDate(), 'Y-m-d') ;
+        $maxDate = date_format($userPreferences->getDataPeriodMaxDate(), 'Y-m-d');
 
-        $q = "SELECT f.id, f.name,
-                    (SELECT count (t.id)
-                    FROM TellawLeadsFactoryBundle:Tracking t
-                    WHERE t.form = f
-                      AND DATE_FORMAT(t.created_at, '%Y-%m-%d') >= '" . date_format($minDate, 'Y-m-d') . "'
-                      AND DATE_FORMAT(t.created_at, '%Y-%m-%d') <= '" . date_format($maxDate, 'Y-m-d') . "')
-                    AS PAGES_VIEWS,
-                    (SELECT count (l.id)
-                    FROM TellawLeadsFactoryBundle:Leads l
-                    WHERE l.form = f
-                        AND DATE_FORMAT(l.createdAt, '%Y-%m-%d') >= '" . date_format($minDate, 'Y-m-d') . "'
-                        AND DATE_FORMAT(l.createdAt, '%Y-%m-%d') <= '" . date_format($maxDate, 'Y-m-d') . "')
-                    AS NB_LEADS
-                FROM TellawLeadsFactoryBundle:Form f";
+        // Get type of forms in the user's scope
+        $forms_id = array();
+        foreach($forms as $f) $forms_id[] = $f->getId();
+        $ids = join(',',$forms_id);
 
-        $result = $this->getEntityManager()->createQuery($q);
-        $result = $result->getResult();
-//        echo "<pre>";
-//        print_r($result); exit;
-//        echo "</pre>";
+        // Get the number of leads
+        $sub_qb_l = $this->_em->createQueryBuilder();
+        $sub_qb_l->select('count (l)');
+        $sub_qb_l->from("TellawLeadsFactoryBundle:Leads", "l");
+        $sub_qb_l->where("l.form = f");
+        $sub_qb_l->andWhere("DATE_FORMAT(l.createdAt, '%Y-%m-%d') >= '$minDate'");
+        $sub_qb_l->andWhere("DATE_FORMAT(l.createdAt, '%Y-%m-%d') <= '$maxDate'");
+        $sub_qb_l = $this->excludeInternalLeads($sub_qb_l);
+
+        // Get the number of views
+        $sub_qb_t = $this->_em->createQueryBuilder();
+        $sub_qb_t->select('count (t)');
+        $sub_qb_t->from("TellawLeadsFactoryBundle:Tracking", "t");
+        $sub_qb_t->where("t.form = f");
+        $sub_qb_t->andWhere("DATE_FORMAT(t.created_at, '%Y-%m-%d') >= '$minDate'");
+        $sub_qb_t->andWhere("DATE_FORMAT(t.created_at, '%Y-%m-%d') <= '$maxDate'");
+
+        // Create query with all subqueries
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select("f.id, f.name");
+        $qb->addSelect("(".$sub_qb_l->getDQL().") AS NB_LEADS");
+        $qb->addSelect("(".$sub_qb_t->getDQL().") AS PAGES_VIEWS");
+        $qb->from("TellawLeadsFactoryBundle:Form", "f", "f.name");
+        if ($ids) $qb->where("f.id IN ($ids)");
+
+        $result = $qb->getQuery()->getResult();
         return $result;
-
     }
 
     public function setStatisticsForId($form_id, $utils)
@@ -112,7 +122,6 @@ class FormRepository extends EntityRepository
 
         $minDate = $userPreferences->getDataPeriodMinDate();
         $maxDate = $userPreferences->getDataPeriodMaxDate();
-
 
         // Load the number of pages views
         $qb = $this->_em->createQueryBuilder();
@@ -384,6 +393,11 @@ class FormRepository extends EntityRepository
         $this->internal_email_patterns = $patterns;
     }
 
+    public function getInternalEmailPatterns()
+    {
+        return $this->internal_email_patterns;
+    }
+
     /**
      * @param QueryBuilder $qb
      *
@@ -394,9 +408,7 @@ class FormRepository extends EntityRepository
     {
         $i = 0;
         foreach ($this->internal_email_patterns as $pattern) {
-            $qb->andWhere('l.email not like :pattern_'.$i)
-                ->setParameter('pattern_'.$i, $pattern)
-            ;
+            $qb->andWhere("l.email NOT LIKE '".$pattern."'");
             ++$i;
         }
         return $qb;

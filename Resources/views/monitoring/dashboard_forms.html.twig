@@ -25,7 +25,7 @@
 			<br/><br/>
 			{#                search for item here  #}
 
-			<table id="myTable" class='table table-bordered'>
+			<table id="statistics_table" class='table table-bordered'>
 				<thead>
 				<tr class="country-table-head">
 					<th>Nom</th>
@@ -37,26 +37,35 @@
 				</tr>
 				</thead>
 				<tbody>
+
 				{% for form in forms %}
 					<tr>
 						<td>
 							<a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">
-								{% for bookmark in bookmarks %}
-									{% if form.name == bookmark.form.name %}
-										<i class="fa fa-star"></i>
-									{% endif %}
-								{% endfor %}
-								{{ form.name }}
+							{% for bookmark in bookmarks %}
+								{% if form.name == bookmark.form.name %}
+									<i class="fa fa-star"></i>
+								{% endif %}
+							{% endfor %}
+							{{ form.name }}
 							</a>
 						</td>
-						{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormStatisticsValues', {"form_id" : form.id})) }}
+						<td>{{ nbviews[form.name]["PAGES_VIEWS"] }}</td>
+						<td>{{ nbviews[form.name]["NB_LEADS"] }}</td>
+						<td>
+							{% if nbviews[form.name]["PAGES_VIEWS"] != 0  %}
+								{{ (nbviews[form.name]["NB_LEADS"] / nbviews[form.name]["PAGES_VIEWS"] * 100) |round}} %
+							{% else %}
+								0 %
+							{% endif %}
+						</td>
 						<td>
 							{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getStatusForForm', {"form_id" : form.id})) }}
 						</td>
 						<td>
-							<a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}"  alt="Voir les statistiques">
-								<img title="Voir les statistiques" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/>
-							</a>
+						<a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}"  alt="Voir les statistiques">
+							<img title="Voir les statistiques" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/>
+						</a>
 						</td>
 					</tr>
 				{% endfor %}
@@ -118,13 +127,20 @@
 
 	<!-- Chart -->
 	{% if(app.request.get('form')) %}
-		{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
-			"period" : app.request.get('form')['period'],
-			"mode" : "Form"
-		}
+		{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard',
+			{
+				"period" : app.request.get('form')['period'],
+				"mode" : "Form",
+				"objects": forms
+			}
 		)) }}
 	{% else %}
-		{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {"mode" : "Form"})) }}
+		{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard',
+			{
+				"mode" : "Form",
+				"objects": forms
+			}
+		)) }}
 	{% endif %}
 
 
@@ -183,7 +199,7 @@
 				tx_transformation = nb_l / nb_v;
 			tab_nb_views.push([data_nb_views[k]['name'], nb_v]);
 			tab_nb_leads.push([data_nb_views[k]['name'], nb_l]);
-			tab_nb_transformation.push([data_nb_views[k]['name'], tx_transformation * 100]);
+			tab_nb_transformation.push([data_nb_views[k]['name'], tx_transformation]);
 		});
 
 		//console.log(JSON.stringify(tab_nb_transformation));
@@ -228,21 +244,29 @@
 				columns: tab_nb_transformation,
 				type: 'pie'
 			},
+			tooltip: {
+				format: {
+					title: function (d) { return d; },
+					value: function (value, ratio, id) {
+						var format = d3.format(',');
+						return format(Math.round(value * 100)) + " %";
+					}
+				}
+			},
 			size: {height: chart_height}
 		});
-
 
 		$("#search").keyup(function() {
 			var value = this.value.toUpperCase();
 			//console.log(value);
-			$("#myTable").find("tr").each(function(index) {
+			$("#statistics_table").find("tr").each(function(index) {
 				if (index === 0) return;
 				var id = $(this).find("td").first().text().toUpperCase();
 				$(this).toggle(id.indexOf(value) !== -1);
 			});
 		});
 
-		$("#myTable").tablesorter();
+		$("#statistics_table").tablesorter();
 
 	</script>
 {% endblock %}
