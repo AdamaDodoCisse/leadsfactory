@@ -114,6 +114,8 @@ class MonitoringController extends CoreController {
         unset ($views["PAGES_VIEWS"]);
         unset ($views["id"]);
 
+        $forms = $this->sortFormsByBookmark($forms, $bookmarks);
+
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
             'form'          =>  $form->createView(),
             'bookmarks'     =>  $bookmarks,
@@ -124,6 +126,30 @@ class MonitoringController extends CoreController {
             'nbLeads'       =>  $nbLeads
         ));
     }
+
+
+    /**
+     * Only used to sort bookmarked forms
+     * @param $forms
+     * @param $bookmarks
+     * @return array
+     */
+    private function sortFormsByBookmark($forms, $bookmarks) {
+        $bookmark_list = array();
+        $sorted_forms = array();
+        foreach ($bookmarks as $b) {
+            array_push($bookmark_list, $b->getForm()->getName());
+        }
+        foreach ($forms as $form) {
+            if (in_array($form->getName(), $bookmark_list)) {
+                array_unshift($sorted_forms, $form);
+            } else {
+                array_push($sorted_forms, $form);
+            }
+        }
+        return $sorted_forms;
+    }
+
 
     /**
      * @route("/dashboard_type_page/{type_id}", name="_monitoring_dashboard_type_page")
