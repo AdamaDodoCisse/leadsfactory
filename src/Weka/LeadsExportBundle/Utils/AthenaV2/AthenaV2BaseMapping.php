@@ -190,26 +190,32 @@ class AthenaV2BaseMapping {
 
 
     public function getTelephone($data) {
-        if (array_key_exists("pays",$data) && $data["pays"] && array_key_exists("phone",$data) && $data["phone"]) {
+        $telephone = '';
+        if (array_key_exists("phone", $data) && $data["phone"]
+            && array_key_exists("pays", $data) && $data["pays"]) {
             switch ($data['pays'])
             {
                 case 'FR':
-                    $data['phone'] = '+33' . $data['phone'];
+                    $telephone = '+33' . $data['phone'];
                     break;
                 case 'BE':
-                    $data['phone'] = '+32' . $data['phone'];
+                    $telephone = '+32' . $data['phone'];
                     break;
                 case 'MC':
-                    $data['phone'] = '+377' . $data['phone'];
+                    $telephone = '+377' . $data['phone'];
                     break;
                 case 'LU':
-                    $data['phone'] = '+352' . $data['phone'];
+                    $telephone = '+352' . $data['phone'];
                     break;
                 case 'CH':
-                    $data['phone'] = '+41' . $data['phone'];
+                    $telephone = '+41' . $data['phone'];
+                    break;
+                default :
+                    $telephone = $data['phone'];
+                    break;
             }
         }
-        return $data['phone'];
+        return $telephone;
     }
 
     public function getVille_facturation($data){
@@ -292,27 +298,8 @@ class AthenaV2BaseMapping {
             $comment .= ", société : " . strtoupper($data['etablissement']) ;
         }
 
-        if (array_key_exists("phone",$data) && $data["phone"]) {
-            switch ($data['pays'])
-            {
-                case 'FR':
-                    $telephone = '+33' . $data['phone'];
-                    break;
-                case 'BE':
-                    $telephone = '+32' . $data['phone'];
-                    break;
-                case 'MC':
-                    $telephone = '+377' . $data['phone'];
-                    break;
-                case 'LU':
-                    $telephone = '+352' . $data['phone'];
-                    break;
-                case 'CH':
-                    $telephone = '+41' . $data['phone'];
-                    break;
-                default :
-                    $telephone = $data['phone'];
-            }
+        $telephone = $this->getTelephone($data);
+        if ($telephone) {
             $comment .= ", telephone : " . strtoupper($telephone);
         }
 

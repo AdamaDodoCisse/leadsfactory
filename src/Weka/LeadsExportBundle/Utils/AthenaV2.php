@@ -97,7 +97,7 @@ class AthenaV2 extends AbstractMethod{
                 $id_leadsfactory = $job->getLead()->getId();
 
                 // Client informations
-                $logger->info("########################################################## START!#############################");
+                $logger->info("############################## START ATHENAV2!#############################");
                 $ip_adr = $job->getLead()->getIpadress();
                 $user_agent = $job->getLead()->getUserAgent();
 
