@@ -101,7 +101,6 @@ class EntityReferenceListController extends CoreController
     public function buildfileAction ( $id ) {
 
         $fileName = '../datas/json-lists/'.$id.'.json';
-
         $fs = new Filesystem();
         $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find($id);
         $referingLists = $this->get("lf.utils")->getListOfLists( $id );

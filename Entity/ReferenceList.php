@@ -185,11 +185,13 @@ class ReferenceList {
         $data = array();
 
         $elements = $this->getElements ();
+        //var_dump(($elements));
+
         $data["lists"] = $referingLists;
         $data["elements"] = $this->getChilds( $elements );
 
-        //var_dump(($elements));
-        //die();
+//        var_dump(($elements));
+//        die();
         $json = json_encode( $data, JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT );
 
         return $json;
@@ -223,7 +225,7 @@ class ReferenceList {
 
 
             }
-//var_dump ($element->getChildren());
+            //var_dump ($element->getChildren());
             //if ( count($element->getChildren()) ) {
 
 

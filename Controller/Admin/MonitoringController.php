@@ -83,14 +83,18 @@ class MonitoringController extends CoreController {
         // Get user scope
         $user_scope = $this->get('security.context')->getToken()->getUser()->getScope();
 
-        // Get All Types in the scope
+        // Get All Types of forms regardless the scope
         $raw_forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
 
-        // Filter forms
+        // Filter forms regarding scopes
         $forms = array();
-        foreach($raw_forms as $f) {
-            if ($f->getScope() == $user_scope)
-                $forms[] = $f;
+        if ($user_scope) { // If there is a scope
+            foreach($raw_forms as $f) {
+                if ($f->getScope() == $user_scope)
+                    $forms[] = $f;
+            }
+        } else { // If there is no scope
+            $forms = $raw_forms;
         }
 
         // Load bookmarked forms for user
@@ -110,18 +114,6 @@ class MonitoringController extends CoreController {
         unset ($views["PAGES_VIEWS"]);
         unset ($views["id"]);
 
-        /*
-                // get table for nb views graphs
-                foreach ($forms as $cpt => $forma){
-                    $nb_view = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->setStatisticsForId($forma->getId(), $utils);
-
-                    $views[$cpt]['label'] = $forma->getName();
-                    $views[$cpt]['value'] = $nb_view->nbViews;
-
-                    $nbLeads[$cpt]['label'] = $forma->getName();
-                    $nbLeads[$cpt]['value'] = $nb_view->nbLeads;
-                }
-          */
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
             'form'          =>  $form->createView(),
             'bookmarks'     =>  $bookmarks,
@@ -207,21 +199,6 @@ class MonitoringController extends CoreController {
 
         // Get All Types in the scope
         $forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
-
-        // get table for nb views graphs
-        $utils = $this->container->get('lf.utils');
-
-//        foreach ($entity as $cpt => $forma){
-        $nb_view = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->setStatisticsForId($entity->getId(), $utils);
-
-//            $views[$cpt]['label'] = $forma->getName();
-//            $views[$cpt]['value'] = $nb_view->nbViews;
-//            
-//            $nbLeads[$cpt]['label'] = $forma->getName();
-//            $nbLeads[$cpt]['value'] = $nb_view->nbLeads;
-//        }
-//                
-//        var_dump($nb_view->nbViews); 
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_form_page.html.twig", array(
             'form'  => $form->createView(),
