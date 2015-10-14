@@ -9,6 +9,7 @@ deployment:
     - app/Export
     - app/logs
     - app/sessions
+    - licence
     - datas
   strategy: targz
 releases:
@@ -17,12 +18,12 @@ releases:
   symlink: current
   directory: releases
 hosts:
-  - 10.25.109.50
+  - 10.25.109.61
 tasks:
   pre-deploy:
     - composer-install: {dev: false}
   on-deploy:
-    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas]}
+    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas, licence]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
     - symfony-doctrine-update
