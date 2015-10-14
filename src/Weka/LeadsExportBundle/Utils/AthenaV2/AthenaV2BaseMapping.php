@@ -190,29 +190,30 @@ class AthenaV2BaseMapping {
 
 
     public function getTelephone($data) {
-        $telephone = '';
-        if (array_key_exists("phone", $data) && $data["phone"]
-            && array_key_exists("pays", $data) && $data["pays"]) {
-            switch ($data['pays'])
-            {
-                case 'FR':
-                    $telephone = '+33' . $data['phone'];
-                    break;
-                case 'BE':
-                    $telephone = '+32' . $data['phone'];
-                    break;
-                case 'MC':
-                    $telephone = '+377' . $data['phone'];
-                    break;
-                case 'LU':
-                    $telephone = '+352' . $data['phone'];
-                    break;
-                case 'CH':
-                    $telephone = '+41' . $data['phone'];
-                    break;
-                default :
-                    $telephone = $data['phone'];
-                    break;
+        if (array_key_exists("phone", $data) && $data["phone"]) {
+            $telephone = $data["phone"];
+            if (array_key_exists("pays", $data) && $data["pays"]) {
+                switch ($data['pays'])
+                {
+                    case 'FR':
+                        $telephone = '+33' . $data['phone'];
+                        break;
+                    case 'BE':
+                        $telephone = '+32' . $data['phone'];
+                        break;
+                    case 'MC':
+                        $telephone = '+377' . $data['phone'];
+                        break;
+                    case 'LU':
+                        $telephone = '+352' . $data['phone'];
+                        break;
+                    case 'CH':
+                        $telephone = '+41' . $data['phone'];
+                        break;
+                    default :
+                        $telephone = $data['phone'];
+                        break;
+                }
             }
         }
         return $telephone;
