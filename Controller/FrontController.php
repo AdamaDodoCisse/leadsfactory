@@ -177,6 +177,8 @@ class FrontController extends CoreController
 
         $exportUtils = $this->get('export_utils');
 
+        $searchUtils = $this->get('search.utils');
+
        /*
          if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
             throw new \Exception ("Form Key is not allowed");
@@ -236,6 +238,10 @@ class FrontController extends CoreController
             if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
                 $exportUtils->createJob($leads);
             }
+
+            // Index leads on search engine
+            $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leads->getId());
+            $searchUtils->indexLeadObject($leads_array, $leads->getForm()->getScope()->getId());
 
             //Send notification
             if(isset($config['notification'])){

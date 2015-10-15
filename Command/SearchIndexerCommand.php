@@ -129,7 +129,11 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 				echo $idxElementNum++."/".$countLeads." -> ".$obj["id"]. " - ".$obj["email"]."\n";
 
 				// Send to Search Engine
-				$searchUtils->indexLeadObject( $obj, $scopeId );
+				$leads_array = $this->getContainer()->get('leadsfactory.leads_repository')->getLeadsArrayById($obj["id"]);
+				$response = $searchUtils->indexLeadObject( $leads_array, $scopeId );
+				print_r($leads_array);
+				echo "#### RESULST ####";
+				print_r($response);
 
 			}
 			unset ($result);

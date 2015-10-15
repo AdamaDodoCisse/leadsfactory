@@ -460,9 +460,7 @@ class Leads
         $this->setEmail( $source->email );
         if ($source->entreprise_id) $this->setEntreprise( $em->getRepository('TellawLeadsFactoryBundle:Entreprise')->find( $source->entreprise_id ) );
         if ($source->client_id) $this->setEntreprise( $em->getRepository('TellawLeadsFactoryBundle:Client')->find( $source->client_id ) );
-
         return $this;
-
     }
 
 }

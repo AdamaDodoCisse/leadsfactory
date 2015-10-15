@@ -14,6 +14,51 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsRepository extends EntityRepository
 {
 
+
+	/**
+	 * Get al fields for a Lead
+	 * @return mixed
+	 */
+	public function getLeadsArrayById($id=0) {
+		$q = $this->getEntityManager()
+			->createQueryBuilder();
+		$q  ->select("l")
+			->from("TellawLeadsFactoryBundle:Leads", "l")
+			->where("l.id = ".$id);
+		$result_array = $q->getQuery()->getArrayResult();
+		$result_object = $q->getQuery()->getResult();
+		if ($result_array) {
+			$result_array = $result_array[0];
+			$result_object = $result_object[0];
+
+			$result_array["content"] = json_decode($result_array["data"], true);
+
+			$result_array["formId"] = $result_object->getForm()->getId();
+			$result_array["formName"] = str_replace(' ', '_', strtolower($result_object->getForm()->getName()));
+
+			if ($result_object->getForm()->getFormType()) {
+				$result_array["formTypeId"] = $result_object->getForm()->getFormType()->getId();
+				$result_array["formTypeName"] = str_replace(' ', '_', strtolower($result_object->getForm()->getFormType()->getName()));
+			} else {
+				$result_array["formTypeId"] = 0;
+				$result_array["formTypeName"] = "";
+			}
+
+			if ($result_object->getForm()->getScope()) {
+				$result_array["scopeId"] = $result_object->getForm()->getScope()->getId();
+				$result_array["scopeName"] = str_replace(' ', '_', strtolower($result_object->getForm()->getScope()->getName()));
+			} else {
+				$result_array["scopeId"] = 0;
+				$result_array["scopeName"] = "";
+			}
+
+			$result_array["clientId"] = $result_object->getClient();
+			$result_array["entrepriseId"] = $result_object->getEntreprise();
+		}
+
+		return $result_array;
+	}
+
 	/**
 	 * Returns a paginated list of leads
 	 *
@@ -51,6 +96,7 @@ class LeadsRepository extends EntityRepository
 
 		return $results;
 	}
+
 
 	/**
 	 * Return an array of leads based on parameters

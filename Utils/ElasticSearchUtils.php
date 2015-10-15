@@ -266,53 +266,24 @@ class ElasticSearchUtils extends SearchShared {
 
     /**
      * @param $fields Array of fields to represent Lead object
+     * @param $scopeId
+     * @return mixed|SearchResult
      */
-    public function indexLeadObject ( $fields, $scopeId, $leadObject = null ) {
+    public function indexLeadObject ( $fields, $scopeId ) {
 
-        $exportDate = "";
-        $createdAt = "";
-
-        if ($leadObject != null) {
-
-            die();
-
-        } else {
-
-            $data = array();
-            if ($fields["exportdate"] != "") {
-                $exportDate = \DateTime::createFromFormat('Y-m-j H:i:s', $fields["exportdate"]);
-                $data["exportdate"] = $exportDate->format("c");
+        $data = array();
+        // Recuperation
+        foreach ($fields as $k => $f) {
+            if (in_array($k, array("exportdate","createdAt")) && $f) { // Date treatment
+                $data[$k] = $f->format("c");
+            } else {
+                $data[$k] = $f;
             }
-            if ($fields["createdAt"] != "") {
-                $createdAt = \DateTime::createFromFormat('Y-m-j H:i:s', $fields["createdAt"]);
-                $data["createdAt"] = $createdAt->format("c");
-            }
-
-            $data["id"] = $fields["id"];
-            $data["_id"] = $fields["id"];
-            $data["firstname"] = ($fields["firstname"]);
-            $data["lastname"] = ($fields["lastname"]);
-            $data["status"] = $fields["status"];
-            $data["log"] = $fields["log"];
-            $data["formTyped"] = $fields["form_type_id"];
-            $data["form"] = $fields["form_id"];
-            $data["utmcampaign"] = $fields["utmcampaign"];
-            $data["telephone"] = $fields["telephone"];
-            $data["email"] = $fields["email"];
-            $data["client"] = $fields["client_id"];
-            $data["entreprise"] = $fields["entreprise_id"];
-            $data["scope"] = $scopeId;
-            $data["content"] = json_decode($fields["content"]);
-
         }
+
         $response = $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/leads/".$fields["id"], json_encode($data), false );
-
         unset ($data);
-        unset ($exportDate);
-        unset ($createdAt);
-
-        //var_dump ($response);
-
+        return $response;
     }
 
     public function getKibanaDashboards () {

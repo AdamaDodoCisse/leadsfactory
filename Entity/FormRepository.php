@@ -72,7 +72,6 @@ class FormRepository extends EntityRepository
      * @return array|\Doctrine\ORM\Query
      */
     public function getStatisticsForForms($forms, $utils ) {
-
         $userPreferences = $utils->getUserPreferences();
 
         $minDate = date_format($userPreferences->getDataPeriodMinDate(), 'Y-m-d') ;
