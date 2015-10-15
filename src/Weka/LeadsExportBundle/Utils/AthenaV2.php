@@ -2,6 +2,7 @@
 
 namespace Weka\LeadsExportBundle\Utils;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
@@ -42,7 +43,7 @@ class AthenaV2 extends AbstractMethod{
 
     public function getLogger () {
         if ( $this->_logger == null) {
-          $this->_logger = $this->getContainer()->get('export.logger');
+            $this->_logger = $this->getContainer()->get('export.logger');
         }
         return $this->_logger;
     }
@@ -55,39 +56,38 @@ class AthenaV2 extends AbstractMethod{
      */
     public function export($jobs, $form)
     {
-	    $this->_athenaUrl = $this->getContainer()->get("preferences_utils")->getUserPreferenceByKey ('ATHENA_URL');
+        $this->_athenaUrl = $this->getContainer()->get("preferences_utils")->getUserPreferenceByKey ('ATHENA_URL');
 
         // Get Utils & Logger
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getLogger();
         $this->_logger = $logger;
 
-
         $this->_formConfig = $form->getConfig();
 
         // Recuperation de la mapping class
         $this->_mappingClass = $this->_getMapping($form);
 
-
         // Find the ID of the form
         $source = $this->_formConfig["export"]["athenaV2"]["source"];
 
         // Get destination
-        $id_assignation = '';
+        $id_assignation = 'Non renseigné.';
         if(array_key_exists('id_assignation', $this->_formConfig["export"]["athenaV2"])){
             $id_assignation = $this->_formConfig["export"]["athenaV2"]["id_assignation"];
         }
 
+
+        $logger->info("############ ATHENAV2 - EXPORT ###############");
         // Loop over export jobs
-        foreach($jobs as $job){ 
+        foreach($jobs as $job){
             if(is_null($this->_mappingClass)){
 
-                $error = 'Mapping ATHENAV2 inexistant pour '.$form->getCode();
-                $logger->error("Erreur d'export : ".$error);
+                $error = 'mapping inexistant pour '.$form->getCode();
+                $logger->error("ERREUR ATEHENAV2 : ".$error);
                 $status = $exportUtils->getErrorStatus($job);
                 $exportUtils->updateJob($job, $status, $error);
                 $exportUtils->updateLead($job->getLead(), $status, $error);
-
 
             } else {
 
@@ -95,60 +95,50 @@ class AthenaV2 extends AbstractMethod{
 
                 // Get leads' id
                 $id_leadsfactory = $job->getLead()->getId();
+                $logger->info("############ ATHENAV2 - ID_LEADS (" . $id_leadsfactory . ") ###############");
 
                 // Client informations
-                $logger->info("############################## START ATHENAV2!#############################");
                 $ip_adr = $job->getLead()->getIpadress();
                 $user_agent = $job->getLead()->getUserAgent();
 
                 // Start Session to Athena
-                $logger->info("Calling Athena GetRemplissage");
                 $id_remplissage = $this->getAthenaRemplissage( $source, $data, $ip_adr, $user_agent );
                 $this->_mappingClass->id_remplissage = $id_remplissage;
 
                 // Get ID Campagne
-                $logger->info("Calling Athena GetCampagne");
                 $id_campagne = $this->getIdCampagne( $id_remplissage, $source, $data );
                 $this->_mappingClass->id_campagne = $id_campagne;
 
                 // Get ID Produit
-                $logger->info("Calling Athena GetProduit");
                 $id_produit = $this->getProduit( $id_remplissage, $source, $data );
 
                 // Get ID Compte
-                $logger->info("Calling Athena GetCompte");
                 $id_compte = $this->getCompte( $id_remplissage, $source, $data, $id_campagne );
 
                 // Get ID Contact
-                $logger->info("Calling Athena GetContact");
                 $id_contact = $this->getContact( $id_remplissage, $source, $data, $id_compte, $id_campagne );
                 // Send Request createDRC or createAffaire
                 if ( $this->_formConfig["export"]["athenaV2"]["method"] == "drc" ) {
-                    $logger->info("Calling Athena CreateDRC");
                     $results = $this->createDrc( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte,
-                                                $id_contact, $source, $id_leadsfactory, $id_assignation);
+                        $id_contact, $source, $id_leadsfactory, $id_assignation);
                 } else {
-                    $logger->info("Calling Athena CreateAffaire");
                     $results = $this->createAffaire( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source );
                 }
-                
+
                 // closing Athena Connection
-                $logger->info("Calling Athena CloseRemplissage");
                 $this->closeAthenaConnection( $id_remplissage, $source, $data );
 
                 if(!$this->_hasError($results)){
                     $log = "Exporté avec succès";
-                    $logger->info("Exporté avec succès");
+                    $logger->info("LOG ATHENAV2 : Exporté avec succès -> id_remplissage : " . $id_remplissage);
                     $status = $exportUtils::$_EXPORT_SUCCESS;
-                }else{
+                } else {
                     $log = json_encode($results->errors);
-                    $logger->info("Erreur d'export : ".$log);
-                    $status = $exportUtils->getErrorStatus($job); 
+                    $logger->info("LOG ATHENAV2 : Erreur lors de l'export : ".$log);
+                    $status = $exportUtils->getErrorStatus($job);
                 }
                 $exportUtils->updateJob($job, $status, $log);
                 $exportUtils->updateLead($job->getLead(), $status, $log);
-                $logger->info($log);
-
             }
 
         }
@@ -170,10 +160,12 @@ class AthenaV2 extends AbstractMethod{
         $scope = !is_null($form->getScope()) ? $form->getScope()->getCode() : null;
         $scopePath = !is_null($scope) ? $scope."\\" : '';
 
+
         if(isset($config['export']['athenaV2']['mapping_class'])){
-            $logger->info($config['export']['athenaV2']['mapping_class']);
+            $logger->info("LOG ATHENAV2 : Recupération du mapping  : " . $config['export']['athenaV2']['mapping_class']);
             $className = "\\Weka\\LeadsExportBundle\\Utils\\AthenaV2\\" . $scopePath . $config['export']['athenaV2']['mapping_class'];
         }else{
+            $logger->info("LOG ATHENAV2 : Recupération du mapping  : " . ucfirst($form->getCode()));
             $className = "\\Weka\\LeadsExportBundle\\Utils\\AthenaV2\\" . $scopePath . ucfirst($form->getCode());
         }
         $em = $this->getContainer()->get('doctrine')->getManager();
@@ -189,12 +181,13 @@ class AthenaV2 extends AbstractMethod{
             $getter = 'get'.ucfirst(strtolower($athenaKey));
 
             if (method_exists($this->_mappingClass, $getter)){
-                $this->_logger->info ("Key method (".$getter." : ".$athenaKey);
+                $this->_logger->info("LOG ATHENAV2 : Recupération de la methode mappée  -> " .$getter." - ".$athenaKey);
                 $entity->$athenaKey = $this->_mappingClass->$getter($data);
             }elseif(!empty($formKey)){
-                $this->_logger->info ("Key value : ".$athenaKey);
+                $this->_logger->info("LOG ATHENAV2 : Recupération de la methode mappée  -> " .$athenaKey);
                 $entity->$athenaKey = isset($data[$formKey]) ? $data[$formKey] : null;
-            }else{
+            }else {
+                $this->_logger->info("LOG ATHENAV2 : Methode non retrouvée -> " . $getter);
                 $entity->$athenaKey = null;
             }
         }
@@ -210,9 +203,7 @@ class AthenaV2 extends AbstractMethod{
     private function _postToAthena($request)
     {
         $logger = $this->getLogger();
-        $logger->info('Athena post start==================>');
-        $logger->info('Athena URL : '.$this->_athenaUrl);
-        $logger->info($request);
+        $this->_logger->info("LOG ATHENAV2 : Envoie des Leads vers ATHENA -> " . $this->_athenaUrl);
 
         $rawData = http_build_query(array('entryPoint' => 'gatewayv2', 'data' => $request));
         $max_exe_time = 10050; // time in milliseconds
@@ -229,11 +220,7 @@ class AthenaV2 extends AbstractMethod{
         $error = curl_error($ch);
         curl_close($ch);
 
-
-        $logger->info("Athena Result =====> ");
-        $logger->info($result);
-        $logger->info("=====> End of Athena Post & Results  ");
-
+        $this->_logger->info("LOG ATHENAV2 : Résultat de l'envoie : " . $result);
         return $result;
     }
 
@@ -247,35 +234,32 @@ class AthenaV2 extends AbstractMethod{
             "data"      => $requestData
         );
 
+        $this->_logger->info("LOG ATHENAV2 : Préparation de la requête d'envoie vers ATHENA");
         $jsonRequest = json_encode($request);
         return json_decode($this->_postToAthena($jsonRequest));
     }
 
     private function getAthenaRemplissage($source, $data, $ip_adr, $user_agent) {
 
-        $this->getLogger()->info("[remplissage] : ***");
-        $this->getLogger()->info("[remplissage] : *** REMPLISSAGE");
-        $this->getLogger()->info("[remplissage] : ***");
-        $dateTime = new \DateTime();
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
+        $dateTime = new \DateTime();
         $requestData = array();
         $requestData["date_formulaire"] = $dateTime->format("c");
         $requestData["adresse_ip"] = $ip_adr ? $ip_adr : "0.0.0.0"; // Pas obligatoire
         $requestData["user_agent"] = $user_agent ? $user_agent : "Non renseigné"; // Pas obligatoire
-        
+
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_REMPLISSAGE, $requestData, $source);
         $idRemplissage = $results->result->id_remplissage;
 
-        $this->getLogger()->info("[remplissage] : ******** => ID REMPLISSAGE : " . $idRemplissage);
+        $this->getLogger()->info("LOG ATHENAV2 : id_remplissage -> " . $idRemplissage);
 
         return $idRemplissage;
     }
 
     private function getIdCampagne ( $idRemplissage, $source, $data ) {
 
-        $this->getLogger()->info( "[getIdCampagne] ***");
-        $this->getLogger()->info( "[getIdCampagne] *** CAMPAGNE");
-        $this->getLogger()->info( "[getIdCampagne] ***");
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
         $requestData = array();
         $requestData["code_action"] = $data["utmcampaign"]; // Debute par un / "/XX/XX/XXXXXXX"
@@ -286,20 +270,17 @@ class AthenaV2 extends AbstractMethod{
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_CAMPAGNE, $requestData, $source);
         $id_athena = $results->result->id_athena;
 
-        $this->getLogger()->info( "[getIdCampagne] ******** => ID ATHENA : ".$id_athena);
-        
-        
+        $this->getLogger()->info( "LOG ATHENAV2 : id_campagne (utmcampaign) -> " .$id_athena);
+
         return $id_athena;
 
     }
 
     private function getProduit ( $idRemplissage, $source, $data ) {
-        
+
         if ( array_key_exists("product_sku", $data) && trim($data["product_sku"])!="") {
-        
-            $this->getLogger()->info( "[getProduit] ***");
-            $this->getLogger()->info( "[getProduit] *** PRODUIT");
-            $this->getLogger()->info( "[getProduit] ***");
+
+            $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
             $requestData = $this->getMappedData($data, $this->_mappingClass->getProduitMapping());
 
@@ -313,22 +294,20 @@ class AthenaV2 extends AbstractMethod{
             } else {
                 $id_produit = "";
             }
-
-            $this->getLogger()->info( "[getProduit] ******** => ID ATHENA : ".$id_produit);
-
         } else {
+            $this->getLogger()->info("LOG ATHENAV2 : id_produit -> Aucun produit trouvé");
             return false;
         }
-        
+
+        $this->getLogger()->info("LOG ATHENAV2 : id_produit -> " . $id_produit );
+
         return $id_produit;
 
     }
 
     private function getCompte ( $idRemplissage, $source, $data, $id_campagne ) {
 
-        $this->getLogger()->info( "[getCompte] ***");
-        $this->getLogger()->info( "[getCompte] *** COMPTE");
-        $this->getLogger()->info( "[getCompte] ***");
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
         $requestData = $this->getMappedData($data, $this->_mappingClass->getCompteMapping());
 
@@ -338,7 +317,8 @@ class AthenaV2 extends AbstractMethod{
 
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_COMPTE, $requestData, $source);
         $id_compte = $results->result->id_athena;
-        $this->getLogger()->info( "[getCompte] ******** => ID ATHENA : ".$id_compte);
+
+        $this->getLogger()->info("LOG ATHENAV2 : id_compte -> " . $id_compte );
 
         return $id_compte;
 
@@ -346,9 +326,7 @@ class AthenaV2 extends AbstractMethod{
 
     private function getContact($idRemplissage, $source, $data, $id_compte, $id_campagne) {
 
-        $this->getLogger()->info("[getContact] ***");
-        $this->getLogger()->info("[getContact] *** CONTACT");
-        $this->getLogger()->info("[getContact] ***");
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
         $requestData = $this->getMappedData($data, $this->_mappingClass->getContactMapping());
 
@@ -360,7 +338,7 @@ class AthenaV2 extends AbstractMethod{
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_CONTACT, $requestData, $source);
         $id_contact = $results->result->id_athena;
 
-        $this->getLogger()->info("[getContact] ******** => ID ATHENA : " . $id_contact);
+        $this->getLogger()->info("LOG ATHENAV2 : id_contact -> " . $id_contact );
 
         return $id_contact;
     }
@@ -368,9 +346,7 @@ class AthenaV2 extends AbstractMethod{
     private function createDrc($idRemplissage, $data, $id_campagne, $id_produit,
                                $id_compte, $id_contact, $source, $id_leadsfactory, $id_assignation) {
 
-        $this->getLogger()->info( "[createdrc] : ***");
-        $this->getLogger()->info( "[createdrc] : *** DRC");
-        $this->getLogger()->info( "[createdrc] : ***");
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);;
 
         $requestData = $this->getMappedData($data, $this->_mappingClass->getDRCMapping());
         // ID used for Athena Linking.
@@ -378,23 +354,17 @@ class AthenaV2 extends AbstractMethod{
         $requestData->id_campagne = $id_campagne;
         if ($id_produit) {
             $requestData->id_produit = $id_produit;
-            $this->_logger->info( "[createdrc] : Produit : ".$id_produit);
-        } else {
-            $this->_logger->info( "[createdrc] : Pas de produit");
         }
+
         $requestData->id_compte = $id_compte;
         $requestData->id_contact = $id_contact;
         $requestData->id_leadsfactory = $id_leadsfactory;
         $requestData->id_assignation = $id_assignation;
 
-        
-        $this->_logger->info( "[createdrc] : id_compte : ".$id_compte);
-        $this->_logger->info( "[createdrc] : id_contact : ".$id_contact);
-        $this->_logger->info( "[createdrc] : id_leadsfactory : ".$id_leadsfactory);
-        
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_CREATE_DRC, $requestData, $source );
         $id_drc = $results->result->id_athena;
-        $this->getLogger()->info( "[createdrc] : ******** => ID ATHENA : ".$id_drc);
+
+        $this->getLogger()->info("LOG ATHENAV2 : id_drc -> " . $id_drc );
 
         return $results;
 
@@ -402,14 +372,14 @@ class AthenaV2 extends AbstractMethod{
 
     private function createAffaire ( $id_remplissage, $data, $source ) {
 
-        $this->getLogger()->info( "[affaire] : ***");
-        $this->getLogger()->info( "[affaire] : *** AFFAIRE");
-        $this->getLogger()->info( "[affaire] : ***");
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
         return true;
     }
 
     private function closeAthenaConnection ( $id_remplissage, $source, $data ) {
+
+        $this->getLogger()->info("LOG ATHENAV2 : appel de la methode " . __FUNCTION__);
 
         $dateTime = new \DateTime();
 
@@ -419,10 +389,11 @@ class AthenaV2 extends AbstractMethod{
 
         $idRemplissage = $this->sendRequest( AthenaV2::$_POST_METHOD_CLOSE_REMPLISSAGE, $requestData, $source );
 
+        $this->getLogger()->info("LOG ATHENAV2 : Fin de remplissage");
         return $idRemplissage;
 
     }
-    
+
     /**
      * Build request
      *

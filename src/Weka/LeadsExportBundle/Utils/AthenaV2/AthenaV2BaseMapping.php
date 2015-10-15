@@ -440,10 +440,9 @@ class AthenaV2BaseMapping {
     public function getProfil_ti ( $data ) {
 
         $profil_ti = array (
-
             "ETUDIANT"      => "ETUDIANT",
-            "PROFESSIONNEL" => "PROFESSIONNEL"
-
+            "PROFESSIONNEL" => "PROFESSIONNEL",
+            "PARTICULIER" => "PARTICULIER"
         );
         if (array_key_exists("profil",$data)) {
             if($data["profil"]){
