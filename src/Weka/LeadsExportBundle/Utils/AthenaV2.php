@@ -9,6 +9,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
 
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 /**
  * Class AthenaV2
@@ -72,7 +73,7 @@ class AthenaV2 extends AbstractMethod{
         $source = $this->_formConfig["export"]["athenaV2"]["source"];
 
         // Get destination
-        $id_assignation = 'Non renseigné.';
+        $id_assignation = "";
         if(array_key_exists('id_assignation', $this->_formConfig["export"]["athenaV2"])){
             $id_assignation = $this->_formConfig["export"]["athenaV2"]["id_assignation"];
         }
@@ -81,7 +82,12 @@ class AthenaV2 extends AbstractMethod{
         $logger->info("############ ATHENAV2 - EXPORT ###############");
         // Loop over export jobs
         foreach($jobs as $job){
-            if(is_null($this->_mappingClass)){
+
+            if ($job->getStatus() == ExportUtils::$_EXPORT_MULTIPLE_ERROR) {
+
+                $logger->error("ERREUR ATEHENAV2 : Job ignoré en ERREUR ".$job->getId());
+
+            } else if(is_null($this->_mappingClass)){
 
                 $error = 'mapping inexistant pour '.$form->getCode();
                 $logger->error("ERREUR ATEHENAV2 : ".$error);
@@ -90,6 +96,8 @@ class AthenaV2 extends AbstractMethod{
                 $exportUtils->updateLead($job->getLead(), $status, $error);
 
             } else {
+
+                $has_error = false;
 
                 $data = json_decode($job->getLead()->getData(), true);
 
@@ -102,43 +110,132 @@ class AthenaV2 extends AbstractMethod{
                 $user_agent = $job->getLead()->getUserAgent();
 
                 // Start Session to Athena
-                $id_remplissage = $this->getAthenaRemplissage( $source, $data, $ip_adr, $user_agent );
-                $this->_mappingClass->id_remplissage = $id_remplissage;
+                try {
+                    $id_remplissage = $this->getAthenaRemplissage( $source, $data, $ip_adr, $user_agent );
+                    $this->_mappingClass->id_remplissage = $id_remplissage;
+                } catch (\Exception $e) {
+                    $has_error = true;
+                    $message = "Error in getAthenaRemplissage : ".$e->getMessage();
+                }
 
-                // Get ID Campagne
-                $id_campagne = $this->getIdCampagne( $id_remplissage, $source, $data );
-                $this->_mappingClass->id_campagne = $id_campagne;
+                if (!$has_error) {
 
-                // Get ID Produit
-                $id_produit = $this->getProduit( $id_remplissage, $source, $data );
+                    try {
+                        // Get ID Campagne
+                        $id_campagne = $this->getIdCampagne($id_remplissage, $source, $data);
+                        $this->_mappingClass->id_campagne = $id_campagne;
+                    } catch (\Exception $e) {
+                        $has_error = true;
+                        $message = "Error in getAthenaRemplissage : ".$e->getMessage();
+                    }
 
-                // Get ID Compte
-                $id_compte = $this->getCompte( $id_remplissage, $source, $data, $id_campagne );
+                }
 
-                // Get ID Contact
-                $id_contact = $this->getContact( $id_remplissage, $source, $data, $id_compte, $id_campagne );
+                if (!$has_error) {
+
+                    try {
+                        // Get ID Produit
+                        $id_produit = $this->getProduit($id_remplissage, $source, $data);
+                    } catch (\Exception $e) {
+                        $has_error = true;
+                        $message = "Error in getProduit : ".$e->getMessage();
+                    }
+
+                }
+
+                if (!$has_error) {
+                    try {
+                        // Get ID Compte
+                        $id_compte = $this->getCompte($id_remplissage, $source, $data, $id_campagne);
+                    } catch (Exception $e) {
+                        $has_error = true;
+                        $message = "Error in getCompte : ".$e->getMessage();
+                    }
+                }
+
+                if (!$has_error) {
+                    try {
+                        // Get ID Contact
+                        $id_contact = $this->getContact($id_remplissage, $source, $data, $id_compte, $id_campagne);
+                    } catch (\Exception $e) {
+                        $has_error = true;
+                        $message = "Error in getContact : ".$e->getMessage();
+                    }
+                }
+
+
                 // Send Request createDRC or createAffaire
                 if ( $this->_formConfig["export"]["athenaV2"]["method"] == "drc" ) {
-                    $results = $this->createDrc( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte,
-                        $id_contact, $source, $id_leadsfactory, $id_assignation);
+                    if (!$has_error) {
+                        try {
+                            $results = $this->createDrc($id_remplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source, $id_leadsfactory, $id_assignation);
+                        } catch (\Exception $e) {
+                            $has_error = true;
+                            $message = "Error in createDrc : ".$e->getMessage();
+                        }
+                    }
                 } else {
-                    $results = $this->createAffaire( $id_remplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source );
+                    if (!$has_error) {
+                        try {
+                            $results = $this->createAffaire($id_remplissage, $data, $id_campagne, $id_produit, $id_compte, $id_contact, $source);
+                        } catch (\Exception $e) {
+                            $has_error = true;
+                            $message = "Error in createAffaire : ".$e->getMessage();
+                        }
+                    }
                 }
 
-                // closing Athena Connection
-                $this->closeAthenaConnection( $id_remplissage, $source, $data );
+                if (!$has_error) {
+                    try {
+                        // closing Athena Connection
+                        $this->closeAthenaConnection($id_remplissage, $source, $data);
+                    } catch (\Exception $e) {
+                        $has_error = true;
+                        $message = "Error in closeAthenaConnection : ".$e->getMessage();
+                    }
+                }
 
-                if(!$this->_hasError($results)){
-                    $log = "Exporté avec succès";
-                    $logger->info("LOG ATHENAV2 : Exporté avec succès -> id_remplissage : " . $id_remplissage);
-                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                if(!$has_error ){
+
+                    if (!$this->_hasError($results)) {
+
+                        $log = "Exporté avec succès";
+                        $logger->info("LOG ATHENAV2 : Exporté avec succès -> id_remplissage : " . $id_remplissage);
+                        $status = $exportUtils::$_EXPORT_SUCCESS;
+
+                        $exportUtils->updateJob($job, $status, "Id Athena : ".$id_remplissage);
+                        $exportUtils->updateLead($job->getLead(), $status, "Id Athena : ".$id_remplissage);
+
+                        echo ("ATHENA V2 : Lead Exporté : ".$id_remplissage."\r\n");
+
+                    } else {
+
+                        $log = json_encode($results->errors);
+                        $logger->info("LOG ATHENAV2 : [Erreur lors de l'export] - ".$log);
+                        $status = $exportUtils->getErrorStatus($job);
+
+                        $exportUtils->updateJob($job, $status, $log);
+                        $exportUtils->updateLead($job->getLead(), $status, $log);
+
+                        $this->notifyOfExportIssue ( $log, $form, $job, $status );
+
+                        echo ("ATHENA V2 : Lead en erreur : ".$log."\r\n");
+
+                    }
                 } else {
-                    $log = json_encode($results->errors);
-                    $logger->info("LOG ATHENAV2 : Erreur lors de l'export : ".$log);
+
+                    $logger->info("LOG ATHENAV2 : [Erreur lors de l'export] - " . $message);
                     $status = $exportUtils->getErrorStatus($job);
+
+                    $exportUtils->updateJob($job, $status, $message);
+                    $exportUtils->updateLead($job->getLead(), $status, $message);
+
+                    $this->notifyOfExportIssue ( $message, $form, $job, $status );
+
+                    echo ("ATHENA V2 : Lead en erreur : ".$message."\r\n");
+
                 }
-                $exportUtils->updateJob($job, $status, $log);
-                $exportUtils->updateLead($job->getLead(), $status, $log);
+
             }
 
         }
@@ -250,8 +347,11 @@ class AthenaV2 extends AbstractMethod{
         $requestData["user_agent"] = $user_agent ? $user_agent : "Non renseigné"; // Pas obligatoire
 
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_REMPLISSAGE, $requestData, $source);
-        $idRemplissage = $results->result->id_remplissage;
-
+        try {
+            $idRemplissage = $results->result->id_remplissage;
+        } catch (\Exception $e) {
+            throw new Exception ("Response has error from Athena : ".json_encode($results));
+        }
         $this->getLogger()->info("LOG ATHENAV2 : id_remplissage -> " . $idRemplissage);
 
         return $idRemplissage;
@@ -268,7 +368,12 @@ class AthenaV2 extends AbstractMethod{
         $requestData["id_remplissage"] = $idRemplissage;
 
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_CAMPAGNE, $requestData, $source);
-        $id_athena = $results->result->id_athena;
+        try {
+            $id_athena = $results->result->id_athena;
+        } catch (\Exception $e) {
+            throw new Exception ("Response has error from Athena : ".json_encode($results));
+        }
+
 
         $this->getLogger()->info( "LOG ATHENAV2 : id_campagne (utmcampaign) -> " .$id_athena);
 
@@ -316,8 +421,12 @@ class AthenaV2 extends AbstractMethod{
         $requestData->id_campagne = $id_campagne;
 
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_COMPTE, $requestData, $source);
-        $id_compte = $results->result->id_athena;
 
+        try {
+            $id_compte = $results->result->id_athena;
+        } catch (\Exception $e) {
+            throw new Exception ("Response has error from Athena : ".json_encode($results));
+        }
         $this->getLogger()->info("LOG ATHENAV2 : id_compte -> " . $id_compte );
 
         return $id_compte;
@@ -336,7 +445,11 @@ class AthenaV2 extends AbstractMethod{
         $requestData->id_campagne = $id_campagne;
 
         $results = $this->sendRequest(AthenaV2::$_POST_METHOD_GET_ID_CONTACT, $requestData, $source);
-        $id_contact = $results->result->id_athena;
+        try {
+            $id_contact = $results->result->id_athena;
+        } catch (\Exception $e) {
+            throw new Exception ("Response has error from Athena : ".json_encode($results));
+        }
 
         $this->getLogger()->info("LOG ATHENAV2 : id_contact -> " . $id_contact );
 
@@ -362,9 +475,13 @@ class AthenaV2 extends AbstractMethod{
         $requestData->id_assignation = $id_assignation;
 
         $results = $this->sendRequest( AthenaV2::$_POST_METHOD_CREATE_DRC, $requestData, $source );
-        $id_drc = $results->result->id_athena;
+        /*try {
+            //$id_drc = $results->result->id_athena;
+        } catch (\Exception $e) {
+            throw new Exception ("Response has error from Athena : ".json_encode($results));
+        }*/
 
-        $this->getLogger()->info("LOG ATHENAV2 : id_drc -> " . $id_drc );
+        $this->getLogger()->info("LOG ATHENAV2 : id_drc -> " . $idRemplissage );
 
         return $results;
 

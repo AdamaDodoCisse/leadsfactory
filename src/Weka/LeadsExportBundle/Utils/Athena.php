@@ -59,7 +59,9 @@ class Athena extends AbstractMethod{
             }else{
                 $log = json_encode($result->errors);
                 $status = $exportUtils->getErrorStatus($job);
+                $this->notifyOfExportIssue ( $log, $form, $job, $status );
             }
+
             $exportUtils->updateJob($job, $status, $log);
             $exportUtils->updateLead($job->getLead(), $status, $log);
             $logger->info($log);
