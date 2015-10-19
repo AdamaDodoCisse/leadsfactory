@@ -36,6 +36,7 @@
                         <th>Nom</th>
                         <th>email</th>
                         <th>Code action</th>
+                        <th>Ip</th>
                         <th>Date de création</th>
                         <th>Actions</th>
                     </tr>
@@ -49,6 +50,7 @@
                             <td>{{ item.lastname }}</td>
                             <td>{{ item.email }}</td>
                             <td>{% if item.utmcampaign == '' %}<span style="color:darkred">Vide</span>{% else %}{{ item.utmcampaign }}{% endif %}</td>
+                            <td>{{ item.ipadress }}</td>
                             <td>{{ item.createdAt|date("d/m/Y h:i:s") }}</td>
                             <td style="text-align:center">
                                 <center>

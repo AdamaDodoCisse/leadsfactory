@@ -42,11 +42,18 @@ class ExportRepository extends EntityRepository
                 if($key>0)
                     $where .= ' AND';
                 $where .= " e.method LIKE '%".$keyword."%'";
+                $where .= " OR e.lead = '".$keyword."'";
+                $where .= " OR e.id = '".$keyword."'";
+                $where .= " OR e.log LIKE '%".$keyword."%'";
             }
 
         }
 
         $dql .= $where;
+
+        if ( array_key_exists("statuses", $params)) {
+            $dql .= " AND e.status IN ('".implode (',',$params["statuses"])."')";
+        }
 
 	    $dql .= ' ORDER BY e.created_at DESC';
 

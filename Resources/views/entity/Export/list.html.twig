@@ -23,7 +23,10 @@
             <div class="streaming-tables">
                 <div>
                     <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
-                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez par méthode...">
+
+                    <span id="found" class="label"><a href="{{ path ('_export_history_error') }}">Exports en erreurs</a> | <a href="{{ path ('_export_history_emailnotvalidated') }}">Exports avec un email non validé</a> | <a href="{{ path ('_export_history') }}">Tous les exports</a></span>
+
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez...">
                     <select name="per_page" class="st_per_page" id="st_per_page">
                         {% for limit in limit_options %}
                             <option value="{{ limit }}">{{ limit }}</option>
@@ -65,6 +68,9 @@
                         {% elseif item.status == 4 %}
                             {% set statusLibelle = "Non planifié" %}
                             {% set color =  "" %}
+                        {% elseif item.status == 5 %}
+                            {% set statusLibelle = "Email non validé" %}
+                            {% set color =  "style=background-color:#FFFF6B;color:#000000;" %}
                         {%  endif %}
 
                         <tr>
@@ -72,7 +78,7 @@
                             <td {{ color }} >{{ item.form.name }}</td>
                             <td {{ color }} >{{ item.scheduledAt.date }}</td>
                             <td {{ color }} >{% if item.executedAt != null %}{{ item.executedAt.date }}{% endif %}</td>
-                            <td {{ color }} >{{ item.lead.id }}</td>
+                            <td {{ color }} ><a href="{{ path('_leads_edit', {'id': item.lead.id}) }}">{{ item.lead.id }}</a></td>
                             <td {{ color }} >{{ item.method }}</td>
                             <td {{ color }} >{{ statusLibelle }}</td>
                             <td {{ color }} >{{ item.log }}</td>

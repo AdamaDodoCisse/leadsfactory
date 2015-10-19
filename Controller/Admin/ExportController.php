@@ -71,7 +71,7 @@ class ExportController extends CoreController
      */
     public function showHistoryAction($page=1, $limit=25, $keyword='')
     {
-        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser()));
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser(), 'statuses' => array()));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
@@ -83,6 +83,46 @@ class ExportController extends CoreController
         );
     }
 
+    /**
+     * Display export jobs
+     *
+     * @route("/export/history-error/{page}/{limit}/{keyword}", name="_export_history_error")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function showHistoryErrorAction($page=1, $limit=25, $keyword='')
+    {
 
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser(), 'statuses' => array( ExportUtils::$_EXPORT_ONE_TRY_ERROR, ExportUtils::$_EXPORT_MULTIPLE_ERROR)));
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
+            )
+        );
+    }
+
+    /**
+     * Display export jobs
+     *
+     * @route("/export/history-emailnotvalidated/{page}/{limit}/{keyword}", name="_export_history_emailnotvalidated")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function showHistoryNotValidatedEmailAction($page=1, $limit=25, $keyword='')
+    {
+
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser(), 'statuses' => array( ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED )));
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
+            array(
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options']
+            )
+        );
+    }
 
 }
