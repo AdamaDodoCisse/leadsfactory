@@ -380,8 +380,8 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
             } else if (isset ($item["attributes"]["name"])) {
                 $fields[$item["attributes"]["name"]] = $item;
             } else {
-                echo ("Erreur : ");
-                var_dump ($item);
+                //echo ("Erreur : ");
+                //var_dump ($item);
             }
 
         }
