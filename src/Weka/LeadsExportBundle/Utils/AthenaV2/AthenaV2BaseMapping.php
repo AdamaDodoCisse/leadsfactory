@@ -241,36 +241,31 @@ class AthenaV2BaseMapping {
     }
     public function getNb_habitants($data){
 
-        if (array_key_exists( 'zip', $data )) {
-            $first_str = substr($data['zip'], 0, 1);
+        $population = "";
+        if (array_key_exists( 'zip', $data ) && $data['zip']) {
+                $first_str = substr($data['zip'], 0, 1);
             if($first_str == 0){
                 $zip_code =  substr($data['zip'], 1);
             } else {
                 $zip_code = $data['zip'];
             }
 
-            if(array_key_exists('ville_id', $data) && $data['ville_id']){
+            if (array_key_exists('ville_id', $data) && $data['ville_id']){
                 $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville_id']);
             } else if(array_key_exists('ville', $data) && $data['ville']){
                 $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $zip_code."-".$data['ville']);
             } else if(array_key_exists('ville_text', $data) && $data['ville_text']){
                 $ville_id = $this->list_element_repository->getValueUsingListCodeAndName("ville", $zip_code."-".$data['ville_text']);
                 $population = $this->list_element_repository->getValueUsingListCodeAndName("nbhabitants", $ville_id);
-            } else {
-                return "";
             }
-        } else {
-            $population = "";
         }
 
-        if(is_array($population)){
+        $pop = "";
+        if(is_array($population) && count($population) && array_key_exists('value', $population[0])){
             $pop = $population[0]['value'];
         } else if (is_string($population)) {
             $pop = $population;
-        } else {
-            $pop = "";
         }
-
         return $pop;
     }
 
@@ -321,14 +316,9 @@ class AthenaV2BaseMapping {
 
     public function getRdv_conseiller( $data ){
         if (array_key_exists("demande-rdv",$data)) {
-            if ($data["demande-rdv"]) {
-                return TRUE;
-            } else {
-                return FALSE;
-            }
-        } else {
-            return FALSE;
+            return $data["demande-rdv"] ? true : false;
         }
+        return false;
     }
 
     public function getVersion () {
@@ -336,7 +326,7 @@ class AthenaV2BaseMapping {
     }
 
     public function getEmail_valide(){
-        return TRUE;
+        return true;
     }
 
 
@@ -372,13 +362,11 @@ class AthenaV2BaseMapping {
             "6"     => "sivom"
         );
 
-        if (array_key_exists("type-etablissement",$data)) {
-            if($data['type-etablissement']){
-                return $secteurs[$data['type-etablissement']];
-            }
-        } else {
-            return "";
+        if (array_key_exists("type-etablissement", $data) && $data['type-etablissement']
+            && array_key_exists($data['type-etablissement'], $secteurs)) {
+            return $secteurs[$data['type-etablissement']];
         }
+        return "";
     }
 
 
@@ -403,25 +391,24 @@ class AthenaV2BaseMapping {
         );
 
 
-        if (array_key_exists("secteur-activite",$data)) {
-            if($data["secteur-activite"]){
-                return $secteurs[$data["secteur-activite"]];
-            }
-        } else {
-            return "";
+        if (array_key_exists("secteur-activite", $data) && $data["secteur-activite"]
+            && array_key_exists($data["secteur-activite"], $secteurs)) {
+            return $secteurs[$data["secteur-activite"]];
         }
+        return "";
     }
 
 
     public function getTab_contact ( $data ) {
 
+        $d_email = array_key_exists("email", $data) ? $data["email"] : "";
+        $d_nom = array_key_exists("lastName", $data) ? $data["lastName"] : "";
+        $d_prenom = array_key_exists("firstName", $data) ? $data["firstName"] : "";
         $contact = array (
-
-            "email_contact" => $data["email"],
-            "nom"           => $data["lastName"],
-            "prenom"        => $data["firstName"],
+            "email_contact" => $d_email,
+            "nom"           => $d_nom,
+            "prenom"        => $d_prenom,
             "id_contact"    => ""
-
         );
         return $contact;
     }
@@ -429,17 +416,15 @@ class AthenaV2BaseMapping {
     public function getCivilite ( $data ) {
 
         $civilite = array (
-
             "MR"    => "m",
             "MRS"   => "mme"
-
         );
 
-        if (array_key_exists("salutation",$data)) {
+        if (array_key_exists("salutation",$data) && $data["salutation"]
+            && array_key_exists($data["salutation"], $civilite)) {
             return $civilite[$data["salutation"]];
-        } else {
-            return "";
         }
+        return "";
     }
 
     public function getProfil_ti ( $data ) {
@@ -449,13 +434,12 @@ class AthenaV2BaseMapping {
             "PROFESSIONNEL" => "PROFESSIONNEL",
             "PARTICULIER" => "PARTICULIER"
         );
-        if (array_key_exists("profil",$data)) {
-            if($data["profil"]){
-                return $profil_ti[$data["profil"]];
-            }
-        } else {
-            return "";
+
+        if (array_key_exists("profil",$data) && $data["profil"]
+            && array_key_exists($data["profil"], $profil_ti)) {
+            return $profil_ti[$data["profil"]];
         }
+        return "";
     }
 
 
@@ -489,11 +473,11 @@ class AthenaV2BaseMapping {
             "services_techniques" => "services_techniques",
         );
 
-        if (array_key_exists("service",$data)) {
+        if (array_key_exists("service",$data) && $data["service"]
+            && array_key_exists($data["service"], $fonctions)) {
             return $fonctions[$data["service"]];
-        } else {
-            return "";
         }
+        return "";
     }
 
 
@@ -636,7 +620,6 @@ class AthenaV2BaseMapping {
             "prfet" =>"prfet",
             "prsident" =>"prsident",
             "prsident_de_club" =>"prsident_de_club",
-            "prsident_de_club" =>"prsident_de_club",
             "principal_collge" =>"principal_collge",
             "principal_adjoint" =>"principal_adjoint",
             "professeur" =>"professeur",
@@ -647,7 +630,6 @@ class AthenaV2BaseMapping {
             "psychologue_scolaire" =>"psychologue_scolaire",
             "psychomotricien" =>"psychomotricien",
             "psychothrapeute" =>"psychothrapeute",
-            "puriculteur__auxiliaire_de_puriculture" =>"puriculteur__auxiliaire_de_puriculture",
             "puriculteur__auxiliaire_de_puriculture" =>"puriculteur__auxiliaire_de_puriculture",
             "recteur" =>"recteur",
             "rfrent_ase" =>"rfrent_ase",
@@ -714,7 +696,6 @@ class AthenaV2BaseMapping {
             "ingnieur_territorial" =>"ingnieur_territorial",
             "inspecteur_technique" =>"inspecteur_technique",
             "iprp_hygieniste" =>"iprp_hygieniste",
-            "mdecin_du_travail" =>"mdecin_du_travail",
             "responsable_achat" =>"responsable_achat",
             "responsable_affaires_rglementaires" =>"responsable_affaires_rglementaires",
             "responsable_be_mthode" =>"responsable_be_mthode",
@@ -745,14 +726,11 @@ class AthenaV2BaseMapping {
 
         );
 
-        if (array_key_exists("fonction",$data)) {
-            if($data["fonction"]){
-                return $fonctions[trim($data["fonction"])];
-            }
-        } else {
-            return "";
+        if (array_key_exists("fonction",$data) && $data["fonction"]
+            && array_key_exists($data["fonction"], $fonctions)) {
+            return $fonctions[trim($data["fonction"])];
         }
-
+        return "";
     }
 
 
