@@ -67,7 +67,8 @@ class ResetExportsCommand extends ContainerAwareCommand
                 $er->resetFailedExports($date);
                 $message = $this->formatExportTable($exports, $scope);
                 if (is_array($export_email) && count($export_email) && $export_email[0]['p_value']) {
-                    $this->sendExportLogsMail($message, $export_email[0]['p_value'], $scope);
+                    $email = explode(';', $export_email[0]['p_value']);
+                    $this->sendExportLogsMail($message, $email , $scope);
                 } else {
                     $logger->info("REVIEW JOBS : Email d'export introuvalble");
                 }
@@ -127,17 +128,21 @@ class ResetExportsCommand extends ContainerAwareCommand
                 .'<br><br>Ils sont remis en attente de traitement'
                 .'<br><br><br><em>Message automatique.</em>';
 
-        $message = Swift_Message::newInstance()
-            ->setSubject($title)
-            ->setFrom($from)
-            ->setTo($export_email)
-            ->setBody($body);
+        foreach($export_email as $email) {
 
-        $logger->info("REVIEW JOBS : ".$scope." : Envoie du mail à : " . $export_email);
-        try {
-            $this->getContainer()->get('mailer')->send($message);
-        } catch(Exception $e){
-            $logger->error($e->getMessage());
+            $message = Swift_Message::newInstance()
+                ->setSubject($title)
+                ->setFrom($from)
+                ->setTo($email)
+                ->setBody($body);
+
+            $logger->info("REVIEW JOBS : ".$scope." : Envoie du mail à : " . $email);
+            try {
+                $this->getContainer()->get('mailer')->send($message);
+            } catch(Exception $e){
+                $logger->error($e->getMessage());
+            }
         }
+
     }
 }
