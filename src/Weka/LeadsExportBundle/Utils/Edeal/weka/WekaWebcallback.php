@@ -46,7 +46,11 @@ class WekaWebcallback extends WekaMapping
 
 	public function getCpwComment($data)
 	{
-		$comment = 'Provient du formulaire de Web call back';
+		if(!empty($data['comment'])){
+			return $data['comment'];
+		}
+
+		$comment = '';
 
 		if(isset($data['referrer_url']))
 			$comment .= "\nURL : ".$data['referrer_url'];
