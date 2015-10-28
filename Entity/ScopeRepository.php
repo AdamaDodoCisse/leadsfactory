@@ -44,4 +44,11 @@ class ScopeRepository extends EntityRepository
         return new Paginator($query);
     }
 
+    public function getAll() {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('s')
+            ->from('TellawLeadsFactoryBundle:Scope', 's');
+        return $qb->getQuery()->getScalarResult();
+    }
+
 }

@@ -26,7 +26,7 @@ class ResetExportsCommand extends ContainerAwareCommand
         $this
             ->setName('leadsfactory:export:reset')
             ->setDescription('Review failed jobs and send email notification')
-            ->addArgument('scope', InputArgument::REQUIRED, 'Specify a scope code (ti, weka, comundi ...)')
+            ->addArgument('scope', InputArgument::REQUIRED, 'Specify a scope code (ti, weka, comundi ... or all)')
         ;
     }
 
@@ -36,19 +36,31 @@ class ResetExportsCommand extends ContainerAwareCommand
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
+        $scope = $input->getArgument('scope');
 
+        if ($scope == 'all') {
+            $sr = $this->getContainer()->get('leadsfactory.scope_repository');
+            $scope_list = $sr->getAll();
+            foreach ($scope_list as $s) {
+                $this->callExportForScope($s['s_code']);
+            }
+        } else {
+            $this->callExportForScope($scope);
+        }
+    }
+
+    private function callExportForScope($scope) {
         $logger = $this->getContainer()->get('export.logger');
         $date = new \DateTime('now');
         $date->modify('-30 days');
         $er = $this->getContainer()->get('leadsfactory.export_repository');
         $prefs = $this->getContainer()->get('leadsfactory.preference_repository');
         $e_ids = array();
-        $scope = $input->getArgument('scope');
 
-        $logger->info("REVIEW JOBS : tâche de recupération des exports en erreur multiple");
+        $logger->info("REVIEW JOBS : ".$scope." tâche de recupération des exports en erreur multiple");
         $exports = $er->findByStatus(3, $date);
         // If We have failed exports
-        $logger->info("REVIEW JOBS : Nombre total d'exports en erreur : " . count($e_ids));
+        $logger->info("REVIEW JOBS : ".$scope." Nombre total d'exports en erreur : " . count($e_ids));
         if (is_array($exports) && count($exports) > 0) {
             $export_email = $prefs->findByKeyAndScope('CORE_EXPORT_EMAIL', intval($exports[0]['s_id']));
 
@@ -122,11 +134,11 @@ class ResetExportsCommand extends ContainerAwareCommand
 
         $title = "[LEADS Factory] Revue des exports en échec : ".$scope;
         $from = $exportUtils::NOTIFICATION_DEFAULT_FROM;
-        $body = 'Bonjour,<br><br>'
+        $body = '<html>Bonjour,<br><br>'
                 .'Ci dessous la liste des exports en echec sur les 30 derniers jours.<br><br>'
                 .$table
                 .'<br><br>Ils sont remis en attente de traitement'
-                .'<br><br><br><em>Message automatique.</em>';
+                .'<br><br><br><em>Message automatique.</em></html>';
 
         foreach($export_email as $email) {
 
@@ -134,7 +146,8 @@ class ResetExportsCommand extends ContainerAwareCommand
                 ->setSubject($title)
                 ->setFrom($from)
                 ->setTo($email)
-                ->setBody($body);
+                ->setBody($body)
+                ->setContentType("text/html");
 
             $logger->info("REVIEW JOBS : ".$scope." : Envoie du mail à : " . $email);
             try {

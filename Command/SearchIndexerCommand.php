@@ -131,17 +131,11 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 				// Send to Search Engine
 				$leads_array = $this->getContainer()->get('leadsfactory.leads_repository')->getLeadsArrayById($obj["id"]);
 				$response = $searchUtils->indexLeadObject( $leads_array, $scopeId );
-				print_r($leads_array);
-				echo "#### RESULST ####";
-				print_r($response);
-
 			}
 			unset ($result);
 			unset ($sql);
 		}
 		//Loop for lead indexation
-
-
 
 	}
 

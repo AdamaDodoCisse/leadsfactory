@@ -127,8 +127,6 @@ class Chart extends ChartShared {
         $chartData = $this->_formatChartData($data);
         $chartData = $this->_addAdditionalGraphs($chartData);
 
-
-
         $chartData = json_encode($chartData);
 
         return $chartData;
