@@ -24,7 +24,8 @@
 	"vresh/twilio-bundle": "0.4.3",
 	"tellaw/leadsfactory" : "1.0.6",
 	"beberlei/DoctrineExtensions": "v1.0.1",
-	"teodortalov/citrix": "1.1"
+	"teodortalov/citrix": "1.1",
+	"phpunit/phpunit": "5.0.*"
   },
   "scripts": {
 	"post-install-cmd": [
