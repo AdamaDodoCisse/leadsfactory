@@ -308,9 +308,14 @@ class AthenaV2BaseMapping {
             $comment .= ". A propos du produit : " . $data["product_name"];
         }
 
+        if (array_key_exists("thematique", $data) && $data["thematique"]) {
+            $comment .= ". Thematique : ".$data["thematique"];
+        }
+
         if (array_key_exists("comment", $data) && $data["comment"]) {
             $comment .= ". Commentaire : ".$data["comment"] . ".";
         }
+
         return $comment;
     }
 
