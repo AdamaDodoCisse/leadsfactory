@@ -185,6 +185,11 @@ services:
     tags:
     - { name: scheduled.job }
 
+  leadsfactory.reset_exports_job:
+    class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\ResetExportScheduler
+    tags:
+    - { name: scheduled.job }
+
   leadsfactory.export_mock_success:
     class: Tellaw\LeadsFactoryBundle\Utils\Export\MockExport
     calls:
