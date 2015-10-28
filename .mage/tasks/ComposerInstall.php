@@ -19,6 +19,6 @@ class ComposerInstall extends AbstractTask
     public function run()
     {
         $dev = $this->getParameter('dev', true);
-        return $this->runCommand('composer install -o' . ($dev ? ' --dev' : ' --no-dev'));
+        return $this->runCommand('composer install --ignore-platform-reqs -o' . ($dev ? ' --dev' : ' --no-dev'));
     }
 }
