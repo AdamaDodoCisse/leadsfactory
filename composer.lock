@@ -4,13 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "hash": "c4c5ecb56fd39efc255fe7e8ac78b36a",
-    "content-hash": "e3fe0104019bca53d83cbac6a9500ee0",
-=======
-    "hash": "c3f3aa351a44abfa4baea933332a8d32",
-    "content-hash": "2c998b290a16ba730d0e1371e4486d7c",
->>>>>>> b94d8d485177e5750803cb043090a706314ebef4
+    "hash": "98078628724926dbbf5fdb2e0749fe16",
+    "content-hash": "dd815a85217687fc0cf281afc85a1ad3",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -3313,30 +3308,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-<<<<<<< HEAD
-            "version": "1.0.6",
-=======
-            "version": "1.0.7",
->>>>>>> b94d8d485177e5750803cb043090a706314ebef4
+            "version": "1.0.8",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-<<<<<<< HEAD
-                "reference": "eb5d53d585dee678947167c9f67541544276b9e1"
+                "reference": "777af349118b090ef6271011b8f14c9e672ea4ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/eb5d53d585dee678947167c9f67541544276b9e1",
-                "reference": "eb5d53d585dee678947167c9f67541544276b9e1",
-=======
-                "reference": "52b1a43beee3a1071d3625a6304ae17c7bd6fd64"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/52b1a43beee3a1071d3625a6304ae17c7bd6fd64",
-                "reference": "52b1a43beee3a1071d3625a6304ae17c7bd6fd64",
->>>>>>> b94d8d485177e5750803cb043090a706314ebef4
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/777af349118b090ef6271011b8f14c9e672ea4ad",
+                "reference": "777af349118b090ef6271011b8f14c9e672ea4ad",
                 "shasum": ""
             },
             "require": {
@@ -3380,11 +3362,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-<<<<<<< HEAD
-            "time": "2015-10-20 12:39:27"
-=======
-            "time": "2015-10-28 12:42:41"
->>>>>>> b94d8d485177e5750803cb043090a706314ebef4
+            "time": "2015-10-28 13:29:29"
         },
         {
             "name": "teodortalov/citrix",
