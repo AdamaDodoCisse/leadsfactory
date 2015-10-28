@@ -57,13 +57,13 @@ class PreferenceRepository extends EntityRepository
 
     public function findByKeyAndScope ( $key, $scopeId ) {
 
-        $dql = 'SELECT p FROM TellawLeadsFactoryBundle:Preference p WHERE p.keyval = :key AND p.scope = :$scopeId';
+        $dql = 'SELECT p FROM TellawLeadsFactoryBundle:Preference p WHERE p.keyval = :key AND p.scope = :scopeId';
 
         $query = $this  ->getEntityManager()
                         ->createQuery($dql)
                         ->setParameters( array ( "key"=>$key , "scopeId" => $scopeId ) );
 
-        return $query->execute();
+        return $query->getScalarResult();
     }
 
 }

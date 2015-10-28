@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 /**
@@ -78,4 +79,35 @@ class ExportRepository extends EntityRepository
         ;
         return $qb->getQuery()->getResult();
     }
+
+    public function findByStatus($status, $date = null) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('e,s,f,l')
+            ->from('TellawLeadsFactoryBundle:Export', 'e')
+            ->innerJoin('TellawLeadsFactoryBundle:Form', 'f', 'WITH', 'f.id = e.form')
+            ->innerJoin('TellawLeadsFactoryBundle:Leads', 'l', 'WITH', 'l.id = e.lead')
+            ->innerJoin('TellawLeadsFactoryBundle:Scope', 's', 'WITH', 's.id = f.scope')
+            ->where('e.status = :status')
+            ->setParameter('status', $status);
+
+        if ($date) {
+            $qb ->andWhere('e.created_at >= :date')
+                ->setParameter('date', $date->format('Y-m-d h:i:s'));
+        }
+
+        return $qb->getQuery()->getScalarResult();
+    }
+
+    public function resetFailedExports($date = null) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->update('TellawLeadsFactoryBundle:Export', 'e')
+            ->set('e.status', 0)
+            ->where('e.status = 3');
+        if ($date) {
+                $qb ->andWhere('e.created_at >= :date')
+                    ->setParameter('date', $date->format('Y-m-d h:i:s'));
+            }
+        return $qb->getQuery()->execute();
+    }
+
 }
