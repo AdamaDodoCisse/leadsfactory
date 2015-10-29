@@ -84,6 +84,15 @@ class AthenaV2 extends AbstractMethod{
         $logger->info("############ ATHENAV2 - EXPORT ###############");
         // Loop over export jobs
         foreach($jobs as $job){
+
+            //on dégage si profil étudiant
+            if(isset($data['profil']) && $data['profil'] == 'ETUDIANT'){
+                $logger->info('Profil étudiant');
+                $exportUtils->updateJob($job, $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
+                $exportUtils->updateLead($job->getLead(), $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
+                continue;
+            }
+
             $this->_current_job = $job->getId();
             $this->_current_lead = $job->getLead()->getId();
 
