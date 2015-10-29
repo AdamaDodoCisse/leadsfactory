@@ -44,6 +44,8 @@ class AthenaV2 extends AbstractMethod{
     private static $_POST_METHOD_CREATE_AFFAIRE = "CreateAffaire";
     private static $_POST_METHOD_CLOSE_REMPLISSAGE = "CloseRemplissage";
 
+    private static $_AHTENA_ID = "850ba435-4c33-7442-6a27-55ca057fb0c8";
+
     public function getLogger () {
         if ( $this->_logger == null) {
             $this->_logger = $this->getContainer()->get('export.logger');
@@ -93,6 +95,11 @@ class AthenaV2 extends AbstractMethod{
                 $exportUtils->updateJob($job, $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
                 $exportUtils->updateLead($job->getLead(), $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
                 continue;
+            }
+
+            // Patch pour la DI marketing qui est capable de cibler le TMK
+            if(array_key_exists('acteur', $data) && strtolower($data['profil']) == 'tmk'){
+                $id_assignation = self::$_AHTENA_ID;
             }
 
             $this->_current_job = $job->getId();
