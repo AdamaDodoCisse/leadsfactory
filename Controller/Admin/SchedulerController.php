@@ -155,7 +155,7 @@ class SchedulerController extends CoreController
         /**
          * This is the deletion action
          */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->find($id);
+        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:CronTask')->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
