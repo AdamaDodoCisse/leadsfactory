@@ -85,6 +85,8 @@ class AthenaV2 extends AbstractMethod{
         // Loop over export jobs
         foreach($jobs as $job){
 
+            $data = json_decode($job->getLead()->getData(), true);
+
             //on dégage si profil étudiant
             if(isset($data['profil']) && $data['profil'] == 'ETUDIANT'){
                 $logger->info('Profil étudiant');
@@ -109,7 +111,6 @@ class AthenaV2 extends AbstractMethod{
 
             } else {
                 $has_error = false;
-                $data = json_decode($job->getLead()->getData(), true);
 
                 // Get leads' id
                 $id_leadsfactory = $job->getLead()->getId();
