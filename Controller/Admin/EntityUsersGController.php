@@ -21,7 +21,7 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 /**
  * @Route("/entity/user")
  */
-class EntityUsersController extends CoreController
+class EntityUsersGController extends CoreController
 {
 
     public function __construct () {
