@@ -241,7 +241,7 @@ class FrontController extends CoreController
 
             // Index leads on search engine
             $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leads->getId());
-            $searchUtils->indexLeadObject($leads_array, $leads->getForm()->getScope()->getId());
+            $searchUtils->indexLeadObject($leads_array, $leads->getForm()->getScope()->getCode());
 
             //Send notification
             if(isset($config['notification'])){

@@ -272,6 +272,7 @@ class ApiController extends CoreController
 	{
 		$exportUtils = $this->get('export_utils');
 		$logger = $this->get('logger');
+        $searchUtils = $this->get('search.utils');
 
 		$logger->info('API post lead');
 
@@ -302,6 +303,10 @@ class ApiController extends CoreController
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($leads);
 			$em->flush();
+
+            // Index leads on search engine
+            $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leads->getId());
+            $searchUtils->indexLeadObject($leads_array, $leads->getForm()->getScope()->getCode());
 
 			// Create export job(s)
 			if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){

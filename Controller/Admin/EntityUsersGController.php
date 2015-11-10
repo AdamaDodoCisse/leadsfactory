@@ -1,5 +1,4 @@
 <?php
-
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -7,8 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersCreationType;
-use Tellaw\LeadsFactoryBundle\Shared\CoreController;
-use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
+use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -19,134 +17,84 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
- * @Route("/entity/user")
+ * @Route("/entity/userg")
  */
-class EntityUsersGController extends CoreController
+class EntityUsersGController extends ApplicationCrudController
 {
+
+    public $_list_title = "Liste des utilisteurs";
+    public $_edition_title = "Edition d'une fiche utilisateur";
+    public $_create_title = "Création d'un utilisateur";
+
+    public $_list_actions = array (
+                                    "Editer"  => array("route"=>"_users_edit", "color" => "red"),
+                                    "Supprimer"  => array("route"=>"_users_delete", "color" => "blue")
+                                  );
 
     public function __construct () {
         parent::__construct();
     }
 
-    /**
-     * @Route("/users/list/{page}/{limit}/{keyword}", name="_users_list")
-     * @Secure(roles="ROLE_USER")
-     */
-    public function indexAction($page=1, $limit=10, $keyword='')
-    {
-        if ($this->get("core_manager")->isDomainAccepted ()) {
-            return $this->redirect($this->generateUrl('_security_licence_error'));
-        }
+    public function setEntity () {
+        return "TellawLeadsFactoryBundle:Users";
+    }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Users', $page, $limit, $keyword, array () );
+    public function setFormType () {
+        return new UsersType();
+    }
 
-        return $this->render(
-            'TellawLeadsFactoryBundle:entity/Users:list.html.twig',
-            array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
-                'limit_options' => $list['limit_options']
-            )
-        );
+    public function setFormTemplate () {
+        return "TellawLeadsFactoryBundle:entity/Users:edit.html.twig";
+    }
+
+    public function setListTemplate () {
+        return "TellawLeadsFactoryBundle:entity/Users:list.html.twig";
+    }
+
+    public function setRedirectRoute () {
+        return "_users_list";
+    }
+
+    public function setListColumns () {
+        return array(
+                        "Titre" => "title",
+                        "Id" => "id",
+                    );
     }
 
     /**
-     * @Route("/users/new", name="_users_new")
+     * @Route("/list/{page}/{limit}/{keyword}", name="_users_list")
      * @Secure(roles="ROLE_USER")
-     * @Template()
      */
-    public function newAction( Request $request )
-    {
-
-        $type = new UsersCreationType();
-
-        $form = $this->createForm(  $type,
-            null,
-            array(
-                'method' => 'POST'
-            )
-        );
-
-
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
-            $em->flush();
-
-
-            return $this->redirect($this->generateUrl('_users_list'));
-        }
-
-
-        return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Création d'un utilisateur"));
+    public function indexAction($page=1, $limit=10, $keyword='') {
+        return parent::indexAction($page, $limit, $keyword);
     }
 
     /**
-     * @Route("/users/edit/{id}", name="_users_edit")
+     * @Route("/new", name="_users_new")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function newAction( Request $request ){
+        return parent::newAction( $request );
+    }
+
+    /**
+     * @Route("/edit/{id}", name="_users_edit")
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction( Request $request, $id )
-    {
-
-        /**
-         * This is the new / editing action
-         */
-
-        // crée une tâche et lui donne quelques données par défaut pour cet exemple
-        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
-
-        $type = new UsersType();
-
-        $form = $this->createForm(  $type,
-                                    $formData,
-                                    array(
-                                        'method' => 'POST'
-                                    )
-        );
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
-
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
-            $em->flush();
-
-            return $this->redirect($this->generateUrl('_users_list'));
-        }
-
-        return $this->render('TellawLeadsFactoryBundle:entity/Users:edit.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Edition d'un profil utilisateur"));
-
+    public function editAction (  Request $request, $id ) {
+        return parent::editAction(  $request, $id );
     }
 
     /**
-     * @Route("/users/delete/id/{id}", name="_users_delete")
+     * @Route("/delete/id/{id}", name="_users_delete")
      * @Secure(roles="ROLE_USER")
      * @Method("GET")
      * @Template()
      */
-    public function deleteAction ( $id ) {
-
-        /**
-         * This is the deletion action
-         */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($object);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('_users_list'));
-
+    public function deleteAction ($id) {
+        return parent::deleteAction($id);
     }
 
 

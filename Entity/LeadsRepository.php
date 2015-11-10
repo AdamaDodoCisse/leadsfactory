@@ -20,13 +20,16 @@ class LeadsRepository extends EntityRepository
 	 * @return mixed
 	 */
 	public function getLeadsArrayById($id=0) {
+
 		$q = $this->getEntityManager()
 			->createQueryBuilder();
 		$q  ->select("l")
 			->from("TellawLeadsFactoryBundle:Leads", "l")
 			->where("l.id = ".$id);
+
 		$result_array = $q->getQuery()->getArrayResult();
 		$result_object = $q->getQuery()->getResult();
+
 		if ($result_array) {
 			$result_array = $result_array[0];
 			$result_object = $result_object[0];

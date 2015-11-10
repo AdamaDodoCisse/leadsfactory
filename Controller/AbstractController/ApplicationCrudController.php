@@ -1,6 +1,5 @@
 <?php
-
-
+namespace Tellaw\LeadsFactoryBundle\Controller\AbstractController;
 
 /**
  * Class ApplicationCrudController
@@ -8,7 +7,7 @@
  * Controller used to set application value for generic CRUD controller.
  *
  */
-class ApplicationCrudController extends AbstractGenericCruController {
+abstract class ApplicationCrudController extends AbstractGenericCrudController {
 
     public function setEntity() {}
     public function setFormType() {}

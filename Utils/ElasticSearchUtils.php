@@ -229,42 +229,6 @@ class ElasticSearchUtils extends SearchShared {
     }
 
     /**
-     * Method used to start the ElasticSearch Process
-     * @return bool
-     * @throws Exception
-     */
-    public function start ()
-    {
-
-        // get preference used to find elastic search
-        $preferences = $this->container->get ("preferences_utils");
-        $searchEnginePath = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH );
-
-        if ( trim ($searchEnginePath) == "" ) {
-            throw new \Exception ("Configuration option not found : ".ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH);
-        }
-
-        if (file_exists( $searchEnginePath )) {
-            $process = new Process( $searchEnginePath . ' -d');
-        } else {
-            throw new \Exception ("ElasticSearch binary not found");
-        }
-
-        $input = new StringInput("");
-        $output = new BufferedOutput();
-
-        $process->setTimeout(3600);
-        $process->run(null, $output );
-
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
-
-        return $output;
-
-    }
-
-    /**
      * @param $fields Array of fields to represent Lead object
      * @param $scopeId
      * @return mixed|SearchResult
@@ -284,16 +248,12 @@ class ElasticSearchUtils extends SearchShared {
         $response = $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/leads/".$fields["id"], json_encode($data), false );
         unset ($data);
         return $response;
+
     }
 
     public function getKibanaDashboards () {
-
         $request = "";
-
         $dashboards = $this->request( ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/dashboard/_search?q=*", $request );
-
-        //var_dump( $dashboards->hits->hits );
-
         return $dashboards->hits->hits;
     }
 

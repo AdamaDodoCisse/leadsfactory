@@ -20,15 +20,10 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 	protected function configure() {
 		$this
 		->setName('leadsfactory:searchIndexer')
-		->setDescription('Indexer for Elastic Search')
-		//->addArgument('objectTpye', InputArgument::OPTIONAL, 'Specify the type of object to index')
-		;
+		->setDescription('Indexer for Elastic Search');
 	}
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-
-		//$objectType = trim($input->getArgument('objectType'));
-
 
 		// Get DB parameters. Not using Doctrine for better performances
 		$dbUser = $this->getContainer()->getParameter('database_user');
@@ -49,31 +44,15 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 		mysqli_query($this->dbConnection, "SET character_set_results = 'utf8', character_set_client = 'utf8', character_set_connection = 'utf8', character_set_database = 'utf8', character_set_server = 'utf8'");
 
 		// Iterate of scopes
-		$sql = "SELECT id,name FROM Scope";
+		$sql = "SELECT id,name,code FROM Scope";
 		$result = mysqli_query( $this->dbConnection , $sql);
 
 		//$result = $mysqli->query( $sql );
 		while($donnees = mysqli_fetch_object($result))
 		{
-			echo $donnees->id. " - ".$donnees->name."\n";
-			$this->exportScope( $donnees->id );
+			echo $donnees->id. " - ".$donnees->name. " - ".$donnees->code."\n";
+			$this->exportScope( $donnees->code, $donnees->id );
 		}
-
-
-		// SQL Query to get the max Lead
-
-
-		//Loop for lead indexation
-
-
-		// SQL Query to get the max export
-
-		// Loop for the export indexation
-
-
-		// SQL Query to get the max form id
-
-		// Loop for Form indexation
 
 	}
 
@@ -103,11 +82,11 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 		return $obj->maxid;
 	}
 
-	private function exportScope ( $scopeId ) {
-		$this->exportLeads( $scopeId );
+	private function exportScope ( $scopeCode, $scopeId ) {
+		$this->exportLeads( $scopeCode, $scopeId );
 	}
 
-	private function exportLeads ( $scopeId ) {
+	private function exportLeads ( $scopeCode, $scopeId ) {
 
 		$searchUtils = $this->getContainer()->get("search.utils");
 
@@ -118,7 +97,6 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 		for ($loopidx = 0; $loopidx <= $countLeads; $loopidx=$loopidx+$this->nbOfItemsToBatch ) {
 
 			echo ("Index : ".$loopidx);
-			//$maxValue = $loopidx+$this->nbOfItemsToBatch-1;
 
 			$sql = "SELECT * FROM Leads WHERE form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
 			echo "\n".$sql."\n";
@@ -130,12 +108,11 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
 				// Send to Search Engine
 				$leads_array = $this->getContainer()->get('leadsfactory.leads_repository')->getLeadsArrayById($obj["id"]);
-				$response = $searchUtils->indexLeadObject( $leads_array, $scopeId );
+				$response = $searchUtils->indexLeadObject( $leads_array, $scopeCode );
 			}
 			unset ($result);
 			unset ($sql);
 		}
-		//Loop for lead indexation
 
 	}
 

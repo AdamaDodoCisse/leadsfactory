@@ -30,6 +30,7 @@ class SearchController extends CoreController {
     }
 
     /**
+     * Index page of search section in ADMIn
      * @Route("/index", name="_search_config")
      * @Secure(roles="ROLE_USER")
      */
@@ -128,45 +129,21 @@ class SearchController extends CoreController {
     }
 
     /**
-     * @Route("/run", name="_search_run")
-     * @Secure(roles="ROLE_USER")
-     */
-    public function runElasticAction () {
-
-        $searchUtils = $this->get("search.utils");
-        $output = $searchUtils->start();
-
-        //$messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Démarrage du service de recherche", $process->getOutput() );
-
-        return $this->redirect($this->generateUrl('_search_config'));
-
-    }
-
-    /**
-     * @Route("/shutdown", name="_search_stop")
-     * @Secure(roles="ROLE_USER")
-     */
-    public function shutdownAction () {
-
-        $request = '_shutdown';
-
-        $searchUtils = $this->get("search.utils");
-        $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , $request );
-
-        return $this->redirect($this->generateUrl('_search_config'));
-
-    }
-
-    /**
      * @Route("/deleteIndex", name="_search_delete_index")
      * @Secure(roles="ROLE_USER")
      */
     public function deleteIndex () {
 
-        $request = '/leadsfactory';
+        $sr = $this->get('leadsfactory.scope_repository');
+        $scope_list = $sr->getAll();
 
-        $searchUtils = $this->get("search.utils");
-        $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_DELETE , $request );
+        foreach ($scope_list as $s) {
+
+            $request = '/leadsfactory-'.$s['s_code'];
+            $searchUtils = $this->get("search.utils");
+            $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_DELETE , $request );
+
+        }
 
         return $this->redirect($this->generateUrl('_search_config'));
 
@@ -189,23 +166,28 @@ class SearchController extends CoreController {
         $parameters =    '{
                         "mappings": {
                             "leads": {
-                                "dynamic":      "strict",
+                                "dynamic":      true,
                                 "properties": {
-                                    "_id":           { "type": "integer"},
+                                    "_id":           { "type": "integer","index": "not_analyzed"},
                                     "id":           { "type": "integer"},
-                                    "firstname":    { "type": "string"},
-                                    "lastname":     { "type": "string"},
+                                    "firstname":    { "type": "string","index": "not_analyzed"},
+                                    "lastname":     { "type": "string","index": "not_analyzed"},
                                     "status":       { "type": "integer"},
                                     "exportdate":   { "type": "date"},
-                                    "log":          { "type": "string"},
+                                    "log":          { "type": "string","index": "not_analyzed"},
                                     "formTyped":    { "type": "integer"},
                                     "form":         { "type": "integer"},
-                                    "utmcampaign":  { "type": "string"},
-                                    "telephone":    { "type": "string"},
+                                    "utmcampaign":  { "type": "string","index": "not_analyzed"},
+                                    "telephone":    { "type": "string","index": "not_analyzed"},
                                     "createdAt":    { "type": "date"},
-                                    "email":        { "type": "string"},
+                                    "email":        { "type": "string","index": "not_analyzed"},
                                     "client":       { "type": "integer"},
                                     "entreprise":   { "type": "integer"},
+                                    "formTypeName": { "type": "string","index": "not_analyzed"},
+                                    "ipAdress":     { "type": "string","index": "not_analyzed"},
+                                    "userAgent":    { "type": "string","index": "not_analyzed"},
+                                    "scopeName":    { "type": "string","index": "not_analyzed"},
+                                    "formName":     { "type": "string","index": "not_analyzed"},
                                     "content":  {
                                         "type":     "object",
                                         "dynamic":  true
@@ -245,18 +227,16 @@ class SearchController extends CoreController {
                         }
                     }';
 
-        // Create an Index for each Scopes
-        $repository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope');
-        $scopes = $repository->findAll();
+        $sr = $this->get('leadsfactory.scope_repository');
+        $scope_list = $sr->getAll();
 
-        foreach ($scopes as $scope) {
+        foreach ($scope_list as $scope) {
 
-            $request = '/leadsfactory-'.$scope->getId();
+            $request = '/leadsfactory-'.$scope['s_code'];
             $searchUtils = $this->get("search.utils");
             $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
 
         }
-
 
     }
 
