@@ -57,8 +57,9 @@ class EntityUsersGController extends ApplicationCrudController
 
     public function setListColumns () {
         return array(
-                        "Titre" => "title",
-                        "Id" => "id",
+                        "Titre" => ["key"=>"title", "method"=>"Utils::FormatMyString"],
+                        "Date de création" => ["key"=>"createdDate", "format"=>"jj/mm/YYYY"],
+                        "Id" => "id"
                     );
     }
 
