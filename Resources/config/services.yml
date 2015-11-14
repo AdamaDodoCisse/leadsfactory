@@ -98,6 +98,11 @@ services:
       tags:
         - { name: twig.extension }
 
+  leadsfactory.twig_genericcrud_extension:
+      class: Tellaw\LeadsFactoryBundle\Twig\TellawGenericCrudExtension
+      tags:
+        - { name: twig.extension }
+
   leadsfactory.leads_repository:
     class: Tellaw\LeadsFactoryBundle\Entity\LeadsRepository
     factory_service: doctrine.orm.default_entity_manager

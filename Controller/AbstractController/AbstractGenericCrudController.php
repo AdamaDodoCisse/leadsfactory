@@ -51,6 +51,7 @@ abstract class AbstractGenericCrudController extends CoreController {
     abstract function setListTemplate ();
     abstract function setRedirectRoute ();
     abstract function setListColumns ();
+    abstract function setNewRoute();
 
     function __construct () {
 
@@ -92,10 +93,15 @@ abstract class AbstractGenericCrudController extends CoreController {
         }
 
         $list = $this->getList ($this->_entity , $page, $limit, $keyword, array () );
+        $listTitles = array_keys( $this->_list_columns );
 
         return $this->render(
             $this->_list_template,
             array(
+                'newRoute'      => $this->setNewRoute(),
+                'listTitle'     => $listTitles,
+                'listColumns'   => $this->_list_columns,
+                'listActions'   => $this->_list_actions,
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
                 'limit_options' => $list['limit_options']
@@ -164,6 +170,7 @@ abstract class AbstractGenericCrudController extends CoreController {
         return $this->render($this->_form_template,
             array(
                 'form' => $form->createView(),
+                'helpMessage' => $this->_help_message,
                 'title' => "Edition d'un profil utilisateur")
             );
 

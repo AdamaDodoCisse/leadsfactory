@@ -11,7 +11,13 @@ abstract class ApplicationCrudController extends AbstractGenericCrudController {
 
     public function setEntity() {}
     public function setFormType() {}
-    public function setFormTemplate() {}
-    public function setListTemplate() {}
+
+    public function setFormTemplate () {
+        return "TellawLeadsFactoryBundle:entity/generic:edit.html.twig";
+    }
+
+    public function setListTemplate () {
+        return "TellawLeadsFactoryBundle:entity/generic:list.html.twig";
+    }
 
 }

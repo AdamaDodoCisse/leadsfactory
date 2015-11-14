@@ -53,22 +53,6 @@ class LeadsFactoryExtension extends \Twig_Extension
 		}
 	}
 
-	/**
-	 * Method used to extract links of actions
-	 * @param $params
-	 */
-	public function getActionsLinks ($params) {
-
-	}
-
-	/**
-	 * Method used to extract in List views the values of object attributes
-	 * @param $params
-	 */
-	public function getListItem ($params) {
-
-	}
-
 	public function field($params)
 	{
 		if (isset($params['attributes']['data-list'])) {
