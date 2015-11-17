@@ -98,11 +98,13 @@ class ExportRepository extends EntityRepository
         return $qb->getQuery()->getScalarResult();
     }
 
-    public function resetFailedExports($date = null) {
+    public function resetFailedExports($date = null, $exports = array()) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->update('TellawLeadsFactoryBundle:Export', 'e')
             ->set('e.status', 0)
-            ->where('e.status = 3');
+            ->where('e.status = 3')
+            ->andWhere('e.id IN (:exports)')
+            ->setParameter('exports', $exports);
         if ($date) {
                 $qb ->andWhere('e.created_at >= :date')
                     ->setParameter('date', $date->format('Y-m-d h:i:s'));

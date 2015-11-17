@@ -37,12 +37,13 @@ class ResetExportsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
         $scope = $input->getArgument('scope');
-
+        $logger = $this->getContainer()->get('export.logger');
         if ($scope == 'all') {
             $sr = $this->getContainer()->get('leadsfactory.scope_repository');
             $scope_list = $sr->getAll();
             foreach ($scope_list as $s) {
-                $this->callExportForScope($s['s_code']);
+                $logger->info("Reset Leads from : " . $s['s_code']);
+                $this->callExportForScope(strtolower($s['s_code']));
             }
         } else {
             $this->callExportForScope($scope);
@@ -60,23 +61,24 @@ class ResetExportsCommand extends ContainerAwareCommand
         $logger->info("REVIEW JOBS : ".$scope." tâche de recupération des exports en erreur multiple");
         $exports = $er->findByStatus(3, $date);
         // If We have failed exports
-        $logger->info("REVIEW JOBS : ".$scope." Nombre total d'exports en erreur : " . count($e_ids));
         if (is_array($exports) && count($exports) > 0) {
             $export_email = $prefs->findByKeyAndScope('CORE_EXPORT_EMAIL', intval($exports[0]['s_id']));
 
             // Get Exports Id List in this scope
             foreach ($exports as $e) {
-                if ($scope && $scope != $e['s_code']) continue ; // If there is a scope get or Go !
-                $e_ids[] = $e['e_id'];
+                if ($scope == $e['s_code']) {
+                    $e_ids[] = $e['e_id'];
+                }
             }
-
             $logger->info("REVIEW JOBS : ".$scope." : Nombre d'exports en erreur : " . count($e_ids));
             // Update exports and format mail
-            if (count($e_ids)) {
+            if (count($e_ids) > 0) {
                 $logger->info("REVIEW JOBS : ".$scope." : Liste des exports : ".implode(', ', $e_ids));
                 $logger->info("REVIEW JOBS : ".$scope." : Remise en attente des exports");
+
                 // Reset des exports
-                $er->resetFailedExports($date);
+                $er->resetFailedExports($date, $e_ids);
+
                 $message = $this->formatExportTable($exports, $scope);
                 if (is_array($export_email) && count($export_email) && $export_email[0]['p_value']) {
                     $email = explode(';', $export_email[0]['p_value']);
@@ -85,6 +87,8 @@ class ResetExportsCommand extends ContainerAwareCommand
                     $logger->info("REVIEW JOBS : Email d'export introuvalble");
                 }
             }
+        } else {
+            $logger->info("REVIEW JOBS : Aucun export en erreur.");
         }
     }
 

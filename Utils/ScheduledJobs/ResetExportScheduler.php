@@ -25,9 +25,7 @@ class ResetExportScheduler implements IScheduledJob
 
     public function getCommands()
     {
-        return array (  'leadsfactory:export:reset ti',
-                        'leadsfactory:export:reset weka',
-                        'leadsfactory:export:reset comundi');
+        return array ( 'leadsfactory:export:reset all' );
     }
 
     public function getEnabled()
