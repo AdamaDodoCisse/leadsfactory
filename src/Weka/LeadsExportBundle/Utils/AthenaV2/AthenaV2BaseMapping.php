@@ -176,6 +176,7 @@ class AthenaV2BaseMapping {
             "utmcontent"                => "",   //
             "referrer_url"              => "",   //
             "redirect_url"              => "",   //
+            "acteur"                    => "acteur",
             "trackin_origin"            => "",   //
 
         );

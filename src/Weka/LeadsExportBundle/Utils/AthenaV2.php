@@ -78,10 +78,9 @@ class AthenaV2 extends AbstractMethod{
 
         // Get destination
         $id_assignation = "";
-        if(array_key_exists('id_assignation', $this->_formConfig["export"]["athenaV2"])){
-            $id_assignation = $this->_formConfig["export"]["athenaV2"]["id_assignation"];
+        if(array_key_exists('acteur', $this->_formConfig["export"]["athenaV2"])){
+            $id_assignation = $this->_formConfig["export"]["athenaV2"]["acteur"];
         }
-
 
         $logger->info("############ ATHENAV2 - EXPORT ###############");
         // Loop over export jobs
@@ -90,16 +89,11 @@ class AthenaV2 extends AbstractMethod{
             $data = json_decode($job->getLead()->getData(), true);
 
             //on dégage si profil étudiant
-            if(isset($data['profil']) && $data['profil'] == 'ETUDIANT'){
+            if(isset($data['acteur']) && $data['acteur'] == 'ETUDIANT'){
                 $logger->info('Profil étudiant');
                 $exportUtils->updateJob($job, $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
                 $exportUtils->updateLead($job->getLead(), $exportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
                 continue;
-            }
-
-            // Patch pour la DI marketing qui est capable de cibler le TMK
-            if(array_key_exists('acteur', $data) && strtolower($data['profil']) == 'tmk'){
-                $id_assignation = self::$_AHTENA_ID;
             }
 
             $this->_current_job = $job->getId();
@@ -228,8 +222,11 @@ class AthenaV2 extends AbstractMethod{
 
                     } else {
 
-                        if ($results) $log = json_encode($results->errors);
-                        else $log = "Réponse vide d'Athena";
+                        if ($results) {
+                            $log = json_encode($results->errors);
+                        } else {
+                            $log = "Réponse vide d'Athena";
+                        }
                         $logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : [Erreur lors de l'export] - ".$log);
                         $status = $exportUtils->getErrorStatus($job);
 

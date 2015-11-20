@@ -25,4 +25,19 @@ class Livreblanc extends BaseMapping{
 	{
 		return 'WPWEB';
 	}
+
+	public function getDetail_demande ($data) {
+
+		$comment = 'Provient du formulaire Téléchargement de livre blanc (actu)';
+
+		if(isset($data['type-etablissement']))
+			$comment .= "\nType d'établissement : ".$this->getTypeEtablissement($data['type-etablissement']);
+
+		if(isset($data['livre-blanc']))
+			$comment .= "\nLivre blanc  : ".$data['livre-blanc'];
+
+		return $comment;
+
+	}
+
 }
