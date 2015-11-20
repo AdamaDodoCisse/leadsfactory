@@ -91,12 +91,12 @@ class ApiController extends CoreController
                 $export->setStatus(ExportUtils::$_EXPORT_NOT_PROCESSED);
             }
 
+            $entity_manager->flush();
+
             $response_status = 'Validated '.$email;
         } else {
             $response_status = $email.' already valid';
         }
-
-        $entity_manager->flush();
 
         return new JsonResponse(array('status' => $response_status));
     }
