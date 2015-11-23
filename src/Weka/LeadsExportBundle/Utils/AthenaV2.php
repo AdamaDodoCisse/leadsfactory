@@ -78,6 +78,8 @@ class AthenaV2 extends AbstractMethod{
 
         // Get destination
         $id_assignation = "";
+
+        // Jira : ST-5281
         if(array_key_exists('acteur', $this->_formConfig["export"]["athenaV2"])){
             $id_assignation = $this->_formConfig["export"]["athenaV2"]["acteur"];
         }
@@ -321,6 +323,8 @@ class AthenaV2 extends AbstractMethod{
         $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Envoie des Leads vers ATHENA -> " . $this->_athenaUrl);
 
         $rawData = http_build_query(array('entryPoint' => 'gatewayv2', 'data' => $request));
+        $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : HTTP Query -> [" . $rawData ."]" );
+
         $max_exe_time = 10050; // time in milliseconds
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->_athenaUrl);
