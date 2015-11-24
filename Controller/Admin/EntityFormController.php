@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
@@ -23,7 +24,6 @@ class EntityFormController extends CoreController {
 
     public function __construct () {
         parent::__construct();
-
     }
 
     /**
@@ -94,6 +94,22 @@ class EntityFormController extends CoreController {
         );
     }
 
+
+    /**
+     * Preview of a TWIG FORM
+     *
+     * @Route("/preview/twig/{code}", name="_client_twig_preview")
+     * @Secure(roles="ROLE_USER")
+     * @ParamConverter("form")
+     */
+    public function getTwigFormPreview(Form $form)
+    {
+        return $this->render(
+            'TellawLeadsFactoryBundle:Front:display_twig_form.html.twig',
+            array('form' => $form)
+        );
+    }
+
     /**
      * @Route("/form/edit/{id}", name="_form_edit")
      * @Secure(roles="ROLE_USER")
@@ -126,6 +142,7 @@ class EntityFormController extends CoreController {
             'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
             array(
                 'id' => $id,
+                'code' => $formEntity->getCode(),
                 'form' => $form->createView(),
                 'title' => "Edition d'un formulaire"
             )

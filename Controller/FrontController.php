@@ -38,6 +38,9 @@ class FrontController extends CoreController
 
     /**
      * Tracking callback method
+     *
+     * Method used to generate a transparent pixel to track display of a form, including the UTM.
+     *
      * @Route("/form/trck", name="_client_form_tracking")
      * @Route("/form/trck/{code}/")
      * @Route("/form/trck/{code}/{utm_campaign}")
@@ -65,6 +68,9 @@ class FrontController extends CoreController
 
 
     /**
+     *
+     * Method used for FORM Post in Twig Format
+     *
      * @Route("/form/twig/{code}/{utm_campaign}", name="_client_twig")
      * @ParamConverter("form")
      */
@@ -102,15 +108,6 @@ class FrontController extends CoreController
         $response = new Response( $view );
 		$response->headers->set('Content-Type', 'application/javascript');
 		return $response;
-	}
-
-	/**
-	 * @Route("/preview/twig/{code}", name="_client_twig_preview")
-	 * @ParamConverter("form")
-	 */
-	public function getTwigFormPreview(Form $form)
-	{
-		return $this->render('TellawLeadsFactoryBundle:Front:display_twig_form.html.twig', array('form' => $form));
 	}
 
     /**

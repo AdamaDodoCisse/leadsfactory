@@ -36,7 +36,7 @@
         {% if id is defined %}
             <h3 class="custom-heading">Actions:</h3>
             <div>
-                <button type="button" class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" onClick="window.location.href='{{ path('_client_get_form', {'id': id}) }}'">Apercu du formulaire</button>
+                <a class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" href="{{ path('_client_twig_preview', {'code': code}) }}" data-featherlight="ajax">Apercu du formulaire</a>
                 <button type="button" class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" onClick="window.location.href='{{ path('_entity_leads_export', {'id': id}) }}'">Export des leads du formulaire</button>
             </div>
             <div style="clear:both"></div>

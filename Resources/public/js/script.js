@@ -332,56 +332,7 @@ new Timeline($('#cvs3').get(0)).toggle(true);
 
 $(document).ready(function(){ 
 
-	/*** Scrollbar Timeline ***/	
-	$('#scrollbox3').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
 
-	/*** Sidebar Scroll ***/	
-	$('#scrollbox4').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
-	
-	/*** Contact list Scroll ***/	
-	$('#scrollbox5').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
-	
-	/*** Chat Widget Scroll ***/	
-	$('#scrollbox6').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
-	
-	/*** Inbox Widget Scroll ***/	
-	$('#scrollbox7').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
-	
-	/*** Inbox Page  Scroll ***/	
-	$('#scrollbox8').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
-	
-	/*** Read Message Scroll ***/	
-	$('#scrollbox9').enscroll({
-	showOnHover: true,
-	verticalTrackClass: 'track3',
-	verticalHandleClass: 'handle3'
-	});	
-	
-	
 	/*** Carousal Widget ***/
 	$('.slidewrap').carousel({
 	slider: '.slider',
