@@ -25,22 +25,25 @@
 	"tellaw/leadsfactory" : "1.0.10",
 	"beberlei/DoctrineExtensions": "v1.0.1",
 	"teodortalov/citrix": "1.1",
-	"phpunit/phpunit": "5.0.*"
+    "jonnyw/php-phantomjs": "3.*"
   },
+
   "scripts": {
 	"post-install-cmd": [
 	  "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "PhantomInstaller\\Installer::installPhantomJS"
 	],
 	"post-update-cmd": [
 	  "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+      "PhantomInstaller\\Installer::installPhantomJS"
 	]
   },
   "config": {

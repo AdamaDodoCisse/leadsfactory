@@ -4,6 +4,7 @@ bin/doctrine-dbal
 /web/bundles/
 /app/bootstrap.php.cache
 /composer.phar
+bin/*
 
 app/config/parameters.yml
 app/cache
