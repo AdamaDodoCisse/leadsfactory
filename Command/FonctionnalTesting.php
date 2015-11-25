@@ -49,6 +49,13 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
 
 	private function runFormTesting ( $form, $fields ) {
 
+		// 2/ Vérification des champs
+		// 3/ Connexion au front sur l'url du formulaire. Si inexistante, utilisation de la preview
+		// 4/ Remplissage des champs et intégrrogation des fields pour obtenir les valeurs
+		// 5/ Post
+		// 6/ vérification en base du post
+		// 7/ Vérification de la création des taches d'exports
+
 	}
 
 }
