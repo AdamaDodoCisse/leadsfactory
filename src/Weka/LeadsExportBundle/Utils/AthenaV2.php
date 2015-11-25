@@ -301,8 +301,14 @@ class AthenaV2 extends AbstractMethod{
                 $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Recupération de la methode mappée  -> " .$getter." - ".$athenaKey);
                 $entity->$athenaKey = $this->_mappingClass->$getter($data);
             }elseif(!empty($formKey)){
-                $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Recupération de la methode mappée  -> " .$athenaKey);
-                $entity->$athenaKey = isset($data[$formKey]) ? $data[$formKey] : null;
+                $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Recupération de la valeur mappée  -> " .$athenaKey);
+                if( isset($data[$formKey])) {
+                    $this->_logger->info ("[".$this->_current_job."]"."[".$this->_current_lead."]"." --> Valeur -> ".$data[$formKey]);
+                    $entity->$athenaKey = $data[$formKey];
+                } else {
+                    $this->_logger->info ("[".$this->_current_job."]"."[".$this->_current_lead."]"." --> Valeur -> [vide]");
+                    $entity->$athenaKey = "";
+                }
             }else {
                 $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Methode non retrouvée -> " . $getter);
                 $entity->$athenaKey = null;
@@ -323,7 +329,7 @@ class AthenaV2 extends AbstractMethod{
         $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Envoie des Leads vers ATHENA -> " . $this->_athenaUrl);
 
         $rawData = http_build_query(array('entryPoint' => 'gatewayv2', 'data' => $request));
-        $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : HTTP Query -> [" . $rawData ."]" );
+        $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : HTTP Query -> [" . $request ."]" );
 
         $max_exe_time = 10050; // time in milliseconds
         $ch = curl_init();
@@ -355,6 +361,7 @@ class AthenaV2 extends AbstractMethod{
 
         $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Préparation de la requête d'envoie vers ATHENA");
         $jsonRequest = json_encode($request);
+
         return json_decode($this->_postToAthena($jsonRequest));
     }
 
