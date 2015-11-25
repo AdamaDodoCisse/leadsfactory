@@ -92,6 +92,8 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
     /**
      * Required tags
      *
+     * @deprecated
+     *
      * @param $source
      * @validator : Type of data validation expected
      * @return array
@@ -137,6 +139,16 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
         return $items;
     }
 
+    /**
+     *
+     * Method used to render a field tag
+     *
+     * @deprecated
+     *
+     * @param $id
+     * @param $tag
+     * @return string
+     */
     public function renderTag($id, $tag)
     {
         $type = strtolower($tag['type']);
@@ -291,6 +303,14 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
 
     }
 
+    /**
+     *
+     * Return data-list ID used in a field of a form.
+     *
+     * @param $fieldId
+     * @param $formId
+     * @return null
+     */
     public function getUsedReferenceListByFieldId ( $fieldId, $formId ) {
 
         $datas = $this->getFieldsAsArrayByFormId( $formId );
@@ -360,6 +380,7 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
     /**
      *
      * Method used to extract all fields from source
+     * This method must be used on TWIG FORMS
      *
      * @param $form_source
      * @return array

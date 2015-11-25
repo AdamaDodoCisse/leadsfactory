@@ -34,7 +34,21 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
         // Find every forms
         $client = static::createClient();
 
+		$forms = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+		$alertUtils = $this->getContainer()->get("alertes_utils");
+		$formUtils = $this->getContainer()->get("form_utils");
+
+		foreach ( $forms as $form ) {
+
+			$fields = $formUtils->getFieldsAsArray ( $form->getSource() );
+
+		}
+
 	}
 
+
+	private function runFormTesting ( $form, $fields ) {
+
+	}
 
 }

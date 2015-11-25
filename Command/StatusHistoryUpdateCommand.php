@@ -46,7 +46,6 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
             $alertUtils->setValuesForAlerts ( $form );
 
             $output->writeln("Recherche du status du formulaire : ".$form->getName()." / Id : ".$form->getId());
-
             // 1 - Load a potentially existing status from history :
             // If so, just update it.
 
@@ -56,15 +55,12 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
                 if (count ($statusHistory)>0) {
                     $statusHistory = $statusHistory[0];
                 } else {
-
                     $statusHistory = new StatusHistory();
                     $statusHistory->setStatusDate( $minDate );
                     $statusHistory->setForm( $form );
                     $statusHistory->setData( '' );
                     $statusHistory->setCreatedAt( $currentDate );
-
                 }
-
                 $statusHistory->setStatus( $form->yesterdayStatus );
                 $statusHistory->setUpdatedAt( $currentDate );
 

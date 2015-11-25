@@ -54,7 +54,6 @@ class AlertUtilsTest extends WebTestCase {
         /**
          * Testing Warnings
          */
-
         // Test de variation
         // Variation : 30*25/100 = 7,5
         $valueNow = 21;
