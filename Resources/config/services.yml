@@ -14,6 +14,11 @@ services:
     calls:
                   - [ setContainer, [ @service_container ] ]
 
+  functionnal_testing.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\FunctionnalTestingUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   scheduler.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\SchedulerUtils
     calls:

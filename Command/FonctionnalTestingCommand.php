@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use JonnyW\PhantomJs\Client;
 
 class FonctionnalTestingCommand extends ContainerAwareCommand {
 	
@@ -32,15 +32,20 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
     protected function execute(InputInterface $input, OutputInterface $output) {
 
         // Find every forms
-        $client = static::createClient();
+        $client = Client::getInstance();
+
+        $logger = $this->getContainer()->get('export.logger');
 
 		$forms = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
 		$alertUtils = $this->getContainer()->get("alertes_utils");
 		$formUtils = $this->getContainer()->get("form_utils");
+        $testsUtils = $this->getContainer()->get("functionnal_testing.utils");
 
 		foreach ( $forms as $form ) {
 
+            $logger->info ("Form : ".$form->getCode());
 			$fields = $formUtils->getFieldsAsArray ( $form->getSource() );
+            $testsUtils->testForm ( $client, $form, $fields );
 
 		}
 
@@ -49,12 +54,7 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
 
 	private function runFormTesting ( $form, $fields ) {
 
-		// 2/ Vérification des champs
-		// 3/ Connexion au front sur l'url du formulaire. Si inexistante, utilisation de la preview
-		// 4/ Remplissage des champs et intégrrogation des fields pour obtenir les valeurs
-		// 5/ Post
-		// 6/ vérification en base du post
-		// 7/ Vérification de la création des taches d'exports
+
 
 	}
 

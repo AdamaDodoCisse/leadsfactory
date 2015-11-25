@@ -94,6 +94,12 @@ class Form {
 	 */
 	protected $secureKey;
 
+    /**
+     * @ORM\Column(type="string", nullable=true, name="url")
+     */
+    protected $url;
+
+
     public function getType() {
         return $this->type;
     }
@@ -281,6 +287,24 @@ class Form {
     {
         $this->code = $code;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+
 
     /**
      * Set confirmationEmailSource
