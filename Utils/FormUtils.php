@@ -143,8 +143,6 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
      *
      * Method used to render a field tag
      *
-     * @deprecated
-     *
      * @param $id
      * @param $tag
      * @return string
