@@ -19,7 +19,7 @@
             <directory>../src/*/Bundle/*Bundle/Tests</directory>
         </testsuite>
         <testsuite name="Leads Test Suite">
-            <directory>../vendor/tellaw/LeadsFactoryBundle/Tellaw/LeadsFactoryBundle/Tests</directory>
+            <directory>../vendor/tellaw/leadsfactory/Tellaw/LeadsFactoryBundle/Tests</directory>
         </testsuite>
     </testsuites>
 
