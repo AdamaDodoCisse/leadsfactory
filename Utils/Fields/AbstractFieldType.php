@@ -3,6 +3,8 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 abstract class AbstractFieldType {
 
+    abstract function getTestValue( $dataType );
+
     /**
      * Generic list of attributes to ignore for tags
      * @var array $attributesToIgnore Defines attributes which should not be copied to html output for the field
@@ -106,10 +108,8 @@ abstract class AbstractFieldType {
 
     }
 
-
     public function getDemoValue ( $id ){
         return "field-".$id."-autofill";
     }
-
 
 }
