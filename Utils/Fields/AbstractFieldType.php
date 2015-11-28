@@ -3,7 +3,9 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 abstract class AbstractFieldType {
 
-    abstract function getTestValue( $dataType );
+    public function getTestValue ( $dataType ) {
+        return "test-value";
+    }
 
     /**
      * Generic list of attributes to ignore for tags
