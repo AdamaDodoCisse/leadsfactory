@@ -3,8 +3,18 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 abstract class AbstractFieldType {
 
-    public function getTestValue ( $dataType ) {
-        return "test-value";
+    public static $_DATATYPE_PHONENUMBER = "PHONE_NUMBER";
+    public static $_DATATYPE_EMAIL = "EMAIL";
+    public static $_DATATYPE_ZIP = "ZIP_CODE";
+    public static $_DATATYPE_COUNTRY_CODE = "COUNTRY_CODE";
+    public static $_DATATYPE_COUNTRY_NAME = "COUNTRY_NAME";
+
+    public function getTestValue ( $dataType, $field ) {
+        if (isset($field["attributes"]["id"])) {
+            return "test-value-" . $field["attributes"]["id"];
+        } else {
+            return "test-value-" . time();
+        }
     }
 
     /**

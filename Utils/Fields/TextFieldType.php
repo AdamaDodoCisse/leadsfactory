@@ -14,4 +14,19 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
  */
 class TextFieldType extends AbstractFieldType
 {
+
+    public function getTestValue ( $dataType, $field ) {
+
+        if ( $dataType == AbstractFieldType::$_DATATYPE_EMAIL ) {
+            return "test-fonctionnel@leadsfactory.com";
+        } else {
+            if (isset($field["attributes"]["id"])) {
+                return "text-".$field["attributes"]["id"];
+            }else {
+                return "text-".time();
+            }
+        }
+
+    }
+
 }

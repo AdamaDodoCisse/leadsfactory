@@ -5,6 +5,17 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 
 class HiddenFieldType extends AbstractFieldType
 {
+
+    public function getTestValue ( $dataType, $field ) {
+
+        if (isset($field["attributes"]["id"])) {
+            return "hidden-".$field["attributes"]["id"];
+        }else {
+            return "hidden-".time();
+        }
+
+    }
+
     /**
      * Render HTML
      *

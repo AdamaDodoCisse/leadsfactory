@@ -35,6 +35,7 @@ class FormType extends AbstractType
 
         $builder->add('name');
         $builder->add('description');
+        $builder->add('url',null, array('label' => 'URL de test du formulaire'));
 
         $builder->add('code',null, array('label' => 'Code (identifiant technique) du formulaire'));
 
