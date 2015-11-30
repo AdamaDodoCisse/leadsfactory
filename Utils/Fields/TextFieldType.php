@@ -19,6 +19,14 @@ class TextFieldType extends AbstractFieldType
 
         if ( $dataType == AbstractFieldType::$_DATATYPE_EMAIL ) {
             return "test-fonctionnel@leadsfactory.com";
+        } else if ( $dataType == AbstractFieldType::$_DATATYPE_ZIP ) {
+            return "77330";
+        } else if ( $dataType == AbstractFieldType::$_DATATYPE_PHONENUMBER ) {
+            return "0123456789";
+        } else if ( $dataType == AbstractFieldType::$_DATATYPE_COUNTRY_CODE ) {
+            return "FR";
+        } else if ( $dataType == AbstractFieldType::$_DATATYPE_COUNTRY_NAME ) {
+            return "France";
         } else {
             if (isset($field["attributes"]["id"])) {
                 return "text-".$field["attributes"]["id"];
