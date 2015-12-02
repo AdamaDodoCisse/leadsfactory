@@ -79,13 +79,10 @@
 				var meteo_id = "meteo-icon-"+fid;
 				if (($(this).attr("data-color") == "green")) {
 					skycons.add(meteo_id, Skycons.CLEAR_DAY);
-					$(this).attr("style", "background-color:#33CC33;color:#FFFFFF;");
 				} else if (($(this).attr("data-color") == "pink")) {
 					skycons.add(meteo_id, Skycons.RAIN);
-					$(this).attr("style", "background-color:#F5B1A0;");
 				} else if (($(this).attr("data-color") == "yellow")) {
 					skycons.add(meteo_id, Skycons.PARTLY_CLOUDY_DAY);
-					$(this).attr("style", "background-color:#CCCC66;color:#FFFFFF;");
 				}
 			});
 			skycons.play();
