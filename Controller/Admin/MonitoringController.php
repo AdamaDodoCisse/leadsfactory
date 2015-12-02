@@ -508,8 +508,36 @@ class MonitoringController extends CoreController {
         /** @var AlertUtils $alertes_utils */
         $alertes_utils = $this->get("alertes_utils");
         $alertes_utils->setValuesForAlerts($formEntity);
-        return new Response( $formEntity->yesterdayValue );
+        return new Response( $formEntity->yesterdayStatus );
 
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getFormStatusTextAction($form_id) {
+        $formEntity = $this->get('leadsfactory.form_repository')->find($form_id);
+
+        if ($formEntity == null) throw new \Exception ("Form cannot be null");
+
+        /** @var AlertUtils $alertes_utils */
+        $alertes_utils = $this->get("alertes_utils");
+        $alertes_utils->setValuesForAlerts($formEntity);
+        return new Response( $formEntity->yesterdayStatusText );
+    }
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     */
+    public function getFormStatusColorAction($form_id) {
+        $formEntity = $this->get('leadsfactory.form_repository')->find($form_id);
+
+        if ($formEntity == null) throw new \Exception ("Form cannot be null");
+
+        /** @var AlertUtils $alertes_utils */
+        $alertes_utils = $this->get("alertes_utils");
+        $alertes_utils->setValuesForAlerts($formEntity);
+        return new Response( $formEntity->yesterdayStatusColor );
     }
 
     /**
