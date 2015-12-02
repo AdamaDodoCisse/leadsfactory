@@ -23,6 +23,7 @@ tasks:
   pre-deploy:
     - composer-install: {dev: false}
   on-deploy:
+    - chmod
     - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas, licence]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
