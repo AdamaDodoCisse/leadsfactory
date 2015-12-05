@@ -415,12 +415,10 @@ class AthenaV2 extends AbstractMethod{
         if ( array_key_exists("product_sku", $data) && trim($data["product_sku"])!="") {
 
             $this->getLogger()->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : appel de la methode " . __FUNCTION__);
-
             $requestData = $this->getMappedData($data, $this->_mappingClass->getProduitMapping());
 
             // ID used for Athena Linking.
             $requestData->id_remplissage = $idRemplissage;
-
             $results = $this->sendRequest( AthenaV2::$_POST_METHOD_GET_ID_PRODUIT, $requestData, $source );
 
             if (isset($results->result->id_athena)) {

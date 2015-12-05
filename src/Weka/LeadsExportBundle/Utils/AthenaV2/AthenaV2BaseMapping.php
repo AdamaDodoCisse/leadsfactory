@@ -322,7 +322,7 @@ class AthenaV2BaseMapping {
 
         //JIRA  : ST-5283
         if (array_key_exists("type-etablissement", $data) && $data["type-etablissement"]) {
-            $comment .= "\nType d'établissement : " . $this->getSecteur_activite_weka($data['type-etablissement']);
+            $comment .= "\nType d'établissement : " . $this->getSecteur_activite_weka($data);
         }
 
         if (array_key_exists("livre-blanc", $data) && $data["livre-blanc"]) {
