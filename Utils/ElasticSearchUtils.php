@@ -102,7 +102,7 @@ class ElasticSearchUtils extends SearchShared {
      * Load saved search from Kibana
      *
      */
-    public function getKibanaSavedSearch ( $searchId, $nbDays ) {
+    public function getKibanaSavedSearch ( $searchId, $nbDays=60 ) {
 
         $query = "
         {
@@ -215,7 +215,6 @@ class ElasticSearchUtils extends SearchShared {
 
         if ($result) {
             $result = json_decode( $result);
-
             if (method_exists($result,"error")) {
                 echo ("ERROR : ".$baseUri.$query);
                 var_dump ($result);die();
@@ -342,7 +341,7 @@ class ElasticSearchUtils extends SearchShared {
 
         foreach ($content->hits->hits as $hit) {
 
-          //var_dump ($hit);
+          var_dump ($hit);
 
             if ($hit->_type == 'leads') {
                 $object = new Leads();

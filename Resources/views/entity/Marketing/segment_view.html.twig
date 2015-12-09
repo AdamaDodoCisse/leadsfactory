@@ -1,52 +1,27 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
-{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
-
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
 
-    <script>
-
-        function validateFormAction() {
-            /*
-            alert ("test");
-            alert (editor3.getValue());
-            document.getElementById("source2Widget").value = editor3.getValue();
-            alert (document.getElementById("source2Widget").value);
-            */
-        }
-
-    </script>
-
     <div class="col-md-12">
-        <div class="heading-sec" id="intro6">
-            <h1>{{ title }}</h1>
-        </div>
-    </div>
-
-    <div class="col-md-8">
-        <div class="widget-body custom-form">
-            {{ form(form) }}
-        </div>
-    </div>
-
-    <div class="col-md-4">
-        {% if id is defined %}
-            <h3 class="custom-heading">Actions:</h3>
-            <div>
-                <button type="button" class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" onClick="window.location.href='{{ path('_marketing_kibana_download_csv', {'id': id}) }}'">Télécharger le CSV</button>
+        <div class="col-md-8">
+            <div class="heading-sec" id="intro6">
+                <h1>Visualisation <i>d'un ségment</i></h1>
+                <div style="clear:both"></div>
 
             </div>
-            <div style="clear:both"></div>
-        {% endif %}
-
+        </div>
+        <div class="col-md-4">
+            <div class="btn-group btn-group-justified">
+                <a class="btn blue" href="{{ path ('_marketing_segment_download_csv', {'id': id}) }}">Télécharger le CSV</a>
+            </div>
+        </div>
     </div>
-
-    <div class="col-md-12">
-        {{ error }}
-    </div>
-
 
     {% if (searchResults) %}
+
+        <div class="col-md-12">
+
+        </div>
 
         <div class="col-md-12">
             <div class="">

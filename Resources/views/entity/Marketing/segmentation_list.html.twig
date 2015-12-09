@@ -5,19 +5,20 @@
 	<div class="col-md-12">
         <div class="col-md-8">
         <div class="heading-sec" id="intro6">
-            <h1>Administration <i>des Segments</i></h1>
+            <h1>Administration <i>des segmentations</i></h1>
             <div style="clear:both"></div>
-            <div class="titleDescription"><em>Un &laquo;ségment&raquo; est une requete marketing permettant d'isoler des données dans l'application en vue d'un export ou d'une consultation. </em></div>
+            <div class="titleDescription"><em>Une "segementation" est une requête marketing permettant d'isoler des
+            données dans l'application en vue d'un export ou d'une consultation. </em></div>
         </div>
         </div>
         <div class="col-md-4">
         <div class="btn-group btn-group-justified">
-            <a class="btn blue" href="{{ path ('_marketing_kibana_dashboard_new') }}">Créer un segment</a>
+            <a class="btn blue" href="{{ path ('_marketing_segmentation_new') }}">Ajouter une segmentation</a>
         </div>
         </div>
 	</div>
     <div class="col-md-12">
-        <h3 class="custom-heading">Ségments disponibles:</h3>
+        <h3 class="custom-heading">Ségmentations disponibles:</h3>
         <div class="">
             <div class="streaming-tables">
                 <div>
@@ -35,8 +36,6 @@
                         <th>id</th>
                         <th>Nom</th>
                         <th>Description</th>
-                        <th>Dernière éxécution</th>
-                        <th>Prochaine éxéctuion</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -48,19 +47,9 @@
                             <td style="vertical-align: middle;">{{ item.name }}</td>
                             <td style="vertical-align: middle;">{{ item.description }}</td>
 
-                            {% if item.enabled == false or not item.emails or not item.cronexpression %}
-                                <td colspan="2">Envoi non programmé</td>
-                            {% else %}
-                                <td style="vertical-align: middle;">{{ item.lastrun|date("d/m/Y h:i:s") }}</td>
-                                <td style="vertical-align: middle;">{{ item.nextrun|date("d/m/Y h:i:s") }}</td>
-                            {% endif %}
-
-
                             <td style="text-align:center">
-                                <a href="{{ path('_marketing_kibana_dashboard_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
+                                <a href="{{ path('_marketing_segmentation_edit', {'id': item.id}) }}" alt="Editer"><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
                                 <a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_marketing_kibana_dashboard_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/supprimer.png') }}"/></a>
-                                <a href="{{ path('_marketing_kibana_download_csv', {'id': item.id}) }}"  alt="Télécharger le CSV"><img title="Télécharger le CSV" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons/12.png') }}"/></a>
-                                <a href="{{ path('_marketing_kibana_dashboard_view', {'id': item.id}) }}"  alt="Voir les données"><img title="Voir les données" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/></a>
                             </td>
                         </tr>
 

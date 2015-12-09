@@ -347,9 +347,25 @@ class UtilsController extends CoreController
 
             $sections[] = array (   "name" => "Dashboards Marketing", "url" => "");
 
-        } else if (substr ($parentRoute, 0, strlen ("_marketing_kibana")) == "_marketing_kibana") {
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_kibana_exports_list")) == "_marketing_kibana_exports_list") {
 
-            $sections[] = array (   "name" => "Gestion des exports de segments", "url" => "");
+            $sections[] = array (   "name" => "Gestion des segmentations", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_segment_view")) == "_marketing_segment_view") {
+
+            $sections[] = array (   "name" => "Visualisation des réusltats du segment", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_segmentation_edit")) == "_marketing_segmentation_edit") {
+
+            $sections[] = array (   "name" => "Gestion des segmentations", "url" => $this->get('router')->generate('_marketing_kibana_exports_list'));
+            $sections[] = array (   "name" => "Edition des segmetations", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_marketing_segment_edit")) == "_marketing_segment_edit"
+                    || substr ($parentRoute, 0, strlen ("_marketing_segment_add")) == "_marketing_segment_add"
+                    || substr ($parentRoute, 0, strlen ("_marketing_segment_new_config")) == "_marketing_segment_new_config") {
+
+            $sections[] = array (   "name" => "Génération des segments", "url" => "");
+
         }
 
         return $this->render('TellawLeadsFactoryBundle:Utils:breadcrumb.html.twig', array ("sections" => $sections, "route" => $parentRoute, "displayBreadCrumb" => $displayBreadCrumb));

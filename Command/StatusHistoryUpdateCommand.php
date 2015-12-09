@@ -112,7 +112,6 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
             $from = $exportUtils::NOTIFICATION_DEFAULT_FROM;
             if (count($scope)) {
                 $body = $templatingService->render('TellawLeadsFactoryBundle:emails:status_history_task.html.twig', array("results" => $scope, "scope" => $scopes[$id]));
-                file_put_contents("file.".$id.".html", $body);
                 if (is_array($email) && count($email) && $email[0]['p_value']) {
                     $email = explode(';', $email[0]['p_value']);
                     foreach ($email as $s_email) {

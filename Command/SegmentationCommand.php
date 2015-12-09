@@ -11,6 +11,7 @@ use Cron\CronExpression;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
 use Swift_Message;
+use Tellaw\LeadsFactoryBundle\Utils\SegmentUtils;
 
 
 class SegmentationCommand extends ContainerAwareCommand {
@@ -31,9 +32,9 @@ class SegmentationCommand extends ContainerAwareCommand {
         $this->output = $output;
 
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
-        $segmentations = $this->getContainer()->get('leadsfactory.mkgsegmentation_repository')->findAll();
+        $segments = $this->getContainer()->get('leadsfactory.mkgsegment_repository')->findAll();
 
-        foreach ($segmentations as $segment) {
+        foreach ($segments as $segment) {
 
             // If cron is enabled
             if ($segment->getEnabled() && trim($segment->getCronExpression()) != "") {
@@ -49,7 +50,7 @@ class SegmentationCommand extends ContainerAwareCommand {
                     $output->writeln(sprintf('Running Cron Task <info>%s</info>', $segment->getName()));
 
                     // Set $lastrun for this crontask
-                    $segment->setLastRun(new \DateTime());
+                    $segment->setLastrun(new \DateTime());
                     try {
 
                         //$commands = $crontask->getCommands();
@@ -78,7 +79,7 @@ class SegmentationCommand extends ContainerAwareCommand {
                 }
 
                 // Get the last run time of this task, and calculate when it should run next
-                $lastrun = $segment->getLastRun() ? $segment->getLastRun() : 0;
+                $lastrun = $segment->getLastrun() ? $segment->getLastrun() : 0;
                 $cron = CronExpression::factory($segment->getCronexpression());
                 $nextrun = $cron->getNextRunDate( $lastrun );
                 if (!$segment->getNextrun() || $segment->getNextrun() <= $now ) {
@@ -109,8 +110,11 @@ class SegmentationCommand extends ContainerAwareCommand {
 
         if($segment->getCode()) {
 
-            $savedSearch = $searchUtils->getKibanaSavedSearch ( $segment->getCode(),$segment->getNbDays()  );
+            $segmentation = $this->getContainer()->get('leadsfactory.mkgsegmentation_repository')->find($segment->getSegmentation());
+            $savedSearch = $searchUtils->getKibanaSavedSearch ($segmentation->getQueryCode());
             $query = $savedSearch->getQuery();
+
+            SegmentUtils::addFilterConfig($query, $segment);
             $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
 
             $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());

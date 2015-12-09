@@ -21,8 +21,6 @@ class StatusHistoryRepository extends EntityRepository
         $result = $this->getEntityManager()->createQuery($dql)->setParameter('form_id', $form->getId() )->setParameter('status_date', $statusDate->format('Y-m-d') )->getResult();
 
         return $result;
-
-
     }
 
 }
