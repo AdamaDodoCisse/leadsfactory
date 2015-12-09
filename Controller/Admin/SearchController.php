@@ -167,6 +167,16 @@ class SearchController extends CoreController {
                         "mappings": {
                             "leads": {
                                 "dynamic":      true,
+                                "dynamic_templates": [
+                                                { "contentfields": {
+                                                      "match":              "*",
+                                                      "match_mapping_type": "string",
+                                                      "mapping": {
+                                                          "type": "string",
+                                                          "index": "not_analyzed"
+                                                      }
+                                                }}
+                                            ],
                                 "properties": {
                                     "_id":           { "type": "integer","index": "not_analyzed"},
                                     "id":           { "type": "integer"},
@@ -190,7 +200,8 @@ class SearchController extends CoreController {
                                     "formName":     { "type": "string","index": "not_analyzed"},
                                     "content":  {
                                         "type":     "object",
-                                        "dynamic":  true
+                                        "dynamic":  true,
+                                        "index": "analyzed"
                                     }
                                 }
                             },

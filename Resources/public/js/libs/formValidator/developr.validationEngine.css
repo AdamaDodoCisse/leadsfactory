@@ -1,7 +1,4 @@
 
-
-
-
 /* Z-INDEX */
  .formError { z-index: 999500; }
     .formError .formErrorContent { z-index: 999501; }
@@ -10,9 +7,6 @@
     .formErrorInsideDialog.formError { z-index: 999520; }
     .formErrorInsideDialog.formError .formErrorContent { z-index: 999521; }
     .formErrorInsideDialog.formError .formErrorArrow { z-index: 999526; }
-
-
-
 
 .inputContainer {
 	position: relative;
@@ -41,7 +35,7 @@
     padding-left: 17px;
     font-size: 10px;
     line-height: 13px;
-    background: url(http://preprod.weka.fr/boutique/skin/frontend/bysoft/default/images/validation_advice_bg.gif) 2px 1px no-repeat;
+    background: url(validation_advice_bg.gif) 2px 1px no-repeat;
     color: #f00;
 }
 
