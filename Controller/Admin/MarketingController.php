@@ -269,7 +269,7 @@ class MarketingController extends CoreController
             $query = $savedSearch->getQuery();
 
             SegmentUtils::addFilterConfig($query, $segment);
-            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search?size=10000&from=0", $query );
 
             $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
             $fieldsToDisplay = $savedSearch->getColumns();
@@ -313,7 +313,7 @@ class MarketingController extends CoreController
             $query = $savedSearch->getQuery();
 
             SegmentUtils::addFilterConfig($query, $segment);
-            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search?size=10000&from=0", $query );
 
             $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
             $fieldsToDisplay = $savedSearch->getColumns();

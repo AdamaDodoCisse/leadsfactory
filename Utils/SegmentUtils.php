@@ -42,6 +42,7 @@ class SegmentUtils
 
         $query_json['query']['query_string']['query'] = $query;
         $query_json['filter']['range']['createdAt'] = $range;
+
         $request = json_encode($query_json);
     }
 
