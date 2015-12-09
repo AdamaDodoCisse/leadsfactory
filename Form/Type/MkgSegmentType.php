@@ -55,7 +55,7 @@ class MkgSegmentType extends AbstractType
 
         $builder->add('segmentation', 'hidden', array('data'=>$this->segmentation_id, 'by_reference' => false));
 
-        $builder->add('nb_days',null, array('label' => 'Nombre de jours (laisser "0" pour utiliser les dates)', 'data' => '0'));
+        $builder->add('nb_days',null, array('label' => 'Nombre de jours (laisser "0" pour utiliser les dates)'));
 
         $builder->add('date_start','date', array('label' => 'Date de debut'));
         $builder->add('date_end','date', array('label' => 'Date de Fin'));

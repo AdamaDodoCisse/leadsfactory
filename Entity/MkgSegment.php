@@ -52,7 +52,7 @@ class MkgSegment
     /**
      * @ORM\Column(type="integer", name="nb_days", nullable=true)
      */
-    protected $nbDays;
+    protected $nbDays = 0;
 
     /**
      * @ORM\Column(type="date", name="date_start", nullable=false)

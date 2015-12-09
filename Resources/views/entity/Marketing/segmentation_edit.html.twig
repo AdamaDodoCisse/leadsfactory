@@ -43,21 +43,23 @@
         {{ error }}
     </div>
 
-        {% if segments is defined %}
+    {% if segments is defined %}
         <div class="col-md-8">
-            <h3 class="custom-heading">Liste des segments existants</h3>
-            <div>
-                <table id="" class="table table-striped table-bordered">
-                    <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Date</th>
-                        <th>Nom</th>
-                        <th class="text-center">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for segment in segments %}
+        <h3 >Liste des segments existants</h3>
+        {% if segments is empty %}
+            <h4>Aucun segment existant</h4></div>
+        {% else %}
+            <table id="" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Nom</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for segment in segments %}
                     <tr>
                         <td>{{ segment.id }}</td>
                         <td>{{ segment.created|date("d/m/Y") }}</td>
@@ -69,11 +71,11 @@
                             <a href="{{ path('_marketing_segment_view', {'id': segment.id}) }}"  alt="Voir les données"><img title="Voir les données" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/></a>
                         </td>
                     </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
+        </div>
+    {% endif %}
 
 {% endblock %}

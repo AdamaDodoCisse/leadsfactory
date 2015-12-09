@@ -58,8 +58,8 @@ class SegmentUtils
             $new_range['gte'] = date("Y-m-d", time() - (84600 * $variables['nbdays'])) ;
             $range = $new_range;
         } else if ($variables['dateStart'] && $variables['dateEnd']) {
-            $new_range['lte'] = $variables['dateEnd']->format("Y-m-d");
             $new_range['gte'] = $variables['dateStart']->format("Y-m-d");
+            $new_range['lte'] = $variables['dateEnd']->format("Y-m-d");
             $range = $new_range;
         }
     }
