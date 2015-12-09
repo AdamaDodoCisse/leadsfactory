@@ -41,6 +41,13 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
                 $output->writeln ("Traitement de la page de test : ".$form->getUrl());
                 $testContent = $testUtils->createJasperScript( $form );
                 $testUtils->saveTest( $form, $testContent );
+
+                // Run test
+
+                // Check result in DB
+
+                // Set test status
+
             } else {
                 $output->writeln ("Aucune page de test, formulaire ignoré");
             }

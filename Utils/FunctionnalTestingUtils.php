@@ -2,6 +2,7 @@
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Entity\KibanaSearch;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
@@ -20,10 +21,36 @@ class FunctionnalTestingUtils extends SearchShared {
 
     private $logger;
 
+    // Field set array that saves values of test for the form, in order to validate values in the DB
+    private $fieldSet = array();
+
+    public static $_STATUS_NOT_TESTED = 0;
+    public static $_STATUS_SUCCESS = 1;
+    public static $_STATUS_FAILED = 2;
+
+    public static $_VALIDATION_NO_MATCH = 0;
+    public static $_VALIDATION_PARTIAL_MATCH = 1;
+    public static $_VALIDATION_MATCH = 2;
 
     public function __construct () {
 
 
+    }
+
+    public function getScreenPathOfForm ( Form $form ) {
+        $screenshotDir = "app/cache/screenshots";
+        if (!is_dir( $screenshotDir )) {
+            mkdir ( $screenshotDir );
+        }
+        return "app/cache/screenshots/form-".$form->getId().".jpg";
+    }
+
+    public function getScreenPathOfResult ( Form $form ) {
+        $screenshotDir = "app/cache/screenshots";
+        if (!is_dir( $screenshotDir )) {
+            mkdir ( $screenshotDir );
+        }
+        return "app/cache/screenshots/result-".$form->getId().".jpg";
     }
 
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
@@ -76,6 +103,9 @@ class FunctionnalTestingUtils extends SearchShared {
             // Get the correct sequence of fields to test
             $sequencesToTest = $this->getSequencesToTest( $fields );
 
+            // Get a screenshot of the form
+            $this->getScreenShot( "formscreen" );
+
             // Render Sequences
             $nbSequences = count ($sequencesToTest);
             $sequenceIdx = 1;
@@ -86,7 +116,7 @@ class FunctionnalTestingUtils extends SearchShared {
                 }
                 $sequenceIdx++;
 
-                $item .= $this->getScreenShot();
+                $item .= $this->getScreenShot( "statusscreen" );
 
                 $item .= "
                     casper.then(function() {";
@@ -103,6 +133,12 @@ class FunctionnalTestingUtils extends SearchShared {
                         this.fill(	'form[id=\"".$formId."\"]',
                             {
                                 ";
+
+
+                //
+                // Loop over fields to add test values to the casperjs file
+                // It also saves fields and value to this class for test validation
+                //
                 $fieldIdx = 0;
                 foreach ( $sequence['fields'] as $field ) {
 
@@ -111,10 +147,15 @@ class FunctionnalTestingUtils extends SearchShared {
 
                     // Create field
                     if ( isset( $field["attributes"]["test-alias"] ) ) {
-                        $item .= "'lffield[".$field["attributes"]["test-alias"]."]': '".$fieldValue."'";
+                        $fieldName = $field["attributes"]["test-alias"];
                     } else {
-                        $item .= "'lffield[".$field["attributes"]["id"]."]': '".$fieldValue."'";
+                        $fieldName = $field["attributes"]["id"];
                     }
+                    $item .= "'lffield[".$fieldName."]': '".$fieldValue."'";
+
+                    // Saves to this object value for later verification
+                    $this->saveFieldValue( $fieldName, $fieldValue );
+
                     if ($fieldIdx != count ($sequence['fields'])-1) {
                         $item.= ",\r";
                     }
@@ -137,7 +178,9 @@ class FunctionnalTestingUtils extends SearchShared {
             }
 
             $startItem = "
-                var filename = \"".$form->getId().".jpg\";
+                var formscreen = \"".$this->getScreenPathOfForm($form).".jpg\";
+                var statusscreen = \"".$this->getScreenPathOfResult($form).".jpg\";
+
                 var websiteUrl = \"".$frontUrl."\";
 
                 casper.test.begin('Test de remplissage du formulaire : ".$form->getName()."', 1, function(test) {
@@ -208,12 +251,12 @@ class FunctionnalTestingUtils extends SearchShared {
      * Method used to take a screenshot of the form
      * @return string
      */
-    private function getScreenShot (  ) {
+    private function getScreenShot ( $fileName ) {
 
         $content = "
                 casper.then(function() {
                     this.echo (\"Sequence : Génération de la capture d\'ecran \");
-                    this.capture(filename);
+                    this.capture(".$fileName.");
                 });
         ";
 
@@ -257,6 +300,13 @@ class FunctionnalTestingUtils extends SearchShared {
 
     }
 
+    /**
+     *
+     * Method used to save the JS Casper test file
+     *
+     * @param $form
+     * @param $content
+     */
     public function saveTest ( $form, $content ) {
         if (!is_dir( "app/cache/casperjs" )) {
             mkdir ( "app/cache/casperjs" );
@@ -264,6 +314,90 @@ class FunctionnalTestingUtils extends SearchShared {
         $fp = fopen( "app/cache/casperjs/".$form->getId()."-test.js" , 'w');
         fwrite($fp, $content);
         fclose($fp);
+    }
+
+    /**
+     *
+     * Method used to save in this object the field name and its value used for
+     * the test purpose. This is required to validate the lead in the database after
+     * the test
+     *
+     * @param $fieldName
+     * @param $value
+     */
+    public function saveFieldValue ( $fieldName, $value ) {
+        $this->fieldSet[$fieldName] = $value;
+    }
+
+
+    /**
+     *
+     * Method used to find the recorded test in history
+     * This method will filter results by type of form.
+     *
+     * @param $fields
+     */
+    public function findLeadsInDatabase ( Form $form, $searchInHistoryOfNbPost = 10 ) {
+
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findLastNByType($form, $searchInHistoryOfNbPost);
+        return $leads;
+
+    }
+
+    /**
+     *
+     * Save the final status of the form.
+     * The status is saved in the formEntity
+     * It saves two datas :
+     *      - Status (static value of this utils class)
+     *      - Log message
+     *
+     * @param $status
+     */
+    public function saveTestStatus ( $status, $log, Form $form ) {
+
+        $form->setTestStatus( $status );
+        $form->setTestLog( $log );
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($form);
+        $em->flush();
+
+    }
+
+    /**
+     *
+     * This method compare content of leads to the content used for the test
+     * it return true if content is equal, false if not
+     *
+     * @param $fields
+     * @param Leads $leads
+     */
+    public function validateTestResults ( $fields, Leads $leads ) {
+
+        $nbFieldsEntries = count ($fields);
+
+        $content = utf8_decode( $leads->getData() );
+        foreach ( $content as $field => $value ) {
+
+            if (array_key_exists( $fields, $field )) {
+
+                if ( $fields[$field] == $value ) {
+                    unset ( $fields[$field] );
+                }
+
+            }
+
+        }
+
+        if ( count ( $fields ) == $nbFieldsEntries ) {
+            return FunctionnalTestingUtils::$_VALIDATION_NO_MATCH;
+        } else if (count ( $fields ) == 0) {
+            return FunctionnalTestingUtils::$_VALIDATION_PARTIAL_MATCH;
+        } else {
+            return FunctionnalTestingUtils::$_VALIDATION_MATCH;
+        }
+
     }
 
 }

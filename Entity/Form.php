@@ -99,6 +99,50 @@ class Form {
      */
     protected $url;
 
+    /**
+     * @var int $testStatus
+     * @ORM\Column(type="integer", nullable=true, name="testStatus")
+     */
+    protected $testStatus;
+
+    /**
+     * @var String $testLog
+     * @ORM\Column(type="string", nullable=true, name="testLog")
+     */
+    protected $testLog;
+
+
+    /**
+     * @return int
+     */
+    public function getTestStatus()
+    {
+        return $this->testStatus;
+    }
+
+    /**
+     * @param int $testStatus
+     */
+    public function setTestStatus($testStatus)
+    {
+        $this->testStatus = $testStatus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTestLog()
+    {
+        return $this->testLog;
+    }
+
+    /**
+     * @param int $testLog
+     */
+    public function setTestLog($testLog)
+    {
+        $this->testLog = $testLog;
+    }
 
     public function getType() {
         return $this->type;

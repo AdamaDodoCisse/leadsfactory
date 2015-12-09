@@ -14,6 +14,19 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsRepository extends EntityRepository
 {
 
+    public function findLastNByType ( Form $form, $searchInHistoryOfNbPost ) {
+
+        $dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l JOIN l.form f';
+        $dql .= " AND f.formType.id='".$form->getType()->getId()."'";
+        $dql .= " ORDER BY l.createdAt DESC";
+
+        $query = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setMaxResults( $searchInHistoryOfNbPost );
+
+        return new Paginator($query);
+
+    }
 
 	/**
 	 * Get al fields for a Lead
