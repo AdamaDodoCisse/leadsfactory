@@ -176,6 +176,10 @@ class AthenaV2BaseMapping {
             "utmcontent"                => "",   //
             "referrer_url"              => "",   //
             "redirect_url"              => "",   //
+
+            // Jira : ST-5281
+            "acteur"                    => "acteur",
+
             "trackin_origin"            => "",   //
 
         );
@@ -314,6 +318,15 @@ class AthenaV2BaseMapping {
 
         if (array_key_exists("comment", $data) && $data["comment"]) {
             $comment .= ". Commentaire : ".$data["comment"] . ".";
+        }
+
+        //JIRA  : ST-5283
+        if (array_key_exists("type-etablissement", $data) && $data["type-etablissement"]) {
+            $comment .= "\nType d'établissement : " . $this->getSecteur_activite_weka($data);
+        }
+
+        if (array_key_exists("livre-blanc", $data) && $data["livre-blanc"]) {
+            $comment .= "\nLivre blanc : " . $data['livre-blanc'];
         }
 
         return $comment;
