@@ -143,7 +143,7 @@ class AthenaV2BaseMapping {
             "id_leadsfactory"           => "id_leadsfactory",
             "detail_demande"            => "",  // Vide
             "marque"                    => "",  // Vide
-            "deja_client"               => "deja-client",  // Vide
+            "deja_client"               => "deja-client",
             "id_sogec"                  => "",  // Boolean
             "id_sap"                    => "",  // Vide
             "periode_mission"           => "",  // Vide

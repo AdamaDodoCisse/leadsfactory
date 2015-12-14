@@ -161,7 +161,7 @@ class AthenaV2 extends AbstractMethod{
             // Filter for preprocessing datas
             $data = $this->preProcessData( $data );
 
-            if ( !$this->isExportable( $job, $data )) {
+            if ( !$this->isExportable( $job, $form, $data )) {
                 continue;
             }
 
