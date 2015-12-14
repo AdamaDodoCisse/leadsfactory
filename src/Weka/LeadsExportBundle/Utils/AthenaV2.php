@@ -243,7 +243,7 @@ class AthenaV2 extends AbstractMethod{
                     }
                 } else {
 
-                    $logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : [Erreur lors de l'export] - " . $message);
+                    $logger->info("[J".$this->_current_job."]"."[L".$this->_current_lead."]"." ATHENAV2 : [Erreur lors de l'export] - " . $message);
                     $status = $exportUtils->getErrorStatus($job);
 
                     $exportUtils->updateJob($job, $status, $message);

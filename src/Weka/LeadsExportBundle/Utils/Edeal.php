@@ -29,6 +29,7 @@ class Edeal extends AbstractMethod{
      */
     public function export($jobs, $form)
     {
+        return null;
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
