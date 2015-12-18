@@ -102,12 +102,14 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
     private function sendStatusLogsMail($results, $scopes) {
         $logger = new Logger("STATUS");
         $exportUtils = $this->getContainer()->get('export_utils');
-        $prefs = $this->getContainer()->get('leadsfactory.preference_repository');
+        $prefUtils = $this->getContainer()->get('preferences_utils');
+
         $templatingService = $this->getContainer()->get('templating');
 
         foreach ($results as $id => $scope) {
 
-            $email = $prefs->findByKeyAndScope('CORE_STATUS_HISTORY_EMAIL', $id);
+            $email = $prefUtils->getUserPreferenceByKey('CORE_STATUS_HISTORY_EMAIL', $id);
+
             $title = "[LEADS Factory] Status des formulaires : ".$scopes[$id];
             $from = $exportUtils::NOTIFICATION_DEFAULT_FROM;
             if (count($scope)) {

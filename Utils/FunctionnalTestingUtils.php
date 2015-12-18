@@ -37,6 +37,48 @@ class FunctionnalTestingUtils extends SearchShared {
 
     }
 
+
+    public function run (Form $form) {
+
+        /*
+         * This method expect to run the functionnal test
+         */
+
+        // 1/ Check or create Jasper file for testing
+        $this->createJasperScript( $form );
+
+        // 2/ Run Casper test
+        if ($this->isJCsperScriptExist()) {
+
+            list ($status, $log) = $this->executeCasperTest( $form );
+
+        } else {
+            throw new \Exception ("Issue while creating CASPER Script");
+        }
+
+        // 3/ Find in leads the test result
+        if ($status) {
+            $leads = $this->findLeadsInDatabase( $form );
+            $resultOfTheTest = $this->validateTestResults( $this->fieldSet, $leads );
+        }
+
+        // 4/ Save status of test
+        if ($resultOfTheTest) {
+            // Test has worked, and lead's found in the database
+        } else {
+            // Test has probably failed somewhere
+        }
+
+    }
+
+    /**
+     *
+     * Method used to get the path and name of the screenshot file
+     * This is for the screenshot of the form
+     * 
+     * @param  Form Object targeted by the screenshot
+     * @return [String] path and filename
+     */
     public function getScreenPathOfForm ( Form $form ) {
         $screenshotDir = "app/cache/screenshots";
         if (!is_dir( $screenshotDir )) {
@@ -45,6 +87,14 @@ class FunctionnalTestingUtils extends SearchShared {
         return "app/cache/screenshots/form-".$form->getId().".jpg";
     }
 
+    /**
+     *
+     * Method used to get the path and name of the screenshot file
+     * This is for the screenshot of the result
+     * 
+     * @param  Form Object targeted by the screenshot
+     * @return [String] path and filename
+     */
     public function getScreenPathOfResult ( Form $form ) {
         $screenshotDir = "app/cache/screenshots";
         if (!is_dir( $screenshotDir )) {
@@ -53,6 +103,12 @@ class FunctionnalTestingUtils extends SearchShared {
         return "app/cache/screenshots/result-".$form->getId().".jpg";
     }
 
+    /**
+     *
+     * Used to inject Symfony container to application
+     * 
+     * @param \Symfony\Component\DependencyInjection\ContainerInterface
+     */
     public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
         $this->container = $container;
         $this->logger = $this->container->get("logger");
@@ -62,6 +118,21 @@ class FunctionnalTestingUtils extends SearchShared {
 
         $this->createJasperScript ( $form );
 
+    }
+
+    /**
+     *
+     * Checks if the casper script test file exists
+     * 
+     * @param  Form Object to test with Casper
+     * @return boolean
+     */
+    public function isCasperScriptExist ( Form $form ) {
+
+        if ( file_exists( "app/cache/casperjs/".$form->getId()."-test.js" )) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -397,6 +468,18 @@ class FunctionnalTestingUtils extends SearchShared {
         } else {
             return FunctionnalTestingUtils::$_VALIDATION_MATCH;
         }
+
+    }
+
+    /**
+     * @param Form $form
+     * @return array index 0 is the status 'boolean', index 1 is the output messages
+     */
+    private function executeCasperTest ( Form $form ) {
+
+        // TODO : Method to execute the casper test.
+
+        return array (true, "");
 
     }
 
