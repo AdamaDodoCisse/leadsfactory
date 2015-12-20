@@ -34,34 +34,21 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
         $formUtils = $this->getContainer()->get("form_utils");
         $testUtils = $this->getContainer()->get("functionnal_testing.utils");
 
+        $testUtils->setOutputInterface ( $output );
+
         foreach ( $forms as $form ) {
 
             $output->writeln ("Traitement formulaire : ".$form->getName());
-            if (trim($form->getUrl()) != "") {
+
+            $formId = $form->getConfig();
+            if (isset( $formId ["configuration"]["functionnalTestingEnabled"] ) && $formId ["configuration"]["functionnalTestingEnabled"] == true) {
+
                 $output->writeln ("Traitement de la page de test : ".$form->getUrl());
-                $testContent = $testUtils->createJasperScript( $form );
-                $testUtils->saveTest( $form, $testContent );
-
-                // Run test
-
-                // Check result in DB
-
-                // Set test status
+                $testUtils->run ( $form );
 
             } else {
-                $output->writeln ("Aucune page de test, formulaire ignoré");
+                $output->writeln ("Le formulaire n'est pas configuré pour réaliser les tests fonctionnels");
             }
         }
     }
-
-
-
-    private function buildFormTest ( $output, $form ) {
-
-
-
-    }
-
-
-
 }

@@ -19,7 +19,8 @@ class FunctionnalTestingUtils extends SearchShared {
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
-    private $logger;
+    private $logger = null;
+    private $outputInterface = null;
 
     // Field set array that saves values of test for the form, in order to validate values in the DB
     private $fieldSet = array();
@@ -37,6 +38,24 @@ class FunctionnalTestingUtils extends SearchShared {
 
     }
 
+    public function setLogger ( $logger ) {
+        $this->logger = $logger;
+    }
+
+    public function setOutputInterface ( $outputInterface ) {
+        $this->outputInterface = $outputInterface;
+    }
+
+    private function log ( $msg ) {
+
+        if ($this->logger != null) {
+            $this->logger->info ( $msg );
+        }
+        if ($this->outputInterface != null) {
+            $this->outputInterface->writeln ($msg);
+        }
+
+    }
 
     public function run (Form $form) {
 
@@ -48,7 +67,7 @@ class FunctionnalTestingUtils extends SearchShared {
         $this->createJasperScript( $form );
 
         // 2/ Run Casper test
-        if ($this->isJCsperScriptExist()) {
+        if ($this->isCasperScriptExist( $form )) {
 
             list ($status, $log) = $this->executeCasperTest( $form );
 
@@ -63,11 +82,8 @@ class FunctionnalTestingUtils extends SearchShared {
         }
 
         // 4/ Save status of test
-        if ($resultOfTheTest) {
-            // Test has worked, and lead's found in the database
-        } else {
-            // Test has probably failed somewhere
-        }
+        $form->setTestStatus( $resultOfTheTest );
+        $form->setTestLog( $log );
 
     }
 
@@ -162,131 +178,139 @@ class FunctionnalTestingUtils extends SearchShared {
         $frontUrl = $form->getUrl();
 
         if ( trim($frontUrl) == "" ) {
-            //
-        } else {
 
-            // 2/ Lecture des champs
-            $fields = $formUtils->getFieldsAsArray ( $form->getSource() );
+            // build preview URL
+            $prefUtils = $this->container->get('preferences_utils');
+            $leadsUrl = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', "");
 
-            // Build Ordered sequences for testing
-            $submit = "false";
+            $frontUrl = $leadsUrl."/preview/twig/".$form->getCode();
 
-            // Get the correct sequence of fields to test
-            $sequencesToTest = $this->getSequencesToTest( $fields );
+            echo ("Using preview url");
 
-            // Get a screenshot of the form
-            $this->getScreenShot( "formscreen" );
+        }
 
-            // Render Sequences
-            $nbSequences = count ($sequencesToTest);
-            $sequenceIdx = 1;
-            foreach ( $sequencesToTest as $idx => $sequence ) {
+        // 2/ Lecture des champs
+        $fields = $formUtils->getFieldsAsArray ( $form->getSource() );
 
-                if ($sequenceIdx == count ($sequencesToTest)) {
-                    $submit = "true";
-                }
-                $sequenceIdx++;
+        // Build Ordered sequences for testing
+        $submit = "false";
 
-                $item .= $this->getScreenShot( "statusscreen" );
+        // Get the correct sequence of fields to test
+        $sequencesToTest = $this->getSequencesToTest( $fields );
 
+        // Get a screenshot of the form
+        $this->getScreenShot( "formscreen" );
+
+        // Render Sequences
+        $nbSequences = count ($sequencesToTest);
+        $sequenceIdx = 1;
+        foreach ( $sequencesToTest as $idx => $sequence ) {
+
+            if ($sequenceIdx == count ($sequencesToTest)) {
+                $submit = "true";
+            }
+            $sequenceIdx++;
+
+            $item .= $this->getScreenShot( "statusscreen" );
+
+            $item .= "
+                casper.then(function() {";
+
+            // Adding delay to sequence if needed
+            if (isset($sequence["delay"])) {
                 $item .= "
-                    casper.then(function() {";
-
-                // Adding delay to sequence if needed
-                if (isset($sequence["delay"])) {
-                    $item .= "
-                    this.wait(".trim($sequence["delay"]).", function() {
-                ";
-                }
-
-                $item .= "
-                        this.echo (\"Sequence ".($idx+1)."/".$nbSequences."\");
-                        this.fill(	'form[id=\"".$formId."\"]',
-                            {
-                                ";
-
-
-                //
-                // Loop over fields to add test values to the casperjs file
-                // It also saves fields and value to this class for test validation
-                //
-                $fieldIdx = 0;
-                foreach ( $sequence['fields'] as $field ) {
-
-                    // Find value for field
-                    $fieldValue = $this->getValueForField ( $field );
-
-                    // Create field
-                    if ( isset( $field["attributes"]["test-alias"] ) ) {
-                        $fieldName = $field["attributes"]["test-alias"];
-                    } else {
-                        $fieldName = $field["attributes"]["id"];
-                    }
-                    $item .= "'lffield[".$fieldName."]': '".$fieldValue."'";
-
-                    // Saves to this object value for later verification
-                    $this->saveFieldValue( $fieldName, $fieldValue );
-
-                    if ($fieldIdx != count ($sequence['fields'])-1) {
-                        $item.= ",\r";
-                    }
-                    $fieldIdx++;
-                }
-
-                $item.= "
-                            },
-                        ".$submit.");";
-
-                // Closing for delay desction
-                if (isset($sequence["delay"])) {
-                    $item .= "});";
-                }
-
-                $item.= "
-                    });
-                ";
-
+                this.wait(".trim($sequence["delay"]).", function() {
+            ";
             }
 
-            $startItem = "
-                var formscreen = \"".$this->getScreenPathOfForm($form).".jpg\";
-                var statusscreen = \"".$this->getScreenPathOfResult($form).".jpg\";
+            $item .= "
+                    this.echo (\"Sequence ".($idx+1)."/".$nbSequences."\");
+                    this.fill(	'form[id=\"".$formId."\"]',
+                        {
+                            ";
 
-                var websiteUrl = \"".$frontUrl."\";
 
-                casper.test.begin('Test de remplissage du formulaire : ".$form->getName()."', 1, function(test) {
+            //
+            // Loop over fields to add test values to the casperjs file
+            // It also saves fields and value to this class for test validation
+            //
+            $fieldIdx = 0;
+            foreach ( $sequence['fields'] as $field ) {
 
-                    casper.start( websiteUrl , function() {
-                        this.echo (\"Opening website page : [\" + websiteUrl+\"]\");
-                    });
-            ";
+                // Find value for field
+                $fieldValue = $this->getValueForField ( $field );
 
-            $endItem = "
-                casper.then(function() {
-                    this.echo (\"Sequence : Test des messages d'erreurs \");
-                    console.log('Wait and check error message (3 seconds) ');
-                    this.wait(3000, function() {
-                        casper.test.assertDoesntExist( '.formErrorContent', 'Acun message d\'erreur n\'est affiché ?' );
-                    });
-                });";
+                // Create field
+                if ( isset( $field["attributes"]["test-alias"] ) ) {
+                    $fieldName = $field["attributes"]["test-alias"];
+                } else {
+                    $fieldName = $field["attributes"]["id"];
+                }
+                $item .= "'lffield[".$fieldName."]': '".$fieldValue."'";
 
-            $endItem .= "
-                casper.then(function() {
-                    this.echo (\"Sequence : Log de l'url de destination\");
-                    console.log('clicked ok, new location is ' + this.getCurrentUrl());
+                // Saves to this object value for later verification
+                $this->saveFieldValue( $fieldName, $fieldValue );
+
+                if ($fieldIdx != count ($sequence['fields'])-1) {
+                    $item.= ",\r";
+                }
+                $fieldIdx++;
+            }
+
+            $item.= "
+                        },
+                    ".$submit.");";
+
+            // Closing for delay desction
+            if (isset($sequence["delay"])) {
+                $item .= "});";
+            }
+
+            $item.= "
                 });
             ";
 
-            $endItem .= $this->getScreenShot();
-
-            $endItem .= "
-            });
-
-            casper.run();
-            ";
-
-            return $startItem.$item.$endItem;
         }
+
+        $startItem = "
+            var formscreen = \"".$this->getScreenPathOfForm($form).".jpg\";
+            var statusscreen = \"".$this->getScreenPathOfResult($form).".jpg\";
+
+            var websiteUrl = \"".$frontUrl."\";
+
+            casper.test.begin('Test de remplissage du formulaire : ".$form->getName()."', 1, function(test) {
+
+                casper.start( websiteUrl , function() {
+                    this.echo (\"Opening website page : [\" + websiteUrl+\"]\");
+                });
+        ";
+
+        $endItem = "
+            casper.then(function() {
+                this.echo (\"Sequence : Test des messages d'erreurs \");
+                console.log('Wait and check error message (3 seconds) ');
+                this.wait(3000, function() {
+                    casper.test.assertDoesntExist( '.formErrorContent', 'Acun message d\'erreur n\'est affiché ?' );
+                });
+            });";
+
+        $endItem .= "
+            casper.then(function() {
+                this.echo (\"Sequence : Log de l'url de destination\");
+                console.log('clicked ok, new location is ' + this.getCurrentUrl());
+            });
+        ";
+
+        $endItem .= $this->getScreenShot( $this->getScreenPathOfResult( $form ) );
+
+        $endItem .= "
+        });
+
+        casper.run();
+        ";
+
+        return $startItem.$item.$endItem;
+
 
     }
 
@@ -477,9 +501,25 @@ class FunctionnalTestingUtils extends SearchShared {
      */
     private function executeCasperTest ( Form $form ) {
 
-        // TODO : Method to execute the casper test.
+        $prefUtils = $this->container->get('preferences_utils');
 
-        return array (true, "");
+        // TODO : Method to execute the casper test.
+        //
+        $pathToCasperProcess = $prefUtils->getUserPreferenceByKey('CORE_CASPER_PATH', "");
+        $pathToCasperScripts = "";
+
+        $command = $pathToCasperProcess." test ".$pathToCasperScripts;
+        $process = new Process( $command );
+        $process->run();
+
+        // executes after the command finishes
+        if (!$process->isSuccessful()) {
+            throw new \Exception("Casper process is not successfull");
+        }
+
+        $output = $process->getOutput();
+
+        return array ( true, $output );
 
     }
 
