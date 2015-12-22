@@ -106,8 +106,8 @@ class Form {
     protected $testStatus;
 
     /**
-     * @var String $testLog
-     * @ORM\Column(type="string", nullable=true, name="testLog")
+     * @var longtext $testLog
+     * @ORM\Column(type="text", nullable=true, name="testLog")
      */
     protected $testLog;
 

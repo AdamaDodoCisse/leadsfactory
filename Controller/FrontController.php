@@ -414,4 +414,19 @@ class FrontController extends CoreController
 
 	    return $string;
     }
+
+    /**
+     * Preview of a TWIG FORM
+     *
+     * @Route("/preview/twig/{code}", name="_front_twig_preview")
+     * @ParamConverter("form")
+     */
+    public function getTwigFormPreview(Form $form)
+    {
+        return $this->render(
+            'TellawLeadsFactoryBundle:Front:display_twig_form.html.twig',
+            array('form' => $form)
+        );
+    }
+
 }

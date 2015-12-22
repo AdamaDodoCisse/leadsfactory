@@ -11,9 +11,10 @@ use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Process\Process;
-use Tellaw\LeadsFactoryBundle\Shared\SearchShared;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class FunctionnalTestingUtils extends SearchShared {
+class FunctionnalTestingUtils implements ContainerAwareInterface {
 
 
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
@@ -21,6 +22,8 @@ class FunctionnalTestingUtils extends SearchShared {
 
     private $logger = null;
     private $outputInterface = null;
+
+    private $isWebMode = false;
 
     // Field set array that saves values of test for the form, in order to validate values in the DB
     private $fieldSet = array();
@@ -36,6 +39,10 @@ class FunctionnalTestingUtils extends SearchShared {
     public function __construct () {
 
 
+    }
+
+    public function setIsWebMode ( $mode ) {
+        $this->isWebMode = $mode;
     }
 
     public function setLogger ( $logger ) {
@@ -64,7 +71,8 @@ class FunctionnalTestingUtils extends SearchShared {
          */
 
         // 1/ Check or create Jasper file for testing
-        $this->createJasperScript( $form );
+        $testContent = $this->createJasperScript( $form );
+        $this->saveTest( $form, $testContent );
 
         // 2/ Run Casper test
         if ($this->isCasperScriptExist( $form )) {
@@ -85,6 +93,12 @@ class FunctionnalTestingUtils extends SearchShared {
         $form->setTestStatus( $resultOfTheTest );
         $form->setTestLog( $log );
 
+        $this->log ("-- Saving test result");
+
+        $em = $this->container->get("doctrine")->getManager();
+        $em->persist($form);
+        $em->flush();
+
     }
 
     /**
@@ -96,11 +110,22 @@ class FunctionnalTestingUtils extends SearchShared {
      * @return [String] path and filename
      */
     public function getScreenPathOfForm ( Form $form ) {
-        $screenshotDir = "app/cache/screenshots";
+        if ($this->isWebMode) {
+            $screenshotDir = "../app/cache/screenshots";
+        } else {
+            $screenshotDir = "app/cache/screenshots";
+        }
+
         if (!is_dir( $screenshotDir )) {
             mkdir ( $screenshotDir );
         }
-        return "app/cache/screenshots/form-".$form->getId().".jpg";
+
+        if ($this->isWebMode) {
+            return "../app/cache/screenshots/form-".$form->getId().".jpg";
+        } else {
+            return "app/cache/screenshots/form-".$form->getId().".jpg";
+        }
+
     }
 
     /**
@@ -112,11 +137,19 @@ class FunctionnalTestingUtils extends SearchShared {
      * @return [String] path and filename
      */
     public function getScreenPathOfResult ( Form $form ) {
-        $screenshotDir = "app/cache/screenshots";
+        if ($this->isWebMode) {
+            $screenshotDir = "../app/cache/screenshots";
+        } else {
+            $screenshotDir = "app/cache/screenshots";
+        }
         if (!is_dir( $screenshotDir )) {
             mkdir ( $screenshotDir );
         }
-        return "app/cache/screenshots/result-".$form->getId().".jpg";
+        if ($this->isWebMode) {
+            return "../app/cache/screenshots/result-".$form->getId().".jpg";
+        } else {
+            return "app/cache/screenshots/result-".$form->getId().".jpg";
+        }
     }
 
     /**
@@ -125,7 +158,7 @@ class FunctionnalTestingUtils extends SearchShared {
      * 
      * @param \Symfony\Component\DependencyInjection\ContainerInterface
      */
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
+    public function setContainer (ContainerInterface $container = null) {
         $this->container = $container;
         $this->logger = $this->container->get("logger");
     }
@@ -134,6 +167,10 @@ class FunctionnalTestingUtils extends SearchShared {
 
         $this->createJasperScript ( $form );
 
+    }
+
+    private function getCasperScriptPath ( Form $form ) {
+        return "app/cache/casperjs/".$form->getId()."-test.js";
     }
 
     /**
@@ -145,7 +182,7 @@ class FunctionnalTestingUtils extends SearchShared {
      */
     public function isCasperScriptExist ( Form $form ) {
 
-        if ( file_exists( "app/cache/casperjs/".$form->getId()."-test.js" )) {
+        if ( file_exists( $this->getCasperScriptPath( $form ) )) {
             return true;
         }
         return false;
@@ -183,10 +220,16 @@ class FunctionnalTestingUtils extends SearchShared {
             $prefUtils = $this->container->get('preferences_utils');
             $leadsUrl = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', "");
 
-            $frontUrl = $leadsUrl."/preview/twig/".$form->getCode();
+            if ( trim($leadsUrl) == "" ) {
+                throw new \Exception ("Lead's Factory URL not set in preference : CORE_LEADSFACTORY_URL");
+            }
 
-            echo ("Using preview url");
+            $frontUrl = $leadsUrl."web/app_dev.php/client/preview/twig/".$form->getCode();
 
+            $this->log ("Using preview url : ".$frontUrl);
+
+        } else{
+            $this->log ("Using declared url : ".$frontUrl);
         }
 
         // 2/ Lecture des champs
@@ -285,6 +328,8 @@ class FunctionnalTestingUtils extends SearchShared {
                 });
         ";
 
+        $startItem .= $this->getScreenShot("formscreen");
+
         $endItem = "
             casper.then(function() {
                 this.echo (\"Sequence : Test des messages d'erreurs \");
@@ -301,7 +346,7 @@ class FunctionnalTestingUtils extends SearchShared {
             });
         ";
 
-        $endItem .= $this->getScreenShot( $this->getScreenPathOfResult( $form ) );
+        $endItem .= $this->getScreenShot( "statusscreen" );
 
         $endItem .= "
         });
@@ -351,6 +396,7 @@ class FunctionnalTestingUtils extends SearchShared {
         $content = "
                 casper.then(function() {
                     this.echo (\"Sequence : Génération de la capture d\'ecran \");
+                    this.viewport (1280, 1024);
                     this.capture(".$fileName.");
                 });
         ";
@@ -390,7 +436,6 @@ class FunctionnalTestingUtils extends SearchShared {
             }
 
         }
-
         return $sequencesToTest;
 
     }
@@ -406,7 +451,7 @@ class FunctionnalTestingUtils extends SearchShared {
         if (!is_dir( "app/cache/casperjs" )) {
             mkdir ( "app/cache/casperjs" );
         }
-        $fp = fopen( "app/cache/casperjs/".$form->getId()."-test.js" , 'w');
+        $fp = fopen( $this->getCasperScriptPath( $form ) , 'w');
         fwrite($fp, $content);
         fclose($fp);
     }
@@ -433,10 +478,7 @@ class FunctionnalTestingUtils extends SearchShared {
      * @param $fields
      */
     public function findLeadsInDatabase ( Form $form, $searchInHistoryOfNbPost = 10 ) {
-
-        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->findLastNByType($form, $searchInHistoryOfNbPost);
-        return $leads;
-
+        return $this->container->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Leads')->findLastNByType($form, $searchInHistoryOfNbPost);
     }
 
     /**
@@ -466,32 +508,60 @@ class FunctionnalTestingUtils extends SearchShared {
      * it return true if content is equal, false if not
      *
      * @param $fields
-     * @param Leads $leads
+     * @param Array $leads
      */
-    public function validateTestResults ( $fields, Leads $leads ) {
+    public function validateTestResults ( $fields, array $leads ) {
 
-        $nbFieldsEntries = count ($fields);
+        //  $fields are expected fields generated for casper script
+        foreach ( $leads as $lead ) {
 
-        $content = utf8_decode( $leads->getData() );
-        foreach ( $content as $field => $value ) {
+            // Cope de travail des champs attendus
+            $tmpFields = $fields;
 
-            if (array_key_exists( $fields, $field )) {
+            $this->log( "** Analyzing lead : ".$lead["id"] );
 
-                if ( $fields[$field] == $value ) {
-                    unset ( $fields[$field] );
+            // Decodage des données de la lead
+            $content = json_decode( $lead["data"], true );
+            foreach ( $tmpFields as $srcField => $srcValue ) {
+
+                // Si la clée des données attendue existe dans la lead
+                if (array_key_exists( $srcField, $content )) {
+
+                    $this->log( "-- field exists : ".$srcField );
+
+                    // Comparaison des valeurs attendue et de la lead
+                    if ( $content[$srcField] == $srcValue ) {
+                        $this->log( "-- field match : ".$srcField."/".$srcValue );
+                        unset ( $tmpFields[$srcField] );
+                    } else {
+
+                        // Les valeurs ne match pas
+                        $this->log( "-- field value mismatch : ".$srcField."/".$srcValue." => have : ".$content[$srcField] );
+                    }
+
+                } else{
+
+                    // Le champs n'existe pas
+                    $this->log( "-- field NOT matching : ".$srcField );
                 }
 
             }
 
+            // Pour chaque formulaire, on regarde si tous les champs ont été trouvés ou non
+            if (count ( $tmpFields ) == 0) {
+                $this->log( "-- Returning perfect MATCH " );
+                return FunctionnalTestingUtils::$_VALIDATION_MATCH;
+            } else if (count ( $tmpFields ) <  count ($fields)) {
+                $this->log( "-- Returning partial MATCH " );
+                var_dump($tmpFields);
+                return FunctionnalTestingUtils::$_VALIDATION_PARTIAL_MATCH;
+            }
+
         }
 
-        if ( count ( $fields ) == $nbFieldsEntries ) {
-            return FunctionnalTestingUtils::$_VALIDATION_NO_MATCH;
-        } else if (count ( $fields ) == 0) {
-            return FunctionnalTestingUtils::$_VALIDATION_PARTIAL_MATCH;
-        } else {
-            return FunctionnalTestingUtils::$_VALIDATION_MATCH;
-        }
+        // Si aucun retour sur les leads, c'est que nous ne trouvons rien en base, echec
+        $this->log( " Returning NO MATCH " );
+        return FunctionnalTestingUtils::$_VALIDATION_NO_MATCH;
 
     }
 
@@ -503,21 +573,22 @@ class FunctionnalTestingUtils extends SearchShared {
 
         $prefUtils = $this->container->get('preferences_utils');
 
-        // TODO : Method to execute the casper test.
-        //
         $pathToCasperProcess = $prefUtils->getUserPreferenceByKey('CORE_CASPER_PATH', "");
-        $pathToCasperScripts = "";
+        $pathToCasperScripts = $this->getCasperScriptPath( $form );
 
-        $command = $pathToCasperProcess." test ".$pathToCasperScripts;
+        $command = "export PATH=$"."PATH:".$pathToCasperProcess.";".$pathToCasperProcess."casperjs test ".$pathToCasperScripts;
+        $this->log( "Executing command : " . $command );
+
         $process = new Process( $command );
         $process->run();
 
         // executes after the command finishes
         if (!$process->isSuccessful()) {
-            throw new \Exception("Casper process is not successfull");
+            // throw new \Exception("Casper process is not successfull");
         }
 
         $output = $process->getOutput();
+        $this->log( $output );
 
         return array ( true, $output );
 

@@ -99,7 +99,6 @@ class EntityFormController extends CoreController {
      * Preview of a TWIG FORM
      *
      * @Route("/preview/twig/{code}", name="_client_twig_preview")
-     * @Secure(roles="ROLE_USER")
      * @ParamConverter("form")
      */
     public function getTwigFormPreview(Form $form)
@@ -117,7 +116,11 @@ class EntityFormController extends CoreController {
      */
     public function editAction( Request $request, $id )
     {
+        $testUtils = $this->get("functionnal_testing.utils");
+        $testUtils->setIsWebMode (true);
+
         $formEntity = $this->get('leadsfactory.form_repository')->find($id);
+
         $form = $this->createForm(
             new FormType(),
             $formEntity,
@@ -138,13 +141,28 @@ class EntityFormController extends CoreController {
 //            return $this->redirect($this->generateUrl('_form_list'));
         }
 
+        if (file_exists( $testUtils->getScreenPathOfForm( $formEntity ) )) {
+            $screenofForm = $testUtils->getScreenPathOfForm( $formEntity );
+        } else {
+            $screenofForm = null;
+        }
+
+        if (file_exists( $testUtils->getScreenPathOfResult( $formEntity ) )) {
+            $screenofResult = $testUtils->getScreenPathOfResult( $formEntity );
+        } else {
+            $screenofResult = null;
+        }
+
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
             array(
                 'id' => $id,
                 'code' => $formEntity->getCode(),
+                'formObj' => $formEntity,
                 'form' => $form->createView(),
-                'title' => "Edition d'un formulaire"
+                'title' => "Edition d'un formulaire",
+                'screenofResult' => $screenofResult,
+                'screenofForm' => $screenofForm
             )
         );
     }

@@ -42,8 +42,30 @@
             <div style="clear:both"></div>
         {% endif %}
 
-        <h3 class="custom-heading">Aide:</h3>
-<p>Cette page vous permet de parametrer complétement votre formulaire.</p>
+        <h3 class="custom-heading">Tests fonctionnels:</h3>
+        {% if formObj.testStatus == 2 %}
+        <p style="color:#00aa00">votre formulaire a passé les tests fonctionnels!</p>
+        {% endif %}
+        {% if formObj.testStatus == 0 %}
+            <p style="color:#aa0000">votre formulaire n'a pas passé les tests fonctionnels!</p>
+        {% endif %}
+        {% if formObj.testStatus == 1 %}
+            <p style="color:#aa0000">votre formulaire n'a pas passé les tests fonctionnels!</p>
+        {% endif %}
+
+        {% if screenofForm is defined %}
+        <a href="{{ screenofForm }}"><img src="{{ screenofForm }}"/></a>
+        {% endif %}
+
+        {% if screenofResult is defined %}
+            <a href="{{ screenofResult }}"><img src="{{ screenofResult }}"/></a>
+        {% endif %}
+
+        <p>
+            <pre>{{ formObj.testLog }}
+        </pre>
+
+        </p>
 
 
     </div>
