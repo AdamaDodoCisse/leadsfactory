@@ -31,7 +31,7 @@ class AlertUtils extends AlertUtilsShared {
     /** @var array */
     protected $internal_email_patterns = array();
 
-    public function __construct(EntityManagerInterface $entity_manager, array $internal_email_patterns)
+    public function __construct(EntityManagerInterface $entity_manager, array $internal_email_patterns, PreferencesUtils $preferencesUtils)
     {
         $this->entity_manager = $entity_manager;
         $this->internal_email_patterns = $internal_email_patterns;

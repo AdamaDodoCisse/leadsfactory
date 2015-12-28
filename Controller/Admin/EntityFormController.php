@@ -4,9 +4,11 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Tellaw\LeadsFactoryBundle\Utils\FunctionnalTestingUtils;
 use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -157,6 +159,7 @@ class EntityFormController extends CoreController {
             'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
             array(
                 'id' => $id,
+                'funtionnalTestEnabled' => $testUtils->isFormTestable( $formEntity ),
                 'code' => $formEntity->getCode(),
                 'formObj' => $formEntity,
                 'form' => $form->createView(),
@@ -211,4 +214,87 @@ class EntityFormController extends CoreController {
 
         return $this->redirect($this->generateUrl('_form_edit', array('id' => $new->getId())));
     }
+
+    /**
+     * Method used to run test
+     *
+     * @Route("/runtest/{id}/{step}", name="_form_runtest")
+     * @Secure(roles="ROLE_USER")
+     * @Method("GET")
+     * @Template()
+     */
+    public function runtestAction ($id, $step = 1)
+    {
+
+        $testUtils = $this->get("functionnal_testing.utils");
+
+        $form = $this->get('leadsfactory.form_repository')->find($id);
+        $logger = $this->get('logger');
+        $testUtils->setLogger ( $logger );
+        $testUtils->setIsWebMode ( true );
+
+        $formId = $form->getConfig();
+        if (isset( $formId ["configuration"]["functionnalTestingEnabled"] ) && $formId ["configuration"]["functionnalTestingEnabled"] == true) {
+
+            switch ($step) {
+                case FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT:
+                    echo ("<h2>Etape 1/4 : Création de script de test</h2>");
+                    \flush();
+                    $status = $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT, $form );
+                    if (!$status){
+                        throw new \Exception ("Unable to create Casper Script");
+                    }
+                    echo ("Script créé avec succès");
+                    return $this->redirectToRoute('_form_runtest', array ( "id"=>$id, "step"=> FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT ));
+                    break;
+
+                case FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT:
+                    echo ("<h2>Etape 2/4 : debut du test fonctionnel</h2>");
+                    \flush();
+                    list ( $status, $log ) = $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT, $form );
+                    $this->get("session")->set ("functionnalTestingStatus", $status);
+                    $this->get("session")->set ("functionnalTestingLog", $log);
+                    echo ("Test terminé");
+                    return $this->redirectToRoute('_form_runtest', array ( "id"=>$id, "step"=> FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS ));
+                    break;
+
+                case FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS:
+                    echo ("<h2>Etape 3/4 : Validation des données en base</h2>");
+                    \flush();
+                    $status = $this->get("session")->get("functionnalTestingStatus");
+                    $log = $this->get("session")->get("functionnalTestingLog");
+                    $statusOfTest = $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS, $form, $status, $log );
+                    $this->get("session")->set ("functionnalTestingStatusOfTest", $statusOfTest);
+                    echo ("Fin de validation");
+                    return $this->redirectToRoute('_form_runtest', array ( "id"=>$id, "step"=> FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS ));
+                    break;
+
+                case FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS:
+                    echo ("<h2>Etape 4/4 : Enregistrement des résultats</h2>");
+                    \flush();
+                    $status = $this->get("session")->get("functionnalTestingStatus");
+                    $log = $this->get("session")->get("functionnalTestingLog");
+                    $statusOfTest = $this->get("session")->get("functionnalTestingStatusOfTest");
+
+                    $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS, $form, $status, $log, $statusOfTest );
+                    break;
+
+            }
+
+            $logger->info ("Traitement de la page de test : ".$form->getUrl());
+            $testUtils->run ( $form );
+
+        } else {
+            $logger->info ("Le formulaire n'est pas configuré pour réaliser les tests fonctionnels");
+        }
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Form:functionnal-test.html.twig',
+            array(
+                'id' => $id,
+                'formObj' => $form
+            )
+        );
+    }
+
 }

@@ -38,6 +38,11 @@
             <div>
                 <a class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" href="{{ path('_client_twig_preview', {'code': code}) }}" data-featherlight="ajax">Apercu du formulaire</a>
                 <button type="button" class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" onClick="window.location.href='{{ path('_entity_leads_export', {'id': id}) }}'">Export des leads du formulaire</button>
+                {% if funtionnalTestEnabled %}
+                    <a class="btns  blue  m-sml-btn" style="margin:0px 0px 10px 0px" href="{{ path('_form_runtest', {'id': id}) }}" target="_blank">Lancer les tests fonctionnels</a>
+                {% else %}
+                    <a class="btns gray  m-sml-btn" style="margin:0px 0px 10px 0px" href="#" >Tests fonctionnels non activés</a>
+                {% endif %}
             </div>
             <div style="clear:both"></div>
         {% endif %}
@@ -61,12 +66,14 @@
             <a href="{{ screenofResult }}"><img src="{{ screenofResult }}"/></a>
         {% endif %}
 
-        <p>
-            <pre>{{ formObj.testLog }}
-        </pre>
+        {% if formObj.testLog %}
+            <h3 class="custom-heading">Log du test</h3>
+            <div>
 
-        </p>
+            {{ formObj.testLog|raw }}
 
+            </div>
+        {% endif %}
 
     </div>
 

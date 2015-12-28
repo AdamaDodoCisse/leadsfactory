@@ -16,8 +16,11 @@ services:
 
   functionnal_testing.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\FunctionnalTestingUtils
+    arguments:    [@preferences_utils]
     calls:
                   - [ setContainer, [ @service_container ] ]
+    tags:
+                -  { name: preference.key }
 
   scheduler.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\SchedulerUtils
@@ -85,12 +88,15 @@ services:
 
   alertes_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\AlertUtils
-    arguments:    [@doctrine.orm.entity_manager, %leadsfactory.internal_email_patterns%]
+    arguments:    [@doctrine.orm.entity_manager, %leadsfactory.internal_email_patterns%, @preferences_utils]
 
   search.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils
+    arguments:    [@preferences_utils]
     calls:
                   - [ setContainer, [ @service_container ] ]
+    tags:
+                -  { name: preference.key }
 
   leadsfactory.twig_extension:
     class: Tellaw\LeadsFactoryBundle\Twig\LeadsFactoryExtension

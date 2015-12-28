@@ -25,5 +25,23 @@ class ExportCompilerPass implements CompilerPassInterface{
                 );
             }
         }
+
+
+        if (!$container->hasDefinition('preferences_utils')) {
+            return;
+        }
+
+        $definition = $container->getDefinition('preferences_utils');
+        $taggedServices = $container->findTaggedServiceIds('preference.key');
+
+        foreach ($taggedServices as $id => $tagAttributes) {
+            foreach ($tagAttributes as $attributes) {
+                $definition->addMethodCall(
+                    'addMethod',
+                    array(new Reference($id))
+                );
+            }
+        }
+
     }
 } 

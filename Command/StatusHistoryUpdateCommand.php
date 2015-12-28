@@ -100,6 +100,7 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
 
 
     private function sendStatusLogsMail($results, $scopes) {
+
         $logger = new Logger("STATUS");
         $exportUtils = $this->getContainer()->get('export_utils');
         $prefUtils = $this->getContainer()->get('preferences_utils');

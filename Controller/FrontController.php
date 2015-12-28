@@ -78,11 +78,25 @@ class FrontController extends CoreController
 	{
 		$post_url = $this->get('router')->generate('_client_post_form', array(), true);
 		$hidden_tags = $this->get('form_utils')->getHiddenTags($form);
+        $prefUtils = $this->get('preferences_utils');
 
         $cacheFileName = "../app/cache/templates/".$form->getId().".js";
 
         if (!is_dir("../app/cache/templates")) {
             mkdir("../app/cache/templates");
+        }
+
+        // Get the correct path for the formAction
+        $url = $this->container->get('router')->generate("_client_post_form", array(), true);
+
+        $scope = $form->getScope();
+        if (isset($scope)) {
+            $scopeId = $scope->getId();
+            $urlDb = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $scopeId);
+
+            if (trim($urlDb) != "") {
+                $url = $urlDb."web/client/post";
+            }
         }
 
         if (file_exists( $cacheFileName ) && $utm_campaign == "") {
@@ -92,7 +106,7 @@ class FrontController extends CoreController
                 'TellawLeadsFactoryBundle::form-jquery.js.twig',
                 array(
                     'formId' => $form->getCode(),
-                    'formAction' => $this->container->get('router')->generate("_client_post_form", array(), true),
+                    'formAction' => $url,
                     'trackingAction'=> $this->container->get('router')->generate("_client_form_tracking"),
                     'utm_campaign' => $utm_campaign, // Used for compatibility of old forms. Do not REMOVE
                     'form' => $form,

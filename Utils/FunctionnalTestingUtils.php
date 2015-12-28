@@ -36,8 +36,23 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     public static $_VALIDATION_PARTIAL_MATCH = 1;
     public static $_VALIDATION_MATCH = 2;
 
-    public function __construct () {
+    public static $_STEP_1_CREATE_CASPER_SCRIPT = 1;
+    public static $_STEP_2_EXECUTE_CASPER_SCRIPT = 2;
+    public static $_STEP_3_EVALUATE_LEADS = 3;
+    public static $_STEP_4_PERSIST_RESULTS = 4;
 
+    private $logContent = "";
+
+    public function __construct ( PreferencesUtils $preferencesUtils ) {
+
+        $preferencesUtils->registerKey( "CORE_LEADSFACTORY_URL",
+                                        "Url de l'application, sur le scope global pour le BO, et sur les scopes pour les formulaires",
+                                        PreferencesUtils::$_PRIORITY_OPTIONNAL
+            );
+
+        $preferencesUtils->registerKey( "CORE_CASPER_PATH",
+                                        "Path to Casper install for functionnal testings.",
+                                        PreferencesUtils::$_PRIORITY_OPTIONNAL);
 
     }
 
@@ -53,10 +68,22 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
         $this->outputInterface = $outputInterface;
     }
 
-    private function log ( $msg ) {
+    public function isFormTestable ( Form $form ) {
+        $formConfig = $form->getConfig();
+        if (isset( $formConfig ["configuration"]["functionnalTestingEnabled"] ) && $formConfig ["configuration"]["functionnalTestingEnabled"] == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function log ( $msg ) {
 
         if ($this->logger != null) {
             $this->logger->info ( $msg );
+            $this->logContent .= $msg."<br/>";
+            echo ($msg."<br/>");
+            \flush();
         }
         if ($this->outputInterface != null) {
             $this->outputInterface->writeln ($msg);
@@ -64,40 +91,73 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
 
     }
 
+    public function runByStep ( $step, Form $form, $status = 0, $log = "", $resultOfTheTest = "" ) {
+
+        switch ($step) {
+            case FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT:
+
+                // 1/ Check or create Jasper file for testing
+                $testContent = $this->createJasperScript( $form );
+                return $this->saveTest( $form, $testContent );
+
+                break;
+
+            case FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT:
+                // 2/ Run Casper test
+                if ($this->isCasperScriptExist( $form )) {
+
+                    list ($status, $log) = $this->executeCasperTest( $form );
+                    return array ($status, $log);
+
+                } else {
+                    throw new \Exception ("Issue while creating CASPER Script");
+                }
+                break;
+
+            case FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS:
+
+                // 3/ Find in leads the test result
+                if ($status) {
+                    $leads = $this->findLeadsInDatabase( $form );
+                    $resultOfTheTest = $this->validateTestResults( $this->fieldSet, $leads );
+                    return $resultOfTheTest;
+                }
+                break;
+
+            case FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS:
+
+                // 4/ Save status of test
+                $form->setTestStatus( $resultOfTheTest );
+                $form->setTestLog( $this->logContent );
+
+                $this->log ("-- Saving test result");
+
+                $em = $this->container->get("doctrine")->getManager();
+                $em->persist($form);
+                $em->flush();
+                break;
+
+        }
+
+    }
+
     public function run (Form $form) {
 
-        /*
-         * This method expect to run the functionnal test
-         */
+        // Step 1
+        $status = $this->runByStep( FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT, $form );
 
-        // 1/ Check or create Jasper file for testing
-        $testContent = $this->createJasperScript( $form );
-        $this->saveTest( $form, $testContent );
-
-        // 2/ Run Casper test
-        if ($this->isCasperScriptExist( $form )) {
-
-            list ($status, $log) = $this->executeCasperTest( $form );
-
-        } else {
-            throw new \Exception ("Issue while creating CASPER Script");
+        if ( !$status ) {
+            throw new \Exception ("Unable to create casper script");
         }
 
-        // 3/ Find in leads the test result
-        if ($status) {
-            $leads = $this->findLeadsInDatabase( $form );
-            $resultOfTheTest = $this->validateTestResults( $this->fieldSet, $leads );
-        }
+        // Step 2
+        list ( $status, $log ) = $this->runByStep( FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT, $form );
 
-        // 4/ Save status of test
-        $form->setTestStatus( $resultOfTheTest );
-        $form->setTestLog( $log );
+        // Step 3
+        $statusOfTest = $this->runByStep( FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS, $form, $status, $log );
 
-        $this->log ("-- Saving test result");
-
-        $em = $this->container->get("doctrine")->getManager();
-        $em->persist($form);
-        $em->flush();
+        // Step 4
+        $this->runByStep( FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS, $form, $status, $log, $statusOfTest );
 
     }
 
@@ -105,26 +165,24 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      *
      * Method used to get the path and name of the screenshot file
      * This is for the screenshot of the form
-     * 
+     *
      * @param  Form Object targeted by the screenshot
      * @return [String] path and filename
      */
     public function getScreenPathOfForm ( Form $form ) {
-        if ($this->isWebMode) {
-            $screenshotDir = "../app/cache/screenshots";
-        } else {
-            $screenshotDir = "app/cache/screenshots";
-        }
+
+
+        // ex : /var/www/weka-leadsfactory/app
+        $base = $this->container->get('kernel')->getRootDir();
+
+
+        $screenshotDir = $base."/cache/screenshots";
 
         if (!is_dir( $screenshotDir )) {
-            mkdir ( $screenshotDir );
+            \mkdir ( $screenshotDir );
         }
 
-        if ($this->isWebMode) {
-            return "../app/cache/screenshots/form-".$form->getId().".jpg";
-        } else {
-            return "app/cache/screenshots/form-".$form->getId().".jpg";
-        }
+        return $base."/cache/screenshots/form-".$form->getId().".jpg";
 
     }
 
@@ -132,30 +190,29 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      *
      * Method used to get the path and name of the screenshot file
      * This is for the screenshot of the result
-     * 
+     *
      * @param  Form Object targeted by the screenshot
      * @return [String] path and filename
      */
     public function getScreenPathOfResult ( Form $form ) {
-        if ($this->isWebMode) {
-            $screenshotDir = "../app/cache/screenshots";
-        } else {
-            $screenshotDir = "app/cache/screenshots";
-        }
+
+        // ex : /var/www/weka-leadsfactory/app
+        $base = $this->container->get('kernel')->getRootDir();
+
+        $screenshotDir = $base."/cache/screenshots";
+
         if (!is_dir( $screenshotDir )) {
-            mkdir ( $screenshotDir );
+            \mkdir ( $screenshotDir );
         }
-        if ($this->isWebMode) {
-            return "../app/cache/screenshots/result-".$form->getId().".jpg";
-        } else {
-            return "app/cache/screenshots/result-".$form->getId().".jpg";
-        }
+
+        return $base."/cache/screenshots/result-".$form->getId().".jpg";
+
     }
 
     /**
      *
      * Used to inject Symfony container to application
-     * 
+     *
      * @param \Symfony\Component\DependencyInjection\ContainerInterface
      */
     public function setContainer (ContainerInterface $container = null) {
@@ -170,13 +227,17 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     }
 
     private function getCasperScriptPath ( Form $form ) {
-        return "app/cache/casperjs/".$form->getId()."-test.js";
+
+        // ex : /var/www/weka-leadsfactory/app
+        $base = $this->container->get('kernel')->getRootDir();
+
+        return $base."/cache/casperjs/" . $form->getId() . "-test.js";
     }
 
     /**
      *
      * Checks if the casper script test file exists
-     * 
+     *
      * @param  Form Object to test with Casper
      * @return boolean
      */
@@ -448,12 +509,21 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * @param $content
      */
     public function saveTest ( $form, $content ) {
+        /*
         if (!is_dir( "app/cache/casperjs" )) {
             mkdir ( "app/cache/casperjs" );
+        }*/
+
+        $filename = $this->getCasperScriptPath($form);
+        if (is_writable($filename)) {
+            $fp = fopen( $filename , 'w');
+            fwrite($fp, $content);
+            fclose($fp);
+        } else {
+            return false;
         }
-        $fp = fopen( $this->getCasperScriptPath( $form ) , 'w');
-        fwrite($fp, $content);
-        fclose($fp);
+        return true;
+
     }
 
     /**

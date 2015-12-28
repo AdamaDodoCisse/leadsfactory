@@ -54,8 +54,8 @@ class ExportCommand extends ContainerAwareCommand {
             $output->writeln('Info : Removed LOCK file : ' . ExportCommand::$_PID_FILE);
 
         } else {
-            $output->writeln('Un export est dÈj‡ en traitement. Si c\'est anormal, merci de dÈtruire le fichier LOCK :'.ExportCommand::$_PID_FILE );
-            $logger->error('Un export est dÈj‡ en traitement. Si c\'est anormal, merci de dÈtruire le fichier LOCK :'.ExportCommand::$_PID_FILE);
+            $output->writeln('Un export est d√©j√† en traitement. Si c\'est anormal, merci de d√©truire le fichier LOCK :'.ExportCommand::$_PID_FILE );
+            $logger->error('Un export est d√©j√† en traitement. Si c\'est anormal, merci de d√©truire le fichier LOCK :'.ExportCommand::$_PID_FILE);
         }
 	}
 
@@ -70,7 +70,7 @@ class ExportCommand extends ContainerAwareCommand {
         }
 
         if (fwrite($handle, $somecontent) === FALSE) {
-            throw new \Exception ("Impossible d'Ècrire dans le fichier (".ExportCommand::$_PID_FILE.")");
+            throw new \Exception ("Impossible d'√©crire dans le fichier (".ExportCommand::$_PID_FILE.")");
             exit;
         }
 

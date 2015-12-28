@@ -19,12 +19,12 @@ class ElasticSearchUtils extends SearchShared {
     public static $PROTOCOL_GET = "XGET";
     public static $PROTOCOL_DELETE = "DELETE";
 
-    public static $_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH = "SEARCH_BINARY_PATH";
-    public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT__ELASTICSEARCH";
+    //public static $_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH = "SEARCH_BINARY_PATH";
+    public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT_ELASTICSEARCH";
 
     public static $_PREFERENCE_SEARCH_KIBANA_ENABLE = "SEARCH_KIBANA_ENABLE";
     public static $_PREFERENCE_SEARCH_KIBANA_URL = "SEARCH_KIBANA_URL";
-    public static $_PREFERENCE_SEARCH_KIBANA_BINARY_PATH = "SEARCH_KIBANA_BINARY_PATH";
+    //public static $_PREFERENCE_SEARCH_KIBANA_BINARY_PATH = "SEARCH_KIBANA_BINARY_PATH";
     public static $_PREFERENCE_SEARCH_KIBANA_INDEX_NAME = "SEARCH_KIBANA_INDEX_NAME";
 
     //public $baseUri = "http://localhost:9200/";
@@ -35,10 +35,23 @@ class ElasticSearchUtils extends SearchShared {
     private $logger;
 
 
-    public function __construct () {
-        PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH, "Path to the binary file of elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
-        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE, "Url to elastic search", PreferencesUtils::$_PRIORITY_REQUIRED, null, true );
+    public function __construct ( PreferencesUtils $preferencesUtils ) {
 
+        $preferencesUtils->registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE,
+                                        "Url to elastic search",
+                                        PreferencesUtils::$_PRIORITY_REQUIRED );
+
+        $preferencesUtils->registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_ENABLE,
+                                        "Set to true to activate Kibana or false to disable. By Default set to false",
+                                        PreferencesUtils::$_PRIORITY_OPTIONNAL );
+
+        $preferencesUtils->registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL,
+                                        "Url to Kibana application",
+                                        PreferencesUtils::$_PRIORITY_OPTIONNAL );
+
+        $preferencesUtils->registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_INDEX_NAME,
+                                        "Index name of the kibana index",
+                                        PreferencesUtils::$_PRIORITY_OPTIONNAL );
 
     }
 
