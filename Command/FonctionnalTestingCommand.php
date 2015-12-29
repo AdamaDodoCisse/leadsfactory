@@ -15,6 +15,7 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
         $this
             ->setName('leadsfactory:testing:run')
             ->setDescription('Command running foncitonnal testing of forms.')
+            ->addArgument('form', InputArgument::OPTIONAL, 'form code')
         ;
     }
 
@@ -29,12 +30,21 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $forms = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+
         $alertUtils = $this->getContainer()->get("alertes_utils");
         $formUtils = $this->getContainer()->get("form_utils");
         $testUtils = $this->getContainer()->get("functionnal_testing.utils");
 
         $testUtils->setOutputInterface ( $output );
+
+        $form = $input->getArgument('form');
+        if ($form) {
+            $output->writeln('Testing ONLY ' . $form . '...');
+            $forms = $this->getContainer()->get('leadsfactory.form_repository')->findByCode($form);
+        } else {
+            $output->writeln('Testing every forms...');
+            $forms = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Form')->findAll();
+        }
 
         foreach ( $forms as $form ) {
 

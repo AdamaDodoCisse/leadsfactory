@@ -3,9 +3,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
-use Tellaw\LeadsFactoryBundle\Form\Type\UsersCreationType;
 use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

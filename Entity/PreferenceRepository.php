@@ -63,7 +63,8 @@ class PreferenceRepository extends EntityRepository
                         ->createQuery($dql)
                         ->setParameters( array ( "key"=>$key , "scopeId" => $scopeId ) );
 
-        return $query->getScalarResult();
+        $result = $query->getSingleResult();
+        return $result;
     }
 
 }

@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class FunctionnalTestingUtils implements ContainerAwareInterface {
 
-
     /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
     private $container;
 
@@ -43,17 +42,29 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
 
     private $logContent = "";
 
-    public function __construct ( PreferencesUtils $preferencesUtils ) {
+    public function __construct (  ) {
 
-        $preferencesUtils->registerKey( "CORE_LEADSFACTORY_URL",
+        PreferencesUtils::registerKey( "CORE_LEADSFACTORY_URL",
                                         "Url de l'application, sur le scope global pour le BO, et sur les scopes pour les formulaires",
                                         PreferencesUtils::$_PRIORITY_OPTIONNAL
             );
 
-        $preferencesUtils->registerKey( "CORE_CASPER_PATH",
+        PreferencesUtils::registerKey( "CORE_CASPER_PATH",
                                         "Path to Casper install for functionnal testings.",
                                         PreferencesUtils::$_PRIORITY_OPTIONNAL);
 
+    }
+
+    /**
+     * Method used to detect if recorded lead has been created by a test or not
+     * @param Leads $lead
+     * @return bool
+     */
+    public function isTestLead ( Leads $lead ) {
+        if (strstr ($lead->getUserAgent(), 'casperjs')) {
+            return true;
+        }
+        return false;
     }
 
     public function setIsWebMode ( $mode ) {

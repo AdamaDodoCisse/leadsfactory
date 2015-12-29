@@ -16,7 +16,6 @@ services:
 
   functionnal_testing.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\FunctionnalTestingUtils
-    arguments:    [@preferences_utils]
     calls:
                   - [ setContainer, [ @service_container ] ]
     tags:
@@ -92,7 +91,6 @@ services:
 
   search.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils
-    arguments:    [@preferences_utils]
     calls:
                   - [ setContainer, [ @service_container ] ]
     tags:

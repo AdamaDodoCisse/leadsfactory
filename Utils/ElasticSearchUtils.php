@@ -35,21 +35,21 @@ class ElasticSearchUtils extends SearchShared {
     private $logger;
 
 
-    public function __construct ( PreferencesUtils $preferencesUtils ) {
+    public function __construct () {
 
-        $preferencesUtils->registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE,
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE,
                                         "Url to elastic search",
                                         PreferencesUtils::$_PRIORITY_REQUIRED );
 
-        $preferencesUtils->registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_ENABLE,
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_ENABLE,
                                         "Set to true to activate Kibana or false to disable. By Default set to false",
                                         PreferencesUtils::$_PRIORITY_OPTIONNAL );
 
-        $preferencesUtils->registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL,
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL,
                                         "Url to Kibana application",
                                         PreferencesUtils::$_PRIORITY_OPTIONNAL );
 
-        $preferencesUtils->registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_INDEX_NAME,
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_INDEX_NAME,
                                         "Index name of the kibana index",
                                         PreferencesUtils::$_PRIORITY_OPTIONNAL );
 

@@ -52,7 +52,7 @@ class PreferencesUtils implements ContainerAwareInterface {
      * @param $is_uniq          // Is uniq defines that if the same key is tryied to be registered twice, an Exception will be raised (default true)
      * @throws \Exception
      */
-    public function registerKey (    $key,
+    public static function registerKey (    $key,
                                             $description,
                                             $priority,
                                             $scope = false,
@@ -104,9 +104,9 @@ class PreferencesUtils implements ContainerAwareInterface {
         if ($scope == "") {
             $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyval($key);
         } else if ( $scope == PreferencesUtils::$_SCOPE_GLOBAL ) {
-            $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyvalAndScope ($key, "");
+            $preference = $this->container->get('leadsfactory.preference_repository')->findByKeyAndScope ($key, "");
         }else {
-            $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyvalAndScope ($key, $scope);
+            $preference = $this->container->get('leadsfactory.preference_repository')->findByKeyAndScope ($key, $scope);
         }
 
         if ($preference != null ) {
