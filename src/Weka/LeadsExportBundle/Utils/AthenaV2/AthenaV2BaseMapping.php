@@ -135,6 +135,11 @@ class AthenaV2BaseMapping {
 
     }
 
+    /**
+     * Refactored 18-1 for Athena V3
+     *
+     * @return array
+     */
     public function getDRCMapping () {
 
         $dateTime = new \DateTime();
@@ -182,10 +187,25 @@ class AthenaV2BaseMapping {
 
             "trackin_origin"            => "",   //
 
+            // Ajout des méthodes V3
+            "civilite"                  => "",   // methode de récupération des données
+            "nom_contact"               => "lastName",
+            "prenom_contact"            => "firstName",
+            "email"                     => "email",
+            "service"                   => "",  // methode de récupération des données
+            "secteur_activite_weka"     => "",  // methode de récupération des données
+            "fonction_marketing"        => "",  // methode de récupération des données
+            "telephone"                 => "phone",
+            "telephone_mobile"          => "",
+            "rue_facturation"           => "address",
+            "code_postal_facturation"   => "zip",
+            "ville_facturation"         => "",  // methode de récupération des données
+            "pays_facturation"          => "pays",
+            "sku_produit"               => "product_sku",
+
         );
 
     }
-
 
     // #########################################################################################
     // OVERRIDE DES GETTERS
