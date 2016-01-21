@@ -39,7 +39,7 @@ services:
 
   export.logger_handler:
     class:        Monolog\Handler\StreamHandler
-    arguments:    [%kernel.logs_dir%/%kernel.environment%.export.log, 200]
+    arguments:    [%kernel.logs_dir%/%kernel.environment%.export.log, 200, true, 664 ]
 
   export_utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\ExportUtils

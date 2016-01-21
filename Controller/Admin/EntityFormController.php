@@ -74,6 +74,8 @@ class EntityFormController extends CoreController {
             array('method' => 'POST')
         );
 
+        $formEntity = new Form();
+
         $form->handleRequest($request);
         if ($form->isValid()) {
 
@@ -91,6 +93,7 @@ class EntityFormController extends CoreController {
             'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
             array(
                 'form' => $form->createView(),
+                'formObj' => $formEntity,
                 'title' => "Création d'un formulaire"
             )
         );
