@@ -7,7 +7,7 @@
 	"psr-0": { "": "src/" }
   },
   "require": {
-	"php": ">=5.3.3",
+	"php": ">=5.6.0",
 	"symfony/symfony": "2.7.2",
 	"doctrine/orm": "v2.4.7",
 	"doctrine/doctrine-bundle": "v1.5.0",
@@ -22,7 +22,7 @@
 	"jms/security-extra-bundle": "1.5.1",
 	"mtdowling/cron-expression": "v1.0.4",
 	"vresh/twilio-bundle": "0.4.3",
-	"tellaw/leadsfactory" : "1.0.13",
+	"tellaw/leadsfactory" : "1.0.14",
 	"beberlei/DoctrineExtensions": "v1.0.1",
 	"teodortalov/citrix": "1.1",
     "jonnyw/php-phantomjs": "3.*"

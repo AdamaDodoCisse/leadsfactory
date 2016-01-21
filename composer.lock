@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0d97fb75c6668d4f8b2e8246e19bab8f",
-    "content-hash": "9d054ae1b99315006dbb03bf60d15ba1",
+    "hash": "7e4281c4b3325aada6d6355d649ace52",
+    "content-hash": "9121ac2ae1740c2abb80e18eda8fd086",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2423,17 +2423,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.13",
+            "version": "1.0.14",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "f7682f8bdf5d53ad9e9e85c4b78990ac57421970"
+                "reference": "76c5b30226a0a0a77e32f7ac43fa06e1565320c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/f7682f8bdf5d53ad9e9e85c4b78990ac57421970",
-                "reference": "f7682f8bdf5d53ad9e9e85c4b78990ac57421970",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/76c5b30226a0a0a77e32f7ac43fa06e1565320c3",
+                "reference": "76c5b30226a0a0a77e32f7ac43fa06e1565320c3",
                 "shasum": ""
             },
             "require": {
@@ -2477,7 +2477,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-01-19 14:07:09"
+            "time": "2016-01-21 14:22:00"
         },
         {
             "name": "teodortalov/citrix",
@@ -2634,16 +2634,16 @@
         },
         {
             "name": "twilio/sdk",
-            "version": "4.9.0",
+            "version": "4.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twilio/twilio-php.git",
-                "reference": "654a73821c1421fe2fb0f9dce2f400403015de3e"
+                "reference": "dff645321a5c65457248218f4438070a45a24035"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/654a73821c1421fe2fb0f9dce2f400403015de3e",
-                "reference": "654a73821c1421fe2fb0f9dce2f400403015de3e",
+                "url": "https://api.github.com/repos/twilio/twilio-php/zipball/dff645321a5c65457248218f4438070a45a24035",
+                "reference": "dff645321a5c65457248218f4438070a45a24035",
                 "shasum": ""
             },
             "require": {
@@ -2680,7 +2680,7 @@
                 "sms",
                 "twilio"
             ],
-            "time": "2015-12-17 01:05:48"
+            "time": "2016-01-20 00:23:41"
         },
         {
             "name": "vresh/twilio-bundle",
@@ -2738,7 +2738,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.3"
+        "php": ">=5.6.0"
     },
     "platform-dev": []
 }
