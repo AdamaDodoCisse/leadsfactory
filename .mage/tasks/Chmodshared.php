@@ -9,11 +9,11 @@ namespace Task;
 
 use Mage\Task\AbstractTask;
 
-class Chmod extends AbstractTask
+class Chmodshared extends AbstractTask
 {
 	public function getName()
 	{
-		return 'Chmod -R 775 on remote directory with sudo';
+		return 'Chmod SHARED -R 775 on remote directory with sudo';
 	}
 
 	public function run()
