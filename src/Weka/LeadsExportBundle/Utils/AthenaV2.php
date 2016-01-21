@@ -51,6 +51,15 @@ class AthenaV2 extends AbstractMethod{
     private $_exportUtils = null;
     private $_functionnalTestingUtils = null;
 
+
+    public function __construct ()
+    {
+
+        PreferencesUtils::registerKey(  "ATHENA_URL",
+                                        "Url to Athena CRM Plateform",
+                                        PreferencesUtils::$_PRIORITY_REQUIRED);
+    }
+
     public function getExportUtils () {
         if ($this->_exportUtils == null) {
             $this->_exportUtils = $this->getContainer()->get('export_utils');
