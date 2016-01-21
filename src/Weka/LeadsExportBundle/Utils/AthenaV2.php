@@ -10,6 +10,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Export;
 
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
+use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
  * Class AthenaV2
