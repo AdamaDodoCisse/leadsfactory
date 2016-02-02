@@ -202,7 +202,8 @@ class AthenaV2BaseMapping {
             "ville_facturation"         => "",  // methode de récupération des données
             "pays_facturation"          => "pays",
             "sku_produit"               => "product_sku",
-            "thematique_weka"           => "" // Information inconnue
+            "thematique_weka"           => "", // Information inconnue
+            "nom_compte"                => "etablissement"
 
         );
 
