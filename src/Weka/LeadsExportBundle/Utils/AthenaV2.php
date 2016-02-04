@@ -10,6 +10,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Export;
 
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
+use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
  * Class AthenaV2
@@ -49,12 +50,29 @@ class AthenaV2 extends AbstractMethod{
     public $isTestMode = false;
 
     private $_exportUtils = null;
+    private $_functionnalTestingUtils = null;
+
+
+    public function __construct ()
+    {
+
+        PreferencesUtils::registerKey(  "ATHENA_URL",
+                                        "Url to Athena CRM Plateform",
+                                        PreferencesUtils::$_PRIORITY_REQUIRED);
+    }
 
     public function getExportUtils () {
         if ($this->_exportUtils == null) {
             $this->_exportUtils = $this->getContainer()->get('export_utils');
         }
         return $this->_exportUtils;
+    }
+
+    public function getFunctionnalTestingUtils () {
+        if ($this->_functionnalTestingUtils == null) {
+            $this->_functionnalTestingUtils = $this->getContainer()->get('functionnal_testing.utils');
+        }
+        return $this->_functionnalTestingUtils;
     }
 
     public function getLogger () {
@@ -156,6 +174,11 @@ class AthenaV2 extends AbstractMethod{
         // Loop over export jobs
         foreach($jobs as $job){
 
+            // If testlead, then switch to test mode
+            if ($this->getFunctionnalTestingUtils()->isTestLead ( $job->getLead() )) {
+                $this->isTestMode = true;
+            }
+
             $data = json_decode($job->getLead()->getData(), true);
 
             // Filter for preprocessing datas
@@ -227,7 +250,6 @@ class AthenaV2 extends AbstractMethod{
                     $message = "Error in getContact : ".$e->getMessage();
                 }
             }
-
 
             // Send Request createDRC or createAffaire
             if ( $this->isDrc( $data ) ) {
@@ -401,13 +423,14 @@ class AthenaV2 extends AbstractMethod{
         return $result;
     }
 
-    private function sendRequest($method, $requestData, $source, $version ="2.0")
-    {  // version dans request et passer en paramétres la variable dans le reste des fonctions
-
+    private function sendRequest($method, $requestData, $source, $version ="3.0")
+    {
+        // version dans request et passer en paramétres la variable dans le reste des fonctions
         $request = array(
             "source"    => $source,
             "version"   => $version,
             "method"    => $method,
+            "testMode"  => $this->isTestMode,
             "data"      => $requestData
         );
 
@@ -457,7 +480,6 @@ class AthenaV2 extends AbstractMethod{
 
 
         $this->getLogger()->info( "[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : id_campagne (utmcampaign) -> " .$id_athena);
-
         return $id_athena;
 
     }
