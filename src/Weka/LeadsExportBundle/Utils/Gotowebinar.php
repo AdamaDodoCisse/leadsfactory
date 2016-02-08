@@ -147,7 +147,7 @@ class Gotowebinar extends AbstractMethod{
 
 	    if(isset($config['export']['gotowebinar']['mapping_class'])){
 		    $logger->info($config['export']['gotowebinar']['mapping_class']);
-		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Gotowebinar\\" . $scopePath . $config['export']['edeal']['mapping_class'];
+		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Gotowebinar\\" . $scopePath . $config['export']['gotowebinar']['mapping_class'];
 	    }
 		$em = $this->getContainer()->get('doctrine')->getManager();
         $list_element_repository = $this->getContainer()->get('leadsfactory.reference_list_element_repository');
