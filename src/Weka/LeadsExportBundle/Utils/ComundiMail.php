@@ -38,7 +38,8 @@ class ComundiMail extends AbstractMethod {
 
         $logger->info('Récupération de la liste des mails destinataires');
         foreach($jobs as $job){
-            $contenu = $this->_formConfig['mails'][$job['sujet']]['texte'];
+            //$contenu = $this->_formConfig['mails'][$job['sujet']]['texte'];
+            $contenu = $this->_formConfig['mails'][$job->sujet]['texte'];
             $from = $this->_formConfig['mail_from'];
             $mail_contact = $this->_formConfig['mails'][$job['sujet']]['contact_mail'];
             $tel = $this->_formConfig['mails'][$job['sujet']]['tel'];
