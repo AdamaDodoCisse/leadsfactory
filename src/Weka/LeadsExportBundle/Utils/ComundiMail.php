@@ -30,29 +30,34 @@ class ComundiMail extends AbstractMethod {
      */
     public function export($jobs, $form)
     {
+        die("export");
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
-        $scope = $form->getScope()->getCode();
 
         $this->_formConfig = $form->getConfig();
 
         $logger->info('Récupération de la liste des mails destinataires');
         foreach($jobs as $job){
-            //$contenu = $this->_formConfig['mails'][$job['sujet']]['texte'];
             $contenu = $this->_formConfig['mails'][$job->sujet]['texte'];
             $from = $this->_formConfig['mail_from'];
-            $mail_contact = $this->_formConfig['mails'][$job['sujet']]['contact_mail'];
-            $tel = $this->_formConfig['mails'][$job['sujet']]['tel'];
-            $sujet = $this->_formConfig['mails'][$job['sujet']]['sujet_mail'];
-            $mail_webmaster = $this->_formConfig['mails'][$job['sujet']]['webmaster'];
+            $mail_contact = $this->_formConfig['mails'][$job->sujet]['contact_mail'];
+            $tel = $this->_formConfig['mails'][$job->sujet]['tel'];
+            $sujet = $this->_formConfig['mails'][$job->sujet]['sujet_mail'];
+            $mail_webmaster = $this->_formConfig['mails'][$job->sujet]['webmaster'];
+
+            // Upload de fichiers
+            if(isset($this->_formConfig['upload_files']) && $this->_formConfig['upload_files'] == true) {
+                $data = json_decode($job->getLead()->getData(), true);
+            }
 
             $message = \Swift_Message::newInstance()
                 ->setSubject($sujet)
                 ->setFrom($from)
-                ->setTo($job['email'])
+                ->setTo($job->email)
+                // HTML version
                 ->setBody(
                     $this->renderView(
-                        'Emails/contact.html.twig',
+                        'Emails/Comundi/contact.html.twig',
                         array(
                             'content' => $contenu,
                             'mail_contact' => $mail_contact,
@@ -62,20 +67,23 @@ class ComundiMail extends AbstractMethod {
                     ),
                     'text/html'
                 )
-                /*
-                 * If you also want to include a plaintext version of the message
+                // Plaintext version
                 ->addPart(
                     $this->renderView(
-                        'Emails/registration.txt.twig',
-                        array('name' => $name)
+                        'Emails/Comundi/contact.txt.twig',
+                        array(
+                            'content' => $contenu,
+                            'mail_contact' => $mail_contact,
+                            'tel' => $tel,
+                            'user_data' => $job,
+                        )
                     ),
                     'text/plain'
                 )
-                */
             ;
 
-            if(isset($this->_formConfig['mails'][$job['sujet']]['bcc'])) {
-                $message->setBcc($this->_formConfig['mails'][$job['sujet']]['bcc']);
+            if(isset($this->_formConfig['mails'][$job->sujet]['bcc'])) {
+                $message->setBcc($this->_formConfig['mails'][$job->sujet]['bcc']);
             }
 
             try {
