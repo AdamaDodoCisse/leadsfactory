@@ -8,6 +8,7 @@ abstract class AbstractFieldType {
     public static $_DATATYPE_ZIP = "ZIP_CODE";
     public static $_DATATYPE_COUNTRY_CODE = "COUNTRY_CODE";
     public static $_DATATYPE_COUNTRY_NAME = "COUNTRY_NAME";
+    public static $_DATATYPE_FILE = "FILE";
 
     public function getTestValue ( $dataType, $field ) {
         if (isset($field["attributes"]["id"])) {

@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
@@ -22,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Swift_Message;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  *
@@ -183,7 +185,7 @@ class FrontController extends CoreController
         $formUtils = $this->get("form_utils");
 
         $fields = $request->get ("lffield");
-        var_dump ($fields);
+//        var_dump ($request->files->get('lffield')['user_file']->getClientSize());die;
         $json = json_encode( $fields );
 
         $exportUtils = $this->get('export_utils');
@@ -208,6 +210,26 @@ class FrontController extends CoreController
 
             $redirectUrlSuccess = isset($config['redirect']['url_success']) ? $config['redirect']['url_success'] : '';
             $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
+
+            // On vérifie s'il y a des fichiers uploadés
+            if(isset($config['upload_files']) && $config['upload_files'] == true) {
+                // On vérifie l'extension
+                $all_files = $request->files->all();
+                $form_dir_path = $this->container->getParameter('kernel.root_dir').'/../datas/';;
+                $fs = new Filesystem();
+                foreach($all_files['lffield'] as $field_name => $file) {
+
+                    // Fichier pesant 1Mo max
+                    if($file->getClientSize() !=0 && $file->getClientSize() <= 8388608) {
+                        // On créé (s'il n'existe pas) un répertoire portant le nom de l'ID form Leads
+                        if(!$fs->exists($form_dir_path.$formId)) {
+                            $fs->mkdir($form_dir_path.$formId, 0760);
+                        }
+                        // On déplace le fichier uploadé vers le répertoire final
+                        $file->move($form_dir_path.$formId, $file->getClientOriginalName());
+                    } else return $this->redirect($redirectUrlError);
+                }
+            }
 
             if ( array_key_exists('configuration', $config) ) {
 

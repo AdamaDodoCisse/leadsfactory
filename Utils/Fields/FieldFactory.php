@@ -28,6 +28,8 @@ class FieldFactory
                 return new LinkedReferenceListFieldType();
             case "hidden":
                 return new HiddenFieldType();
+            case "file":
+                return new FileFieldType();
             case "text":
             default:
                 return new TextFieldType();
