@@ -30,64 +30,67 @@ class ComundiMail extends AbstractMethod {
      */
     public function export($jobs, $form)
     {
-        die("export");
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
+        $logger->info('Test export Comundi');
 
         $this->_formConfig = $form->getConfig();
 
         $logger->info('Récupération de la liste des mails destinataires');
         foreach($jobs as $job){
-            $contenu = $this->_formConfig['mails'][$job->sujet]['texte'];
+            $data = json_decode($job->getLead()->getData(), true); // Infos clients
+
+            $form_subject = $data['sujet'];
+            $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
             $from = $this->_formConfig['mail_from'];
-            $mail_contact = $this->_formConfig['mails'][$job->sujet]['contact_mail'];
-            $tel = $this->_formConfig['mails'][$job->sujet]['tel'];
-            $sujet = $this->_formConfig['mails'][$job->sujet]['sujet_mail'];
-            $mail_webmaster = $this->_formConfig['mails'][$job->sujet]['webmaster'];
+            $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
+            $tel = $this->_formConfig['mails'][$form_subject]['tel'];
+            $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
+            $mail_webmaster = $this->_formConfig['mails'][$form_subject]['webmaster'];
 
             // Upload de fichiers
             if(isset($this->_formConfig['upload_files']) && $this->_formConfig['upload_files'] == true) {
-                $data = json_decode($job->getLead()->getData(), true);
             }
 
+            $templatingService = $this->container->get('templating');
             $message = \Swift_Message::newInstance()
                 ->setSubject($sujet)
                 ->setFrom($from)
-                ->setTo($job->email)
+                ->setTo($data['email'])
                 // HTML version
                 ->setBody(
-                    $this->renderView(
-                        'Emails/Comundi/contact.html.twig',
+                    $templatingService->render(
+                        'WekaLeadsExportBundle:Emails:Comundi/contact.html.twig',
                         array(
                             'content' => $contenu,
                             'mail_contact' => $mail_contact,
                             'tel' => $tel,
-                            'user_data' => $job,
+                            'user_data' => $data,
                         )
                     ),
                     'text/html'
                 )
                 // Plaintext version
                 ->addPart(
-                    $this->renderView(
-                        'Emails/Comundi/contact.txt.twig',
+                    $templatingService->render(
+                        'WekaLeadsExportBundle:Emails:Comundi/contact.txt.twig',
                         array(
                             'content' => $contenu,
                             'mail_contact' => $mail_contact,
                             'tel' => $tel,
-                            'user_data' => $job,
+                            'user_data' => $data,
                         )
                     ),
                     'text/plain'
                 )
             ;
 
-            if(isset($this->_formConfig['mails'][$job->sujet]['bcc'])) {
-                $message->setBcc($this->_formConfig['mails'][$job->sujet]['bcc']);
+            if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                $message->setBcc($this->_formConfig['mails'][$form_subject]['bcc']);
             }
 
             try {
-                $this->get('mailer')->send($message);
+                $this->container->get('mailer')->send($message);
                 $logger->info('****** Envoi du mail réussi ! ******');
             } catch(\Exception $e) {
                 $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');
