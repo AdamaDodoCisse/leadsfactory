@@ -185,17 +185,16 @@ class FrontController extends CoreController
         $formUtils = $this->get("form_utils");
 
         $fields = $request->get ("lffield");
-//        var_dump ($request->files->get('lffield')['user_file']->getClientSize());die;
         $json = json_encode( $fields );
 
         $exportUtils = $this->get('export_utils');
 
         $searchUtils = $this->get('search.utils');
 
-       /*
-         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
-            throw new \Exception ("Form Key is not allowed");
-*/
+
+//         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
+//            throw new \Exception ("Form Key is not allowed");
+
 
         try {
 
@@ -220,14 +219,20 @@ class FrontController extends CoreController
                 foreach($all_files['lffield'] as $field_name => $file) {
 
                     // Fichier pesant 1Mo max
-                    if($file->getClientSize() !=0 && $file->getClientSize() <= 8388608) {
+                    if(isset($file) && $file->getClientSize() !=0 && $file->getClientSize() <= 1048576) {
                         // On créé (s'il n'existe pas) un répertoire portant le nom de l'ID form Leads
                         if(!$fs->exists($form_dir_path.$formId)) {
                             $fs->mkdir($form_dir_path.$formId, 0760);
+                        } else {
+                            // Droits en écriture ?
+                            if(!is_writable($form_dir_path.$formId)) {
+                                $fs->chmod($form_dir_path.$formId, 0760);
+                            }
                         }
+
                         // On déplace le fichier uploadé vers le répertoire final
                         $file->move($form_dir_path.$formId, $file->getClientOriginalName());
-                    } else return $this->redirect($redirectUrlError);
+                    }
                 }
             }
 
