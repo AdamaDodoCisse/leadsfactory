@@ -3,7 +3,7 @@ parameters:
     athena_url: http://athena.host-athena-dev1.captivea.net/index.php
     weka_leads_export.edeal.class: Weka\LeadsExportBundle\Utils\Edeal
     weka_leads_export.athenav2.class: Weka\LeadsExportBundle\Utils\AthenaV2
-    weka_leads_export.comundi_mail.class: Weka\LeadsExportBundle\Utils\ComundiMail
+    weka_leads_export.comundimail.class: Weka\LeadsExportBundle\Utils\Comundimail
 
 services:
     athena_method:
@@ -35,9 +35,9 @@ services:
             tags:
               - {name: export.method, alias: gotowebinar}
             arguments: [%gotowebinar_credentials%]
-    comundi_mail_method:
-            class: %weka_leads_export.comundi_mail.class%
+    comundimail_method:
+            class: %weka_leads_export.comundimail.class%
             calls:
               - [setContainer, [@service_container]]
             tags:
-              - {name: export.method, alias: comundi_mail}
+              - {name: export.method, alias: comundimail}

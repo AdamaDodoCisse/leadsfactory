@@ -14,7 +14,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 
-class ComundiMail extends AbstractMethod {
+class Comundimail extends AbstractMethod {
 
     private $_formConfig;
 
@@ -47,10 +47,6 @@ class ComundiMail extends AbstractMethod {
             $tel = $this->_formConfig['mails'][$form_subject]['tel'];
             $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
             $mail_webmaster = $this->_formConfig['mails'][$form_subject]['webmaster'];
-
-            // Upload de fichiers
-            if(isset($this->_formConfig['upload_files']) && $this->_formConfig['upload_files'] == true) {
-            }
 
             $templatingService = $this->container->get('templating');
             $message = \Swift_Message::newInstance()
