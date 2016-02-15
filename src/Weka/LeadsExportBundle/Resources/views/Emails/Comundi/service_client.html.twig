@@ -1,0 +1,25 @@
+<html>
+    <head>
+    </head>
+    <body style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+    Nom : {{ user_data.lastName }}<br>
+    Pr&eacute;nom : {{ user_data.firstName }}<br>
+    Soci&eacute;t&eacute; : {{ user_data.etablissement }}<br>
+    Code postal : {{ user_data.zip }}<br>
+    T&eacute;l&eacute;phone : {{ user_data.phone }}<br>
+    Email : {{ user_data.email }}<br>
+    Votre demande : {{ demande }}<br>
+    {% if user_data.budget != '' %}
+        Budget : {{ user_data.budget }}<br>
+    {% endif %}
+
+    {% if user_data.datelimite != '' %}
+        Date limite de réponse : {{ user_data.datelimite }}<br>
+    {% endif %}
+
+    Détails : {{ user_data.comment }}
+    {% if user_data.demande-rdv == 1 %}
+        <br><br>Cette personne souhaite être contactée dans les meilleurs délais par Comundi.
+    {% endif %}
+    </body>
+</html>

@@ -1,0 +1,19 @@
+Nom : {{ user_data.lastName }}
+Prénom : {{ user_data.firstName }}
+Société : {{ user_data.etablissement }}
+Code postal : {{ user_data.zip }}
+Téléphone : {{ user_data.phone }}
+Email : {{ user_data.email }}
+Votre demande : {{ demande }}
+{% if user_data.budget != '' %}
+    Budget : {{ user_data.budget }}
+{% endif %}
+
+{% if user_data.datelimite != '' %}
+    Date limite de réponse : {{ user_data.datelimite }}
+{% endif %}
+
+Détails : {{ user_data.comment }}
+{% if user_data.demande-rdv == 1 %}
+    Cette personne souhaite être contactée dans les meilleurs délais par Comundi.
+{% endif %}
