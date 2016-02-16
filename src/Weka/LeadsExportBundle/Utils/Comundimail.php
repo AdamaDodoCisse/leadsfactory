@@ -110,6 +110,7 @@ class Comundimail extends AbstractMethod {
 
 
             // Envoi du mail au service client
+            $data['demande-rdv'] = $this->subjects[$data['sujet']];
             $message_service_client = \Swift_Message::newInstance()
                 ->setSubject($sujet)
                 ->setFrom($from)
@@ -119,8 +120,7 @@ class Comundimail extends AbstractMethod {
                     $templatingService->render(
                         'WekaLeadsExportBundle:Emails:Comundi/service_client.html.twig',
                         array(
-                            'user_data' => $data,
-                            'demande' => $this->subjects[$data['sujet']]
+                            'user_data' => $data
                         )
                     ),
                     'text/html'
@@ -130,8 +130,7 @@ class Comundimail extends AbstractMethod {
                     $templatingService->render(
                         'WekaLeadsExportBundle:Emails:Comundi/service_client.txt.twig',
                         array(
-                            'user_data' => $data,
-                            'demande' => $this->subjects[$data['sujet']]
+                            'user_data' => $data
                         )
                     ),
                     'text/plain'
@@ -159,13 +158,15 @@ class Comundimail extends AbstractMethod {
 
             if($hasError) {
                 $status = $exportUtils::$_EXPORT_NOT_SCHEDULED;
+                $msg = 'Erreur envoi de mail Comundi';
             } else {
                 $status = $exportUtils::$_EXPORT_SUCCESS;
+                $msg = 'Exporté avec succès';
             }
 
             $logger->info('Export Comundi mail désactivé');
-            $exportUtils->updateJob($job, $status, 'Export Comundi mail désactivé');
-            $exportUtils->updateLead($job->getLead(), $status, 'Export Comundi mail désactivé');
+            $exportUtils->updateJob($job, $status, $msg);
+            $exportUtils->updateLead($job->getLead(), $status, $msg);
 
         }
     }

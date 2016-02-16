@@ -8,7 +8,7 @@
     Code postal : {{ user_data.zip }}<br>
     T&eacute;l&eacute;phone : {{ user_data.phone }}<br>
     Email : {{ user_data.email }}<br>
-    Votre demande : {{ demande }}<br>
+    Votre demande : {{ attribute(user_data, 'demande-rdv') }}<br>
     {% if user_data.budget != '' %}
         Budget : {{ user_data.budget }}<br>
     {% endif %}
@@ -18,7 +18,7 @@
     {% endif %}
 
     Détails : {{ user_data.comment }}
-    {% if user_data.demande-rdv == 1 %}
+    {% if attribute(user_data, 'demande-rdv') == 1 %}
         <br><br>Cette personne souhaite être contactée dans les meilleurs délais par Comundi.
     {% endif %}
     </body>
