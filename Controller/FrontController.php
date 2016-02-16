@@ -214,7 +214,7 @@ class FrontController extends CoreController
             if(isset($config['upload_files']) && $config['upload_files'] == true) {
                 // On vérifie l'extension
                 $all_files = $request->files->all();
-                $form_dir_path = $this->container->getParameter('kernel.root_dir').'/../datas/';;
+                $form_dir_path = $this->container->getParameter('kernel.root_dir').'/../datas/';
                 $fs = new Filesystem();
                 foreach($all_files['lffield'] as $field_name => $file) {
 
