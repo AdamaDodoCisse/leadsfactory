@@ -1,7 +1,7 @@
 <html>
     <head></head>
     <body>
-        Bonjour {{ user_data.firstName }} {{ user_data.lastName }}<br/><br/>
+        Bonjour {{ user_data.firstName|capitalize  }} {{ user_data.lastName|upper  }}<br/><br/>
         {{ content }}<br/><br/>
         En cas d'urgence, n'hésitez pas à nous contacter directement par téléphone au {{ tel }}<br/><br/>
         Cordialement,<br/><br/>

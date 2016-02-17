@@ -1,8 +1,8 @@
 <html>
     <head></head>
     <body>
-    Nom : {{ user_data.lastName }}<br>
-    Pr&eacute;nom : {{ user_data.firstName }}<br>
+    Nom : {{ user_data.lastName|upper  }}<br>
+    Pr&eacute;nom : {{ user_data.firstName|capitalize  }}<br>
     Soci&eacute;t&eacute; : {{ user_data.etablissement }}<br>
     Code postal : {{ user_data.zip }}<br>
     T&eacute;l&eacute;phone : {{ user_data.phone }}<br>

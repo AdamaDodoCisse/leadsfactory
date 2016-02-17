@@ -1,5 +1,5 @@
-Nom : {{ user_data.lastName }}
-Prénom : {{ user_data.firstName }}
+Nom : {{ user_data.lastName|upper }}
+Prénom : {{ user_data.firstName|capitalize  }}
 Société : {{ user_data.etablissement }}
 Code postal : {{ user_data.zip }}
 Téléphone : {{ user_data.phone }}
