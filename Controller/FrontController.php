@@ -209,6 +209,17 @@ class FrontController extends CoreController
             $redirectUrlSuccess = isset($config['redirect']['url_success']) ? $config['redirect']['url_success'] : '';
             $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
 
+            if ( array_key_exists('configuration', $config) ) {
+
+                if (array_key_exists(  'lastname' , $config["configuration"] )) {
+                    $fields["lastname"] = ucfirst ($fields[ $config["configuration"]["lastname"] ]);
+                }
+
+                if (array_key_exists(  'firstname' , $config["configuration"] )) {
+                    $fields["firstname"] = ucfirst( $fields[ $config["configuration"]["firstname"] ] );
+                }
+            }
+
             // On vérifie s'il y a des fichiers uploadés
             if(isset($config['upload_files']) && $config['upload_files'] == 'OK') {
                 // On vérifie l'extension
@@ -231,22 +242,12 @@ class FrontController extends CoreController
                         }
 
                         // On déplace le fichier uploadé vers le répertoire final
-                        $file->move($form_dir_path.$formId, $file->getClientOriginalName());
-                        $fields['all_files'][] = $file->getClientOriginalName();
+                        $file->move($form_dir_path.$formId, $fields["lastname"].'_'.$file->getClientOriginalName());
+                        $fields['all_files'][] = $fields["lastname"].'_'.$file->getClientOriginalName();
                     }
                 }
             }
 
-            if ( array_key_exists('configuration', $config) ) {
-
-                if (array_key_exists(  'lastname' , $config["configuration"] )) {
-                    $fields["lastname"] = ucfirst ($fields[ $config["configuration"]["lastname"] ]);
-                }
-
-                if (array_key_exists(  'firstname' , $config["configuration"] )) {
-                    $fields["firstname"] = ucfirst( $fields[ $config["configuration"]["firstname"] ] );
-                }
-            }
             $json = json_encode( $fields );
 
             // Create new Leads Entity Object
