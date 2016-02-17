@@ -185,7 +185,6 @@ class FrontController extends CoreController
         $formUtils = $this->get("form_utils");
 
         $fields = $request->get ("lffield");
-        $json = json_encode( $fields );
 
         $exportUtils = $this->get('export_utils');
 
@@ -211,11 +210,12 @@ class FrontController extends CoreController
             $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
 
             // On vérifie s'il y a des fichiers uploadés
-            if(isset($config['upload_files']) && $config['upload_files'] == true) {
+            if(isset($config['upload_files']) && $config['upload_files'] == 'OK') {
                 // On vérifie l'extension
                 $all_files = $request->files->all();
                 $form_dir_path = $this->container->getParameter('kernel.root_dir').'/../datas/';
                 $fs = new Filesystem();
+                $fields['all_files'] = array();
                 foreach($all_files['lffield'] as $field_name => $file) {
 
                     // Fichier pesant 1Mo max
@@ -232,6 +232,7 @@ class FrontController extends CoreController
 
                         // On déplace le fichier uploadé vers le répertoire final
                         $file->move($form_dir_path.$formId, $file->getClientOriginalName());
+                        $fields['all_files'][] = $file->getClientOriginalName();
                     }
                 }
             }
@@ -246,6 +247,7 @@ class FrontController extends CoreController
                     $fields["firstname"] = ucfirst( $fields[ $config["configuration"]["firstname"] ] );
                 }
             }
+            $json = json_encode( $fields );
 
             // Create new Leads Entity Object
             $leads = new Leads();
