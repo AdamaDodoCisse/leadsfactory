@@ -1,10 +1,10 @@
 <html>
     <head></head>
-    <body style="font-family: Arial, Helvetica, sans-serif; font-size: 12px;">
+    <body>
         Bonjour {{ user_data.firstName }} {{ user_data.lastName }}<br/><br/>
         {{ content }}<br/><br/>
         En cas d'urgence, n'hésitez pas à nous contacter directement par téléphone au {{ tel }}<br/><br/>
-        Cordialement,<br/>
+        Cordialement,<br/><br/>
         Le Service Client <br/>
         Comundi<br/>
         Immeuble Pleyad 1<br/>
@@ -12,6 +12,6 @@
         93288 Saint-Denis Cedex<br/>
         Tél : {{ tel }}<br/>
         Fax : 01.84.03.05.58<br/>
-        Mail : {{ mail_contact }}<br/>
+        Mail : <a href="mailto:{{ mail_contact }}">{{ mail_contact }}</a>
     </body>
 </html>

@@ -49,7 +49,6 @@ class Comundimail extends AbstractMethod {
 
         $this->_formConfig = $form->getConfig();
 
-        $logger->info('Récupération de la liste des mails destinataires');
         foreach($jobs as $job) {
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
 
@@ -97,17 +96,24 @@ class Comundimail extends AbstractMethod {
                 )
             ;
 
+            $logger->info(serialize($job));
+            $files_dir = $this->container->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
+
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
                 $message_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
+                $logger->info('Destinataire mail BCC (copie carbone caché) ajouté dans le mail client');
             }
 
             // Ajout des pièces jointes
-            $files_dir = $this->container->getParameter('kernel.root_dir').'/../datas/';
-            if(isset($data['user_file']) && file_exists($files_dir.$data['user_file'])) {
-                $message_client->attach(\Swift_Attachment::fromPath($files_dir.$data['user_file']));
+            if(isset($data['all_files'])) {
+                foreach($data['all_files'] as $file) {
+                    if(file_exists($files_dir.$file)) {
+                        $message_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
+                        $logger->info('Pièce jointe attachée au mail client');
+                    } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
+                }
             }
-
 
             // Envoi du mail au service client
             $data['demande-rdv'] = $this->subjects[$data['sujet']];
@@ -140,17 +146,24 @@ class Comundimail extends AbstractMethod {
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
                 $message_service_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
+                $logger->info('Destinataire mail BCC (copie carbone caché) ajouté dans le mail service client');
             }
 
             // Ajout des pièces jointes
-            $files_dir = $this->container->getParameter('kernel.root_dir').'/../datas/';
-            if(isset($data['user_file']) && file_exists($files_dir.$data['user_file'])) {
-                $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$data['user_file']));
+            if(isset($data['all_files'])) {
+                foreach($data['all_files'] as $file) {
+                    if(file_exists($files_dir.$file)) {
+                        $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
+                        $logger->info('Pièce jointe attachée au mail service client');
+                    } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
+                }
             }
 
             try {
                 $this->container->get('mailer')->send($message_client);
-                $logger->info('****** Envoi du mail réussi ! ******');
+                $logger->info('****** Envoi du mail client réussi ! ******');
+                $this->container->get('mailer')->send($message_service_client);
+                $logger->info('****** Envoi du mail service client réussi ! ******');
             } catch(\Exception $e) {
                 $hasError = true;
                 $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');

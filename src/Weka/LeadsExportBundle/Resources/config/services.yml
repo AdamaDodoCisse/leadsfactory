@@ -29,15 +29,15 @@ services:
         tags:
           - {name: export.method, alias: athenaV2}
     gotowebinar_method:
-            class: Weka\LeadsExportBundle\Utils\Gotowebinar
-            calls:
-              - [setContainer, [@service_container]]
-            tags:
-              - {name: export.method, alias: gotowebinar}
-            arguments: [%gotowebinar_credentials%]
+        class: Weka\LeadsExportBundle\Utils\Gotowebinar
+        calls:
+            - [setContainer, [@service_container]]
+        tags:
+            - {name: export.method, alias: gotowebinar}
+        arguments: [%gotowebinar_credentials%]
     comundimail_method:
-            class: %weka_leads_export.comundimail.class%
-            calls:
-              - [setContainer, [@service_container]]
-            tags:
-              - {name: export.method, alias: comundimail}
+        class: %weka_leads_export.comundimail.class%
+        calls:
+            - [setContainer, [@service_container]]
+        tags:
+            - {name: export.method, alias: comundimail}
