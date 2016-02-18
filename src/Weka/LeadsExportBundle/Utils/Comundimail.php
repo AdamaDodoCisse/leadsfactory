@@ -105,16 +105,6 @@ class Comundimail extends AbstractMethod {
                 $logger->info('Destinataire mail BCC (copie carbone caché) ajouté dans le mail client');
             }
 
-            // Ajout des pièces jointes
-            if(isset($data['all_files'])) {
-                foreach($data['all_files'] as $file) {
-                    if(file_exists($files_dir.$file)) {
-                        $message_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
-                        $logger->info('Pièce jointe attachée au mail client');
-                    } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
-                }
-            }
-
             // Envoi du mail au service client
             $data['demande-rdv'] = $this->subjects[$data['sujet']];
             $message_service_client = \Swift_Message::newInstance()
@@ -150,13 +140,12 @@ class Comundimail extends AbstractMethod {
             }
 
             // Ajout des pièces jointes
-            if(isset($data['all_files'])) {
-                foreach($data['all_files'] as $file) {
-                    if(file_exists($files_dir.$file)) {
-                        $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
-                        $logger->info('Pièce jointe attachée au mail service client');
-                    } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
-                }
+            if(isset($data['user_file'])) {
+                $file = $job->getLead()->getId().'_user_file.'.substr(strrchr($data['user_file'], "."), 1);
+                if(file_exists($files_dir.$file)) {
+                    $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
+                    $logger->info('Pièce jointe attachée au mail service client');
+                } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
             }
 
             try {
