@@ -1,0 +1,17 @@
+<html>
+    <head></head>
+    <body>
+        Bonjour {{ user_data.firstName|capitalize  }} {{ user_data.lastName|upper  }}<br/><br/>
+        {{ content }}<br/><br/>
+        En cas d'urgence, n'hésitez pas à nous contacter directement par téléphone au {{ tel }}<br/><br/>
+        Cordialement,<br/><br/>
+        Le Service Client <br/>
+        Comundi<br/>
+        Immeuble Pleyad 1<br/>
+        39 bd Ornano - <br/>
+        93288 Saint-Denis Cedex<br/>
+        Tél : {{ tel }}<br/>
+        Fax : 01.84.03.05.58<br/>
+        Mail : <a href="mailto:{{ mail_contact }}">{{ mail_contact }}</a>
+    </body>
+</html>
