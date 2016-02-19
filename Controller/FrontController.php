@@ -287,7 +287,12 @@ class FrontController extends CoreController
                     $field_name = $file_item['field_name']; // Nom du champ dans la Lead
                     $file = $file_item['file']; // Objet permettant de gérer le fichier à uploader
                     $extension = $file_item['extension'];
-                    $file->move($form_dir_path.$formId, $leads->getId().'_'.$field_name.'.'.$extension);
+                    $filename = $leads->getId().'_'.$field_name.'.'.$extension;
+                    $file->move($form_dir_path.$formId, $filename);
+                    $logger->info ("Fichier : ".$filename." uploadés :)");
+                    // On rajoute les droits sur le fichiers
+                    $fs->chmod($filename, 0774);
+                    $logger->info ("Droits mis à jour sur le fichier : ".$filename);
                 }
             }
 
