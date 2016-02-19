@@ -45,7 +45,6 @@ class Comundimail extends AbstractMethod {
     {
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
-        $logger->info('Test export Comundi');
 
         $this->_formConfig = $form->getConfig();
 
@@ -96,13 +95,12 @@ class Comundimail extends AbstractMethod {
                 )
             ;
 
-            $logger->info(serialize($job));
             $files_dir = $this->container->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
 
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
                 $message_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
-                $logger->info('Destinataire mail BCC (copie carbone caché) ajouté dans le mail client');
+                $logger->info('Destinataire mail BCC ajouté dans le mail client');
             }
 
             // Envoi du mail au service client
@@ -136,7 +134,7 @@ class Comundimail extends AbstractMethod {
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
                 $message_service_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
-                $logger->info('Destinataire mail BCC (copie carbone caché) ajouté dans le mail service client');
+                $logger->info('Destinataire mail BCC ajouté dans le mail service client');
             }
 
             // Ajout des pièces jointes
@@ -144,7 +142,7 @@ class Comundimail extends AbstractMethod {
                 $file = $job->getLead()->getId().'_user_file.'.substr(strrchr($data['user_file'], "."), 1);
                 if(file_exists($files_dir.$file)) {
                     $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
-                    $logger->info('Pièce jointe attachée au mail service client');
+                    $logger->info('Pièce jointe "'.$files_dir.$file.'" attachée au mail service client : '.$files_dir.$file);
                 } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
             }
 
