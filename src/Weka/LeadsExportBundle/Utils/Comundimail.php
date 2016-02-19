@@ -47,6 +47,7 @@ class Comundimail extends AbstractMethod {
         $logger = $this->getContainer()->get('export.logger');
 
         $this->_formConfig = $form->getConfig();
+        $logger->info('############ COMUNDI - EXPORT ###############');
 
         foreach($jobs as $job) {
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
@@ -142,7 +143,7 @@ class Comundimail extends AbstractMethod {
                 $file = $job->getLead()->getId().'_user_file.'.substr(strrchr($data['user_file'], "."), 1);
                 if(file_exists($files_dir.$file)) {
                     $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
-                    $logger->info('Pièce jointe "'.$files_dir.$file.'" attachée au mail service client : '.$files_dir.$file);
+                    $logger->info('Pièce jointe "'.$files_dir.$file.'" attachée au mail service client');
                 } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
             }
 
