@@ -22,7 +22,7 @@ var webcallback = {
 
             if(!jQuery(this).validationEngine('validate')){
                 e.preventDefault();
-                _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_error' ]);
+                ga('send', 'pageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_error');
                 return;
             }
 
@@ -37,7 +37,7 @@ var webcallback = {
             switch(webcallback.step){
                 case 'call':
                     webcallback.call();
-                    _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterCodeDI' ]);
+                    ga('send', 'pageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterCodeDI');
                     break;
                 case 'check':
                     webcallback.check();
@@ -55,7 +55,7 @@ var webcallback = {
                 jQuery('#phone-prefix').html('+'+webcallback.phoneUtil.getCountryCodeForRegion(webcallback.countryCode));
                 webcallback.displayNumberExample();
                 webcallback.step = 'call';
-                _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterTelDI' ]);
+                ga('send', 'pageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_EnterTelDI');
             }else{
                 jQuery('#callback-step2').hide();
                 jQuery('#callback-step3').hide();
@@ -68,7 +68,7 @@ var webcallback = {
                     window.location.href = redirect_url;
                 });
                 webcallback.step = 'init';
-                _gaq.push(['_trackPageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_formulaireDI_Export' ]);
+                ga('send', 'pageview', virtualDomain + location.pathname + 'vrt/editionLogiciel_'+webcallback.trackingOrigin+'_formulaireDI_Export');
             }
         });
     },
