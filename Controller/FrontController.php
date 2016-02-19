@@ -290,9 +290,6 @@ class FrontController extends CoreController
                     $filename = $leads->getId().'_'.$field_name.'.'.$extension;
                     $file->move($form_dir_path.$formId, $filename);
                     $logger->info ("Fichier : ".$filename." uploadés :)");
-                    // On rajoute les droits sur le fichiers
-                    $fs->chmod($filename, 0774);
-                    $logger->info ("Droits mis à jour sur le fichier : ".$filename);
                 }
             }
 
