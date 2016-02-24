@@ -189,11 +189,13 @@ class LeadsRepository extends EntityRepository
 
 			if(!empty($args['datemin'])){
 				$datemin = is_object($args['datemin']) ? $args['datemin']->format('Y-m-d') : $args['datemin'];
+				if (is_array( $datemin )) $datemin = $datemin["date"];
 				$dql .= " AND l.createdAt >= '$datemin'";
 			}
 
 			if(!empty($args['datemax'])){
 				$datemax = is_object($args['datemax']) ? $args['datemax']->format('Y-m-d') : $args['datemax'];
+				if (is_array( $datemax )) $datemax = $datemax["date"];
 				$dql .= " AND l.createdAt <= '$datemax'";
 			}
 		}
