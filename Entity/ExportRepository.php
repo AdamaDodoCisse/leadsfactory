@@ -53,7 +53,7 @@ class ExportRepository extends EntityRepository
         $dql .= $where;
 
         if ( array_key_exists("statuses", $params) && count ($params["statuses"])> 0) {
-            $dql .= " AND e.status IN ('".implode (',',$params["statuses"])."')";
+            $dql .= " AND e.status IN (".implode (',',$params["statuses"]).")";
         }
 
 	    $dql .= ' ORDER BY e.created_at DESC';
