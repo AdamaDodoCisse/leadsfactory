@@ -520,19 +520,24 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * @param $content
      */
     public function saveTest ( $form, $content ) {
-        /*
+
         if (!is_dir( "app/cache/casperjs" )) {
             mkdir ( "app/cache/casperjs" );
-        }*/
+        }
 
         $filename = $this->getCasperScriptPath($form);
-        if (is_writable($filename)) {
-            $fp = fopen( $filename , 'w');
-            fwrite($fp, $content);
-            fclose($fp);
-        } else {
+
+        if (!$fp = fopen( $filename , 'w')) {
+            echo ("Unable to write file : ".$filename);
             return false;
         }
+
+        if (fwrite($fp, $content) === FALSE) {
+            echo ("Impossible d'ecrire le contenu du fichier dans : ".$filename);
+            return false;
+        }
+        fclose($fp);
+
         return true;
 
     }
