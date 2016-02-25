@@ -4,12 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "hash": "69283f4fbd983cdd1f42d6dab052fb1b",
-=======
-    "hash": "5940500d92906c9339ff821c15f93d89",
->>>>>>> 7ed011035c323a1cdaa3096151665f91fa0132a8
-    "content-hash": "c1accdd79ac6c69e86278463ee0651ae",
+    "hash": "f3c64ce24570444854ab6fd6bae82065",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1108,54 +1103,57 @@
         },
         {
             "name": "jms/di-extra-bundle",
-            "version": "1.6.0",
-            "target-dir": "JMS/DiExtraBundle",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/JMSDiExtraBundle.git",
-                "reference": "c9e36dce4014db1f6abf02e94eac225344a5147d"
+                "reference": "85a989bedcf22495c03bf94339ddc5e856bd9b46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/JMSDiExtraBundle/zipball/c9e36dce4014db1f6abf02e94eac225344a5147d",
-                "reference": "c9e36dce4014db1f6abf02e94eac225344a5147d",
+                "url": "https://api.github.com/repos/schmittjoh/JMSDiExtraBundle/zipball/85a989bedcf22495c03bf94339ddc5e856bd9b46",
+                "reference": "85a989bedcf22495c03bf94339ddc5e856bd9b46",
                 "shasum": ""
             },
             "require": {
-                "jms/aop-bundle": "^1.1.0",
-                "jms/metadata": "1.*",
-                "symfony/finder": "~2.1",
-                "symfony/framework-bundle": "~2.1",
-                "symfony/process": "~2.1"
+                "jms/aop-bundle": "~1.1",
+                "jms/metadata": "~1.0",
+                "symfony/dependency-injection": "~2.3|~3.0",
+                "symfony/finder": "~2.3|~3.0",
+                "symfony/framework-bundle": "~2.3|~3.0",
+                "symfony/http-kernel": "^2.3.24|~3.0",
+                "symfony/process": "~2.3|~3.0",
+                "symfony/routing": "~2.3|~3.0"
             },
             "require-dev": {
-                "doctrine/doctrine-bundle": "*",
-                "doctrine/orm": "*",
-                "jms/security-extra-bundle": "1.*",
-                "phpcollection/phpcollection": ">=0.1,<0.3-dev",
-                "sensio/framework-extra-bundle": "*",
-                "symfony/browser-kit": "*",
-                "symfony/class-loader": "*",
-                "symfony/form": "*",
-                "symfony/security-bundle": "*",
-                "symfony/twig-bundle": "*",
-                "symfony/validator": "*",
-                "symfony/yaml": "*"
+                "doctrine/doctrine-bundle": "~1.5",
+                "doctrine/orm": "~2.3",
+                "jms/security-extra-bundle": "~1.0@dev",
+                "phpcollection/phpcollection": ">=0.2,<0.3-dev",
+                "sensio/framework-extra-bundle": "~2.0|~3.0",
+                "symfony/browser-kit": "~2.3|~3.0",
+                "symfony/class-loader": "~2.3|~3.0",
+                "symfony/form": "~2.3|~3.0",
+                "symfony/phpunit-bridge": "~2.7",
+                "symfony/security-bundle": "~2.3",
+                "symfony/twig-bundle": "~2.3|~3.0",
+                "symfony/validator": "~2.3|~3.0",
+                "symfony/yaml": "~2.3|~3.0"
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.5-dev"
+                    "dev-master": "1.7-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "JMS\\DiExtraBundle": ""
+                "psr-4": {
+                    "JMS\\DiExtraBundle\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "Apache"
+                "Apache-2.0"
             ],
             "authors": [
                 {
@@ -1169,7 +1167,7 @@
                 "annotations",
                 "dependency injection"
             ],
-            "time": "2015-09-13 09:03:50"
+            "time": "2016-02-21 22:14:09"
         },
         {
             "name": "jms/metadata",
@@ -2128,12 +2126,12 @@
             "version": "v2.6.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/AsseticBundle.git",
+                "url": "https://github.com/symfony/assetic-bundle.git",
                 "reference": "422b0add2110f0cf9bc7a873a386ea053f4a89f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/AsseticBundle/zipball/422b0add2110f0cf9bc7a873a386ea053f4a89f0",
+                "url": "https://api.github.com/repos/symfony/assetic-bundle/zipball/422b0add2110f0cf9bc7a873a386ea053f4a89f0",
                 "reference": "422b0add2110f0cf9bc7a873a386ea053f4a89f0",
                 "shasum": ""
             },
@@ -2193,12 +2191,12 @@
             "version": "v2.7.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/MonologBundle.git",
+                "url": "https://github.com/symfony/monolog-bundle.git",
                 "reference": "9320b6863404c70ebe111e9040dab96f251de7ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/MonologBundle/zipball/9320b6863404c70ebe111e9040dab96f251de7ac",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/9320b6863404c70ebe111e9040dab96f251de7ac",
                 "reference": "9320b6863404c70ebe111e9040dab96f251de7ac",
                 "shasum": ""
             },
@@ -2252,12 +2250,12 @@
             "version": "v2.3.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/SwiftmailerBundle.git",
+                "url": "https://github.com/symfony/swiftmailer-bundle.git",
                 "reference": "970b13d01871207e81d17b17ddda025e7e21e797"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/SwiftmailerBundle/zipball/970b13d01871207e81d17b17ddda025e7e21e797",
+                "url": "https://api.github.com/repos/symfony/swiftmailer-bundle/zipball/970b13d01871207e81d17b17ddda025e7e21e797",
                 "reference": "970b13d01871207e81d17b17ddda025e7e21e797",
                 "shasum": ""
             },
@@ -2428,17 +2426,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.18",
+            "version": "1.0.18.1",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "6b688d43a90c80f672642e5ea7ebb6f915637aee"
+                "reference": "24838b0ce64143fe266dfbe44ca73a20f5ecf99e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/6b688d43a90c80f672642e5ea7ebb6f915637aee",
-                "reference": "6b688d43a90c80f672642e5ea7ebb6f915637aee",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/24838b0ce64143fe266dfbe44ca73a20f5ecf99e",
+                "reference": "24838b0ce64143fe266dfbe44ca73a20f5ecf99e",
                 "shasum": ""
             },
             "require": {
@@ -2482,7 +2480,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-02-16 15:43:47"
+            "time": "2016-02-25 12:30:36"
         },
         {
             "name": "teodortalov/citrix",
