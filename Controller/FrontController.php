@@ -185,7 +185,6 @@ class FrontController extends CoreController
         $formUtils = $this->get("form_utils");
 
         $fields = $request->get ("lffield");
-        $json = json_encode( $fields );
 
         $exportUtils = $this->get('export_utils');
 
@@ -210,12 +209,25 @@ class FrontController extends CoreController
             $redirectUrlSuccess = isset($config['redirect']['url_success']) ? $config['redirect']['url_success'] : '';
             $redirectUrlError = isset($config['redirect']['url_error']) ? $config['redirect']['url_error'] : '';
 
+            if ( array_key_exists('configuration', $config) ) {
+
+                if (array_key_exists(  'lastname' , $config["configuration"] )) {
+                    $fields["lastname"] = ucfirst ($fields[ $config["configuration"]["lastname"] ]);
+                }
+
+                if (array_key_exists(  'firstname' , $config["configuration"] )) {
+                    $fields["firstname"] = ucfirst( $fields[ $config["configuration"]["firstname"] ] );
+                }
+            }
+
             // On vérifie s'il y a des fichiers uploadés
-            if(isset($config['upload_files']) && $config['upload_files'] == true) {
+            $form_dir_path = $this->container->getParameter('kernel.root_dir').'/../datas/';
+            if(isset($config['upload_files']) && $config['upload_files'] == 'OK') {
                 // On vérifie l'extension
                 $all_files = $request->files->all();
-                $form_dir_path = $this->container->getParameter('kernel.root_dir').'/../datas/';;
                 $fs = new Filesystem();
+                $filesToSave = array();
+                $i = 0;
                 foreach($all_files['lffield'] as $field_name => $file) {
 
                     // Fichier pesant 1Mo max
@@ -229,23 +241,20 @@ class FrontController extends CoreController
                                 $fs->chmod($form_dir_path.$formId, 0760);
                             }
                         }
-
-                        // On déplace le fichier uploadé vers le répertoire final
-                        $file->move($form_dir_path.$formId, $file->getClientOriginalName());
+                        // On récupère la liste des fichiers à uploader
+                        $filesToSave[$i] = array();
+                        $filesToSave[$i]['field_name'] = $field_name;
+                        $filesToSave[$i]['file'] = $file;
+                        $filesToSave[$i]['extension'] = $file->getClientOriginalExtension();
+                        // On sauvegarde les noms originaux des fichiers
+                        $logger->info ("Field name : ".$field_name);
+                        $fields[$field_name] = $file->getClientOriginalName();
                     }
+                    $i++;
                 }
             }
 
-            if ( array_key_exists('configuration', $config) ) {
-
-                if (array_key_exists(  'lastname' , $config["configuration"] )) {
-                    $fields["lastname"] = ucfirst ($fields[ $config["configuration"]["lastname"] ]);
-                }
-
-                if (array_key_exists(  'firstname' , $config["configuration"] )) {
-                    $fields["firstname"] = ucfirst( $fields[ $config["configuration"]["firstname"] ] );
-                }
-            }
+            $json = json_encode( $fields );
 
             // Create new Leads Entity Object
             $leads = new Leads();
@@ -259,9 +268,9 @@ class FrontController extends CoreController
             $leads->setFormType( $formTypeObject );
             $leads->setForm($formObject);
             $leads->setTelephone( @$fields["phone"] );
-	        if (array_key_exists('email', $fields)) {
-		        $leads->setEmail($fields['email']);
-	        }
+            if (array_key_exists('email', $fields)) {
+                $leads->setEmail($fields['email']);
+            }
 
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
@@ -271,6 +280,19 @@ class FrontController extends CoreController
             $em = $this->getDoctrine()->getManager();
             $em->persist($leads);
             $em->flush();
+
+            // On déplace le(s) fichier(s) uploadé(s) vers le répertoire final
+            if(isset($filesToSave) && !empty($filesToSave)) {
+                foreach($filesToSave as $file_item) {
+                    $field_name = $file_item['field_name']; // Nom du champ dans la Lead
+                    $file = $file_item['file']; // Objet permettant de gérer le fichier à uploader
+                    $extension = $file_item['extension'];
+                    $filename = $leads->getId().'_'.$field_name.'.'.$extension;
+                    $file->move($form_dir_path.$formId, $filename);
+                    $logger->info ("Fichier : ".$filename." uploadés :)");
+                }
+            }
+
 
             // Create export job(s)
             if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){

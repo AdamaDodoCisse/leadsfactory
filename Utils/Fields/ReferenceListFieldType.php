@@ -38,7 +38,6 @@ class ReferenceListFieldType extends AbstractFieldType
             default:
                 return $this->_getSelectHtml($tag);
         }
-
     }
 
     /**
