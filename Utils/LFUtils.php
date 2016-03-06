@@ -16,6 +16,11 @@ class LFUtils extends LFUtilsShared {
     }
 
 
+    public function calculateUid ( $value ) {
+
+        return $value;
+
+    }
 
 }
 

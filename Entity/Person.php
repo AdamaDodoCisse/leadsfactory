@@ -3,20 +3,22 @@
 namespace Tellaw\LeadsFactoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Leads
  *
- * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ClientRepository")
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\PersonRepository")
  */
-class Client
+class Person
 {
 
     public function __construct()
     {
         $this->leads = new ArrayCollection();
         $this->adresses = new ArrayCollection();
+        $this->scopes = new ArrayCollection();
     }
 
 	/**
@@ -49,14 +51,61 @@ class Client
     protected $leads;
 
     /**
-     * @ORM\OneToMany(targetEntity="ClientAdress", mappedBy="adresses")
+     * @ORM\OneToMany(targetEntity="PersonAdress", mappedBy="adresses")
      */
     protected $adresses;
 
     /**
-     * @ORM\OneToMany(targetEntity="ClientEmail", mappedBy="emails")
+     * @ORM\OneToMany(targetEntity="PersonEmail", mappedBy="emails")
      */
     protected $emails;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Scope")
+     * @ORM\JoinTable(name="person_scope",
+     *      joinColumns={@ORM\JoinColumn(name="person_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
+     *      )
+     */
+    private $scopes;
+
+    /**
+     * @return mixed
+     */
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
+
+    /**
+     * @param mixed $scopes
+     */
+    public function setScopes($scopes)
+    {
+        $this->scopes = $scopes;
+    }
+
+    /**
+     * @ORM\Column(type="string", nullable=true, name="uid")
+     */
+    protected $uid;
+
+    /**
+     * @return mixed
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * @param mixed $uid
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+    }
+
 
     /**
      * @return mixed

@@ -112,6 +112,24 @@ services:
       tags:
         - { name: twig.extension }
 
+  leadsfactory.person_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\PersonRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Person']
+
+  leadsfactory.entreprise_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\EntrepriseRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Entreprise']
+
+  leadsfactory.entreprise_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\EntrepriseRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Entreprise']
+
   leadsfactory.leads_repository:
     class: Tellaw\LeadsFactoryBundle\Entity\LeadsRepository
     factory_service: doctrine.orm.default_entity_manager

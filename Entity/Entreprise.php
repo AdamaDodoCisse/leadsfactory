@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *
@@ -17,6 +18,7 @@ class Entreprise
     {
         $this->leads = new ArrayCollection();
         $this->clients = new ArrayCollection();
+        $this->scopes = new ArrayCollection();
     }
 
 	/**
@@ -44,9 +46,55 @@ class Entreprise
     protected $adresses;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Client", inversedBy="entreprises", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Person", inversedBy="entreprises", cascade={"persist"})
      */
-    protected $clients;
+    protected $persons;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Scope")
+     * @ORM\JoinTable(name="entreprise_scope",
+     *      joinColumns={@ORM\JoinColumn(name="entreprise_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="scope_id", referencedColumnName="id")}
+     *      )
+     */
+    private $scopes;
+
+    /**
+     * @return mixed
+     */
+    public function getScopes()
+    {
+        return $this->scopes;
+    }
+
+    /**
+     * @param mixed $scopes
+     */
+    public function setScopes($scopes)
+    {
+        $this->scopes = $scopes;
+    }
+
+    /**
+     * @ORM\Column(type="string", nullable=true, name="uid")
+     */
+    protected $uid;
+
+    /**
+     * @return mixed
+     */
+    public function getUid()
+    {
+        return $this->uid;
+    }
+
+    /**
+     * @param mixed $uid
+     */
+    public function setUid($uid)
+    {
+        $this->uid = $uid;
+    }
 
     /**
      * @return mixed
@@ -128,6 +176,20 @@ class Entreprise
         $this->leads = $leads;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPersons()
+    {
+        return $this->persons;
+    }
 
+    /**
+     * @param mixed $persons
+     */
+    public function setPersons($persons)
+    {
+        $this->persons = $persons;
+    }
 
 }

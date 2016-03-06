@@ -98,7 +98,7 @@ class Leads
     private $userAgent;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Client", inversedBy="leads")
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Person", inversedBy="leads")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;

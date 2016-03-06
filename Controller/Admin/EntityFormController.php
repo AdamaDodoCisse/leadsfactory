@@ -50,7 +50,7 @@ class EntityFormController extends CoreController {
         }
 
         return $this->render(
-	        'TellawLeadsFactoryBundle:entity/Form:entity_form_list.html.twig',
+	        'TellawLeadsFactoryBundle:entity/Form:entity_list.html.twig',
             array(
                     'elements'      => $list['collection'],
                     'pagination'    => $list['pagination'],
@@ -90,7 +90,7 @@ class EntityFormController extends CoreController {
             return $this->redirect($this->generateUrl('_form_list'));
         }
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
+            'TellawLeadsFactoryBundle:entity/Form:entity_edit.html.twig',
             array(
                 'form' => $form->createView(),
                 'formObj' => $formEntity,
@@ -159,7 +159,7 @@ class EntityFormController extends CoreController {
         }
 
         return $this->render(
-            'TellawLeadsFactoryBundle:entity/Form:entity_form_edit.html.twig',
+            'TellawLeadsFactoryBundle:entity/Form:entity_edit.html.twig',
             array(
                 'id' => $id,
                 'funtionnalTestEnabled' => $testUtils->isFormTestable( $formEntity ),

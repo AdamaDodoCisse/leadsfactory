@@ -8,9 +8,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
  *
  * Tellaw\LeadsFactoryBundle\Entity\Leads
  *
- * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ClientAdressRepository")
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\PersonAdressRepository")
  */
-class ClientAdress
+class PersonAdress
 {
 	/**
 	 * @var integer $id
@@ -51,25 +51,25 @@ class ClientAdress
     protected $country;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Client", inversedBy="adress")
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Person", inversedBy="adress")
+     * @ORM\JoinColumn(name="person_id", referencedColumnName="id")
      */
-    private $client;
+    private $person;
 
     /**
      * @return mixed
      */
-    public function getClient()
+    public function getPerson()
     {
-        return $this->client;
+        return $this->person;
     }
 
     /**
      * @param mixed $client
      */
-    public function setClient($client)
+    public function setPerson($person)
     {
-        $this->client = $client;
+        $this->person = $person;
     }
 
     /**
