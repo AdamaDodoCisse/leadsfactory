@@ -55,15 +55,32 @@ class LeadsFactoryExtension extends \Twig_Extension
 
 	public function field($params)
 	{
+
 		if (isset($params['attributes']['data-list'])) {
 
+			// If class has parent, ignore loading of childs, they will be loaded using AJAX
 			if (isset($params['attributes']['data-parent'])) {
 				$params['options'] = false;
 			} else {
 				$listCode = $params['attributes']['data-list'];
+
+				if ( array_key_exists("sort-key", $params["attributes"])) {
+					$sortKey = $params["attributes"]["sort-key"];
+				} else {
+					$sortKey = "name";
+				}
+
+				if ( array_key_exists("sort-order", $params["attributes"])) {
+					$sortOrder = strtoupper( $params["attributes"]["sort-order"] );
+				} else {
+					$sortOrder = "ASC";
+				}
+
 				$list = $this->reference_list_repository->findOneBy(array('code' => $listCode));
+				$elements = $this->reference_list_repository->getElementsByOrder ( $list->getId(), $sortKey, $sortOrder );
+
 				if ($list !== null) {
-					$options = $list->getElements()->getValues();
+					$options = $elements;
 					$params['options'] = $options;
 				}
 			}

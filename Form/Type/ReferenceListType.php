@@ -39,7 +39,7 @@ class ReferenceListType extends AbstractType
         $builder->add('description');
         $builder->add('scope');
 
-        $builder->add('attachment', 'file', array('mapped' => false, 'label' => 'Fichier de description de la liste', 'required' => false));
+        //$builder->add('attachment', 'file', array('mapped' => false, 'label' => 'Fichier de description de la liste', 'required' => false));
 
         //$builder->add('json', new JsonType(), array('mapped' => false, 'label' => 'Elements de la liste', 'required' => false));
 

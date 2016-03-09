@@ -7,11 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement
  *
- * 
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElementRepository")
  */
 class ReferenceListElement {
 
+    public static $_STATUS_ENABLED = 0;
+    public static $_STATUS_DISABLED = 1;
 
     public function __construct()
     {
@@ -67,6 +68,16 @@ class ReferenceListElement {
      * @ORM\JoinColumn(name="referencelist_id", referencedColumnName="id")
      */
     protected $referenceList;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true,  name="rank", options={"default":1})
+     */
+    protected $rank;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true,  name="status")
+     */
+    protected $status;
 
 
     /**
@@ -156,6 +167,40 @@ class ReferenceListElement {
     {
         return $this->parent;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getRank()
+    {
+        return $this->rank;
+    }
+
+    /**
+     * @param mixed $rank
+     */
+    public function setRank($rank)
+    {
+        $this->rank = $rank;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+
 
     /**
      * Add children

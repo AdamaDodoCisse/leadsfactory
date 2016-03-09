@@ -3,7 +3,7 @@
 
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
-
+    <a name="elementValueForm"/>
     <script>
 
         function validateFormAction() {
@@ -18,26 +18,69 @@
         </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="widget-body custom-form">
             {{ form(form) }}
         </div>
+
+        <div class="widget-body custom-form" id="elementsTableHtml">
+
+        </div>
     </div>
 
-    <div class="col-md-4">
+    <!--<div class="col-md-6">
         <div class="btn-group btn-group-justified">
             <a class="btn blue" id="jsonBuild" href="#">Générer le JSON sur le serveur</a>
         </div>
-    </div>
-    <div class="col-md-4">
         <div class="btn-group btn-group-justified">
-            <a class="btn blue" id="jsonImport" href="#">Importer le JSON du serveur</a></div>
+            <a class="btn blue" id="jsonImport" href="#">Importer le JSON du serveur</a>
         </div>
+    </div>-->
+
+    <div class="col-md-6">
+
+        <div class="widget-body custom-form">
+
+            <h2 id="titleForm">Création d'une nouvelle valeur</h2>
+
+            <div id="elementEdit">
+
+                <form class="form-horizontal row-fluid">
+                    <input type="hidden" id="listid" value="{{ referenceListId }}"/>
+                    <div class="form-group" id="row-referenceList_code">
+                        <label>Identifiant</label>
+                        <input id="elementId" type="text" value="" class="form-control" placeholder="Identifiant de l'option" readonly="readonly">
+                    </div>
+                    <div class="form-group" id="row-referenceList_code">
+                        <label>Nom de l'option</label>
+                        <input id="elementText" type="text" class="form-control" placeholder="Nom de l'option">
+                    </div>
+                    <div class="form-group" id="row-referenceList_code">
+                        <label>Valeur de l'option</label>
+                        <input id="elementValue" type="text" class="form-control" placeholder="Valeur de l'option">
+                    </div>
+                    <div class="form-group" id="row-referenceList_code">
+                        <label>Option active</label>
+                        <input id="elementEnabled" type="checkbox" class="form-control" checked="checked">
+                    </div>
+                    <div class="form-group" id="row-referenceList_code">
+                        <center>
+                        <input type="button" value="Vider le formulaire" onclick="cancelForm();"> &nbsp;
+                        <input type="button" value="Valider le formulaire" onclick="submitForm();">
+                        </center>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+
     </div>
 
 {% endblock %}
 {% block javascript %}
 <script type="text/javascript" language="javascript">
+
     $('#jsonBuild').click(function() {
 
         $.loader({
@@ -50,7 +93,9 @@
         }).done(function() {
             location.reload();
         });
+
     });
+
     $('#jsonImport').click(function() {
 
         $.loader({
@@ -63,6 +108,114 @@
         }).done(function() {
             location.reload();
         });
+
     });
+
+    $( document ).ready(function() {
+
+        loadElements();
+        activateDragAndDrop();
+
+    });
+
+    function cancelForm () {
+
+        $("#elementId").val("");
+        $('#elementText').val("");
+        $('#elementValue').val("");
+        $('#elementEnabled').val("");
+        $('#titleForm').html ("Création d'une nouvelle valeur");
+
+    }
+
+    function submitForm () {
+
+        var listid = $("#listid").val();
+        var id = $("#elementId").val();
+        var text = $('#elementText').val();
+        var value = $('#elementValue').val();
+        if ( $('#elementEnabled').prop('checked') ) {
+            var enabled = 1;
+        } else {
+            var enabled = 0;
+        }
+
+        var data = "listid="+listid+"&id="+id+"&text="+text+"&value="+value+"&enabled="+enabled;
+
+        $.ajax ({
+            data: data,
+            type: 'POST',
+            url : '{{ path('_referenceList_updateElement') }}'
+        }).done(function (msg) {alert (msg);loadElements();});
+
+    }
+
+    function editElement (id) {
+
+        var data = "id="+id;
+
+        $.ajax ({
+            data: data,
+            type: 'POST',
+            url : '{{ path('_referenceList_loadElement') }}'
+        }).done(function (msg) {
+            object = jQuery.parseJSON(msg);
+            $("#elementId").val(object.id);
+            $('#elementText').val(object.name);
+            $('#elementValue').val(object.objvalue);
+            var checked = object.enabled;
+            if (checked) {
+                $('#elementEnabled').prop('checked', true);
+            } else {
+                $('#elementEnabled').prop('checked', false);
+            }
+            $('#titleForm').html ( "Edition d'une valeur" );
+            scrollToAnchor ('elementValueForm');
+        });
+
+    }
+
+    function loadElements () {
+
+        var listid = $("#listid").val();
+        var data= "listid="+listid;
+        $.ajax ({
+            data: data,
+            type: 'POST',
+            url : '{{ path('_referenceList_loadElementsTable') }}'
+        }).done(function (result) {
+            $("#elementsTableHtml").html(result);
+            activateDragAndDrop();
+        });
+
+    }
+
+    function activateDragAndDrop () {
+        var fixHelper = function(e, ui) {
+            ui.children().each(function() {
+                $(this).width($(this).width());
+            });
+            return ui;
+        };
+        $("#sort tbody").sortable({
+            helper: fixHelper,
+            update: function() {  // callback quand l'ordre de la liste est changé
+                if (confirm ("Souhaitez-vous enregistrer le changement d'ordre de la liste ?")) {
+                    var order = $("#sort tbody").sortable('serialize'); // récupération des données à envoyer
+                    $.ajax ({
+                        data: order,
+                        type: 'POST',
+                        url : '{{ path('_referenceList_sortElements') }}'
+                    });
+                }
+            }
+        }).disableSelection();
+    }
+
+    function scrollToAnchor(aid){
+        var aTag = $("a[name='"+ aid +"']");
+        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    }
+
 </script>
 {% endblock %}

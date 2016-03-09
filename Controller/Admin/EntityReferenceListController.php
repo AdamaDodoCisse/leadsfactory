@@ -5,6 +5,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceList;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListType;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListElementType;
@@ -159,8 +160,6 @@ class EntityReferenceListController extends CoreController
                                     )
         );
 
-
-
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -174,6 +173,7 @@ class EntityReferenceListController extends CoreController
             //$jsonElements = $form->get('json')->getData();
             //$this->get("lf.utils")->updateListElements( $jsonElements );
 
+            /*
             if ( $form->get('attachment')->getData() != "" ) {
                 $file = $form->get('attachment')->getData()->openFile('r');
                 $jsonElements = "";
@@ -185,7 +185,7 @@ class EntityReferenceListController extends CoreController
 
                 $this->get("lf.utils")->updateListElements( $jsonElements );
             }
-
+*/
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
@@ -296,6 +296,112 @@ class EntityReferenceListController extends CoreController
 
         // Forward request to list controller
         return $this->redirect($this->generateUrl('_referenceList_edit', array ('id' => $referenceListId)));
+
+    }
+
+    /**
+     * @Route("/referenceList/sortElements", name="_referenceList_sortElements")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function sortElementsAjaxAction ( Request $request ) {
+
+        $elements = $request->request->get("element");
+        $rank = 0;
+
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ( $elements as $element ){
+
+            $rank = $rank +10;
+            $element = $this->get('leadsfactory.reference_list_element_repository')->find($element);
+            $element->setRank($rank);
+            $em->flush();
+        }
+
+
+        return new Response('<html><body>ok !</body></html>');
+
+    }
+
+    /**
+     * @Route("/referenceList/updateElement", name="_referenceList_updateElement")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function updateElementAjaxAction ( Request $request ) {
+
+        $listId = $request->request->get("listid");
+        $id = $request->request->get("id");
+        $text = $request->request->get("text");
+        $value = $request->request->get("value");
+        $enabled = $request->request->get("enabled");
+
+        if (trim($id) != "" && $id != 0) {
+            //var_dump("update");
+            $em = $this->getDoctrine()->getManager();
+            $element = $this->get('leadsfactory.reference_list_element_repository')->find($id);
+            $element->setName( $text );
+            $element->setValue ( $value );
+            $element->setStatus ( $enabled );
+            $em->flush();
+
+        } else {
+            //var_dump("create");
+            $list = $this->get('leadsfactory.reference_list_repository')->find($listId);
+            $em = $this->getDoctrine()->getManager();
+            $element = new ReferenceListElement();
+            $element->setReferenceList($list);
+            $element->setName( $text );
+            $element->setValue ( $value );
+            $element->setStatus ( $enabled );
+            $em->persist($element);
+            //var_dump($element);
+            $em->flush();
+        }
+        //var_dump($element);
+        return new Response('Enregistré');
+    }
+
+    /**
+     * @Route("/referenceList/loadElement", name="_referenceList_loadElement")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function loadElementAjaxAction ( Request $request ) {
+
+        $id = $request->request->get("id");
+
+        if (trim($id) != "" && $id != 0) {
+            $element = $this->get('leadsfactory.reference_list_element_repository')->find($id);
+            $response = array ();
+            $response["id"] = $id;
+            $response["name"] = $element->getName();
+            $response["objvalue"] = $element->getValue();
+            $response["enabled"] = $element->getStatus();
+            return new Response ( json_encode($response) );
+        }
+
+        return null;
+
+    }
+
+    /**
+     * @Route("/referenceList/loadElementsTable", name="_referenceList_loadElementsTable")
+     * @Secure(roles="ROLE_USER")
+     * @Template
+     */
+    public function loadElementsTableAjaxAction ( Request $request ) {
+
+        $listId = $request->request->get("listid");
+
+        if (trim($listId) != "" && $listId != 0) {
+            $list = $this->get('leadsfactory.reference_list_repository')->find($listId);
+        } else {
+            $list = new ReferenceList();
+        }
+
+
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_elements.html.twig',
+            array(
+                'elements'=> $list->getElements()));
 
     }
 

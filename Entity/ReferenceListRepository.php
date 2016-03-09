@@ -85,4 +85,42 @@ class ReferenceListRepository extends EntityRepository
 		}
 		return $val;
 	}
+
+	/**
+	 *
+	 * Method used to extract list elements by a defined order
+	 *
+	 * @param $listCode integer id of the list
+	 * @param $sortKey must be name or value or rank
+	 * @param $sortOrder must be ASC of DESC
+	 */
+	public function getElementsByOrder ( $listId, $sortKey, $sortOrder ) {
+
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select('e')
+			->from('TellawLeadsFactoryBundle:ReferenceListElement', 'e')
+			->where('e.referencelist_id = :listId');
+			$qb->andWhere('e.status = 1');
+
+		if (strtolower($sortKey) == "name") {
+			$qb->orderBy('e.name', $sortOrder);
+		} else if ( strtolower($sortKey) == "value" ) {
+			$qb->orderBy('e.value', $sortOrder);
+		} else if ( strtolower($sortKey) == "rank" ) {
+			$qb->orderBy('e.rank', $sortOrder);
+		}
+
+		$qb->setParameter('listId', $listId);
+
+		$query = $qb->getQuery();
+		try {
+			$result = $query->getResult();
+		} catch (\Exception $e) {
+			$result = '';
+		}
+		return $result;
+
+
+	}
+
 }

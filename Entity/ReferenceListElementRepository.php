@@ -19,6 +19,21 @@ class ReferenceListElementRepository extends EntityRepository {
     }
 
     /**
+     *
+     * Mise à jour du rank d'une option dans une liste
+     *
+     * @param $id
+     * @param $rank
+     */
+    public function updateSortRank ( $id, $rank ){
+
+        $element = $this->find($id);
+        $element->setRank ($rank);
+        $element->flush();
+
+    }
+
+    /**
      * Retourne le libellé correspondant à la valeur d'une option
      *
      * @param string $list_code
@@ -26,7 +41,6 @@ class ReferenceListElementRepository extends EntityRepository {
      *
      * @return string
      */
-
     public function getNameUsingListCode($list_code, $element_value, $return_type = 0)
     {
         if (empty($element_value)) {
