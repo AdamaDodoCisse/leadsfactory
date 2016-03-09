@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f3c64ce24570444854ab6fd6bae82065",
+    "hash": "e77dcbbad33ba444e70d8739006abb20",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1603,16 +1603,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.17.2",
+            "version": "1.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24"
+                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
-                "reference": "bee7f0dc9c3e0b69a6039697533dca1e845c8c24",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
+                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
                 "shasum": ""
             },
             "require": {
@@ -1641,6 +1641,7 @@
                 "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
                 "ext-mongo": "Allow sending log messages to a MongoDB server",
                 "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
                 "php-console/php-console": "Allow sending log messages to Google Chrome",
                 "raven/raven": "Allow sending log messages to a Sentry server",
                 "rollbar/rollbar": "Allow sending log messages to Rollbar",
@@ -1650,7 +1651,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.16.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -1676,7 +1677,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2015-10-14 12:51:02"
+            "time": "2016-03-01 18:00:40"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -2426,17 +2427,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.18.1",
+            "version": "1.0.19",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "24838b0ce64143fe266dfbe44ca73a20f5ecf99e"
+                "reference": "bb27dc33b087caa42393a5fd65987802c2ed2e68"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/24838b0ce64143fe266dfbe44ca73a20f5ecf99e",
-                "reference": "24838b0ce64143fe266dfbe44ca73a20f5ecf99e",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/bb27dc33b087caa42393a5fd65987802c2ed2e68",
+                "reference": "bb27dc33b087caa42393a5fd65987802c2ed2e68",
                 "shasum": ""
             },
             "require": {
@@ -2480,7 +2481,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-02-25 12:30:36"
+            "time": "2016-03-09 13:16:57"
         },
         {
             "name": "teodortalov/citrix",
