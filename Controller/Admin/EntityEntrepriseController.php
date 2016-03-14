@@ -112,11 +112,22 @@ class EntityEntrepriseController extends CoreController {
 
         }
 
+        // Get Person's linked to this entity
+        $persons = $formEntity->getPersons();
+
+        // Get Adresses linked
+        $adresses = $formEntity->getAdresses();
+
+        // get Leads linked
+        $leads = $formEntity->getLeads();
+
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Entreprise:entity_edit.html.twig',
             array(
                 'id' => $id,
                 'formObj' => $formEntity,
+                'persons' => $persons,
+                'adresses' => $adresses,
                 'form' => $form->createView(),
                 'title' => "Edition d'une société"
             )

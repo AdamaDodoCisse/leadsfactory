@@ -135,4 +135,50 @@ class EntityPersonController extends CoreController {
 
     }
 
+    /**
+     * @Route("/fragment/list/{entrepriseId}/{page}/{limit}/{keyword}", name="_person_fragment_list")
+     * @Secure(roles="ROLE_USER")
+     * @Template()
+     */
+    public function fragmentPersonsTableAction ( $entrepriseId = 0,$page=1, $limit=10, $keyword='' ) {
+
+        $list = $this->getList ('TellawLeadsFactoryBundle:Person', $page, $limit, $keyword, array ('user'=>$this->getUser()));
+
+        // Get array of persons
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Person:fragment_list.html.twig',
+            array(
+                'entrepriseId'  => $entrepriseId,
+                'elements'      => $list['collection'],
+                'pagination'    => $list['pagination'],
+                'limit_options' => $list['limit_options'],
+                'keyword'       => $keyword
+            )
+        );
+
+    }
+
+    /**
+     * @Route("/fragment/list-in-entreprise/{entrepriseId}", name="_person_fragment_list_in_entreprise")
+     * @Secure(roles="ROLE_USER")
+     * @Template()
+     */
+    public function fragmentPersonsInEntrepriseTableAction ( $entrepriseId ) {
+
+
+
+        $formEntity = $this->get('leadsfactory.entreprise_repository')->find($entrepriseId);
+        $list = $formEntity->getPersons();
+
+        // Get array of persons
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Person:fragment_list_in_entreprise.html.twig',
+            array(
+                'elements'      => $list
+            )
+        );
+
+    }
+
 }

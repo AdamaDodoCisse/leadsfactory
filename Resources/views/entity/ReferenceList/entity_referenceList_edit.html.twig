@@ -142,11 +142,12 @@
 
         var data = "listid="+listid+"&id="+id+"&text="+text+"&value="+value+"&enabled="+enabled;
 
-        $.ajax ({
-            data: data,
-            type: 'POST',
-            url : '{{ path('_referenceList_updateElement') }}'
-        }).done(function (msg) {alert (msg);loadElements();});
+        fragmentAjaxCall ( '{{ path('_referenceList_updateElement') }}', data,
+            function ( result ) {
+                alert (result);
+                loadElements();
+            }
+        );
 
     }
 
@@ -154,24 +155,20 @@
 
         var data = "id="+id;
 
-        $.ajax ({
-            data: data,
-            type: 'POST',
-            url : '{{ path('_referenceList_loadElement') }}'
-        }).done(function (msg) {
-            object = jQuery.parseJSON(msg);
-            $("#elementId").val(object.id);
-            $('#elementText').val(object.name);
-            $('#elementValue').val(object.objvalue);
-            var checked = object.enabled;
-            if (checked) {
-                $('#elementEnabled').prop('checked', true);
-            } else {
-                $('#elementEnabled').prop('checked', false);
-            }
-            $('#titleForm').html ( "Edition d'une valeur" );
-            scrollToAnchor ('elementValueForm');
-        });
+        jsonAjaxCall ( '{{ path('_referenceList_loadElement') }}', data,
+                function( object ) {
+                    $("#elementId").val(object.id);
+                    $('#elementText').val(object.name);
+                    $('#elementValue').val(object.objvalue);
+                    var checked = object.enabled;
+                    if (checked) {
+                        $('#elementEnabled').prop('checked', true);
+                    } else {
+                        $('#elementEnabled').prop('checked', false);
+                    }
+                    $('#titleForm').html ( "Edition d'une valeur" );
+                    scrollToAnchor ('elementValueForm');
+                });
 
     }
 
@@ -179,14 +176,17 @@
 
         var listid = $("#listid").val();
         var data= "listid="+listid;
-        $.ajax ({
-            data: data,
-            type: 'POST',
-            url : '{{ path('_referenceList_loadElementsTable') }}'
-        }).done(function (result) {
-            $("#elementsTableHtml").html(result);
-            activateDragAndDrop();
-        });
+
+        fragmentAjaxCall (
+
+            '{{ path('_referenceList_loadElementsTable') }}',
+            data,
+            $("#elementsTableHtml"),
+            function ( result ) {
+                activateDragAndDrop();
+            }
+
+        );
 
     }
 

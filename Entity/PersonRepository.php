@@ -29,6 +29,11 @@ class PersonRepository extends EntityRepository
         $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Person f';
 
         $where = "";
+        if ($user->getScope() != null) {
+            $where = ' WHERE f.scope = '.$user->getScope()->getId();
+        }else {
+            $where = " WHERE 1=1";
+        }
 
         if(!empty($keyword)){
 

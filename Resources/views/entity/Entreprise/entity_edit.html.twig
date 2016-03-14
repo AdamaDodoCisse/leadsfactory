@@ -10,18 +10,75 @@
         </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="widget-body custom-form">
             {{ form(form) }}
         </div>
+
     </div>
 
-    <div class="col-md-4">
-        {% if id is defined %}
-            <h3 class="custom-heading">Actions:</h3>
+    <div class="col-md-6">
 
-            <div style="clear:both"></div>
-        {% endif %}
+        <div class="widget-body custom-form">
+            <H2>Personnes</H2>
+
+            <div class="widget-body">
+                <div id="accordion" class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading black">
+                            <h4 class="panel-title">
+                                <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                    Personnes dans l'entreprise
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse in" id="collapseOne" style="height: auto;">
+                            <div class="panel-body" id="personnesInEntreprise">
+                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading black">
+                            <h4 class="panel-title">
+                                <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle collapsed">
+                                    Rechercher des personnes
+                                </a>
+                            </h4>
+                        </div>
+                        <div class="panel-collapse collapse" id="collapseTwo" style="height: 0px;">
+                            <div class="panel-body" id="personnes">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group btn-group" style="margin-top:10px">
+                    <a class="btn blue" id="jsonImport" href="{{ path('_person_list') }}" target="_blank">Administration des personnes</a>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="widget-body custom-form">
+            <H2>Adresses</H2>
+        </div>
+
     </div>
 
+{% endblock %}
+{% block javascript %}
+<script type="text/javascript" language="javascript">
+    $( document ).ready(function() {
+        loadPersons();
+    });
+
+    function loadPersons () {
+        fragmentAjaxCall ( '{{ path('_person_fragment_list_in_entreprise', {'entrepriseId': id} )}}', '', $('#personnesInEntreprise') , function (result){});
+        fragmentAjaxCall ( '{{ path('_person_fragment_list', {'entrepriseId': id} ) }}', '', $('#personnes') , function (result){});
+
+    }
+
+</script>
 {% endblock %}

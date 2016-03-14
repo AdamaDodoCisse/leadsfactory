@@ -36,7 +36,17 @@ class Entreprise
     protected $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="Leads", mappedBy="leads")
+     * @ORM\Column(type="string", nullable=true, name="siret")
+     */
+    protected $siret;
+
+    /**
+     * @ORM\Column(type="string", nullable=true, name="phone")
+     */
+    protected $phone;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Leads", mappedBy="siret")
      */
     protected $leads;
 
@@ -46,7 +56,7 @@ class Entreprise
     protected $adresses;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Person", inversedBy="entreprises", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="EntreprisePersonReference", mappedBy="person", cascade={"persist"})
      */
     protected $persons;
 
@@ -102,22 +112,6 @@ class Entreprise
     public function getAdresses()
     {
         return $this->adresses;
-    }
-
-    /**
-     * @param mixed $adresses
-     */
-    public function setAdresses($adresses)
-    {
-        $this->adresses = $adresses;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getClients()
-    {
-        return $this->clients;
     }
 
     /**
@@ -191,5 +185,39 @@ class Entreprise
     {
         $this->persons = $persons;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getSiret()
+    {
+        return $this->siret;
+    }
+
+    /**
+     * @param mixed $siret
+     */
+    public function setSiret($siret)
+    {
+        $this->siret = $siret;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+
 
 }
