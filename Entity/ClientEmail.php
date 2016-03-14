@@ -8,9 +8,9 @@ use Symfony\Component\Validator\Constraints\DateTime;
  *
  * Tellaw\LeadsFactoryBundle\Entity\Leads
  *
- * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\PersonEmailRepository")
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository")
  */
-class PersonEmail
+class ClientEmail
 {
 	/**
 	 * @var integer $id

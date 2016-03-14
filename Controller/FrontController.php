@@ -12,8 +12,6 @@ use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Tellaw\LeadsFactoryBundle\Response\TransparentPixelResponse;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
-use Tellaw\LeadsFactoryBundle\Utils\FormUtils;
-use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
@@ -78,6 +76,7 @@ class FrontController extends CoreController
      */
     public function twigAction(Form $form, $utm_campaign = '')
 	{
+
 		$post_url = $this->get('router')->generate('_client_post_form', array(), true);
 		$hidden_tags = $this->get('form_utils')->getHiddenTags($form);
         $prefUtils = $this->get('preferences_utils');
@@ -97,7 +96,11 @@ class FrontController extends CoreController
             $urlDb = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $scopeId);
 
             if (trim($urlDb) != "") {
-                $url = $urlDb."web/client/post";
+                if (strstr ( $urlDb, "web/" )) {
+                    $url = $urlDb."client/post";
+                } else {
+                    $url = $urlDb."web/client/post";
+                }
             }
         }
 
