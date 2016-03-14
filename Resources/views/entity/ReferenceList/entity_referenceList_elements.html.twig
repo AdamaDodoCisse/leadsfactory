@@ -1,12 +1,15 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
 
-            <h2>Eléments de la liste :</h2>
+            <h3>Eléments de la liste :</h3>
+
+        <div  style="height:250px;overflow:scroll;overflow-x: hidden">
             <table id="sort" class='table table-striped table-bordered'>
                 <thead>
                 <tr>
-                    <th>Identifiant</th>
+                    <th>ID</th>
                     <th>Nom</th>
                     <th>Valeur</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -15,17 +18,22 @@
 
                     {% if item.status == 1 %}
                         {% set color =  "style=background-color:#FFFFFF;color:#0000;" %}
-                    {% elseif item.status == 0 %}
+                        {% set texte = "activé" %}
+                        {% elseif item.status == 0 %}
                         {% set color =  "style=background-color:#EFEFEF;color:#A0A0A0;" %}
+                        {% set texte = "désactivé" %}
                     {%  endif %}
 
                     <tr id="element_{{ item.id }}" style="cursor: pointer;">
                         <td {{ color }}>{{ item.id }}</td>
                         <td {{ color }}>{{ item.name }}</td>
                         <td {{ color }}>{{ item.value }}</td>
-                        <td {{ color }}>
-                            <a onclick="editElement({{ item.id }})" alt="Editer" ><img title="Editer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
+                        <td {{ color }}>{{ texte }}</td>
+                        <td {{ color }} style="vertical-align: middle">
+                            <center>
+                            <a onclick="editElement({{ item.id }})" alt="Editer" ><img title="Editer" style="height:25px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
                             <!--<a href="#" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_referenceList_delete', {'id': item.id}) }}'"  alt="Supprimer"><img title="Supprimer" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/supprimer.png') }}"/></a>-->
+                            </center>
                         </td>
                     </tr>
 
@@ -38,3 +46,4 @@
                 {% endfor %}
                 </tbody>
             </table>
+</div>

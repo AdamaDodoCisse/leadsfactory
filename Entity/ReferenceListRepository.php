@@ -94,13 +94,16 @@ class ReferenceListRepository extends EntityRepository
 	 * @param $sortKey must be name or value or rank
 	 * @param $sortOrder must be ASC of DESC
 	 */
-	public function getElementsByOrder ( $listId, $sortKey, $sortOrder ) {
+	public function getElementsByOrder ( $listId, $sortKey, $sortOrder, $ignoreStatus = false ) {
 
 		$qb = $this->getEntityManager()->createQueryBuilder();
 		$qb->select('e')
 			->from('TellawLeadsFactoryBundle:ReferenceListElement', 'e')
 			->where('e.referencelist_id = :listId');
+
+		if (!$ignoreStatus) {
 			$qb->andWhere('e.status = 1');
+		}
 
 		if (strtolower($sortKey) == "name") {
 			$qb->orderBy('e.name', $sortOrder);

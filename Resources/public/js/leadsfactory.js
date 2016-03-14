@@ -32,7 +32,7 @@ function jsonAjaxCall ( path, data, successCallBack ) {
         type: 'POST',
         url : path
     }).done(function (result) {
-        object = jQuery.parseJSON(msg);
+        object = jQuery.parseJSON(result);
         successCallBack(object);
     });
 

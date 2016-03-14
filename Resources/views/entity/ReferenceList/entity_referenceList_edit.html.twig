@@ -24,7 +24,7 @@
         </div>
 
         <div class="widget-body custom-form" id="elementsTableHtml">
-
+            &nbsp;
         </div>
     </div>
 
@@ -41,7 +41,7 @@
 
         <div class="widget-body custom-form">
 
-            <h2 id="titleForm">Création d'une nouvelle valeur</h2>
+            <h3 id="titleForm">Création d'une nouvelle valeur</h3>
 
             <div id="elementEdit">
 
@@ -142,7 +142,7 @@
 
         var data = "listid="+listid+"&id="+id+"&text="+text+"&value="+value+"&enabled="+enabled;
 
-        fragmentAjaxCall ( '{{ path('_referenceList_updateElement') }}', data,
+        fragmentAjaxCall ( '{{ path('_referenceList_updateElement') }}', data, $("#elementsTableHtml"),
             function ( result ) {
                 alert (result);
                 loadElements();

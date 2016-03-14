@@ -393,16 +393,15 @@ class EntityReferenceListController extends CoreController
         $listId = $request->request->get("listid");
 
         if (trim($listId) != "" && $listId != 0) {
-            $list = $this->get('leadsfactory.reference_list_repository')->find($listId);
+            $elements = $this->get('leadsfactory.reference_list_repository')->getElementsByOrder( $listId, "rank", "ASC", true );
         } else {
             $list = new ReferenceList();
+            $elements = $list->getElements();
         }
-
 
         return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_elements.html.twig',
             array(
-                'elements'=> $list->getElements()));
-
+                'elements'=> $elements ));
     }
 
 }
