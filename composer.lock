@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e77dcbbad33ba444e70d8739006abb20",
+    "hash": "a05bd31439e78003eef8924860e1cbe0",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -1603,16 +1603,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.18.0",
+            "version": "1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc"
+                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
-                "reference": "e19b764b5c855580e8ffa7e615f72c10fd2f99cc",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
+                "reference": "a5f2734e8c16f3aa21b3da09715d10e15b4d2d45",
                 "shasum": ""
             },
             "require": {
@@ -1677,7 +1677,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-03-01 18:00:40"
+            "time": "2016-03-13 16:08:35"
         },
         {
             "name": "mtdowling/cron-expression",
@@ -2427,17 +2427,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.19",
+            "version": "v1.0.21",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "bb27dc33b087caa42393a5fd65987802c2ed2e68"
+                "reference": "5b36b23ebcc081d1eb618f991b68b6516f08cfa1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/bb27dc33b087caa42393a5fd65987802c2ed2e68",
-                "reference": "bb27dc33b087caa42393a5fd65987802c2ed2e68",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/5b36b23ebcc081d1eb618f991b68b6516f08cfa1",
+                "reference": "5b36b23ebcc081d1eb618f991b68b6516f08cfa1",
                 "shasum": ""
             },
             "require": {
@@ -2481,7 +2481,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-03-09 13:16:57"
+            "time": "2015-10-08 14:31:52"
         },
         {
             "name": "teodortalov/citrix",
