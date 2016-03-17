@@ -155,14 +155,21 @@ class EntityLeadsController extends CoreController
 	 */
 	protected function getReportForm($filterParams)
 	{
+		$export_formats = array('raw_csv' => 'CSV brut');
+
+		//Le format "CSV amélioré" est dispo uniquement si un formulaire est sélectionné
+		if(!empty($filterParams['form'])){
+			$export_formats['nice_csv'] = 'CSV amélioré';
+		}
+
 		$form = $this->createFormBuilder(array())
 			->setMethod('GET')
 		    ->setAction($this->generateUrl('_leads_report'))
 		    ->add('format', 'choice', array(
-	            'choices' => array('csv' => 'CSV'),
-	            'label' => 'Format',
-	        )
-	    )
+	            	'choices' => $export_formats,
+	            	'label' => 'Format',
+	        	)
+	    	)
 			->add('filterparams', 'hidden', array('data' => json_encode($filterParams)))
 			->add('valider', 'submit', array('label' => 'Valider'))
 	        ->getForm();
@@ -187,13 +194,13 @@ class EntityLeadsController extends CoreController
 	}
 
 	/**
-	 * Generates CSV report
+	 * Generates raw CSV report
 	 *
 	 * @param array $filterParams
 	 *
 	 * @return Response
 	 */
-	public function generateCsv($filterParams)
+	public function generateRaw_csv($filterParams)
 	{
 		$em = $this->getDoctrine()->getEntityManager();
 		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
@@ -216,6 +223,53 @@ class EntityLeadsController extends CoreController
 				';');
 
 			$em->detach($row[0]);
+		}
+
+		rewind($handle);
+		$content = stream_get_contents($handle);
+		fclose($handle);
+
+		$response =  new Response($content);
+		$response->headers->set('content-type', 'text/csv');
+		$response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
+
+		return $response;
+	}
+
+	/**
+	 * Generates nice CSV report
+	 *
+	 * @param array $filterParams
+	 *
+	 * @return Response
+	 */
+	public function generateNice_csv($filterParams)
+	{
+		$em = $this->getDoctrine()->getEntityManager();
+		$formUtils = $this->get('form_utils');
+
+		$fields = $formUtils->getFieldsAsArrayByFormId($filterParams['form']);
+		$columns = array_merge(array('id', 'Form', 'Date'), array_keys($fields));
+
+		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
+
+		$handle = fopen('php://memory', 'w');
+		fputcsv($handle, $columns, ';');
+		while (false !== ($record = $leads->next())) {
+			$row = array(
+				$record[0]->getId(),
+				$record[0]->getForm()->getName(),
+				$record[0]->getCreatedAt()->format('Y-m-d H:i:s')
+			);
+
+			$data = json_decode($record[0]->getData(), true);
+
+			foreach(array_keys($fields) as $field){
+				$row[] = $formUtils->getFieldFrontendValue($fields[$field], $data[$field]);
+			}
+
+			fputcsv($handle, $row, ';');
+			$em->detach($record[0]);
 		}
 
 		rewind($handle);

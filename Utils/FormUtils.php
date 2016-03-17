@@ -420,4 +420,21 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
     {
         return $key == $this->getApiKey($form) ? true : false;
     }
+
+    /**
+     * Retourne la valeur frontend d'un champ de lead
+     *
+     * @param array $field
+     * @param string $value
+     * @return string
+     */
+    public function getFieldFrontendValue($field, $value)
+    {
+        $type = $field['type'];
+        if(in_array($type, array('reference-list', 'linked-reference-list'))){
+            $listCode = $field['attributes']['data-list'];
+            $value = $this->container->get('leadsfactory.reference_list_element_repository')->getNameUsingListCode($listCode, $value);
+        }
+        return $value;
+    }
 }
