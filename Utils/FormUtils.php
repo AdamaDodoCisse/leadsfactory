@@ -437,4 +437,25 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
         }
         return $value;
     }
+
+    /**
+     * Pre process lead data before save
+     *
+     * @param $formId
+     * @param $data
+     * @return mixed
+     */
+    public function preProcessData($formId, $data)
+    {
+        $fields = $this->getFieldsAsArrayByFormId($formId);
+        foreach($fields as $key => $field){
+            $type = $field['type'];
+            if(in_array($type, array('reference-list', 'linked-reference-list'))){
+                $listCode = $field['attributes']['data-list'];
+                $data[$key.'_label'] = $this->container->get('leadsfactory.reference_list_element_repository')->getNameUsingListCode($listCode, $data[$key]);
+            }
+        }
+        return $data;
+    }
+
 }

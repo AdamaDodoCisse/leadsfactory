@@ -184,19 +184,13 @@ class FrontController extends CoreController
     public function postLeadsAction ( Request $request ) {
 
         $logger = $this->get('logger');
-
         $formUtils = $this->get("form_utils");
-
         $fields = $request->get ("lffield");
-
         $exportUtils = $this->get('export_utils');
-
         $searchUtils = $this->get('search.utils');
-
 
 //         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
 //            throw new \Exception ("Form Key is not allowed");
-
 
         try {
 
@@ -257,6 +251,7 @@ class FrontController extends CoreController
                 }
             }
 
+            $fields = $this->get('form_utils')->preProcessData($formId, $fields);
             $json = json_encode( $fields );
 
             // Create new Leads Entity Object
@@ -494,5 +489,4 @@ class FrontController extends CoreController
             array('form' => $form)
         );
     }
-
 }

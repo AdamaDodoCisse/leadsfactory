@@ -283,6 +283,7 @@ class ApiController extends CoreController
 		try{
 			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($data['formCode']);
 
+			$data = $this->get('form_utils')->preProcessData($form->getId(), $data);
 			$jsonContent = json_encode($data);
 
 			$leads = new Leads();
@@ -319,7 +320,5 @@ class ApiController extends CoreController
 			$logger->error($e->getMessage());
 			return new Response(0);
 		}
-
-
 	}
 }
