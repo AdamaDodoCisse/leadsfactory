@@ -100,9 +100,9 @@ class AthenaV2 extends AbstractMethod{
 
     public function isExportable ( $job, $form, $data ) {
 
-        //on dégage si profil étudiant (TI) ou si type d'établissement Particulier/étudiant (WK)
+        //on dégage si profil étudiant (TI et WK) ou si type d'établissement Particulier/étudiant (WK)
         if(isset($data['profil']) && strtoupper($data['profil']) == 'ETUDIANT'
-            || isset($data['type-etablissement']) && $data['type-etablissement'] == 'particulier'){
+            || isset($data['type-etablissement']) && $data['type-etablissement'] == 'particulier_etudiant'){
 
             $this->_exportUtils->updateJob($job, ExportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
             $this->_exportUtils->updateLead($job->getLead(), ExportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');

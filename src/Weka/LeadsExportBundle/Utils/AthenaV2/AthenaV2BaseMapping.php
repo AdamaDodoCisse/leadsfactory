@@ -399,7 +399,16 @@ class AthenaV2BaseMapping {
             "16"    => "prefecture",
             "5"     => "rectorat",
             "7"     => "SEM",
-            "6"     => "sivom"
+            "6"     => "sivom",
+            'conseil_departemental'     => 'conseil_departemental',
+            'syndicat_intercommunal'    => 'syndicat_intercommunal',
+            'hopital'                   => 'hopital',
+            'enseignement'              => 'enseignement',
+            'sdis'                      => 'sdis',
+            'maisons_retraites'         => 'maisons_retraites',
+            'acteurs_prives'            => 'acteurs_prives',
+            'particulier_etudiant'      => 'particulier_etudiant',
+            'association'               => 'association'
         );
 
         if (array_key_exists("type-etablissement", $data) && $data['type-etablissement']
