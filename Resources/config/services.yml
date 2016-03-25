@@ -14,6 +14,11 @@ services:
     calls:
                   - [ setContainer, [ @service_container ] ]
 
+  history.utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\HistoryUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   functionnal_testing.utils:
     class:        Tellaw\LeadsFactoryBundle\Utils\FunctionnalTestingUtils
     calls:
@@ -176,6 +181,32 @@ services:
     arguments: [@doctrine.orm.entity_manager]
     tags:
     - { name: console.command }
+
+  leadsfactory.datadictionnary_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:DataDictionnary']
+
+  leadsfactory.datadictionnary_element_repository:
+      class: Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryElementRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['TellawLeadsFactoryBundle:DataDictionnaryElement']
+      calls:
+       - [setLogger, [@export.logger]]
+
+  leadsfactory.leads_comments_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\LeadsCommentRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:LeadsComment']
+
+  leadsfactory.leads_history_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\LeadsHistoryRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:LeadsHistory']
 
   leadsfactory.reference_list_repository:
     class: Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository

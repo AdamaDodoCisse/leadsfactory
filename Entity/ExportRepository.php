@@ -22,6 +22,26 @@ class ExportRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
+    public function getForLeadID( $leadId )
+    {
+
+        $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e JOIN e.form f';
+        $dql .= " WHERE e.lead = :id";
+        $dql .= ' ORDER BY e.created_at DESC';
+
+        $query = $this  ->getEntityManager()
+            ->createQuery($dql)
+            ->setParameters( array ( "id"=>$leadId ) );
+
+        return $query->execute();
+    }
+
+    /**
+     * @param $keyword
+     * @param int $page
+     * @param int $limit
+     * @return Paginator
+     */
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
 
