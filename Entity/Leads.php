@@ -110,6 +110,93 @@ class Leads
     private $entreprise;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Users")
+     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $workflowStatus;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $workflowType;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $workflowTheme;
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkflowStatus()
+    {
+        return $this->workflowStatus;
+    }
+
+    /**
+     * @param mixed $workflowStatus
+     */
+    public function setWorkflowStatus($workflowStatus)
+    {
+        $this->workflowStatus = $workflowStatus;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkflowType()
+    {
+        return $this->workflowType;
+    }
+
+    /**
+     * @param mixed $workflowType
+     */
+    public function setWorkflowType($workflowType)
+    {
+        $this->workflowType = $workflowType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getWorkflowTheme()
+    {
+        return $this->workflowTheme;
+    }
+
+    /**
+     * @param mixed $workflowTheme
+     */
+    public function setWorkflowTheme($workflowTheme)
+    {
+        $this->workflowTheme = $workflowTheme;
+    }
+
+
+
+    /**
      * @return mixed
      */
     public function getEntreprise()
