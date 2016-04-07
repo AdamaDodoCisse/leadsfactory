@@ -8,8 +8,8 @@
 ?>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="http://preprod.weka.fr/leads-factory/web/bundles/tellawleadsfactory/js/libs/formValidator/developr.validationEngine.css">
-    <script src="http://preprod.weka.fr/leads-factory/web/bundles/tellawleadsfactory/js/libs/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://local.dev/weka-leadsfactory/web/bundles/tellawleadsfactory/js/libs/formValidator/developr.validationEngine.css">
+    <script src="http://local.dev/weka-leadsfactory/web/bundles/tellawleadsfactory/js/libs/jquery-1.11.3.min.js"></script>
 </head>
 <body>
 
@@ -17,7 +17,7 @@
     <p class="loading-leads-txt">Merci de patienter ...</p>
 </div>
 <script type="text/javascript">
-baseUrl = 'http://preprod.weka.fr/leads-factory/'; // Se termine par un slash
+baseUrl = 'http://local.dev/weka-leadsfactory/'; // Se termine par un slash
     codeAction = '/CD/AC/DEMO01';
     codeFormulaire = '<?= $_GET['id'] ?>';
     data = [];
