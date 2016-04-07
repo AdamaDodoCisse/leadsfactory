@@ -40,6 +40,42 @@ class EntityLeadsController extends CoreController
         parent::__construct();
     }
 
+	/**
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/userList/{page}/{limit}/{keyword}", name="_leads_userList")
+	 */
+	public function indexUserAction(Request $request, $page=1, $limit=25, $keyword='')
+	{
+
+		if ($this->get("core_manager")->isDomainAccepted ()) {
+			return $this->redirect($this->generateUrl('_security_licence_error'));
+		}
+
+		$filterForm = $this->getLeadsFilterForm();
+		$filterForm->handleRequest($request);
+
+		if ($filterForm->isValid()) {
+			$filterParams = $filterForm->getData();
+			$filterParams["user"] = $this->getUser();
+			$filterParams["owner"] = $this->getUser();
+			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+		}else{
+			$filterParams =  array ('user'=>$this->getUser(), 'owner'=>$this->getUser());
+			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+		}
+
+		return $this->render(
+			'TellawLeadsFactoryBundle:entity/Leads:userList.html.twig',
+			array(
+				'elements'      => $list['collection'],
+				'pagination'    => $list['pagination'],
+				'limit_options' => $list['limit_options'],
+				'filters_form'  => $filterForm->createView(),
+				'export_form'   => $this->getReportForm($filterParams)->createView()
+			)
+		);
+	}
+
     /**
      * @Secure(roles="ROLE_USER")
      * @Route("/leads/list/{page}/{limit}/{keyword}", name="_leads_list")
