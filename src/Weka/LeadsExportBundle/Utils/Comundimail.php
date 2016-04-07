@@ -64,7 +64,9 @@ class Comundimail extends AbstractMethod {
             $templatingService = $this->container->get('templating');
 
             if ( trim($data['origine-co']) != "" ) {
-                $sujet .= " - www.comundi.fr - " .$data['origine-co'];
+                $sujetAdv = " - www.comundi.fr - " .$data['origine-co'];
+            } else {
+                $sujetAdv = $sujet;
             }
 
             // Envoi du mail au client
@@ -111,7 +113,7 @@ class Comundimail extends AbstractMethod {
             // Envoi du mail au service client
             $data['demande-rdv'] = $this->subjects[$data['sujet']];
             $message_service_client = \Swift_Message::newInstance()
-                ->setSubject($sujet)
+                ->setSubject($sujetAdv)
                 ->setFrom($from)
                 ->setTo($mail_service_client)
                 // HTML version
