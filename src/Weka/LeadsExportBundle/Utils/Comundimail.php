@@ -54,7 +54,7 @@ class Comundimail extends AbstractMethod {
 
             $form_subject = $data['sujet'];
             $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
-            $from = $this->_formConfig['mail_from'];
+            $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
             $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
             $tel = $this->_formConfig['mails'][$form_subject]['tel'];
             $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
@@ -62,6 +62,10 @@ class Comundimail extends AbstractMethod {
 
             $hasError = false;
             $templatingService = $this->container->get('templating');
+
+            if ( trim($data['origine-co']) != "" ) {
+                $sujet .= " - www.comundi.fr - " .$data['origine-co'];
+            }
 
             // Envoi du mail au client
             $message_client = \Swift_Message::newInstance()
