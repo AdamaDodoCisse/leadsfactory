@@ -64,7 +64,7 @@ class Comundimail extends AbstractMethod {
             $templatingService = $this->container->get('templating');
 
             if ( trim($data['origine-co']) != "" ) {
-                $sujetAdv = " - www.comundi.fr - " .$data['origine-co'];
+                $sujetAdv = $sujet . " - www.comundi.fr - " .$data['origine-co'];
             } else {
                 $sujetAdv = $sujet;
             }
