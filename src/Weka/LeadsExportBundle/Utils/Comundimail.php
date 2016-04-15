@@ -54,7 +54,7 @@ class Comundimail extends AbstractMethod {
 
             $form_subject = $data['sujet'];
             $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
-            $from = $this->_formConfig['mail_from'];
+            $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
             $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
             $tel = $this->_formConfig['mails'][$form_subject]['tel'];
             $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
@@ -62,6 +62,12 @@ class Comundimail extends AbstractMethod {
 
             $hasError = false;
             $templatingService = $this->container->get('templating');
+
+            if ( trim($data['origine-co']) != "" ) {
+                $sujetAdv = $sujet . " - www.comundi.fr - " .$data['origine-co'];
+            } else {
+                $sujetAdv = $sujet;
+            }
 
             // Envoi du mail au client
             $message_client = \Swift_Message::newInstance()
@@ -107,7 +113,7 @@ class Comundimail extends AbstractMethod {
             // Envoi du mail au service client
             $data['demande-rdv'] = $this->subjects[$data['sujet']];
             $message_service_client = \Swift_Message::newInstance()
-                ->setSubject($sujet)
+                ->setSubject($sujetAdv)
                 ->setFrom($from)
                 ->setTo($mail_service_client)
                 // HTML version

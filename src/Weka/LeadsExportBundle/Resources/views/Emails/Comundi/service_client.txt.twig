@@ -4,7 +4,8 @@ Société : {{ user_data.etablissement }}
 Code postal : {{ user_data.zip }}
 Téléphone : {{ user_data.phone }}
 Email : {{ user_data.email }}
-Votre demande : {{ attribute(user_data, 'demande-rdv') }}
+Votre demande : {{ user_data.sujet_label }}
+
 {% if user_data.budget != '' %}
     Budget : {{ user_data.budget }}
 {% endif %}
@@ -14,6 +15,8 @@ Votre demande : {{ attribute(user_data, 'demande-rdv') }}
 {% endif %}
 
 Détails : {{ user_data.comment }}
-{% if attribute(user_data, 'demande-rdv') == 1 %}
-    Cette personne souhaite être contactée dans les meilleurs délais par Comundi.
-{% endif %}
+    {% if user_data.demande_rdv is defined %}
+        {% if user_data.demande_rdv == '1' %}
+            <br><br>Cette personne souhaite être contactée dans les meilleurs délais par Comundi.
+        {% endif %}
+    {% endif %}
