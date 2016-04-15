@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
  * @Route("/entity/user")
@@ -33,6 +34,9 @@ class EntityUsersController extends ApplicationCrudController
                                   );
 
     public function __construct () {
+        PreferencesUtils::registerKey( 'EXPORT_NOTIFICATION_FROM',
+            "Notification email sender",
+            PreferencesUtils::$_PRIORITY_OPTIONNAL );
         parent::__construct();
     }
 
