@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ReferenceListElement {
 
     public static $_STATUS_ENABLED = 1;
-    public static $_STATUS_DISABLED = 0;
+    public static $_STATUS_DISABLED = 1;
 
     public function __construct()
     {
