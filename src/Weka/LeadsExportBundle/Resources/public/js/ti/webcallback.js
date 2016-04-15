@@ -1,5 +1,5 @@
 /**
- * Commun aux formulaires de webcallback et téléchargement d'extrait
+ * Commun aux formulaires de webcallback, téléchargement d'extrait et téléchargement Riskev
  *
  * @type {{step: string, phoneUtil: *, PNF: (i18n.phonenumbers.PhoneNumberFormat|*), countryCode: string, validationCodeIsCorrect: boolean, interceptSubmit: boolean, callEnabled: boolean, callCounter: number, maxCalls: number, formId: string, trackingOrigin: string, init: Function, call: Function, newCall: Function, check: Function, post: Function, isCallEnabled: Function, isAllowedCountry: Function, getRedirectUrl: Function, setTrackingOrigin: Function, displayNumberExample: Function}}
  */
