@@ -287,6 +287,8 @@ class ApiController extends CoreController
 			$jsonContent = json_encode($data);
 
 			$leads = new Leads();
+			$leads->setIpadress($this->get('request')->getClientIp());
+			$leads->setUserAgent($this->get('request')->server->get("HTTP_USER_AGENT"));
 			$leads->setFirstname(@$data['firstName']);
 			$leads->setLastname(@$data['lastName']);
 			$leads->setData($jsonContent);
