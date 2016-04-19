@@ -14,7 +14,6 @@ class TextareaFieldType extends AbstractFieldType
     public function renderToHtml ( $tag )
     {
         $id = $tag["attributes"]["id"];
-        return '<textarea name="lffield['.$id.']" id="lffield['.$id.']"></textarea>';
-        //return "<input type='text' name='lffield[".$id."]' id='lffield[".$id."]' value='' ".$this->getAttributes( $tag )." />";
+        return '<textarea name="lffield['.$id.']" id="lffield['.$id.']" '.$this->getAttributes( $tag ).'></textarea>';
     }
 }
