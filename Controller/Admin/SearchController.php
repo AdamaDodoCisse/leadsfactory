@@ -205,6 +205,13 @@ class SearchController extends CoreController {
                                     "userAgent":    { "type": "string","index": "not_analyzed"},
                                     "scopeName":    { "type": "string","index": "not_analyzed"},
                                     "formName":     { "type": "string","index": "not_analyzed"},
+                                    "userId":       { "type": "string","index": "not_analyzed"},
+                                    "userFirstName":{ "type": "string","index": "not_analyzed"},
+                                    "userLastName": { "type": "string","index": "not_analyzed"},
+                                    "userName":     { "type": "string","index": "not_analyzed"},
+                                    "workflowStatus":{ "type": "string","index": "not_analyzed"},
+                                    "workflowType":  { "type": "string","index": "not_analyzed"},
+                                    "workflowTheme": { "type": "string","index": "not_analyzed"},
                                     "content":  {
                                         "type":     "object",
                                         "dynamic":  true,

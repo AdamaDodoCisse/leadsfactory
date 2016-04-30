@@ -70,6 +70,18 @@ class LeadsRepository extends EntityRepository
 				$result_array["formTypeName"] = "";
 			}
 
+			if ($result_object->getUser()) {
+				$result_array["userId"] = $result_object->getUser()->getId();
+				$result_array["userLastName"] = strtolower($result_object->getUser()->getFirstName());
+				$result_array["userFirstName"] =strtolower($result_object->getUser()->getLastName());
+				$result_array["userName"] =strtolower($result_object->getUser()->getFirstName() . " " . $result_object->getUser()->getLastName());
+			} else {
+				$result_array["userId"] = 0;
+				$result_array["userLastName"] = "";
+				$result_array["userFirstName"] ="";
+				$result_array["userName"] ="";
+			}
+
 			if ($result_object->getForm()->getScope()) {
 				$result_array["scopeId"] = $result_object->getForm()->getScope()->getId();
 				$result_array["scopeName"] = str_replace(' ', '_', strtolower($result_object->getForm()->getScope()->getName()));
@@ -153,6 +165,10 @@ class LeadsRepository extends EntityRepository
 
 		if(!empty($args)) {
 			$dql .= ' WHERE 1=1';
+
+			if (!empty($args['owner'])  ) {
+				$dql .= " AND l.user=".$args['owner']->getId();
+			}
 
             if(!empty($args['user']) && $args['user']->getScope() != null){
                 $dql .= " AND f.scope = ".$args['user']->getScope()->getId();

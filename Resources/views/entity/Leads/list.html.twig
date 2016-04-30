@@ -32,7 +32,6 @@
                     <tr>
                         <th>ID</th>
                         <th>Formulaire</th>
-                        <th>Prénom</th>
                         <th>Nom</th>
                         <th>email</th>
                         <th>Code action</th>
@@ -46,8 +45,7 @@
                         <tr>
                             <td>{{ item.id }}</td>
                             <td>{{ item.form.name }}</td>
-                            <td>{{ item.firstname }}</td>
-                            <td>{{ item.lastname }}</td>
+                            <td>{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
                             <td>{{ item.email }}</td>
                             <td>{% if item.utmcampaign == '' %}<span style="color:darkred">Vide</span>{% else %}{{ item.utmcampaign }}{% endif %}</td>
                             <td>{{ item.ipadress }}</td>
