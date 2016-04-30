@@ -30,10 +30,6 @@ class Person
 	 */
     protected $id;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="EntreprisePersonReference", mappedBy="entreprise", cascade={"persist"})
-     */
-    protected $entreprises;
 
     /**
      * @ORM\Column(type="string", nullable=true, name="firstname")
@@ -223,23 +219,5 @@ class Person
     {
         $this->leads = $leads;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getEntreprises()
-    {
-        return $this->entreprises;
-    }
-
-    /**
-     * @param mixed $entreprises
-     */
-    public function setEntreprises($entreprises)
-    {
-        $this->entreprises = $entreprises;
-    }
-
-
 
 }

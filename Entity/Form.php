@@ -112,6 +112,23 @@ class Form {
     protected $testLog;
 
 
+    public $todayValue = null;
+    public $yesterdayValue = null;
+    public $weekBeforeValue = null;
+    public $yesterdayStatusColor = null;
+    public $yesterdayStatusText = null;
+    public $yesterdayVariation = null;
+
+    public $yesterdayStatus = null;
+
+    public $textualYesterdayDay = null;
+    public $textualWeekBeforeDay = null;
+
+    public $nbViews = null;
+    public $nbLeads = null;
+    public $transformRate = null;
+
+
     /**
      * @return int
      */
@@ -373,21 +390,6 @@ class Form {
         return $this->confirmationEmailSource;
     }
 
-    public $todayValue = null;
-    public $yesterdayValue = null;
-    public $weekBeforeValue = null;
-    public $yesterdayStatusColor = null;
-    public $yesterdayStatusText = null;
-    public $yesterdayVariation = null;
-
-    public $yesterdayStatus = null;
-
-    public $textualYesterdayDay = null;
-    public $textualWeekBeforeDay = null;
-
-    public $nbViews = null;
-    public $nbLeads = null;
-    public $transformRate = null;
 
 
     /**

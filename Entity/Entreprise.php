@@ -7,7 +7,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *
- * Tellaw\LeadsFactoryBundle\Entity\Leads
+ * Entreprise
+ *
+ * This entity class describe the company of a person.
+ *
+ * * An entreprise can handle many persons
+ * * A Person can be linked to multiple entreprise.
+ *
+ * The link between entreprise and person also handle position information.
  *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\EntrepriseRepository")
  */
@@ -22,7 +29,9 @@ class Entreprise
     }
 
 	/**
-	 * @var integer $id
+	 * Unique ID of an Entreprise
+     *
+     * @var integer $id
 	 *
 	 * @ORM\Column(type="integer", name="id")
 	 * @ORM\Id
@@ -31,36 +40,38 @@ class Entreprise
     protected $id;
 
     /**
+     * @var String Name of the entreprise*
      * @ORM\Column(type="string", nullable=true, name="name")
      */
     protected $name;
 
     /**
+     * @var String Siret of the Entreprise
      * @ORM\Column(type="string", nullable=true, name="siret")
      */
     protected $siret;
 
     /**
+     * @var String Phone number of the entreprise
      * @ORM\Column(type="string", nullable=true, name="phone")
      */
     protected $phone;
 
     /**
-     * @ORM\OneToMany(targetEntity="Leads", mappedBy="siret")
+     * @var Leads Leads affected to this entreprise
+     * @ORM\OneToMany(targetEntity="Leads", mappedBy="leads")
      */
     protected $leads;
 
     /**
+     * @var EntrepriseAdress Adresses of the entreprise.
      * @ORM\OneToMany(targetEntity="EntrepriseAdress", mappedBy="adresses")
      */
     protected $adresses;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="EntreprisePersonReference", mappedBy="person", cascade={"persist"})
-     */
-    protected $persons;
 
     /**
+     * @var Scope scope of the Entreprise
      * @ORM\ManyToMany(targetEntity="Scope")
      * @ORM\JoinTable(name="entreprise_scope",
      *      joinColumns={@ORM\JoinColumn(name="entreprise_id", referencedColumnName="id")},

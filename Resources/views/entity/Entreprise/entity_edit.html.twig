@@ -75,9 +75,14 @@
     });
 
     function loadPersons () {
-        fragmentAjaxCall ( '{{ path('_person_fragment_list_in_entreprise', {'entrepriseId': id} )}}', '', $('#personnesInEntreprise') , function (result){});
+        //fragmentAjaxCall ( '{{ path('_person_fragment_list_in_entreprise', {'entrepriseId': id} )}}', '', $('#personnesInEntreprise') , function (result){});
         fragmentAjaxCall ( '{{ path('_person_fragment_list', {'entrepriseId': id} ) }}', '', $('#personnes') , function (result){});
 
+    }
+
+    function attachUser ( userId, entrepriseId ) {
+        var data = "{id: userId, entrepriseId : entrepriseId}";
+        ajaxCall ( '{{ path('_entreprise_link_user' ) }}', data, function (result){ loadPersons() });
     }
 
 </script>

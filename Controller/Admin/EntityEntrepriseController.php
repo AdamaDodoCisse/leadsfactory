@@ -136,6 +136,32 @@ class EntityEntrepriseController extends CoreController {
     }
 
     /**
+     * @Route("/linkUser", name="_entreprise_link_user")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function linkUserAction ( Request $request ) {
+
+        $personId = $request->request->get ("id");
+        $entrepriseId = $request->request->get ("entrepriseId");
+
+        $entreprise = $this->get('leadsfactory.entreprise_repository')->find($entrepriseId);
+        $person = $this->get('TellawLeadsFactoryBundle:Person')->find ($personId);
+
+        if (!$entreprise->hasPerson ( $person )) {
+
+            // Person is not in entreprise
+            $entreprise->addPerson ($person);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entreprise);
+            $em->flush();
+
+        }
+
+        return new \HttpResponse("Ok");
+
+    }
+
+    /**
      * @Route("/delete/id/{id}", name="_entreprise_delete")
      * @Secure(roles="ROLE_USER")
      * @Method("GET")

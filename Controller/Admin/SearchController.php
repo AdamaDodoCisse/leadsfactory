@@ -17,6 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Process\Process;
+use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
  * @Route("/search")
@@ -26,6 +27,12 @@ class SearchController extends CoreController {
     public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT__ELASTICSEARCH";
 
     public function __construct () {
+
+        PreferencesUtils::registerKey( SearchController::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE,
+                            "Url and port of the search service",
+                            PreferencesUtils::$_PRIORITY_OPTIONNAL);
+
+
         parent::__construct();
     }
 
