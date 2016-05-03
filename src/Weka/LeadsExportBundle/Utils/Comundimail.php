@@ -52,6 +52,8 @@ class Comundimail extends AbstractMethod {
         foreach($jobs as $job) {
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
 
+            $logger->info('[ComundiMail] - Traitement Lead : '.$job->getLead()->getId());
+
             $form_subject = $data['sujet'];
             $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
             $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
@@ -70,6 +72,7 @@ class Comundimail extends AbstractMethod {
             }
 
             // Envoi du mail au client
+            $logger->info('[ComundiMail] - Envoi mail client / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
             $message_client = \Swift_Message::newInstance()
                 ->setSubject($sujet)
                 ->setFrom($from)
@@ -106,12 +109,14 @@ class Comundimail extends AbstractMethod {
 
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                $logger->info('[ComundiMail] -Ajotu BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
                 $message_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
                 $logger->info('Destinataire mail BCC ajouté dans le mail client');
             }
 
             // Envoi du mail au service client
             $data['demande-rdv'] = $this->subjects[$data['sujet']];
+            $logger->info('[ComundiMail] - Envoi mail SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
             $message_service_client = \Swift_Message::newInstance()
                 ->setSubject($sujetAdv)
                 ->setFrom($from)
@@ -140,6 +145,7 @@ class Comundimail extends AbstractMethod {
 
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                $logger->info('[ComundiMail] - Ajout BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
                 $message_service_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
                 $logger->info('Destinataire mail BCC ajouté dans le mail service client');
             }
@@ -155,12 +161,13 @@ class Comundimail extends AbstractMethod {
 
             try {
                 $this->container->get('mailer')->send($message_client);
-                $logger->info('****** Envoi du mail client réussi ! ******');
+                mail('ewallet@weka.fr', 'Mon Sujet ComundiMail', 'Test de mail');
+                $logger->info('****** Envoi du mail client réussi ('.$job->getLead()->getId().')! ******');
                 $this->container->get('mailer')->send($message_service_client);
-                $logger->info('****** Envoi du mail service client réussi ! ******');
+                $logger->info('****** Envoi du mail service client réussi ! ('.$job->getLead()->getId().') ******');
             } catch(\Exception $e) {
                 $hasError = true;
-                $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');
+                $logger->error("****** Erreur à l'envoi du mail ('.$job->getLead()->getId().') de contact Comundi : ".$e->getMessage().' ******');
             }
 
             if($hasError) {
@@ -171,7 +178,7 @@ class Comundimail extends AbstractMethod {
                 $msg = 'Exporté avec succès';
             }
 
-            $logger->info('Export Comundi mail désactivé');
+            $logger->info('Export Comundi mail fin : '.$job->getLead()->getId());
             $exportUtils->updateJob($job, $status, $msg);
             $exportUtils->updateLead($job->getLead(), $status, $msg);
 
