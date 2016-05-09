@@ -258,7 +258,7 @@ class AthenaV2BaseMapping {
         }
 
         if(is_array($ma_ville)){
-            $ville = $ma_ville[0]['name'];
+            $ville = $ma_ville['name'];
         } else if(is_string($ma_ville)){
             $ville = $ma_ville;
         } else $ville = "";
