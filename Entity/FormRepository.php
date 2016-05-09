@@ -104,7 +104,7 @@ class FormRepository extends EntityRepository
         $qb->select("f.id, f.name");
         $qb->addSelect("(".$sub_qb_l->getDQL().") AS NB_LEADS");
         $qb->addSelect("(".$sub_qb_t->getDQL().") AS PAGES_VIEWS");
-        $qb->from("TellawLeadsFactoryBundle:Form", "f", "f.name");
+        $qb->from("TellawLeadsFactoryBundle:Form", "f", "f.id");
         if ($ids) $qb->where("f.id IN ($ids)");
 
         $result = $qb->getQuery()->getResult();

@@ -84,17 +84,14 @@ class MonitoringController extends CoreController {
         $user_scope = $this->get('security.context')->getToken()->getUser()->getScope();
 
         // Get All Types of forms regardless the scope
-        $raw_forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
+        $forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
 
         // Filter forms regarding scopes
-        $forms = array();
         if ($user_scope) { // If there is a scope
-            foreach($raw_forms as $f) {
-                if ($f->getScope() == $user_scope)
-                    $forms[] = $f;
+            foreach($forms as $n => $f) {
+                if ($f->getScope() != $user_scope)
+                    unset($forms[$n]);
             }
-        } else { // If there is no scope
-            $forms = $raw_forms;
         }
 
         // Load bookmarked forms for user
@@ -107,17 +104,11 @@ class MonitoringController extends CoreController {
         $results = $this->get('leadsfactory.form_repository')->getStatisticsForForms($forms, $utils);
 
         $views = $results;
-        unset ($views["NB_LEADS"]);
-        unset ($views["id"]);
-
         $nbLeads = $results;
-        unset ($views["PAGES_VIEWS"]);
-        unset ($views["id"]);
-
         $forms = $this->sortFormsByBookmark($forms, $bookmarks);
 
         return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
-            'form'          =>  $form->createView(),
+            'form_view'     =>  $form->createView(),
             'bookmarks'     =>  $bookmarks,
             'forms'         =>  $forms,
             'utmForms'      =>  $utmForms,

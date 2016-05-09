@@ -1,5 +1,5 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
-{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+{% form_theme form_view 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
 
@@ -43,18 +43,18 @@
 						<td>
 							<a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">
 							{% for bookmark in bookmarks %}
-								{% if form.name == bookmark.form.name %}
+								{% if form.id == bookmark.form.id %}
 									<i class="fa fa-star"></i>
 								{% endif %}
 							{% endfor %}
-							{{ form.name }}
+							[{{ form.id }}] {{ form.name }}
 							</a>
 						</td>
-						<td>{{ nbviews[form.name]["PAGES_VIEWS"] }}</td>
-						<td>{{ nbviews[form.name]["NB_LEADS"] }}</td>
+						<td>{{ nbviews[form.id]["PAGES_VIEWS"] }}</td>
+						<td>{{ nbviews[form.id]["NB_LEADS"] }}</td>
 						<td>
-							{% if nbviews[form.name]["PAGES_VIEWS"] != 0  %}
-								{{ (nbviews[form.name]["NB_LEADS"] / nbviews[form.name]["PAGES_VIEWS"] * 100) |round}} %
+							{% if nbviews[form.id]["PAGES_VIEWS"] != 0  %}
+								{{ (nbviews[form.id]["NB_LEADS"] / nbviews[form.id]["PAGES_VIEWS"] * 100) |round}} %
 							{% else %}
 								0 %
 							{% endif %}
