@@ -46,24 +46,34 @@ class Comundimail extends AbstractMethod {
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
+		
         $this->_formConfig = $form->getConfig();
         $logger->info('############ COMUNDI - EXPORT ###############');
-
+		
         foreach($jobs as $job) {
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
 
+            $logger->info('[ComundiMail] - Traitement Lead : '.$job->getLead()->getId());
+
             $form_subject = $data['sujet'];
             $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
-            $from = $this->_formConfig['mail_from'];
+            $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
             $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
             $tel = $this->_formConfig['mails'][$form_subject]['tel'];
             $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
             $mail_service_client = $this->_formConfig['mails'][$form_subject]['webmaster'];
 
             $hasError = false;
-            $templatingService = $this->container->get('templating');
+            $templatingService = $this->getContainer()->get('templating');
+
+            if ( trim($data['origine-co']) != "" ) {
+                $sujetAdv = $sujet . " - www.comundi.fr - " .$data['origine-co'];
+            } else {
+                $sujetAdv = $sujet;
+            }
 
             // Envoi du mail au client
+            $logger->info('[ComundiMail] - Envoi mail client / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
             $message_client = \Swift_Message::newInstance()
                 ->setSubject($sujet)
                 ->setFrom($from)
@@ -96,18 +106,20 @@ class Comundimail extends AbstractMethod {
                 )
             ;
 
-            $files_dir = $this->container->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
+            $files_dir = $this->getContainer()->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
 
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                $logger->info('[ComundiMail] -Ajotu BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
                 $message_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
                 $logger->info('Destinataire mail BCC ajouté dans le mail client');
             }
 
             // Envoi du mail au service client
             $data['demande-rdv'] = $this->subjects[$data['sujet']];
+            $logger->info('[ComundiMail] - Envoi mail SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
             $message_service_client = \Swift_Message::newInstance()
-                ->setSubject($sujet)
+                ->setSubject($sujetAdv)
                 ->setFrom($from)
                 ->setTo($mail_service_client)
                 // HTML version
@@ -134,6 +146,7 @@ class Comundimail extends AbstractMethod {
 
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                $logger->info('[ComundiMail] - Ajout BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
                 $message_service_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
                 $logger->info('Destinataire mail BCC ajouté dans le mail service client');
             }
@@ -148,10 +161,10 @@ class Comundimail extends AbstractMethod {
             }
 
             try {
-                $this->container->get('mailer')->send($message_client);
-                $logger->info('****** Envoi du mail client réussi ! ******');
-                $this->container->get('mailer')->send($message_service_client);
-                $logger->info('****** Envoi du mail service client réussi ! ******');
+                $resutClient = $this->getContainer()->get('mailer')->send($message_client);
+                $logger->info('****** Envoi du mail client réussi ('.$job->getLead()->getId().')! ******');
+                $resultAdv = $this->getContainer()->get('mailer')->send($message_service_client);
+                $logger->info('****** Envoi du mail service client réussi ! ('.$job->getLead()->getId().') ******');
             } catch(\Exception $e) {
                 $hasError = true;
                 $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');
@@ -165,7 +178,7 @@ class Comundimail extends AbstractMethod {
                 $msg = 'Exporté avec succès';
             }
 
-            $logger->info('Export Comundi mail désactivé');
+            $logger->info('Export Comundi mail fin : '.$job->getLead()->getId());
             $exportUtils->updateJob($job, $status, $msg);
             $exportUtils->updateLead($job->getLead(), $status, $msg);
 

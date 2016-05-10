@@ -247,24 +247,27 @@ class AthenaV2BaseMapping {
     }
 
     public function getVille_facturation($data){
+        $ma_ville = null;
+
         if(array_key_exists('ville_id', $data) && $data['ville_id']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville_id']);
         } else if (array_key_exists("ville", $data) && $data['ville']){
             $ma_ville = $this->list_element_repository->getNameUsingListCodeAndValue("ville", $data['ville']);
         } else if(array_key_exists("ville_text", $data) && $data['ville_text']){
             $ma_ville = $data['ville_text'];
-        } else {
-            return "";
         }
 
-        if(is_array($ma_ville)){
-            $ville = $ma_ville[0]['name'];
-        } else if(is_string($ma_ville)){
-            $ville = $ma_ville;
-        } else $ville = "";
+        // Data treatment
+        if (is_array($ma_ville)) {
+            if (count($ma_ville) < count($ma_ville, COUNT_RECURSIVE))
+                $ma_ville = $ma_ville[0]['ville_text'];
+            else // If array is NOT multidimensional
+                $ma_ville = $ma_ville['ville_text'];
+        }
 
-        return $ville;
+        return $ma_ville;
     }
+
     public function getNb_habitants($data){
 
         $population = "";
