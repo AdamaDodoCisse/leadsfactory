@@ -271,13 +271,18 @@ class FrontController extends CoreController
             }
             if ( array_key_exists( 'configuration', $config ) ) {
                 if (array_key_exists(  'assign' , $config["configuration"] )) {
-                    $assign = trim($fields[ $config["configuration"]["firstname"] ] );
-                    $user = $this->getRepository('TellawLeadsFactoryBundle:Leads')->getByEmail($assign);
+                    $assign = trim($config["configuration"]["assign"] );
+                    $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($assign);
+
                     if ($user != null) {
+                        $logger->info("Saving user !");
                         $leads->setUser( $user );
+                    } else {
+                        $logger->info("User does not exists! ".$assign);
                     }
                 }
             }
+
 
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
