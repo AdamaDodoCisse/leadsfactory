@@ -46,9 +46,10 @@ class Comundimail extends AbstractMethod {
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
+		
         $this->_formConfig = $form->getConfig();
         $logger->info('############ COMUNDI - EXPORT ###############');
-
+		
         foreach($jobs as $job) {
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
 
@@ -63,7 +64,7 @@ class Comundimail extends AbstractMethod {
             $mail_service_client = $this->_formConfig['mails'][$form_subject]['webmaster'];
 
             $hasError = false;
-            $templatingService = $this->container->get('templating');
+            $templatingService = $this->getContainer()->get('templating');
 
             if ( trim($data['origine-co']) != "" ) {
                 $sujetAdv = $sujet . " - www.comundi.fr - " .$data['origine-co'];
@@ -105,7 +106,7 @@ class Comundimail extends AbstractMethod {
                 )
             ;
 
-            $files_dir = $this->container->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
+            $files_dir = $this->getContainer()->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
 
             // Ajout des copies carbones
             if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
@@ -160,14 +161,13 @@ class Comundimail extends AbstractMethod {
             }
 
             try {
-                $this->container->get('mailer')->send($message_client);
-                mail('ewallet@weka.fr', 'Mon Sujet ComundiMail', 'Test de mail');
+                $resutClient = $this->getContainer()->get('mailer')->send($message_client);
                 $logger->info('****** Envoi du mail client réussi ('.$job->getLead()->getId().')! ******');
-                $this->container->get('mailer')->send($message_service_client);
+                $resultAdv = $this->getContainer()->get('mailer')->send($message_service_client);
                 $logger->info('****** Envoi du mail service client réussi ! ('.$job->getLead()->getId().') ******');
             } catch(\Exception $e) {
                 $hasError = true;
-                $logger->error("****** Erreur à l'envoi du mail ('.$job->getLead()->getId().') de contact Comundi : ".$e->getMessage().' ******');
+                $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');
             }
 
             if($hasError) {
