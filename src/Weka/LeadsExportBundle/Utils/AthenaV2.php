@@ -407,6 +407,7 @@ class AthenaV2 extends AbstractMethod{
         $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : HTTP Query -> [" . $request ."]" );
 
         $max_exe_time = 10050; // time in milliseconds
+        print_r($this->_athenaUrl);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->_athenaUrl);
         curl_setopt($ch, CURLOPT_FAILONERROR, true);
