@@ -55,14 +55,13 @@ class ExportCommand extends ContainerAwareCommand {
 
         } else {
             $output->writeln('Un export est déjà en traitement. Si c\'est anormal, merci de détruire le fichier LOCK :'.ExportCommand::$_PID_FILE );
-            $logger->error('Un export est déjà en traitement. Si c\'est anormal, merci de détruire le fichier LOCK :'.ExportCommand::$_PID_FILE);
+            $logger->error('Un export est déjà en traitement. Si c\'est anormal, merci dyouplase détruire le fichier LOCK :'.ExportCommand::$_PID_FILE);
         }
 	}
 
     private function createExportPid () {
 
         $somecontent = date("c");
-
 
         if (!$handle = fopen(ExportCommand::$_PID_FILE, 'a')) {
             throw new \Exception ("Impossible d'ouvrir le fichier (".ExportCommand::$_PID_FILE.")");

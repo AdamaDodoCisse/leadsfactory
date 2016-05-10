@@ -269,6 +269,15 @@ class FrontController extends CoreController
             if (array_key_exists('email', $fields)) {
                 $leads->setEmail($fields['email']);
             }
+            if ( array_key_exists( 'configuration', $config ) ) {
+                if (array_key_exists(  'assign' , $config["configuration"] )) {
+                    $assign = trim($fields[ $config["configuration"]["firstname"] ] );
+                    $user = $this->getRepository('TellawLeadsFactoryBundle:Leads')->getByEmail($assign);
+                    if ($user != null) {
+                        $leads->setUser( $user );
+                    }
+                }
+            }
 
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
