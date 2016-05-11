@@ -96,15 +96,11 @@ class PreferencesUtils implements ContainerAwareInterface {
 
     public function getUserPreferenceByKey ( $key, $scope = "", $notifyIfNotFound = true )
     {
-
         if (!array_key_exists( $key, PreferencesUtils::$_REGISTERED_KEYS ) ) {
             throw new \Exception ("Usage of a non registered preference key : ".$key." - Please use PreferencesUtils::registerKey to register the key before using it");
         }
-
-        if ($scope == "") {
-            $preference = $this->container->get('leadsfactory.preference_repository')->findOneByKeyval($key);
-        } else if ( $scope == PreferencesUtils::$_SCOPE_GLOBAL ) {
-            $preference = $this->container->get('leadsfactory.preference_repository')->findByKeyAndScope ($key, "");
+        if ($scope == "" || $scope == PreferencesUtils::$_SCOPE_GLOBAL) {
+            $preference = $this->container->get('leadsfactory.preference_repository')->findByKey($key);
         }else {
             $preference = $this->container->get('leadsfactory.preference_repository')->findByKeyAndScope ($key, $scope);
         }

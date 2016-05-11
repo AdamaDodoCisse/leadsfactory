@@ -23,7 +23,7 @@ class SearchWatchdogCommand extends ContainerAwareCommand {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        $request = '/_search';
+        $request = '/_status';
         $searchUtils = $this->getContainer()->get("search.utils");
 
         $response = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );

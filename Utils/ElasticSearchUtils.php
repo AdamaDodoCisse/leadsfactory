@@ -221,11 +221,11 @@ class ElasticSearchUtils extends SearchShared {
         if ($parameters) {
             curl_setopt($ci, CURLOPT_POSTFIELDS, $parameters);
         }
+
         curl_setopt($ci, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ci);
         $error = curl_error($ci);
         curl_close($ci);
-
         if ($result) {
             $result = json_decode( $result);
             if (method_exists($result,"error")) {
@@ -236,8 +236,9 @@ class ElasticSearchUtils extends SearchShared {
 
         if ($populate)
             return $this->populateObjectFromSearch( $result );
-        else
+        else {
             return $result;
+        }
     }
 
     /**

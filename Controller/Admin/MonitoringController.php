@@ -89,7 +89,7 @@ class MonitoringController extends CoreController {
         // Filter forms regarding scopes
         if ($user_scope) { // If there is a scope
             foreach($forms as $n => $f) {
-                if ($f->getScope() != $user_scope)
+                if ($user_scope && $f->getScope() != $user_scope)
                     unset($forms[$n]);
             }
         }
