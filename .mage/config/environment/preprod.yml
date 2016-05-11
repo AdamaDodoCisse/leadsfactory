@@ -25,7 +25,7 @@ tasks:
   on-deploy:
     - chmod
     - chmodshared
-    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas, licence, vendor/twilio]}
+    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas, licence, vendor/twilio/]}
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
     - symfony-doctrine-update
