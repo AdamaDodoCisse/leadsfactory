@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "12d378f9cda1e6a2cf7e00eb62c097a7",
+    "hash": "b00b0e6ed74061ff2c66b682480cac12",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2428,17 +2428,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.26",
+            "version": "1.0.28",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "6dd72c50fc8e101dd3830c35f3f63794e69f3344"
+                "reference": "bd6b1ee3d4d83acb4080d5a7f88bbdeee128a70e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/6dd72c50fc8e101dd3830c35f3f63794e69f3344",
-                "reference": "6dd72c50fc8e101dd3830c35f3f63794e69f3344",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/bd6b1ee3d4d83acb4080d5a7f88bbdeee128a70e",
+                "reference": "bd6b1ee3d4d83acb4080d5a7f88bbdeee128a70e",
                 "shasum": ""
             },
             "require": {
@@ -2482,7 +2482,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-05-10 13:39:42"
+            "time": "2016-05-11 12:10:54"
         },
         {
             "name": "teodortalov/citrix",
