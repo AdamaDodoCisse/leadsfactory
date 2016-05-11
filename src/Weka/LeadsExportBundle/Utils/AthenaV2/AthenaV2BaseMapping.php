@@ -260,9 +260,9 @@ class AthenaV2BaseMapping {
         // Data treatment
         if (is_array($ma_ville)) {
             if (count($ma_ville) < count($ma_ville, COUNT_RECURSIVE))
-                $ma_ville = $ma_ville[0]['ville_text'];
+                $ma_ville = $ma_ville[0]['name'];
             else // If array is NOT multidimensional
-                $ma_ville = $ma_ville['ville_text'];
+                $ma_ville = $ma_ville['name'];
         }
 
         return $ma_ville;
