@@ -665,8 +665,6 @@ class EntityLeadsController extends CoreController
 		$prefUtils = $this->get('preferences_utils');
 		$from = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_EMAIL_SENDER', $scopeId);
 
-		//mail("eric.wallet@gmail.com","test","toto");
-
 		$subject = "Lead's Factory : ".$action;
 
 		$template = $this->renderView(
