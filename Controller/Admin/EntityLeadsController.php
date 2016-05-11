@@ -510,9 +510,11 @@ class EntityLeadsController extends CoreController
 	 */
 	protected function getUserFormsOptions()
 	{
-		$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->getUserForms($this->getUser());
+		$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->getForms();
 		$options = array('' => 'Sélectionnez un formulaire');
+		$user_scope = $this->get('security.context')->getToken()->getUser()->getScope();
 		foreach($forms as $form){
+			if ($user_scope && $form->getscope() != $user_scope) continue;
 			$options[$form->getId()] = $form->getName();
 		}
 		return $options;
