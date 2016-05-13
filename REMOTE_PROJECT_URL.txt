@@ -1,0 +1,2 @@
+git@bitbucket.org:teamwekaservices/weka-leadsfactory.git
+https://wekaservices@bitbucket.org/teamwekaservices/weka-leadsfactory.git
