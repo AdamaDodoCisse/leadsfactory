@@ -3,7 +3,33 @@
 {% form_theme filters_form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
 {% block body %}
 
+    <style>
+        .ui-autocomplete {
+            background-color:#FFF;
+            max-height: 100px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            width:308px;
+            border:1px solid #e0e0e0;
+            cursor: pointer;
+            padding: 0px;
+        }
+        .ui-autocomplete li {
+            display:block;
+            padding: 5px 0px 5px 12px;
+        }
+        .ui-autocomplete li:hover {
+            background-color:#e0e0e0;
 
+        }
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
+        * html .ui-autocomplete {
+            height: 100px;
+        }
+    </style>
     <div class="col-md-12">
 
             <div class="heading-sec" id="intro6">
@@ -103,12 +129,35 @@
 
     <script type="text/javascript">
 
-        $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
+        $( document ).ready(function() {
+            $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
+            setAutoComplete();
+        });
 
         $('#st_per_page').change(function(){
             var route = '{{ path(pagination.route) }}';
             window.location.href = route + '/1/' + $(this).val();
         });
+
+        function setAutoComplete () {
+            $( "#form_affectation" ).autocomplete({
+                source: "{{ path('_leads_users_search_ajax') }}",
+                minLength: 3,
+                click: function( event, ui ) {
+                    event.preventDefault();
+                    $( "#form_affectation").val(ui.item.label);
+                    return false;
+                },
+                select: function( event, ui ) {
+                    event.preventDefault();
+                    $( "#form_affectation").val(ui.item.label);
+                    return false;
+                }
+            });
+        }
+
+
+
     </script>
 
 {% endblock %}

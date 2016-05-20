@@ -150,6 +150,7 @@ class EntityLeadsController extends CoreController
 	    if ($filterForm->isValid()) {
 		    $filterParams = $filterForm->getData();
 			$filterParams["user"] = $this->getUser();
+			// TODO : GO FIND OUT WTF IS GETLIST DOING !!!
 		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }else{
 			$filterParams =  array ('user'=>$this->getUser());
@@ -163,7 +164,7 @@ class EntityLeadsController extends CoreController
                 'pagination'    => $list['pagination'],
                 'limit_options' => $list['limit_options'],
 	            'filters_form'  => $filterForm->createView(),
-	            'export_form'   => $this->getReportForm($filterParams)->createView()
+	            'export_form'   => $this->getReportForm($filterParams)->createView(),
             )
         );
     }
@@ -554,10 +555,30 @@ class EntityLeadsController extends CoreController
 			->add('datemin', 'date', array('label' => 'Date de début', 'widget'=>'single_text', 'required' => false))
 			->add('datemax', 'date', array('label' => 'Date de fin', 'widget'=>'single_text', 'required' => false))
 			->add('keyword', 'text', array('label' => 'Mot-clé', 'required' => false))
+			->add('affectationId', 'hidden', array('label' => '', 'required' => false))
+			->add('affectation', 'text', array('label' => 'Affectation', 'required' => false))
+			->add('workflowStatus', 'choice', array('choices' => $this->getLeadsWorkflowOptions("status"), 'label' => 'Statut', 'required' => false))
+			->add('workflowType', 'choice', array('choices' => $this->getLeadsWorkflowOptions("type"), 'label' => 'Type', 'required' => false))
+			->add('workflowTheme', 'choice', array('choices' => $this->getLeadsWorkflowOptions("theme"), 'label' => 'Thème', 'required' => false))
 			->add('valider', 'submit', array('label' => 'Valider'))
 		    ->getForm();
 
 		return $form;
+	}
+
+
+	protected function getLeadsWorkflowOptions($target=null) {
+		if ($target == null) return null;
+		$listCode = "leads-".$target;
+		$scopeId = $this->getUser()->getScope()->getId();
+		$dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
+		$dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope( $listCode, $scopeId );
+		$elements = $dataDictionnary->getElementsByOrder( $dataDictionnaryId, "rank", "ASC" );
+		$options = array('' => 'Sélectionnez');
+		foreach ($elements as $element) {
+			$options[$element->getValue()] = $element->getName();
+		}
+		return $options;
 	}
 
 	/**
