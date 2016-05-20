@@ -513,16 +513,16 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     }
 
     /**
-     *
      * Method used to save the JS Casper test file
      *
      * @param $form
      * @param $content
+     * @return bool
      */
     public function saveTest ( $form, $content ) {
 
-        if (!is_dir( "app/cache/casperjs" )) {
-            mkdir ( "app/cache/casperjs" );
+        if (!is_dir( $this->container->get('kernel')->getRootDir(). '/cache/casperjs' )) {
+            mkdir ( $this->container->get('kernel')->getRootDir(). '/cache/casperjs' );
         }
 
         $filename = $this->getCasperScriptPath($form);
@@ -539,7 +539,6 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
         fclose($fp);
 
         return true;
-
     }
 
     /**
