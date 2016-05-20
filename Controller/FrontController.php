@@ -269,20 +269,39 @@ class FrontController extends CoreController
             if (array_key_exists('email', $fields)) {
                 $leads->setEmail($fields['email']);
             }
+
+            // Assignation de la leads si la configuration est presente
             if ( array_key_exists( 'configuration', $config ) ) {
+
                 if (array_key_exists(  'assign' , $config["configuration"] )) {
+
                     $assign = trim($config["configuration"]["assign"] );
                     $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($assign);
 
                     if ($user != null) {
-                        $logger->info("Saving user !");
                         $leads->setUser( $user );
                     } else {
-                        $logger->info("User does not exists! ".$assign);
+                        $logger->info("Frontcontroller : Assign tu a User that does not exists! ".$assign);
                     }
-                }
-            }
 
+                }
+
+                if (array_key_exists(  'status' , $config["configuration"] )) {
+                    $status = trim($config["configuration"]["status"] );
+                    $leads->setWorkflowStatus( $status );
+                }
+
+                if (array_key_exists(  'type' , $config["configuration"] )) {
+                    $type = trim($config["configuration"]["type"] );
+                    $leads->setWorkflowType( $type );
+                }
+
+                if (array_key_exists(  'theme' , $config["configuration"] )) {
+                    $theme = trim($config["configuration"]["theme"] );
+                    $leads->setWorkflowTheme( $theme );
+                }
+
+            }
 
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);

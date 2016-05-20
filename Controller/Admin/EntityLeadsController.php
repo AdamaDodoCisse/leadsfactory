@@ -37,9 +37,66 @@ class EntityLeadsController extends CoreController
 			PreferencesUtils::$_PRIORITY_OPTIONNAL
 		);
 
+		PreferencesUtils::registerKey( "CORE_LEADSFACTORY_DISPATCH_EMAIL",
+			"Email of the dispatch user",
+			PreferencesUtils::$_PRIORITY_REQUIRED
+		);
+
         parent::__construct();
+
     }
 
+	/**
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/dispatchList/{page}/{limit}/{keyword}", name="_leads_dispatchList")
+	 */
+	public function indexDispatchAction(Request $request, $page=1, $limit=25, $keyword='')
+	{
+
+		if ($this->get("core_manager")->isDomainAccepted ()) {
+			return $this->redirect($this->generateUrl('_security_licence_error'));
+		}
+
+		// find the dispatch user for user's scope
+		$prefUtils = $this->get('preferences_utils');
+
+		// First load from preferences the dispatch email for the current scope
+		if (  $this->getUser()->getScope() != null )
+			$dispatchUserEmail = $prefUtils->getUserPreferenceByKey ('CORE_LEADSFACTORY_DISPATCH_EMAIL', $this->getUser()->getScope()->getId() );
+		else
+			$dispatchUserEmail = $prefUtils->getUserPreferenceByKey ('CORE_LEADSFACTORY_DISPATCH_EMAIL' );
+
+		// Then load the user
+		$user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
+
+		if ($user == null) {
+			throw new Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : ".$dispatchUserEmail);
+		}
+
+		$filterForm = $this->getLeadsFilterForm();
+		$filterForm->handleRequest($request);
+
+		if ($filterForm->isValid()) {
+			$filterParams = $filterForm->getData();
+			$filterParams["user"] = $user;
+			$filterParams["owner"] = $user;
+			$list = $this->getDispatchList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+		}else{
+			$filterParams =  array ('user'=>$user, 'owner'=>$user);
+			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+		}
+
+		return $this->render(
+			'TellawLeadsFactoryBundle:entity/Leads:userList.html.twig',
+			array(
+				'elements'      => $list['collection'],
+				'pagination'    => $list['pagination'],
+				'limit_options' => $list['limit_options'],
+				'filters_form'  => $filterForm->createView(),
+				'export_form'   => $this->getReportForm($filterParams)->createView()
+			)
+		);
+	}
 	/**
 	 * @Secure(roles="ROLE_USER")
 	 * @Route("/leads/userList/{page}/{limit}/{keyword}", name="_leads_userList")
