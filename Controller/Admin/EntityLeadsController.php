@@ -87,7 +87,7 @@ class EntityLeadsController extends CoreController
 		}
 
 		return $this->render(
-			'TellawLeadsFactoryBundle:entity/Leads:userList.html.twig',
+			'TellawLeadsFactoryBundle:entity/Leads:dispatchList.html.twig',
 			array(
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
@@ -122,7 +122,7 @@ class EntityLeadsController extends CoreController
 		}
 
 		return $this->render(
-			'TellawLeadsFactoryBundle:entity/Leads:userList.html.twig',
+			'TellawLeadsFactoryBundle:entity/Leads:myList.html.twig',
 			array(
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
@@ -294,6 +294,31 @@ class EntityLeadsController extends CoreController
 
 
 		return new Response('ok');
+
+	}
+
+	/**
+	 * @Route("/leads/json/update", name="_leads_json_update_field")
+	 * @Secure(roles="ROLE_USER")
+	 */
+	public function updateJsonFieldToLead( Request $request ) {
+
+		$leadId = $request->request->get ("leadId");
+		$leadField = $request->request->get ("leadField");
+		$leadFieldValue = $request->request->get ("leadFieldValue");
+
+		$lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
+
+		$leadDetail = json_decode($lead->getData(), true);
+		$leadDetail[$leadField] = $leadFieldValue;
+
+		$lead->setData ( json_encode($leadDetail) );
+
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($lead);
+		$em->flush();
+
+		return new Response($leadFieldValue);
 
 	}
 
@@ -568,8 +593,15 @@ class EntityLeadsController extends CoreController
 
 
 	protected function getLeadsWorkflowOptions($target=null) {
-		if ($target == null) return null;
+
+		if ($target == null) {
+			return null;
+		}
+
 		$listCode = "leads-".$target;
+		if ( $this->getUser()->getScope() == null ) {
+			return null;
+		}
 		$scopeId = $this->getUser()->getScope()->getId();
 		$dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
 		$dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope( $listCode, $scopeId );

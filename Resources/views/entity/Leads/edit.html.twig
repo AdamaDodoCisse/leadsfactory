@@ -149,13 +149,15 @@
                             <tr class="country-table-head">
                                 <th class="sort-down">Information </th>
                                 <th>Détail</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for key, detail in leadDetail %}
                             <tr>
                                 <td>{{ key }}</td>
-                                <td>{{ detail }}</td>
+                                <td id="td-{{ key }}">{{ detail }}</td>
+                                <td><a href="#" alt="Editer" onClick="replaceFieldByInput('{{ key }}', '{{ lead.id }}');return false;"><img title="Editer" style="height:25px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a></td>
                             </tr>
                             {% endfor %}
                             </tbody></table>
@@ -483,6 +485,31 @@ function setAutoComplete () {
         var container = $("#exportList")
         fragmentAjaxCall ( url, data, container,
                 function (result){} );
+    }
+
+    // Script used to edit values
+    function replaceFieldByInput ( id, leadId) {
+        obj = $("#td-"+id);
+        if (obj.val().indexOf("<input") == -1) {
+            var content = "<input type='hidden' id='cancel-"+id+"' value='"+obj.text()+"'/><input type='text' id='field-" + id + "' value='" + obj.text() + "' style='width:80%'/><input type='button' value='ok' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/><input type='button' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>";
+            obj.html(content);
+        }
+    }
+    function cancelFieldValue ( fieldId, leadId ) {
+        var fieldValue = $("#cancel-"+fieldId).val();
+        $("#td-"+fieldId).text(fieldValue);
+    }
+
+    function saveFieldValue ( fieldId, leadId ) {
+
+        var leadId = leadId;
+        var fieldValue = $("#field-"+fieldId).val();
+
+        var url = "{{ path ('_leads_json_update_field') }}";
+        var data = { leadId : leadId, leadField : fieldId, leadFieldValue : fieldValue} ;
+
+        ajaxCall ( url, data, function ( result ) { $("#td-"+fieldId).text(result); });
+
     }
 
 </script>
