@@ -23,27 +23,48 @@
             background-color:#e0e0e0;
 
         }
-        /* IE 6 doesn't support max-height
-         * we use height instead, but this forces the menu to always be this tall
-         */
+        .filter_form form #form div {
+            display: inline-block;
+            width: 45%;
+            margin: 1%;
+        }
+        #row-form_form {
+            width: 92.5% !important;
+        }
+        .filter_form form .form-actions .span3{
+            display: none !important;
+        }
+            /* IE 6 doesn't support max-height
+             * we use height instead, but this forces the menu to always be this tall
+             */
         * html .ui-autocomplete {
             height: 100px;
         }
     </style>
     <div class="col-md-12">
-
-            <div class="heading-sec" id="intro6">
-                <h1>Administration <i>des leads</i></h1>
-                <div style="clear:both"></div>
-                <div class="titleDescription"><em>Un &laquo;leads&raquo; représente un formulaire posté depuis un de vos sites vers votre SI. Il s'agit de l'enregistrement brut des données, qui suivant votre configuration dans le formulaire source, va donner des exports vers les differents outils de votre système d'informations. </em></div>
-            </div>
-
+        <div class="heading-sec" id="intro6">
+            <h1>Administration <i>des leads</i></h1>
+            <div style="clear:both"></div>
+            <div class="titleDescription"><em>Un &laquo;leads&raquo; représente un formulaire posté depuis un de vos sites vers votre SI. Il s'agit de l'enregistrement brut des données, qui suivant votre configuration dans le formulaire source, va donner des exports vers les differents outils de votre système d'informations. </em></div>
+        </div>
     </div>
 
     <div class="col-md-12">
+
+        <div class="widget-body custom-form col-md-12">
+            <div class="col-md-8 filter_form" style="border-right: 1px solid #ddd">
+                <h2>Filtrer la liste</h2>
+                {{ form(filters_form) }}
+            </div>
+            <div class="col-md-4 pull-right">
+                <h2>Télécharger la liste</h2>
+                {{ form(export_form) }}
+            </div>
+        </div>
+
         <h3 class="custom-heading">Leads enregistrés:</h3>
         <div style="clear:both"></div>
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="streaming-tables">
                 <div>
                     <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
@@ -94,36 +115,26 @@
                 </table>
 
                 {% if pagination.pages_count > 1 %}
-                <div class="st_pagination">
-                    <ul class="pagination">
-                        {% if pagination.page > 1 %}
-                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" class="first">Début</a></li>
-                            <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">&larr; Précédent</a></li>
-                        {% endif %}
-                        {% for i in pagination.pagination_min..pagination.pagination_max %}
-                            <li {% if pagination.page == i %}class="active" {% endif %}>
-                                <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
-                            </li>
-                        {% endfor %}
-                        {% if pagination.page < pagination.pages_count %}
-                            <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Suivant &rarr;</a></li>
-                            <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Fin</a></li>
-                        {% endif %}
-                    </ul>
-                </div>
+                    <div class="st_pagination">
+                        <ul class="pagination">
+                            {% if pagination.page > 1 %}
+                                <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" class="first">Début</a></li>
+                                <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">&larr; Précédent</a></li>
+                            {% endif %}
+                            {% for i in pagination.pagination_min..pagination.pagination_max %}
+                                <li {% if pagination.page == i %}class="active" {% endif %}>
+                                    <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if pagination.page < pagination.pages_count %}
+                                <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Suivant &rarr;</a></li>
+                                <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Fin</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 {% endif %}
 
             </div>
-        </div>
-        <div class="col-md-3">
-           <div class="widget-body custom-form">
-               <h2>Filtrer la liste</h2>
-               {{ form(filters_form) }}
-           </div>
-           <div  class="widget-body custom-form" style="margin:10px 0 0 0;">
-               <h2>Télécharger la liste</h2>
-               {{ form(export_form) }}
-           </div>
         </div>
     </div>
 
@@ -132,12 +143,23 @@
         $( document ).ready(function() {
             $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
             setAutoComplete();
+
+            // Scroll to results
+            $('.custom-heading').scrollView();
         });
 
         $('#st_per_page').change(function(){
             var route = '{{ path(pagination.route) }}';
             window.location.href = route + '/1/' + $(this).val();
         });
+
+        $.fn.scrollView = function () {
+            return this.each(function () {
+                $('html, body').animate({
+                    scrollTop: $(this).offset().top
+                }, 1000);
+            });
+        };
 
         function setAutoComplete () {
             $( "#form_affectation" ).autocomplete({

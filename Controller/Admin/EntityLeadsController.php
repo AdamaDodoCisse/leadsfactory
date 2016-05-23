@@ -556,7 +556,7 @@ class EntityLeadsController extends CoreController
 					'required'  => false
 				)
 			)
-			->add('firstname', 'text', array('label' => 'Prénom', 'required' => false))
+			->add('firstname', 'text', array('attr'=>array('class'=>'long'), 'label' => 'Prénom', 'required' => false))
 			->add('lastname', 'text', array('label' => 'Nom', 'required' => false))
 			->add('email', 'text', array('label' => 'E-mail', 'required' => false))
 			->add('datemin', 'date', array('label' => 'Date de début', 'widget'=>'single_text', 'required' => false))
