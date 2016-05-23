@@ -109,7 +109,6 @@ class LeadsRepository extends EntityRepository
 	public function getList($page=1, $limit=25, $keyword='',  $args=null )
 	{
 		$dql = $this->getSqlFilterQuery($args);
-
 		$query = $this->getEntityManager()
 		              ->createQuery($dql)
 		              ->setFirstResult(($page-1) * $limit)
@@ -166,13 +165,25 @@ class LeadsRepository extends EntityRepository
 		if(!empty($args)) {
 			$dql .= ' WHERE 1=1';
 
-			if (!empty($args['owner'])  ) {
-				$dql .= " AND l.user=".$args['owner']->getId();
-			}
-
             if(!empty($args['user']) && $args['user']->getScope() != null){
                 $dql .= " AND f.scope = ".$args['user']->getScope()->getId();
             }
+
+			if (isset($args['affectation']) && !empty($args['affectation'])) {
+				$dql .= " AND l.user = " . $args['user']->getId();
+			}
+
+			if (isset($args['workflowStatus']) && !empty($args['workflowStatus'])) {
+				$dql .= " AND l.workflowStatus = '" . $args['workflowStatus'] . "'";
+			}
+
+			if (isset($args['workflowTheme']) && !empty($args['workflowTheme'])) {
+				$dql .= " AND l.workflowTheme = '" . $args['workflowTheme'] . "'";
+			}
+
+			if (isset($args['workflowType']) && !empty($args['workflowType'])) {
+				$dql .= " AND l.workflowType = '" . $args['workflowType'] . "'";
+			}
 
             if(!empty($args['form'])){
 				$dql .= " AND l.form='{$args['form']}'";

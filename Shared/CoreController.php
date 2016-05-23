@@ -1,2 +1,59 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Shared; use Symfony\Bridge\Monolog\Logger; use Tellaw\LeadsFactoryBundle\Controller\Admin\AbstractLeadsController; use Tellaw\LeadsFactoryBundle\Shared\CoreManager; class CoreController extends AbstractLeadsController { public $logger; public function __construct() { $spd1e661 = CoreManager::getLicenceInfos(); } public function getList($sp0d59bf, $spe03196, $sp65d27f, $sp911eed, $spd65a38 = null) { $sp42a825 = $this->getDoctrine()->getRepository($sp0d59bf)->getList($spe03196, $sp65d27f, $sp911eed, $spd65a38); $sp141e38 = $sp42a825->count(); $spd2f55b = ceil($sp141e38 / $sp65d27f); $sp5319dc = array('page' => $spe03196, 'total' => $sp141e38, 'pages_count' => $spd2f55b, 'pagination_min' => $spe03196 > 5 ? $spe03196 - 5 : 1, 'pagination_max' => $spd2f55b - $spe03196 > 5 ? $spe03196 + 5 : $spd2f55b, 'route' => $this->container->get('request')->get('_route'), 'limit' => $sp65d27f, 'keyword' => ''); $sp3ca8f6 = explode(';', $this->container->getParameter('list.per_page_options')); $sp7f3605 = array('collection' => $sp42a825, 'pagination' => $sp5319dc, 'limit_options' => $sp3ca8f6); return $sp7f3605; } }
+/**
+ * Created by PhpStorm.
+ * User: tellaw
+ * Date: 20/06/15
+ * Time: 07:56
+ */
+namespace Tellaw\LeadsFactoryBundle\Shared;
+
+use Symfony\Bridge\Monolog\Logger;
+use Tellaw\LeadsFactoryBundle\Controller\Admin\AbstractLeadsController;
+use Tellaw\LeadsFactoryBundle\Shared\CoreManager;
+
+class CoreController extends AbstractLeadsController {
+
+    public $logger;
+
+    public function __construct () {
+
+        //$logger = $this->container->get('export.logger');
+        $informations = CoreManager::getLicenceInfos();
+        //var_dump($informations);
+
+        //$logger->info ($informations);
+
+    }
+
+    public function getList($repository, $page, $limit, $keyword, $params=null) {
+
+        $collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $keyword, $params);
+
+        $total = $collection->count();
+        $pages_count = ceil($total/$limit);
+
+        $pagination = array(
+            'page'              => $page,
+            'total'             => $total,
+            'pages_count'       => $pages_count,
+            'pagination_min'    => ($page>5) ? $page -5 : 1,
+            'pagination_max'    => ($pages_count - $page) > 5 ? $page +5 : $pages_count,
+            'route'             => $this->container->get('request')->get('_route'),
+            'limit'             => $limit,
+            'keyword'           => ''
+        );
+
+        $limitOptions = explode(';', $this->container->getParameter('list.per_page_options'));
+
+        $list = array(
+            'collection'    => $collection,
+            'pagination'    => $pagination,
+            'limit_options' => $limitOptions
+        );
+
+        return $list;
+
+    }
+
+
+}

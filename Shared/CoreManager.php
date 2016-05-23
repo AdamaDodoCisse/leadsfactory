@@ -1,2 +1,171 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Shared; use Symfony\Component\DependencyInjection\ContainerAwareInterface; use Symfony\Component\DependencyInjection\ContainerInterface; class CoreManager implements ContainerAwareInterface { private static $v1 = 3.14; private static $v2 = 5; private static $v3 = 2; private static $v6 = 2.5; private static $v4 = 235; private static $v5 = 520; private static $v7 = 326; private $logger; protected $container; public function setContainer(ContainerInterface $spc33497 = null) { $this->container = $spc33497; $this->logger = $this->container->get('logger'); } protected function getContainer() { return $this->container; } public static function getLicenceInfos() { if (file_exists('../licence/licence.php')) { $spd561ac = implode('', file('../licence/licence.php')); $spba11ef = explode('|', $spd561ac); $sp44143e = ($spba11ef[2] + CoreManager::$v2) / CoreManager::$v1; $sp523836 = $spba11ef[3]; $sp9b2da5 = $spba11ef[4] * (CoreManager::$v2 / CoreManager::$v3) / (CoreManager::$v7 / 2); $sp61b114 = ($spba11ef[5] + CoreManager::$v5) / CoreManager::$v4; $sp525057 = $spba11ef[6]; $spb9ab7e = $spba11ef[9]; $spfc03ef = $spba11ef[7]; $sp7ce76f = $spba11ef[8]; $spd561ac = $spba11ef[1]; $specb333 = md5($spba11ef[2] . ':' . $spba11ef[3] . ':' . $spba11ef[4] . ':' . $spba11ef[5] . ':' . $spba11ef[6] . ':' . $spba11ef[8] . ':' . $spba11ef[7]); if ($spd561ac != $specb333) { throw new \Exception('Licence is not valid'); } $sp55eecb = new \DateTime(); $sp55eecb->setTimestamp($sp44143e); $spc38fd5 = new \DateTime(); if ($sp55eecb < $spc38fd5) { throw new Exception('Licence expirée'); } return array('isvalid' => true, 'dtf' => $sp44143e, 'plateform' => $sp523836, 'nbf' => $sp9b2da5, 'nbs' => $sp61b114, 'stats' => $sp525057, 'nom' => $spb9ab7e, 'societe' => $spfc03ef, 'domains' => explode(',', $sp7ce76f)); } else { throw new \Exception('Licence file not found'); } } public function isNewFormAccepted() { $spff4193 = CoreManager::getLicenceInfos(); $spdceea0 = $this->container->get('leadsfactory.form_repository'); $spcab100 = $spdceea0->createQueryBuilder('name')->select('COUNT(name)')->getQuery()->getSingleScalarResult(); if ($spcab100 < $spff4193['nbf']) { return true; } else { return false; } } public function isNewScopeAccepted() { $spff4193 = CoreManager::getLicenceInfos(); $spdceea0 = $this->container->get('leadsfactory.scope_repository'); $sp7e3ef5 = $spdceea0->createQueryBuilder('name')->select('COUNT(name)')->getQuery()->getSingleScalarResult(); if ($sp7e3ef5 < $spff4193['nbs']) { return false; } else { return true; } } public function isMonitoringAccepted() { $spff4193 = CoreManager::getLicenceInfos(); return $spff4193['stats']; } public function isDomainAccepted() { $sp6f0092 = $_SERVER['HTTP_HOST']; $spff4193 = CoreManager::getLicenceInfos(); $sp7ce76f = $spff4193['domains']; foreach ($sp7ce76f as $sp8fdc2a) { if (strstr($sp6f0092, $sp8fdc2a)) { return 0; } } return 1; } }
+/**
+ * Created by PhpStorm.
+ * User: tellaw
+ * Date: 20/06/15
+ * Time: 08:24
+ */
+
+namespace Tellaw\LeadsFactoryBundle\Shared;
+
+
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+class CoreManager  implements ContainerAwareInterface {
+
+    private static $v1 = 3.14;
+    private static $v2 = 5;
+    private static $v3 = 2;
+    private static $v6 = 2.5;
+    private static $v4 = 235;
+    private static $v5 = 520;
+    private static $v7 = 326;
+
+    private $logger;
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @param ContainerInterface $container
+     *
+     */
+    public function setContainer(ContainerInterface $container = null) {
+
+        $this->container = $container;
+        $this->logger = $this->container->get("logger");
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    protected function getContainer()
+    {
+        return $this->container;
+    }
+
+
+    public static function getLicenceInfos () {
+
+        if (file_exists ( "../licence/licence.php" )) {
+
+            $key = implode("",file ("../licence/licence.php"));
+            
+            $datas = explode( "|", $key );
+
+            $dtf = ($datas[2] + CoreManager::$v2)/CoreManager::$v1;
+            $plateform = $datas[3];
+            $nbf = ( ($datas[4] * ( (CoreManager::$v2/CoreManager::$v3) ) ) / (CoreManager::$v7/2) );
+            $nbs = ($datas[5] + CoreManager::$v5) / CoreManager::$v4 ;
+            $stats = $datas[6];
+            $nomClient = $datas[9];
+            $socClient = $datas[7];
+            $domains = $datas[8];
+
+            $key = $datas[1];
+            $calculation = md5($datas[2].":".$datas[3].":".$datas[4].":".$datas[5].":".$datas[6].":".$datas[8].":".$datas[7]);
+
+            if ( $key != $calculation ) throw new \Exception ("Licence is not valid");
+
+            $eol = new \DateTime();
+            $eol->setTimestamp($dtf);
+
+            $now = new \DateTime();
+
+            if ($eol < $now) {
+                throw new Exception ("Licence expirée");
+            }
+
+            return array (
+                "isvalid" => true,
+                "dtf" => $dtf,
+                "plateform" => $plateform,
+                "nbf" => $nbf,
+                "nbs" => $nbs,
+                "stats" => $stats,
+                "nom" => $nomClient,
+                "societe" => $socClient,
+                "domains" => explode (',',$domains)
+            );
+
+        } else {
+
+            throw new \Exception ("Licence file not found");
+
+        }
+
+    }
+
+    public function isNewFormAccepted () {
+
+        $infos = CoreManager::getLicenceInfos();
+        $repo = $this->container->get('leadsfactory.form_repository');
+
+        $nbForms = $repo->createQueryBuilder('name')
+            ->select('COUNT(name)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($nbForms < $infos["nbf"]){
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+
+    /**
+     * Inverted
+     * @return bool
+     * @throws \Exception
+     *
+     */
+    public function isNewScopeAccepted () {
+
+        $infos = CoreManager::getLicenceInfos();
+        $repo = $this->container->get('leadsfactory.scope_repository');
+
+        $nbScopes = $repo->createQueryBuilder('name')
+            ->select('COUNT(name)')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($nbScopes < $infos["nbs"]){
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    public function isMonitoringAccepted () {
+
+        $infos = CoreManager::getLicenceInfos();
+        return $infos["stats"];
+
+    }
+
+    /**
+     * @return int response inverted
+     * @throws \Exception
+     */
+    public function isDomainAccepted () {
+
+        $host = $_SERVER["HTTP_HOST"];
+        $infos = CoreManager::getLicenceInfos();
+        $domains = $infos["domains"];
+        foreach ($domains as $domain) {
+            if ( strstr ( $host, $domain ) ) {
+                return 0;
+            }
+        }
+        return 1;
+
+    }
+
+}

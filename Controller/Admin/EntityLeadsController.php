@@ -139,6 +139,8 @@ class EntityLeadsController extends CoreController
      */
     public function indexAction(Request $request, $page=1, $limit=25, $keyword='')
     {
+		$filterParams = null;
+		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
 
         if ($this->get("core_manager")->isDomainAccepted ()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
@@ -150,10 +152,12 @@ class EntityLeadsController extends CoreController
 	    if ($filterForm->isValid()) {
 		    $filterParams = $filterForm->getData();
 			$filterParams["user"] = $this->getUser();
-			// TODO : GO FIND OUT WTF IS GETLIST DOING !!!
-		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
+			if ($name = explode(" ", $filterParams["affectation"]))
+				$filterParams["user"] = $usersRepository->findOneBy(array("firstname"=>$name, "lastname"=>$name));
+			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }else{
-			$filterParams =  array ('user'=>$this->getUser());
+			$filterParams["user"] =  $this->getUser();
 		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }
 
@@ -460,7 +464,10 @@ class EntityLeadsController extends CoreController
 	public function searchUserLeadAction ( Request $request ) {
 
 		$term = $request->query->get("term");
-		$users = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->getList (1, 10, $term );
+		$users = array();
+
+		if ($scope = $this->getUser()->getScope())
+			$users = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->getList(1, 10, $term, array('scope'=>$scope->getId()) );
 
 		$responseUsers = array();
 
@@ -567,6 +574,10 @@ class EntityLeadsController extends CoreController
 	}
 
 
+	/**
+	 * @param null $target
+	 * @return array|null
+     */
 	protected function getLeadsWorkflowOptions($target=null) {
 		if ($target == null) return null;
 		$listCode = "leads-".$target;
@@ -574,7 +585,10 @@ class EntityLeadsController extends CoreController
 		$dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
 		$dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope( $listCode, $scopeId );
 		$elements = $dataDictionnary->getElementsByOrder( $dataDictionnaryId, "rank", "ASC" );
-		$options = array('' => 'Sélectionnez');
+		if (count($elements) > 2)
+			$options = array('' => 'Sélectionnez');
+		else
+			$options = array('' => 'Pas de données');
 		foreach ($elements as $element) {
 			$options[$element->getValue()] = $element->getName();
 		}
