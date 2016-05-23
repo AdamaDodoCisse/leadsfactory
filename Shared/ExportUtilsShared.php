@@ -1,7 +1,242 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Shared; use Symfony\Component\DependencyInjection\ContainerAwareInterface; use Symfony\Component\DependencyInjection\ContainerInterface; use Tellaw\LeadsFactoryBundle\Entity\Export; use Tellaw\LeadsFactoryBundle\Utils\ExportUtils; use Cron\CronExpression; use Symfony\Component\Config\Definition\Exception\Exception; use Symfony\Component\Validator\Constraints\DateTime; use Tellaw\LeadsFactoryBundle\Entity\Leads; use Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository; class ExportUtilsShared implements ContainerAwareInterface { protected $container; public function setContainer(ContainerInterface $spc33497 = null) { $this->container = $spc33497; } public function createJob($spd976db) { $sp26b3a4 = $this->getContainer()->get('export.logger'); $sp322851 = $spd976db->getForm()->getConfig(); foreach ($sp322851['export'] as $sp3b614c => $spcfdd1c) { $spb48583 = new Export(); if (!$this->isValidExportMethod($sp3b614c)) { $spb48583->setLog('Méthode d\'export invalide'); $sp26b3a4->info('Méthode d\'export invalide (formulaire ID ' . $spd976db->getForm()->getId() . ')'); } $spb48583->setMethod($sp3b614c); $spb48583->setLead($spd976db); $spb48583->setForm($spd976db->getForm()); $sp47fc23 = $this->getInitialExportStatus($spd976db, array('method' => $sp3b614c, 'method_config' => $spcfdd1c)); $spb48583->setStatus($sp47fc23); $spb48583->setCreatedAt(new \DateTime()); $spb48583->setScheduledAt($this->getScheduledDate($spcfdd1c)); try { $sp5c2248 = $this->getContainer()->get('doctrine')->getManager(); $sp5c2248->persist($spb48583); $sp5c2248->flush(); $sp26b3a4->info('Job export (ID ' . $spb48583->getId() . ') créé avec succès'); } catch (Exception $sp5b7f1e) { $sp26b3a4->error($sp5b7f1e->getMessage()); } } } protected function getInitialExportStatus($spd976db, $sp322851) { $sp1b7f16 = $sp322851['method_config']; $sp9c6013 = $this->getMethod($sp322851['method']); if (array_key_exists('if_email_validated', $sp1b7f16) && $sp1b7f16['if_email_validated'] === true) { $spf26696 = $spd976db->getEmail(); $sp815a5c = $sp9c6013->isEmailValidated($spd976db, $spf26696); if ($sp815a5c) { return ExportUtils::$_EXPORT_NOT_PROCESSED; } else { return ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED; } } else { return ExportUtils::$_EXPORT_NOT_PROCESSED; } } protected function getScheduledDate($spcfdd1c) { $spc9c9dc = isset($spcfdd1c['cron']) ? $spcfdd1c['cron'] : $this->_defaultCronExp; $sp90471d = CronExpression::factory($spc9c9dc); return $sp90471d->getNextRunDate($this->getMinDate($spcfdd1c)); } protected function getMinDate($spcfdd1c) { if (!isset($spcfdd1c['gap']) || trim($spcfdd1c['gap']) == '') { return 'now'; } $sp6a2d20 = new \DateTime(); return $sp6a2d20->add(new \DateInterval('PT' . trim($spcfdd1c['gap']) . 'M')); } public function export($sp368158) { $sp26b3a4 = $this->getContainer()->get('export.logger'); $sp322851 = $sp368158->getConfig(); if (!isset($sp322851['export'])) { return; } foreach ($sp322851['export'] as $sp3b614c => $spcfdd1c) { if (!$this->isValidExportMethod($sp3b614c)) { $sp26b3a4->error('Méthode d\'export "' . $sp3b614c . '" invalide'); continue; } $sp9a280e = $this->getExportableJobs($sp368158, $sp3b614c, $spcfdd1c); if (count($sp9a280e)) { $this->getMethod($sp3b614c)->export($sp9a280e, $sp368158); } } } protected function getExportableJobs($sp368158, $sp3b614c, $spcfdd1c) { $sp5c2248 = $this->getContainer()->get('doctrine')->getManager(); $spcfe3cf = $sp5c2248->createQuery('SELECT j
+/**
+ * Created by PhpStorm.
+ * User: tellaw
+ * Date: 20/06/15
+ * Time: 08:00
+ */
+
+namespace Tellaw\LeadsFactoryBundle\Shared;
+
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
+use Cron\CronExpression;
+use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\Validator\Constraints\DateTime;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository;
+
+class ExportUtilsShared implements ContainerAwareInterface {
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @param ContainerInterface $container
+     *
+     */
+    public function setContainer(ContainerInterface $container = null) {
+
+        $this->container = $container;
+
+    }
+
+    /**
+     * Create export job
+     *
+     * @param Leads $lead
+     */
+    public function createJob($lead)
+    {
+        $logger = $this->getContainer()->get('export.logger');
+
+        $config = $lead->getForm()->getConfig();
+        foreach($config['export'] as $method=>$methodConfig){
+
+            $job = new Export();
+
+            if(!$this->isValidExportMethod($method)){
+                $job->setLog('Méthode d\'export invalide');
+                $logger->info('Méthode d\'export invalide (formulaire ID '.$lead->getForm()->getId().')');
+            }
+
+            $job->setMethod($method);
+            $job->setLead($lead);
+            $job->setForm($lead->getForm());
+            $status = $this->getInitialExportStatus($lead, array( 'method' => $method, 'method_config' => $methodConfig));
+            $job->setStatus($status);
+            $job->setCreatedAt(new \DateTime());
+            $job->setScheduledAt($this->getScheduledDate($methodConfig));
+
+            try{
+                $em = $this->getContainer()->get('doctrine')->getManager();
+                $em->persist($job);
+                $em->flush();
+                $logger->info('Job export (ID '.$job->getId().') créé avec succès');
+
+            }catch (Exception $e) {
+                $logger->error($e->getMessage());
+                //Error
+            }
+        }
+    }
+
+    /**
+     * @param Leads $lead
+     */
+    protected function getInitialExportStatus($lead, $config)
+    {
+        $method_config = $config['method_config'];
+        $methodObject = $this->getMethod($config['method']);
+
+        if (
+            array_key_exists('if_email_validated', $method_config)
+            && $method_config['if_email_validated'] === true
+        ) {
+            $email = $lead->getEmail();
+            $validated = $methodObject->isEmailValidated($lead, $email);
+            if ($validated) {
+                return ExportUtils::$_EXPORT_NOT_PROCESSED;
+            } else {
+                return ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED;
+            }
+        } else {
+            return ExportUtils::$_EXPORT_NOT_PROCESSED;
+        }
+    }
+
+    /**
+     * Return job execution scheduled date
+     *
+     * @param array $methodConfig
+     * @return \DateTime
+     */
+    protected function getScheduledDate($methodConfig)
+    {
+        $cronExp = (isset($methodConfig['cron'])) ? $methodConfig['cron'] : $this->_defaultCronExp;
+        $cron = CronExpression::factory($cronExp);
+        return $cron->getNextRunDate($this->getMinDate($methodConfig));
+    }
+
+    /**
+     * Return scheduled min date taking into account the time gap possibly set in config
+     *
+     * @param array $methodConfig
+     * @return \DateTime|string
+     */
+    protected function getMinDate($methodConfig)
+    {
+        if(!isset($methodConfig['gap']) || trim($methodConfig['gap']) == '')
+            return 'now';
+
+        $minDate = new \DateTime();
+        return $minDate->add(new \DateInterval('PT'.trim($methodConfig['gap']).'M'));
+    }
+
+    /**
+     * Launches export for all configured methods
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
+     */
+    public function export($form)
+    {
+        $logger = $this->getContainer()->get('export.logger');
+
+        $config = $form->getConfig();
+
+        if(!isset($config['export']))
+            return;
+
+        foreach($config['export'] as $method=>$methodConfig){
+
+            if(!$this->isValidExportMethod($method)){
+                $logger->error('Méthode d\'export "'.$method.'" invalide');
+                continue;
+            }
+            $jobs = $this->getExportableJobs($form, $method, $methodConfig);
+
+            if(count($jobs))
+                $this->getMethod($method)->export($jobs, $form);
+        }
+    }
+
+    /**
+     * Retrieve exportable jobs for a given form and export method
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Form $form
+     * @param string $method
+     * @param array $methodConfig
+     * @return array
+     */
+    protected function getExportableJobs($form, $method, $methodConfig)
+    {
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $query = $em->createQuery(
+            'SELECT j
             FROM TellawLeadsFactoryBundle:Export j
             WHERE j.form = :form
               AND j.method = :method
               AND j.scheduled_at <= :now
-              AND j.status NOT IN (:status)'); $spcfe3cf->setParameters(array('form' => $sp368158, 'method' => $sp3b614c, 'now' => new \DateTime(), 'status' => array(ExportUtils::$_EXPORT_SUCCESS, ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED, ExportUtils::$_EXPORT_NOT_SCHEDULED))); return $spcfe3cf->getResult(); } public function updateJob($spb48583, $sp47fc23, $sp78701f = '') { $spb48583->setStatus($sp47fc23); $spb48583->setExecutedAt(new \DateTime()); $spb48583->setLog($sp78701f); try { $sp5c2248 = $this->getContainer()->get('doctrine')->getManager(); $sp5c2248->persist($spb48583); $sp5c2248->flush(); } catch (\Exception $sp5b7f1e) { $this->getContainer()->get('export.logger')->error($sp5b7f1e->getMessage()); } } public function updateLead($spd976db, $sp47fc23, $sp78701f, $sp3b0e5f = null) { $sp3b0e5f = is_null($sp3b0e5f) ? new \DateTime() : $sp3b0e5f; $spd976db->setStatus($sp47fc23); $spd976db->setLog($sp78701f); $spd976db->setExportdate($sp3b0e5f); try { $sp5c2248 = $this->getContainer()->get('doctrine')->getManager(); $sp5c2248->persist($spd976db); $sp5c2248->flush(); } catch (\Exception $sp5b7f1e) { $this->getContainer()->get('export.logger')->error($sp5b7f1e->getMessage()); } } public function getErrorStatus($spb48583) { if ($spb48583->getStatus() == ExportUtils::$_EXPORT_NOT_PROCESSED || is_null($spb48583->getStatus())) { return ExportUtils::$_EXPORT_ONE_TRY_ERROR; } else { return ExportUtils::$_EXPORT_MULTIPLE_ERROR; } } }
+              AND j.status NOT IN (:status)'
+        );
+        $query->setParameters(array(
+            'form'      => $form,
+            'method'    => $method,
+            'now'       => new \DateTime(),
+            'status'    => array(ExportUtils::$_EXPORT_SUCCESS, ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED, ExportUtils::$_EXPORT_NOT_SCHEDULED)
+        ));
+        return $query->getResult();
+    }
+
+    /**
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Export $job
+     * @param $status
+     * @param string $log
+     */
+    public function updateJob($job, $status, $log='')
+    {
+        $job->setStatus($status);
+        $job->setExecutedAt(new \DateTime());
+        $job->setLog($log);
+
+        try{
+            $em = $this->getContainer()->get('doctrine')->getManager();
+            $em->persist($job);
+            $em->flush();
+        }catch (\Exception $e) {
+            $this->getContainer()->get('export.logger')->error($e->getMessage());
+        }
+    }
+
+    /**
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Lead $lead
+     * @param int $status
+     * @param string $log
+     * @param DateTime $exportDate
+     */
+    public function updateLead($lead, $status, $log, $exportDate = null)
+    {
+        $exportDate = is_null($exportDate) ? new \DateTime() : $exportDate;
+
+        $lead->setStatus($status);
+        $lead->setLog($log);
+        $lead->setExportdate($exportDate);
+
+        try{
+            $em = $this->getContainer()->get('doctrine')->getManager();
+            $em->persist($lead);
+            $em->flush();
+        }catch (\Exception $e) {
+            $this->getContainer()->get('export.logger')->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Return error status
+     *
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Export $job
+     * @return int
+     */
+    public function getErrorStatus($job){
+        if($job->getStatus() == ExportUtils::$_EXPORT_NOT_PROCESSED || is_null($job->getStatus())){
+            return ExportUtils::$_EXPORT_ONE_TRY_ERROR;
+        }else{
+            return ExportUtils::$_EXPORT_MULTIPLE_ERROR;
+        }
+    }
+
+}

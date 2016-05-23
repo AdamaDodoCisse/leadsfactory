@@ -1,2 +1,99 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Shared; use Symfony\Component\DependencyInjection\ContainerAwareInterface; use Tellaw\LeadsFactoryBundle\Entity\CronTask; use Symfony\Component\DependencyInjection\ContainerInterface; class SchedulerUtilsShared implements ContainerAwareInterface { protected $container; public function setContainer(ContainerInterface $spc33497 = null) { $this->container = $spc33497; } public function getScheduledJobs() { if (!$this->organisedScheduledJobs) { foreach ($this->scheduledJobs as $sp0524d3) { $spb48583 = $this->getContainer()->get($sp0524d3); $this->organisedScheduledJobs[$spb48583->getName()] = array('id' => $sp0524d3, 'job' => $spb48583); } } return $this->organisedScheduledJobs; } public function updateDatabaseJobs() { $sp9a280e = $this->getScheduledJobs(); $sp5c2248 = $this->getContainer()->get('doctrine.orm.entity_manager'); $spafd4b3 = $sp5c2248->getRepository('TellawLeadsFactoryBundle:CronTask'); foreach ($sp9a280e as $sp86cc1c => $sp1b1b46) { $spb48583 = $sp1b1b46['job']; $sp64c220 = $spafd4b3->findOneByName($sp86cc1c); if (!$sp64c220) { $sp64c220 = new CronTask(); $sp64c220->setName($spb48583->getName()); $sp64c220->setCronexpression($spb48583->getExpression()); $sp64c220->setCommands($spb48583->getCommands()); $sp64c220->setEnabled($spb48583->getEnabled()); $spc38fd5 = new \DateTime(); $sp64c220->setCreatedAt($spc38fd5); $sp64c220->setModifiedAt($spc38fd5); $sp64c220->setServiceName($sp1b1b46['id']); $sp5c2248->persist($sp64c220); } else { $sp0ad864 = false; if ($spb48583->getCommands() != $sp64c220->getCommands()) { $sp64c220->setCommands($spb48583->getCommands()); $sp0ad864 = true; } if ($sp0ad864) { $spc38fd5 = new \DateTime(); $sp64c220->setModifiedAt($spc38fd5); $sp5c2248->persist($sp64c220); $sp5c2248->flush(); } } } } }
+/**
+ * Created by PhpStorm.
+ * User: tellaw
+ * Date: 20/06/15
+ * Time: 08:00
+ */
+
+namespace Tellaw\LeadsFactoryBundle\Shared;
+
+
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
+class SchedulerUtilsShared implements ContainerAwareInterface {
+
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
+
+    /**
+     * @param ContainerInterface $container
+     */
+    public function setContainer (ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Return an array with job's name as KEY and instance of job as array entry
+     * @return array of OrganizedScheduledJobs
+     */
+    public function getScheduledJobs () {
+
+        if (!$this->organisedScheduledJobs) {
+            foreach ($this->scheduledJobs as $scheduledJob) {
+                $job = $this->getContainer()->get( $scheduledJob );
+                $this->organisedScheduledJobs[ $job->getName() ] = array ("id" => $scheduledJob, "job" => $job);
+            }
+        }
+        return $this->organisedScheduledJobs;
+    }
+
+    public function updateDatabaseJobs () {
+
+        $jobs = $this->getScheduledJobs();
+        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $cronTasksRepository = $em->getRepository('TellawLeadsFactoryBundle:CronTask');
+
+        foreach ( $jobs as $name => $idAndJobArray ) {
+
+            $job = $idAndJobArray["job"];
+            $cronTaskJob = $cronTasksRepository->findOneByName ( $name );
+
+            if ( !$cronTaskJob ) {
+
+                $cronTaskJob = new CronTask();
+                $cronTaskJob->setName( $job->getName() );
+                $cronTaskJob->setCronexpression( $job->getExpression() );
+                $cronTaskJob->setCommands( $job->getCommands() );
+                $cronTaskJob->setEnabled( $job->getEnabled() );
+                $now = new \DateTime();
+                $cronTaskJob->setCreatedAt( $now );
+                $cronTaskJob->setModifiedAt( $now );
+                $cronTaskJob->setServiceName( $idAndJobArray["id"] );
+                $em->persist($cronTaskJob);
+
+            } else {
+
+                $updateNeed = false;
+                /*
+                 * Decided that cronexpression could be overrided by UI Admin
+                 *
+                if ( $job->getExpression() != $cronTaskJob->getCronexpression() ) {
+                    $cronTaskJob->setCronexpression( $job->getExpression() );
+                    $updateNeed = true;
+                }
+                */
+                if ( $job->getCommands() != $cronTaskJob->getCommands() ) {
+                    $cronTaskJob->setCommands( $job->getCommands() );
+                    $updateNeed = true;
+                }
+
+                if ($updateNeed) {
+                    $now = new \DateTime();
+                    $cronTaskJob->setModifiedAt( $now );
+                    $em->persist($cronTaskJob);
+                    $em->flush();
+                }
+
+            }
+
+        }
+
+    }
+
+
+}
