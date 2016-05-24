@@ -79,10 +79,9 @@ class EntityLeadsController extends CoreController
 		if ($filterForm->isValid()) {
 			$filterParams = $filterForm->getData();
 			$filterParams["user"] = $user;
-			$filterParams["owner"] = $user;
 			$list = $this->getDispatchList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}else{
-			$filterParams =  array ('user'=>$user, 'owner'=>$user);
+			$filterParams["user"] =  $this->getUser();
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}
 
@@ -114,16 +113,21 @@ class EntityLeadsController extends CoreController
 		if ($filterForm->isValid()) {
 			$filterParams = $filterForm->getData();
 			$filterParams["user"] = $this->getUser();
-			$filterParams["owner"] = $this->getUser();
+
+			$filterParams["affectation"] = "mylist";
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}else{
-			$filterParams =  array ('user'=>$this->getUser(), 'owner'=>$this->getUser());
+			$filterParams["affectation"] = "affectation";
+			$filterParams["user"] =  $this->getUser();
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}
 
 		return $this->render(
-			'TellawLeadsFactoryBundle:entity/Leads:myList.html.twig',
+			'TellawLeadsFactoryBundle:entity/Leads:list.html.twig',
 			array(
+				'type'			=> 'mylist',
+				'firstName'		=> $this->getUser()->getFirstName(),
+				'lastName'		=> $this->getUser()->getLastName(),
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
 				'limit_options' => $list['limit_options'],
@@ -164,6 +168,7 @@ class EntityLeadsController extends CoreController
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Leads:list.html.twig',
             array(
+				'type'			=> 'list',
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
                 'limit_options' => $list['limit_options'],
