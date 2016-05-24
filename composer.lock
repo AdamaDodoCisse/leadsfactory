@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ce8caf806e5a15922017aa33657541d2",
+    "hash": "42e9201b58e93b055ff1f5ecce9c1f7f",
+    "content-hash": "478968455d1551d50b97cf7d377765ef",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -917,47 +918,6 @@
             "time": "2015-06-03 08:27:03"
         },
         {
-            "name": "jakoch/phantomjs-installer",
-            "version": "1.9.7",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jakoch/phantomjs-installer.git",
-                "reference": "2431d7001a911c672b2ef04f447222a967134313"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jakoch/phantomjs-installer/zipball/2431d7001a911c672b2ef04f447222a967134313",
-                "reference": "2431d7001a911c672b2ef04f447222a967134313",
-                "shasum": ""
-            },
-            "require": {
-                "ext-openssl": "*"
-            },
-            "type": "custom-installer",
-            "autoload": {
-                "psr-0": {
-                    "PhantomInstaller\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jens-André Koch",
-                    "email": "jakoch@web.de"
-                }
-            ],
-            "description": "A Composer package which installs the PhantomJS binary (Linux, Windows, Mac) into `/bin` of your project.",
-            "keywords": [
-                "binaries",
-                "headless",
-                "phantomjs"
-            ],
-            "time": "2014-07-29 09:42:52"
-        },
-        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -1467,63 +1427,6 @@
                 "xml"
             ],
             "time": "2013-12-05 14:36:11"
-        },
-        {
-            "name": "jonnyw/php-phantomjs",
-            "version": "v3.1.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jonnnnyw/php-phantomjs.git",
-                "reference": "b2e6985b7362f7699c11823e2956a2d8112728eb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jonnnnyw/php-phantomjs/zipball/b2e6985b7362f7699c11823e2956a2d8112728eb",
-                "reference": "b2e6985b7362f7699c11823e2956a2d8112728eb",
-                "shasum": ""
-            },
-            "require": {
-                "jakoch/phantomjs-installer": "1.9.7",
-                "php": ">=5.3.0",
-                "symfony/config": "~2.3",
-                "symfony/dependency-injection": "~2.3",
-                "symfony/filesystem": "~2.3",
-                "symfony/yaml": "~2.3",
-                "twig/twig": "~1.16"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.0"
-            },
-            "bin": [
-                "bin/phantomloader"
-            ],
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "JonnyW\\PhantomJs\\": "src"
-                },
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jonny Wenmoth",
-                    "email": "contact@jonnyw.me",
-                    "homepage": "http://jonnyw.me/"
-                }
-            ],
-            "description": "A PHP wrapper for loading pages through PhantomJS",
-            "keywords": [
-                "Headless Browser",
-                "phantomjs",
-                "testing"
-            ],
-            "time": "2015-02-17 14:23:56"
         },
         {
             "name": "kriswallsmith/assetic",
