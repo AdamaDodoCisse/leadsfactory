@@ -23,7 +23,7 @@ class EntityFieldController extends ApplicationCrudController
     public $_list_title;
     public $_edition_title;
     public $_create_title;
-    public $_help_message;
+    public $_description;
     public $_list_actions;
 
     public function __construct ()

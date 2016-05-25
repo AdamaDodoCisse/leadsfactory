@@ -171,7 +171,7 @@ abstract class AbstractGenericCrudController extends CoreController {
         return $this->render($this->_form_template,
             array(
                 'form' => $form->createView(),
-                'helpMessage' => $this->_help_message,
+                'helpMessage' => $this->_description,
                 'title' => $this->_edition_title)
             );
 
