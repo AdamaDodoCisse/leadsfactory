@@ -31,7 +31,7 @@ class EntityFieldController extends ApplicationCrudController
         $this->_list_title = "Champs";
         $this->_description = "Description de l'admin des champs";
         $this->_edition_title = "Edition d'un champ";
-        $this->_create_title = "Création d'un utilisateur";
+        $this->_create_title = "Création d'un champ";
         $this->_list_actions = array (
             ["title" => "Editer",      "route"=>"_field_edit",    "color" => "blue"],
             ["title" => "Supprimer",   "route"=>"_field_delete",  "color" => "pink",   "alert" => "Confirmez vous la suppression ?"]

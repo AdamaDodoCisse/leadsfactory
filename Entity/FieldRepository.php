@@ -23,7 +23,7 @@ class FieldRepository extends EntityRepository
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Users f';
+        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Field f';
 
         if(!empty($keyword)){
             $where = ' WHERE';
@@ -31,7 +31,7 @@ class FieldRepository extends EntityRepository
             foreach($keywords as $key => $keyword){
                 if($key>0)
                     $where .= ' AND';
-                $where .= " f.lastname LIKE '%".$keyword."%' OR  f.firstname LIKE '%".$keyword."%'";
+                $where .= " f.code LIKE '%".$keyword."%' OR  f.description LIKE '%".$keyword."%'";
             }
             $dql .= $where;
         }

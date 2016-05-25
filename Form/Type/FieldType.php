@@ -39,8 +39,7 @@ class FieldType extends AbstractType
 
         $builder->add('code');
         $builder->add('description');
-        $builder->add('testvalue');
-        // $builder->add('password', 'password', array ("label" => "mot de passe", "required" => false));
+        $builder->add('testvalue', null, array('label' => 'Valeur type (test fonctionnel)'));
 
         $builder->add('save', 'submit');
     }

@@ -133,11 +133,10 @@ abstract class AbstractGenericCrudController extends CoreController {
             $em->flush();
 
 
-            return $this->redirect($this->generateUrl('_users_list'));
+            return $this->redirect($this->generateUrl($this->_redirect_route));
         }
 
-        return $this->render( $this->_form_template , array(  'form' => $form->createView(),
-            'title' => "Création d'un utilisateur"));
+        return $this->render( $this->_form_template , array(  'form' => $form->createView(), 'title' => $this->_create_title));
     }
 
     public function editAction( Request $request, $id )
@@ -148,7 +147,7 @@ abstract class AbstractGenericCrudController extends CoreController {
          */
 
         // crée une tâche et lui donne quelques données par défaut pour cet exemple
-        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
+        $formData = $this->getDoctrine()->getRepository($this->_entity)->find($id);
 
         $form = $this->createForm(  $this->_formType,
             $formData,
@@ -166,14 +165,14 @@ abstract class AbstractGenericCrudController extends CoreController {
             $em->persist($form->getData());
             $em->flush();
 
-            return $this->redirect($this->generateUrl('_users_list'));
+            return $this->redirect($this->generateUrl($this->_redirect_route));
         }
 
         return $this->render($this->_form_template,
             array(
                 'form' => $form->createView(),
                 'helpMessage' => $this->_help_message,
-                'title' => "Edition d'un profil utilisateur")
+                'title' => $this->_edition_title)
             );
 
     }
@@ -183,13 +182,13 @@ abstract class AbstractGenericCrudController extends CoreController {
         /**
          * This is the deletion action
          */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
+        $object = $this->getDoctrine()->getRepository($this->_entity)->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('_users_list'));
+        return $this->redirect($this->generateUrl($this->_redirect_route));
 
     }
 
