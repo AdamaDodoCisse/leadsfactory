@@ -22,10 +22,9 @@
 	"jms/security-extra-bundle": "1.5.1",
 	"mtdowling/cron-expression": "v1.0.4",
 	"vresh/twilio-bundle": "0.4.3",
-	"tellaw/leadsfactory" : "1.0.29",
+	"tellaw/leadsfactory" : "1.0.30",
 	"beberlei/DoctrineExtensions": "v1.0.1",
-	"teodortalov/citrix": "1.1",
-    	"jonnyw/php-phantomjs": "3.*"
+	"teodortalov/citrix": "1.1"
   },
 
   "scripts": {
@@ -34,16 +33,14 @@
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-      "PhantomInstaller\\Installer::installPhantomJS"
+	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
 	],
 	"post-update-cmd": [
 	  "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
 	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-      "PhantomInstaller\\Installer::installPhantomJS"
+	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
 	]
   },
   "config": {
