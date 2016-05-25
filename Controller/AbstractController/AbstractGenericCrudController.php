@@ -93,13 +93,15 @@ abstract class AbstractGenericCrudController extends CoreController {
         }
 
         $list = $this->getList ($this->_entity , $page, $limit, $keyword, array () );
-        $listTitles = array_keys( $this->_list_columns );
+        $columnNames = array_keys( $this->_list_columns );
 
         return $this->render(
             $this->_list_template,
             array(
+                'title'         => $this->_list_title,
+                'description'   => $this->_description,
                 'newRoute'      => $this->setNewRoute(),
-                'listTitle'     => $listTitles,
+                'columnNames'   => $columnNames,
                 'listColumns'   => $this->_list_columns,
                 'listActions'   => $this->_list_actions,
                 'elements'      => $list['collection'],

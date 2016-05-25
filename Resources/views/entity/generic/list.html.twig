@@ -5,14 +5,14 @@
     <div class="col-md-12">
         <div class="col-md-8">
             <div class="heading-sec" id="intro6">
-                <h1>Administration <i>des utilisateurs</i></h1>
+                <h1>Administration <i>des {{ title }}</i></h1>
                 <div style="clear:both"></div>
-                <div class="titleDescription"><em>Vous pouvez grouper vos utilisateurs dans des scopes applicatifs, qui permettrons de ne leur proposer que les données liées à secteur d'activité. </em></div>
+                <div class="titleDescription"><em>{{ description }}</em></div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="btn-group btn-group-justified">
-                <a class="btn blue" href="{{ path (newRoute) }}">Créer un utilisateur</a>
+                <a class="btn blue" href="{{ path (newRoute) }}">Nouveau</a>
             </div>
         </div>
     </div>
@@ -33,8 +33,8 @@
                 <table id="stream_table" class='table table-striped table-bordered'>
                     <thead>
                     <tr>
-                        {% for title in listTitle %}
-                            <th>{{ title }}</th>
+                        {% for name in columnNames %}
+                            <th>{{ name }}</th>
                         {% endfor %}
                         <th>Actions</th>
                     </tr>

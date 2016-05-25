@@ -22,7 +22,7 @@ class Field {
 
     /**
      * @var string $code
-     * @ORM\Column(type="string", nullable=true, name="name")
+     * @ORM\Column(type="string", nullable=true, name="code")
      */
     protected $code;
 
@@ -34,7 +34,86 @@ class Field {
 
     /**
      * @var string $testValue
-     * @ORM\Column(type="string", nullable=true, name="name")
+     * @ORM\Column(type="string", nullable=true, name="test_value")
      */
     protected $testValue;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set code
+     *
+     * @param string $code
+     * @return Field
+     */
+    public function setCode($code)
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Get code
+     *
+     * @return string 
+     */
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Field
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set testValue
+     *
+     * @param string $testValue
+     * @return Field
+     */
+    public function setTestValue($testValue)
+    {
+        $this->testValue = $testValue;
+
+        return $this;
+    }
+
+    /**
+     * Get testValue
+     *
+     * @return string 
+     */
+    public function getTestValue()
+    {
+        return $this->testValue;
+    }
 }

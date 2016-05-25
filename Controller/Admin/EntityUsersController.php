@@ -21,11 +21,11 @@ use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 class EntityUsersController extends ApplicationCrudController
 {
 
-    public $_list_title = "Liste des utilisteurs";
+    public $_list_title = "utilisteurs";
     public $_edition_title = "Edition d'une fiche utilisateur";
     public $_create_title = "Création d'un utilisateur";
 
-    public $_help_message = "Il est possible de regrouper les utilisateurs dans des scopes pour leur mettre à disposition uniquement les données les concernant. Vous pouvez alors séparer vos utilisateurs par entités.";
+    public $_description = "Il est possible de regrouper les utilisateurs dans des scopes pour leur mettre à disposition uniquement les données les concernant. Vous pouvez alors séparer vos utilisateurs par entités.";
 
     public $_list_actions = array (
                                     ["title" => "Editer",                   "route"=>"_users_edit",                 "color" => "blue"],

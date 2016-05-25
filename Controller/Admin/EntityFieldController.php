@@ -3,7 +3,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
+use Tellaw\LeadsFactoryBundle\Form\Type\FieldType;
 use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,23 +20,29 @@ use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
  */
 class EntityFieldController extends ApplicationCrudController
 {
+    public $_list_title;
+    public $_edition_title;
+    public $_create_title;
+    public $_help_message;
+    public $_list_actions;
 
-    public $_list_title = "Liste des utilisteurs";
-    public $_edition_title = "Edition d'une fiche utilisateur";
-    public $_create_title = "Création d'un utilisateur";
+    public function __construct ()
+    {
+        $this->_list_title = "Champs";
+        $this->_description = "Description de l'admin des champs";
+        $this->_edition_title = "Edition d'un champ";
+        $this->_create_title = "Création d'un utilisateur";
+        $this->_list_actions = array (
+            ["title" => "Editer",      "route"=>"_field_edit",    "color" => "blue"],
+            ["title" => "Supprimer",   "route"=>"_field_delete",  "color" => "pink",   "alert" => "Confirmez vous la suppression ?"]
+        );
 
-    public $_help_message = "Il est possible de regrouper les utilisateurs dans des scopes pour leur mettre à disposition uniquement les données les concernant. Vous pouvez alors séparer vos utilisateurs par entités.";
-
-    public $_list_actions = array (
-                                    ["title" => "Editer",                   "route"=>"_users_edit",                 "color" => "blue"],
-                                    ["title" => "Générer un mot de passe",  "route"=>"_users_generate_password",    "color" => "green"],
-                                    ["title" => "Supprimer",                "route"=>"_users_delete",               "color" => "pink",      "alert" => "Confirmez vous la suppression ?"]
-                                  );
-
-    public function __construct () {
-        PreferencesUtils::registerKey( 'EXPORT_NOTIFICATION_FROM',
+        PreferencesUtils::registerKey(
+            'EXPORT_NOTIFICATION_FROM',
             "Notification email sender",
-            PreferencesUtils::$_PRIORITY_OPTIONNAL );
+            PreferencesUtils::$_PRIORITY_OPTIONNAL
+        );
+
         parent::__construct();
     }
 
@@ -65,7 +71,7 @@ class EntityFieldController extends ApplicationCrudController
     }
 
     /**
-     * @Route("/list/{page}/{limit}/{keyword}", name="_users_list")
+     * @Route("/list/{page}/{limit}/{keyword}", name="_field_list")
      * @Secure(roles="ROLE_USER")
      */
     public function indexAction($page=1, $limit=10, $keyword='') {
