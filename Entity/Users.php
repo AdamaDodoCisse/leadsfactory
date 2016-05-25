@@ -12,10 +12,30 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Users implements UserInterface {
 
+    /**
+     * Roles par ordre d'heritage
+     *
+     * => Utilisateur               : Dashboard | Liste de leads | Etat des exports
+     * => Marketing                 : Kibana | Segmentation
+     * => Dispatch                  : Ecran de dispatch
+     * => Developpeur Simple        : Formulaire
+     * => Developpeur Transverse    : Changement de scope
+     * => Administrateur            : Configuration
+     *
+    ROLE_MARKETING: ROLE_USER
+    ROLE_DISPATCH:  [ROLE_USER, ROLE_MARKETING]
+    ROLE_DEV: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH]
+    ROLE_DEV_SCOPE: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV]
+    ROLE_ADMIN: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV, ROLE_DEV_SCOPE]
+     *
+     */
     public static $_ROLES = array (
-        "ROLE_ADMIN" => "Administrateur",
+        "ROLE_USER" => "Utilisateur",
+        "ROLE_MARKETING" => "Marketing",
+        "ROLE_DISPATCH" => "Dispatch",
         "ROLE_DEV" => "Developpeur",
-        "ROLE_REPORTING" => "Responsable Reporting"
+        "ROLE_DEV_SCOPE" => "Developpeur transverse",
+        "ROLE_ADMIN" => "Administrateur"
     );
 
 	/**
@@ -167,7 +187,11 @@ class Users implements UserInterface {
     }
 
     public function getRoles() {
-        return array('ROLE_ADMIN');
+        if ($this->getRole() != "") {
+            return array( $this->getRole() );
+        } else {
+            return array ( "ROLE_USER" );
+        }
     }
 
     /**
