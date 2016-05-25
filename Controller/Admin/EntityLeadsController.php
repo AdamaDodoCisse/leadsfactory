@@ -79,15 +79,14 @@ class EntityLeadsController extends CoreController
 		if ($filterForm->isValid()) {
 			$filterParams = $filterForm->getData();
 			$filterParams["user"] = $user;
-			$filterParams["owner"] = $user;
 			$list = $this->getDispatchList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}else{
-			$filterParams =  array ('user'=>$user, 'owner'=>$user);
+			$filterParams["user"] =  $this->getUser();
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}
 
 		return $this->render(
-			'TellawLeadsFactoryBundle:entity/Leads:userList.html.twig',
+			'TellawLeadsFactoryBundle:entity/Leads:dispatchList.html.twig',
 			array(
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
@@ -114,16 +113,21 @@ class EntityLeadsController extends CoreController
 		if ($filterForm->isValid()) {
 			$filterParams = $filterForm->getData();
 			$filterParams["user"] = $this->getUser();
-			$filterParams["owner"] = $this->getUser();
+
+			$filterParams["affectation"] = "mylist";
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}else{
-			$filterParams =  array ('user'=>$this->getUser(), 'owner'=>$this->getUser());
+			$filterParams["affectation"] = "affectation";
+			$filterParams["user"] =  $this->getUser();
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 		}
 
 		return $this->render(
-			'TellawLeadsFactoryBundle:entity/Leads:userList.html.twig',
+			'TellawLeadsFactoryBundle:entity/Leads:list.html.twig',
 			array(
+				'type'			=> 'mylist',
+				'firstName'		=> $this->getUser()->getFirstName(),
+				'lastName'		=> $this->getUser()->getLastName(),
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
 				'limit_options' => $list['limit_options'],
@@ -139,6 +143,8 @@ class EntityLeadsController extends CoreController
      */
     public function indexAction(Request $request, $page=1, $limit=25, $keyword='')
     {
+		$filterParams = null;
+		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
 
         if ($this->get("core_manager")->isDomainAccepted ()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
@@ -150,20 +156,24 @@ class EntityLeadsController extends CoreController
 	    if ($filterForm->isValid()) {
 		    $filterParams = $filterForm->getData();
 			$filterParams["user"] = $this->getUser();
-		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
+			if ($name = explode(" ", $filterParams["affectation"]))
+				$filterParams["user"] = $usersRepository->findOneBy(array("firstname"=>$name, "lastname"=>$name));
+			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }else{
-			$filterParams =  array ('user'=>$this->getUser());
+			$filterParams["user"] =  $this->getUser();
 		    $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Leads:list.html.twig',
             array(
+				'type'			=> 'list',
                 'elements'      => $list['collection'],
                 'pagination'    => $list['pagination'],
                 'limit_options' => $list['limit_options'],
 	            'filters_form'  => $filterForm->createView(),
-	            'export_form'   => $this->getReportForm($filterParams)->createView()
+	            'export_form'   => $this->getReportForm($filterParams)->createView(),
             )
         );
     }
@@ -293,6 +303,31 @@ class EntityLeadsController extends CoreController
 
 
 		return new Response('ok');
+
+	}
+
+	/**
+	 * @Route("/leads/json/update", name="_leads_json_update_field")
+	 * @Secure(roles="ROLE_USER")
+	 */
+	public function updateJsonFieldToLead( Request $request ) {
+
+		$leadId = $request->request->get ("leadId");
+		$leadField = $request->request->get ("leadField");
+		$leadFieldValue = $request->request->get ("leadFieldValue");
+
+		$lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
+
+		$leadDetail = json_decode($lead->getData(), true);
+		$leadDetail[$leadField] = $leadFieldValue;
+
+		$lead->setData ( json_encode($leadDetail) );
+
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($lead);
+		$em->flush();
+
+		return new Response($leadFieldValue);
 
 	}
 
@@ -459,7 +494,10 @@ class EntityLeadsController extends CoreController
 	public function searchUserLeadAction ( Request $request ) {
 
 		$term = $request->query->get("term");
-		$users = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->getList (1, 10, $term );
+		$users = array();
+
+		if ($scope = $this->getUser()->getScope())
+			$users = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->getList(1, 10, $term, array('scope'=>$scope->getId()) );
 
 		$responseUsers = array();
 
@@ -548,16 +586,50 @@ class EntityLeadsController extends CoreController
 					'required'  => false
 				)
 			)
-			->add('firstname', 'text', array('label' => 'Prénom', 'required' => false))
+			->add('firstname', 'text', array('attr'=>array('class'=>'long'), 'label' => 'Prénom', 'required' => false))
 			->add('lastname', 'text', array('label' => 'Nom', 'required' => false))
 			->add('email', 'text', array('label' => 'E-mail', 'required' => false))
 			->add('datemin', 'date', array('label' => 'Date de début', 'widget'=>'single_text', 'required' => false))
 			->add('datemax', 'date', array('label' => 'Date de fin', 'widget'=>'single_text', 'required' => false))
 			->add('keyword', 'text', array('label' => 'Mot-clé', 'required' => false))
+			->add('affectationId', 'hidden', array('label' => '', 'required' => false))
+			->add('affectation', 'text', array('label' => 'Affectation', 'required' => false))
+			->add('workflowStatus', 'choice', array('choices' => $this->getLeadsWorkflowOptions("status"), 'label' => 'Statut', 'required' => false))
+			->add('workflowType', 'choice', array('choices' => $this->getLeadsWorkflowOptions("type"), 'label' => 'Type', 'required' => false))
+			->add('workflowTheme', 'choice', array('choices' => $this->getLeadsWorkflowOptions("theme"), 'label' => 'Thème', 'required' => false))
 			->add('valider', 'submit', array('label' => 'Valider'))
 		    ->getForm();
 
 		return $form;
+	}
+
+
+	/**
+	 * @param null $target
+	 * @return array|null
+     */
+	protected function getLeadsWorkflowOptions($target=null) {
+
+		if ($target == null) {
+			return null;
+		}
+
+		$listCode = "leads-".$target;
+		if ( $this->getUser()->getScope() == null ) {
+			return null;
+		}
+		$scopeId = $this->getUser()->getScope()->getId();
+		$dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
+		$dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope( $listCode, $scopeId );
+		$elements = $dataDictionnary->getElementsByOrder( $dataDictionnaryId, "rank", "ASC" );
+		if (count($elements) > 2)
+			$options = array('' => 'Sélectionnez');
+		else
+			$options = array('' => 'Pas de données');
+		foreach ($elements as $element) {
+			$options[$element->getValue()] = $element->getName();
+		}
+		return $options;
 	}
 
 	/**

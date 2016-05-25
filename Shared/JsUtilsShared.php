@@ -1,7 +1,61 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Shared; use Tellaw\LeadsFactoryBundle\Entity\Form; use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity; use Tellaw\LeadsFactoryBundle\Utils\StringHelper; class JsUtilsShared { public function buildAndWrapForm(FormEntity $sp49f3aa) { $sp8832b1 = $this->container->get('form_utils'); $spda00b3 = $sp8832b1->buildHtmlForm($sp49f3aa); $spd7cc70 = $this->sp687de1($spda00b3); $spd7cc70 .= $this->sp682ae9($sp49f3aa->getSource()); return $spd7cc70; } private function sp687de1($spc60892) { $spf47933 = str_replace('"', '\\"', $spc60892); $spf47933 = str_replace('	', '', $spf47933); $spf47933 = str_replace('
-', '', $spf47933); $spf47933 = str_replace('', '', $spf47933); $spc1d752 = 'var leadsfactory = new Object();
-leadsfactory.render= function() { var frmObj="' . $spf47933 . '";document.writeln(frmObj);};
-'; return $spc1d752; } private function sp682ae9($sp6d3119) { $sp36b19c = $this->container->get('form_utils')->parseTags($sp6d3119); $sp74f1e4 = ''; foreach ($sp36b19c as $sp259a15 => $spbfb578) { $sp74f1e4 .= $this->spc8e7c9($sp259a15); } return $sp74f1e4; } private function spc8e7c9($sp259a15) { $sp58ebcd = StringHelper::camelize($sp259a15); return 'leadsfactory.set' . $sp58ebcd . '= function (value){document.getElementById("lffield[' . $sp259a15 . ']").value=value;};
-leadsfactory.get' . $sp58ebcd . ' = function(){return document.getElementById("lffield[' . $sp259a15 . ']").value;};
-'; } }
+/**
+ * Created by PhpStorm.
+ * User: tellaw
+ * Date: 20/06/15
+ * Time: 07:59
+ */
+
+namespace Tellaw\LeadsFactoryBundle\Shared;
+
+use Tellaw\LeadsFactoryBundle\Entity\Form;
+use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
+use Tellaw\LeadsFactoryBundle\Utils\StringHelper;
+
+class JsUtilsShared {
+
+    public function buildAndWrapForm(FormEntity $formObject)
+    {
+        /** @var \Tellaw\LeadsFactoryBundle\Utils\FormUtils $formUtils */
+        $formUtils = $this->container->get ("form_utils");
+        $formHtml = $formUtils->buildHtmlForm ( $formObject );
+
+        $jsForm = $this->wrapHtml( $formHtml );
+
+        $jsForm .= $this->generateGetterAndSetters( $formObject->getSource() );
+
+        return $jsForm;
+    }
+
+    private function wrapHtml ( $html ) {
+
+        $jsWrapOfForm = str_replace ("\"", "\\\"", $html);
+        $jsWrapOfForm = str_replace("\t", '', $jsWrapOfForm); // remove tabs
+        $jsWrapOfForm = str_replace("\n", '', $jsWrapOfForm); // remove new lines
+        $jsWrapOfForm = str_replace("\r", '', $jsWrapOfForm); // remove carriage returns
+        $jsWrap = "var leadsfactory = new Object();\r\nleadsfactory.render= function() { var frmObj=\"".$jsWrapOfForm."\";document.writeln(frmObj);};\r\n";
+
+        return $jsWrap;
+
+    }
+
+    private function generateGetterAndSetters ( $source ) {
+
+        $tags = $this->container->get ("form_utils")->parseTags( $source );
+
+        $gettersAndSetters = "";
+
+        foreach ($tags as $id => $tag) {
+            $gettersAndSetters .= $this->buildGetterAndSetterForId( $id );
+        }
+
+        return $gettersAndSetters;
+
+    }
+
+    private function buildGetterAndSetterForId ( $id ) {
+        $camelId = StringHelper::camelize($id);
+        return "leadsfactory.set".$camelId."= function (value){document.getElementById(\"lffield[".$id."]\").value=value;};\r\nleadsfactory.get".$camelId." = function(){return document.getElementById(\"lffield[".$id."]\").value;};\r\n";
+    }
+
+}

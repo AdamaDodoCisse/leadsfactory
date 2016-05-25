@@ -23,15 +23,24 @@ class UsersRepository extends EntityRepository
     public function getList($page=1, $limit=10, $keyword='', $params=array())
     {
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Users f';
+        $dql = 'SELECT u FROM TellawLeadsFactoryBundle:Users u';
 
         if(!empty($keyword)){
             $where = ' WHERE';
+
             $keywords = explode(' ', $keyword);
             foreach($keywords as $key => $keyword){
                 if($key>0)
                     $where .= ' AND';
-                $where .= " f.lastname LIKE '%".$keyword."%' OR  f.firstname LIKE '%".$keyword."%'";
+                $where .= " u.lastname LIKE '%".$keyword."%' OR  u.firstname LIKE '%".$keyword."%'";
+            }
+
+            if ($params) {
+                foreach ($params as $key=>$param) {
+                    $d_param = $param;
+                    if (is_array($param)) $d_param = implode(',', $param);
+                    $where .= ' AND u.'.$key.' IN ('.$d_param.')';
+                }
             }
             $dql .= $where;
         }

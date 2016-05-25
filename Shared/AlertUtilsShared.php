@@ -1,2 +1,230 @@
 <?php
-namespace Tellaw\LeadsFactoryBundle\Shared; use Tellaw\LeadsFactoryBundle\Utils\AlertUtils; class AlertUtilsShared { public function checkWarningStatus($spe18283, $spccba51, $spf0ee7c) { $sp133a0c = $this->getWarningRules($spf0ee7c['rules']); $sp765656 = $this->getAlertRules($spf0ee7c['rules']); if (count($sp765656) > 0) { if ($sp765656['min'] != null && $spe18283 <= $sp765656['min']) { return AlertUtils::$_STATUS_ERROR; } if ($sp765656['max'] != null && $spe18283 >= $sp765656['max']) { return AlertUtils::$_STATUS_ERROR; } if ($sp765656['delta'] != null && $this->getDeltaPourcentValue($spccba51, $spe18283, $sp765656['delta'])) { return AlertUtils::$_STATUS_ERROR; } } else { return AlertUtils::$_STATUS_UNKNOWN; } if (count($sp133a0c) > 0) { if ($sp133a0c['min'] != null && $spe18283 <= $sp133a0c['min']) { return AlertUtils::$_STATUS_WARNING; } if ($sp133a0c['max'] != null && $spe18283 >= $sp133a0c['max']) { return AlertUtils::$_STATUS_WARNING; } if ($sp133a0c['delta'] != null && $this->getDeltaPourcentValue($spccba51, $spe18283, $sp133a0c['delta'])) { return AlertUtils::$_STATUS_WARNING; } } else { return AlertUtils::$_STATUS_UNKNOWN; } return AlertUtils::$_STATUS_OK; } public function getWarningRules($spf0ee7c) { $sp133a0c = isset($spf0ee7c['warning']) ? $spf0ee7c['warning'] : false; if (is_array($sp133a0c)) { if (!array_key_exists('min', $sp133a0c)) { $sp133a0c['min'] = null; } if (!array_key_exists('max', $sp133a0c)) { $sp133a0c['min'] = null; } if (!array_key_exists('delta', $sp133a0c)) { $sp133a0c['min'] = null; } return $sp133a0c; } return array(); } public function getAlertRules($spf0ee7c) { $sp765656 = isset($spf0ee7c['error']) ? $spf0ee7c['error'] : false; if (is_array($sp765656)) { if (!array_key_exists('min', $sp765656)) { $sp765656['min'] = null; } if (!array_key_exists('max', $sp765656)) { $sp765656['max'] = null; } if (!array_key_exists('delta', $sp765656)) { $sp765656['delta'] = null; } return $sp765656; } return array(); } public function getDeltaPourcentValue($sp867aae, $spaee5de, $sp666873) { if ($sp666873 == 0) { return '&laquo;NAN&raquo;'; } $sp1763c9 = $sp867aae * $sp666873 / 100; if ($sp867aae - $sp1763c9 > $spaee5de) { return true; } if ($sp867aae + $sp1763c9 < $spaee5de) { return true; } return false; } public function getDeltaPourcent($sp867aae, $spaee5de) { if ($sp867aae == 0) { return '&laquo; Données indisponibles &raquo;'; } if ($spaee5de == 0) { return '&laquo; calcul impossible &raquo;'; } $sp007bb3 = $spaee5de * 100 / $sp867aae; return $sp007bb3; } public function setValuesForAlerts($sp9111a1) { $sp4ec868 = $this->entity_manager->getRepository('TellawLeadsFactoryBundle:Form'); if ($sp9111a1->getType() == 'formType') { $spb28b81 = $sp4ec868->findByFormType($sp9111a1->getId()); } else { $sp368158 = $sp4ec868->find($sp9111a1->getId()); $spb28b81 = array($sp368158); } $sp6a2d20 = new \DateTime(); $sp9111a1->todayValue = $this->getLeadsCountForForms($spb28b81, $sp6a2d20); $sp6a2d20 = new \DateTime(); $sp6a2d20 = $sp6a2d20->sub(new \DateInterval('P01D')); $sp9111a1->yesterdayValue = $this->getLeadsCountForForms($spb28b81, $sp6a2d20); $sp9111a1->textualYesterdayDay = $this->day[$sp6a2d20->format('N')] . ' ' . $sp6a2d20->format('d') . ' ' . $this->month[$sp6a2d20->format('n')]; $sp6a2d20 = new \DateTime(); $sp6a2d20 = $sp6a2d20->sub(new \DateInterval('P08D')); $sp9111a1->weekBeforeValue = $this->getLeadsCountForForms($spb28b81, $sp6a2d20); $sp9111a1->textualWeekBeforeDay = $this->day[$sp6a2d20->format('N')] . ' ' . $sp6a2d20->format('d') . ' ' . $this->month[$sp6a2d20->format('n')]; $sp9111a1->yesterdayVariation = $this->getDeltaPourcent($sp9111a1->weekBeforeValue, $sp9111a1->yesterdayValue); $spf0ee7c = $sp9111a1->getRules(); if (empty($spf0ee7c)) { $sp47fc23 = AlertUtils::$_STATUS_UNKNOWN; } else { $sp47fc23 = $this->checkWarningStatus($sp9111a1->yesterdayValue, $sp9111a1->weekBeforeValue, $sp9111a1->getRules($spf0ee7c)); } $sp9111a1->yesterdayStatus = $sp47fc23; if ($sp47fc23 == AlertUtils::$_STATUS_ERROR) { $sp9111a1->yesterdayStatusColor = 'pink'; $sp9111a1->yesterdayStatusText = 'Erreur'; } else { if ($sp47fc23 == AlertUtils::$_STATUS_WARNING) { $sp9111a1->yesterdayStatusColor = 'yellow'; $sp9111a1->yesterdayStatusText = 'Attention!'; } else { if ($sp47fc23 == AlertUtils::$_STATUS_UNKNOWN) { $sp9111a1->yesterdayStatusColor = 'black'; $sp9111a1->yesterdayStatusText = 'Aucune donnée'; } else { $sp9111a1->yesterdayStatusColor = 'green'; $sp9111a1->yesterdayStatusText = 'Status OK'; } } } } }
+/**
+ * Created by PhpStorm.
+ * User: tellaw
+ * Date: 20/06/15
+ * Time: 07:58
+ */
+
+namespace Tellaw\LeadsFactoryBundle\Shared;
+
+
+use Tellaw\LeadsFactoryBundle\Utils\AlertUtils;
+
+class AlertUtilsShared {
+
+    /**
+     * @param integer $valueNow actual value
+     * @param integer $valueOld Value for period -1
+     * @param Array $rules of alerts (use getRules from Form and FormType)
+     * @return int status of the values
+     */
+    public function checkWarningStatus ( $valueNow, $valueOld, $rules ) {
+
+        $warningRules = $this->getWarningRules( $rules['rules'] );
+        $alertRules = $this->getAlertRules( $rules['rules'] );;
+
+        if ( count ($alertRules) > 0 ) {
+
+            // Alert Detection
+            if ($alertRules["min"] != null && $valueNow <= $alertRules["min"] )
+                return AlertUtils::$_STATUS_ERROR;
+
+            if ($alertRules["max"] != null && $valueNow >= $alertRules["max"] )
+                return AlertUtils::$_STATUS_ERROR;
+
+            if ($alertRules["delta"] != null && $this->getDeltaPourcentValue ( $valueOld, $valueNow, $alertRules["delta"] ) )
+                return AlertUtils::$_STATUS_ERROR;
+
+        } else {
+            return AlertUtils::$_STATUS_UNKNOWN;
+        }
+
+        if ( count ($warningRules) > 0 ) {
+
+            // Warning detection
+            if ($warningRules["min"] != null && $valueNow <= $warningRules["min"] )
+                return AlertUtils::$_STATUS_WARNING;
+
+            if ($warningRules["max"] != null && $valueNow >= $warningRules["max"] )
+                return AlertUtils::$_STATUS_WARNING;
+
+            if ($warningRules["delta"] != null && $this->getDeltaPourcentValue( $valueOld, $valueNow, $warningRules["delta"] ) )
+                return AlertUtils::$_STATUS_WARNING;
+
+        } else {
+            return AlertUtils::$_STATUS_UNKNOWN;
+        }
+
+        return AlertUtils::$_STATUS_OK;
+
+    }
+
+    /**
+     * This method will return an Array containing formated rules of Warning
+     * @param Array $rules.
+     * @return Array formatted
+     */
+    public function getWarningRules ( $rules ) {
+
+        $warningRules = isset($rules['warning']) ? $rules['warning'] : false;
+
+        if ( is_array($warningRules) ) {
+
+            if ( !array_key_exists( "min", $warningRules ) )
+                $warningRules["min"]=null;
+
+            if ( !array_key_exists( "max", $warningRules ) )
+                $warningRules["min"]=null;
+
+            if ( !array_key_exists( "delta", $warningRules ) )
+                $warningRules["min"]=null;
+
+            return $warningRules;
+
+        }
+
+        return array();
+
+    }
+
+    /**
+     * This method will return an Array containing formated rules of Alerts
+     * @param Array $rules.
+     * @return Array formatted
+     */
+    public function getAlertRules ( $rules ) {
+
+        $alertRules = isset($rules['error']) ? $rules['error'] : false;
+
+        if ( is_array($alertRules) ) {
+
+            if ( !array_key_exists( "min", $alertRules ) )
+                $alertRules["min"]=null;
+
+            if ( !array_key_exists( "max", $alertRules ) )
+                $alertRules["max"]=null;
+
+            if ( !array_key_exists( "delta", $alertRules ) )
+                $alertRules["delta"]=null;
+
+            return $alertRules;
+
+        }
+
+        return array();
+
+    }
+
+    /**
+     * Test that current value is inside the possible variation of ol value
+     * @param $oldValue
+     * @param $currentValue
+     * @param $deltaValue
+     * @return float|string
+     */
+    public function getDeltaPourcentValue ( $oldValue, $currentValue, $deltaValue ) {
+
+        if ( $deltaValue == 0 ) return "&laquo;NAN&raquo;";
+
+        // calculate variation of first value
+        // FirstValue * DeltaPourcentValue / 100 = Delta
+        $value = ($oldValue * $deltaValue) / 100;
+
+        //throw new \Exception ("Error : ".($oldValue - $value)." - ".$currentValue. " - ".($oldValue + $value));
+
+        // Current value is smaller then last value including maximum variation decreasing
+        if ( ($oldValue - $value) > $currentValue )
+            return true;
+
+        // Current value is higher then last value including maximum variation increasing
+        if ( ($oldValue + $value) < $currentValue )
+            return true;
+
+        // Match delta changes criterias
+        return false;
+
+    }
+
+    /**
+     * Function used to return variation % of newvalue compared to old value
+     * @param $oldValue
+     * @param $currentValue
+     * @return float|string
+     */
+    public function getDeltaPourcent ( $oldValue, $currentValue ) {
+
+        if ($oldValue == 0) return "&laquo; Données indisponibles &raquo;";
+        if ($currentValue == 0) return "&laquo; calcul impossible &raquo;";
+        $result = ( $currentValue * 100 ) / $oldValue;
+
+        return $result;
+
+    }
+
+    /**
+     * setValuesForAlerts
+     *
+     * This method intends to fill Form or FormType object with its status details (Variation, alerts...)
+     * This method uses yesterday and 8 days before value (a week before yesterday)
+     *
+     * @param $item
+     */
+    public function setValuesForAlerts($item)
+    {
+        $form_repository = $this->entity_manager->getRepository('TellawLeadsFactoryBundle:Form');
+
+        if ($item->getType() == "formType") {
+            $forms = $form_repository->findByFormType($item->getId());
+        } else {
+            $form = $form_repository->find($item->getId());
+            $forms = array($form);
+        }
+
+        // Calculate todays number of leads
+        $minDate = new \DateTime();
+        $item->todayValue = $this->getLeadsCountForForms( $forms, $minDate );
+
+        // Create yesterday's date object
+        $minDate = new \DateTime();
+        $minDate = $minDate->sub(new \DateInterval("P01D"));
+        $item->yesterdayValue = $this->getLeadsCountForForms( $forms, $minDate );
+        $item->textualYesterdayDay = $this->day[$minDate->format('N')]." ". $minDate->format("d")." ". $this->month[$minDate->format('n')];
+
+        // Get the value for week before
+        $minDate = new \DateTime();
+        $minDate = $minDate->sub(new \DateInterval("P08D"));
+        $item->weekBeforeValue = $this->getLeadsCountForForms( $forms, $minDate );;
+        $item->textualWeekBeforeDay = $this->day[$minDate->format('N')]." ". $minDate->format("d")." ". $this->month[$minDate->format('n')];
+
+        // Calculte the variation for both lead's counts
+        $item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
+
+        // Evaluate the error status of the form / Type.
+        $rules = $item->getRules();
+
+        if(empty($rules)){
+            $status = AlertUtils::$_STATUS_UNKNOWN;
+        }else{
+            $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
+        }
+
+        // Set status value in object
+        $item->yesterdayStatus = $status;
+
+        if ( $status == AlertUtils::$_STATUS_ERROR ) {
+            $item->yesterdayStatusColor = "pink";
+            $item->yesterdayStatusText = "Erreur";
+        } else if ( $status == AlertUtils::$_STATUS_WARNING ) {
+            $item->yesterdayStatusColor = "yellow";
+            $item->yesterdayStatusText = "Attention!";
+        } else if ( $status == AlertUtils::$_STATUS_UNKNOWN ) {
+            $item->yesterdayStatusColor = "black";
+            $item->yesterdayStatusText = "Aucune donnée";
+        } else {
+            $item->yesterdayStatusColor = "green";
+            $item->yesterdayStatusText = "Status OK";
+        }
+    }
+
+}
