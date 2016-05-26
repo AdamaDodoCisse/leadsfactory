@@ -33,7 +33,7 @@ class Field {
     protected $description;
 
     /**
-     * @var string $testValue
+     * @var string $test_value
      * @ORM\Column(type="string", nullable=true, name="test_value")
      */
     protected $testValue;

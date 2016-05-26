@@ -3,6 +3,7 @@
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
@@ -42,6 +43,19 @@ class FieldRepository extends EntityRepository
             ->setMaxResults($limit);
 
         return new Paginator($query);
+    }
+
+    public function findOneByCodeAsArray($code)
+    {
+        $dql = "SELECT f FROM TellawLeadsFactoryBundle:Field f WHERE f.code ='$code'";
+        $result = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setMaxResults(1)
+            ->getOneOrNullResult(Query::HYDRATE_ARRAY);
+
+        return $result;
+
+
     }
 
 }
