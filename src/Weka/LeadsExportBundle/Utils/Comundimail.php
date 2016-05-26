@@ -46,136 +46,198 @@ class Comundimail extends AbstractMethod {
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
-		
         $this->_formConfig = $form->getConfig();
         $logger->info('############ COMUNDI - EXPORT ###############');
 		
         foreach($jobs as $job) {
+
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
 
             $logger->info('[ComundiMail] - Traitement Lead : '.$job->getLead()->getId());
 
             $form_subject = $data['sujet'];
-            $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
-            $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
-            $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
-            $tel = $this->_formConfig['mails'][$form_subject]['tel'];
-            $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
-            $mail_service_client = $this->_formConfig['mails'][$form_subject]['webmaster'];
-
             $hasError = false;
-            $templatingService = $this->getContainer()->get('templating');
 
-            if ( trim($data['origine-co']) != "" ) {
-                $sujetAdv = $sujet . " - www.comundi.fr - " .$data['origine-co'];
+            if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
+
+                // Mode envoi d'email, VS mode CRM Affectation
+
+                $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
+                $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
+                $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
+                $tel = $this->_formConfig['mails'][$form_subject]['tel'];
+                $sujet = $this->_formConfig['mails'][$form_subject]['sujet_mail'];
+                $mail_service_client = $this->_formConfig['mails'][$form_subject]['webmaster'];
+
+                $templatingService = $this->getContainer()->get('templating');
+
+                if ( trim($data['origine-co']) != "" ) {
+                    $sujetAdv = $sujet . " - www.comundi.fr - " .$data['origine-co'];
+                } else {
+                    $sujetAdv = $sujet;
+                }
+
+                // Envoi du mail au client
+                $logger->info('[ComundiMail] - Envoi mail client / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
+                $message_client = \Swift_Message::newInstance()
+                    ->setSubject($sujet)
+                    ->setFrom($from)
+                    ->setTo($data['email'])
+                    // HTML version
+                    ->setBody(
+                        $templatingService->render(
+                            'WekaLeadsExportBundle:Emails:Comundi/contact.html.twig',
+                            array(
+                                'content' => $contenu,
+                                'mail_contact' => $mail_contact,
+                                'tel' => $tel,
+                                'user_data' => $data,
+                            )
+                        ),
+                        'text/html'
+                    )
+                    // Plaintext version
+                    ->addPart(
+                        $templatingService->render(
+                            'WekaLeadsExportBundle:Emails:Comundi/contact.txt.twig',
+                            array(
+                                'content' => $contenu,
+                                'mail_contact' => $mail_contact,
+                                'tel' => $tel,
+                                'user_data' => $data,
+                            )
+                        ),
+                        'text/plain'
+                    )
+                ;
+
+                $files_dir = $this->getContainer()->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
+
+                // Ajout des copies carbones
+                if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                    $logger->info('[ComundiMail] -Ajotu BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
+                    $message_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
+                    $logger->info('Destinataire mail BCC ajouté dans le mail client');
+                }
+
+                // Envoi du mail au service client
+                $data['demande-rdv'] = $this->subjects[$data['sujet']];
+                $logger->info('[ComundiMail] - Envoi mail SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
+                $message_service_client = \Swift_Message::newInstance()
+                    ->setSubject($sujetAdv)
+                    ->setFrom($from)
+                    ->setTo($mail_service_client)
+                    // HTML version
+                    ->setBody(
+                        $templatingService->render(
+                            'WekaLeadsExportBundle:Emails:Comundi/service_client.html.twig',
+                            array(
+                                'user_data' => $data
+                            )
+                        ),
+                        'text/html'
+                    )
+                    // Plaintext version
+                    ->addPart(
+                        $templatingService->render(
+                            'WekaLeadsExportBundle:Emails:Comundi/service_client.txt.twig',
+                            array(
+                                'user_data' => $data
+                            )
+                        ),
+                        'text/plain'
+                    )
+                ;
+
+                // Ajout des copies carbones
+                if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
+                    $logger->info('[ComundiMail] - Ajout BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
+                    $message_service_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
+                    $logger->info('Destinataire mail BCC ajouté dans le mail service client');
+                }
+
+                // Ajout des pièces jointes
+                if(isset($data['user_file'])) {
+                    $file = $job->getLead()->getId().'_user_file.'.substr(strrchr($data['user_file'], "."), 1);
+                    if(file_exists($files_dir.$file)) {
+                        $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
+                        $logger->info('Pièce jointe "'.$files_dir.$file.'" attachée au mail service client');
+                    } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
+                }
+
+                try {
+                    $resutClient = $this->getContainer()->get('mailer')->send($message_client);
+                    $logger->info('****** Envoi du mail client réussi ('.$job->getLead()->getId().')! ******');
+                    $resultAdv = $this->getContainer()->get('mailer')->send($message_service_client);
+                    $logger->info('****** Envoi du mail service client réussi ! ('.$job->getLead()->getId().') ******');
+                } catch(\Exception $e) {
+                    $hasError = true;
+                    $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');
+                }
+
+                if($hasError) {
+                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $msg = 'Erreur envoi de mail Comundi';
+                } else {
+                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                    $msg = 'Exporté avec succès';
+                }
+
             } else {
-                $sujetAdv = $sujet;
-            }
 
-            // Envoi du mail au client
-            $logger->info('[ComundiMail] - Envoi mail client / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
-            $message_client = \Swift_Message::newInstance()
-                ->setSubject($sujet)
-                ->setFrom($from)
-                ->setTo($data['email'])
-                // HTML version
-                ->setBody(
-                    $templatingService->render(
-                        'WekaLeadsExportBundle:Emails:Comundi/contact.html.twig',
-                        array(
-                            'content' => $contenu,
-                            'mail_contact' => $mail_contact,
-                            'tel' => $tel,
-                            'user_data' => $data,
-                        )
-                    ),
-                    'text/html'
-                )
-                // Plaintext version
-                ->addPart(
-                    $templatingService->render(
-                        'WekaLeadsExportBundle:Emails:Comundi/contact.txt.twig',
-                        array(
-                            'content' => $contenu,
-                            'mail_contact' => $mail_contact,
-                            'tel' => $tel,
-                            'user_data' => $data,
-                        )
-                    ),
-                    'text/plain'
-                )
-            ;
+                // Mode CRM Affectation
+                $user_email = $this->_formConfig['mails'][$form_subject]['user_mail'];
+                $user = $this->getContainer()->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findByEmail ( $user_email );
 
-            $files_dir = $this->getContainer()->getParameter('kernel.root_dir').'/../datas/'.$job->getForm()->getId().'/';
+                if ( trim($user_email) == "" ) {
+                    $hasError = true;
+                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $msg = 'Probleme : Mode CRM, Email attribution vide';
+                }
 
-            // Ajout des copies carbones
-            if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
-                $logger->info('[ComundiMail] -Ajotu BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') / Lead : '.$job->getLead()->getId(). ' / To '.$data['email'].' / Sujet : ' . $sujet. ' / From : '.$from);
-                $message_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
-                $logger->info('Destinataire mail BCC ajouté dans le mail client');
-            }
+                if ( $user == null ) {
+                    $hasError = true;
+                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $msg = "Probleme : Mode CRM, Utilisateur non trouve pour l'email : ".$user_email;
+                }
 
-            // Envoi du mail au service client
-            $data['demande-rdv'] = $this->subjects[$data['sujet']];
-            $logger->info('[ComundiMail] - Envoi mail SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
-            $message_service_client = \Swift_Message::newInstance()
-                ->setSubject($sujetAdv)
-                ->setFrom($from)
-                ->setTo($mail_service_client)
-                // HTML version
-                ->setBody(
-                    $templatingService->render(
-                        'WekaLeadsExportBundle:Emails:Comundi/service_client.html.twig',
-                        array(
-                            'user_data' => $data
-                        )
-                    ),
-                    'text/html'
-                )
-                // Plaintext version
-                ->addPart(
-                    $templatingService->render(
-                        'WekaLeadsExportBundle:Emails:Comundi/service_client.txt.twig',
-                        array(
-                            'user_data' => $data
-                        )
-                    ),
-                    'text/plain'
-                )
-            ;
+                // Affect lead to user
+                $lead = $job->getLead();
+                $lead->setUser( $user );
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($lead);
+                $em->flush();
 
-            // Ajout des copies carbones
-            if(isset($this->_formConfig['mails'][$form_subject]['bcc'])) {
-                $logger->info('[ComundiMail] - Ajout BCC ('.$this->_formConfig['mails'][$form_subject]['bcc'].') SERVICE client / Lead : '.$job->getLead()->getId(). ' / To '.$mail_service_client.' / Sujet : ' . $sujetAdv. ' / From : '.$from);
-                $message_service_client->addBcc($this->_formConfig['mails'][$form_subject]['bcc']);
-                $logger->info('Destinataire mail BCC ajouté dans le mail service client');
-            }
+                // Adding an entry to history
+                $this->get("history.utils")->push ( "Attribution à : " . ucfirst($user->getFirstName()). " ". ucfirst($user->getLastName()), $this->getUser(), $lead );
 
-            // Ajout des pièces jointes
-            if(isset($data['user_file'])) {
-                $file = $job->getLead()->getId().'_user_file.'.substr(strrchr($data['user_file'], "."), 1);
-                if(file_exists($files_dir.$file)) {
-                    $message_service_client->attach(\Swift_Attachment::fromPath($files_dir.$file));
-                    $logger->info('Pièce jointe "'.$files_dir.$file.'" attachée au mail service client');
-                } else $logger->info('Pièce jointe introuvable : '.$files_dir.$file);
-            }
+                $prefUtils = $this->get('preferences_utils');
+                $leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
 
-            try {
-                $resutClient = $this->getContainer()->get('mailer')->send($message_client);
-                $logger->info('****** Envoi du mail client réussi ('.$job->getLead()->getId().')! ******');
-                $resultAdv = $this->getContainer()->get('mailer')->send($message_service_client);
-                $logger->info('****** Envoi du mail service client réussi ! ('.$job->getLead()->getId().') ******');
-            } catch(\Exception $e) {
-                $hasError = true;
-                $logger->error("****** Erreur à l'envoi du mail de contact Comundi : ".$e->getMessage().' ******');
-            }
+                /**
+                 * Send notification to a user
+                 * Mail is sent to the user owner of the lead
+                 */
+                $result = $this->sendNotificationEmail (  	"Changement d'affectation pour la LEAD #".$job->getLead()->getId(),
+                    "Un utilisateur vient de modifier l'affectation d'une lead.",
+                    $user,
+                    "Le ".date ("d/m/Y à h:i"). " la lead's factory vient de vous assigner la lead : ".$job->getLead()->getId()  ,
+                    $leadsUrl,
+                    $leadsUrl,
+                    $lead->getForm()->getScope()->getId()
+                );
 
-            if($hasError) {
-                $status = $exportUtils::$_EXPORT_NOT_SCHEDULED;
-                $msg = 'Erreur envoi de mail Comundi';
-            } else {
-                $status = $exportUtils::$_EXPORT_SUCCESS;
-                $msg = 'Exporté avec succès';
+                if ( !$result ) {
+                    $hasError = true;
+                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $msg = "Probleme : Mode CRM, L'email de notification n'a pas été envoyé : ".$user_email;
+                }
+
+                if(!$hasError) {
+                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                    $msg = 'Exporté avec succès';
+                }
+
             }
 
             $logger->info('Export Comundi mail fin : '.$job->getLead()->getId());
