@@ -288,3 +288,7 @@ services:
     tags:
       - {name: export.method, alias: mockExportException}
     arguments: ['2']
+
+  leadsfactory.utils.role:
+      class: Tellaw\LeadsFactoryBundle\Utils\RoleService
+      arguments: [@security.role_hierarchy]
