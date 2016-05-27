@@ -22,7 +22,7 @@ class Field {
 
     /**
      * @var string $code
-     * @ORM\Column(type="string", nullable=true, name="code")
+     * @ORM\Column(type="string", nullable=false, unique=true, name="code")
      */
     protected $code;
 

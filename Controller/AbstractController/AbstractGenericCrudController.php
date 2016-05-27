@@ -126,14 +126,16 @@ abstract class AbstractGenericCrudController extends CoreController {
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($form->getData());
+                $em->flush();
 
-
-            return $this->redirect($this->generateUrl($this->_redirect_route));
+                return $this->redirect($this->generateUrl($this->_redirect_route));
+            }catch(\Exception $e){
+                $this->get('session')->getFlashBag()->add('error', 'Erreur : ' . $e->getMessage());
+            }
         }
 
         return $this->render( $this->_form_template , array(  'form' => $form->createView(), 'title' => $this->_create_title));
@@ -159,13 +161,16 @@ abstract class AbstractGenericCrudController extends CoreController {
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($form->getData());
+                $em->flush();
 
-            return $this->redirect($this->generateUrl($this->_redirect_route));
+                return $this->redirect($this->generateUrl($this->_redirect_route));
+            }catch(\Exception $e){
+                $this->get('session')->getFlashBag()->add('error', 'Erreur : ' . $e->getMessage());
+            }
         }
 
         return $this->render($this->_form_template,
