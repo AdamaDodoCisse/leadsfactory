@@ -58,10 +58,10 @@ class PreferencesUtils implements ContainerAwareInterface {
                                             $scope = false,
                                             $is_uniq = true
                                         ) {
-
+/*
         if ( $is_uniq && array_key_exists( $key, PreferencesUtils::$_REGISTERED_KEYS )) {
             throw new \Exception ("Registered preference key must be unique, but is already declared : ".$key);
-        }
+        }*/
 
         PreferencesUtils::$_REGISTERED_KEYS [ $key ] = array (  "key" => $key,
                                                                 "description" => $description,

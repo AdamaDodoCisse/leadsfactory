@@ -20,7 +20,7 @@ class ElasticSearchUtils extends SearchShared {
     public static $PROTOCOL_DELETE = "DELETE";
 
     //public static $_PREFERENCE_SEARCH_PATH_TO_ELASTICSEARCH = "SEARCH_BINARY_PATH";
-    public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT_ELASTICSEARCH";
+    public static $_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT_ELASTICSEARCH";
 
     public static $_PREFERENCE_SEARCH_KIBANA_ENABLE = "SEARCH_KIBANA_ENABLE";
     public static $_PREFERENCE_SEARCH_KIBANA_URL = "SEARCH_KIBANA_URL";
@@ -37,7 +37,7 @@ class ElasticSearchUtils extends SearchShared {
 
     public function __construct () {
 
-        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE,
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE,
                                         "Url to elastic search",
                                         PreferencesUtils::$_PRIORITY_REQUIRED );
 
@@ -71,7 +71,7 @@ class ElasticSearchUtils extends SearchShared {
 
     public function isElasticSearchAlive () {
         $preferences = $this->container->get ("preferences_utils");
-        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE );
+        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE );
         if (@file ($baseUri  )) {
             return true;
         }
@@ -209,7 +209,7 @@ class ElasticSearchUtils extends SearchShared {
     public function request ( $protocol, $query, $parameters = null, $populate = false ) {
 
         $preferences = $this->container->get ("preferences_utils");
-        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE );
+        $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE );
 
         $ci = curl_init();
         curl_setopt($ci, CURLOPT_URL, $baseUri.$query);
@@ -226,6 +226,7 @@ class ElasticSearchUtils extends SearchShared {
         $result = curl_exec($ci);
         $error = curl_error($ci);
         curl_close($ci);
+
         if ($result) {
             $result = json_decode( $result);
             if (method_exists($result,"error")) {
@@ -248,22 +249,36 @@ class ElasticSearchUtils extends SearchShared {
      */
     public function indexLeadObject ( $fields, $scopeId ) {
 
-        $data = array();
-        // Recuperation
-        foreach ($fields as $k => $f) {
-            if (in_array($k, array("exportdate","createdAt")) && $f) { // Date treatment
-                $data[$k] = $f->format("c");
-            } else {
-                $data[$k] = $f;
-            }
-        }
-
-        $response = $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/leads/".$fields["id"], json_encode($data), false );
-        unset ($data);
-        return $response;
+        $fields = $this->getIndexableLeadsObject( $fields );
+        return $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/leads/".$fields["id"], json_encode($fields), false );
 
     }
 
+    /**
+     *
+     * Method used to apply formating to leads content before sending it to the search engine
+     *
+     * @param $fields Array of fields to index.
+     * @return mixed Array of formated fields for search engine index
+     */
+    public function getIndexableLeadsObject ( $fields ) {
+
+        if (array_key_exists( "exportdate" , $fields ) && $fields["exportdate"] != null) {
+            $fields["exportdate"] = $fields["exportdate"]->format("c");
+        }
+        if (array_key_exists( "createdAt" , $fields ) && $fields["createdAt"] != null) {
+            $fields["createdAt"] = $fields["createdAt"]->format("c");
+        }
+
+        return $fields;
+    }
+
+    /**
+     *
+     * Method used to load the list of dashboard defined in KIBANA
+     *
+     * @return mixed Array of elements
+     */
     public function getKibanaDashboards () {
         $request = "";
         $dashboards = $this->request( ElasticSearchUtils::$PROTOCOL_GET, "/.kibana/dashboard/_search?q=*", $request );

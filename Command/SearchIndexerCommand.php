@@ -7,13 +7,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
 
 class SearchIndexerCommand extends ContainerAwareCommand {
 	
 	private $cronjobs = array();
 	private $dbConnection = null;
 
-	private $nbOfItemsToBatch = 1000;
+	private $nbOfItemsToBatch = 30000;
 
 	private $leadsMaxId = null;
 
@@ -89,29 +90,68 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 	private function exportLeads ( $scopeCode, $scopeId ) {
 
 		$searchUtils = $this->getContainer()->get("search.utils");
-
 		$countLeads = $this->getNbLeadsByScopeId( $scopeId );
 
-		$idxElementNum = 1;
+		echo ("Leads dans le scope : ".$countLeads."\n\n");
+
+		$leadRepository = $this->getContainer()->get('leadsfactory.leads_repository');
 
 		for ($loopidx = 0; $loopidx <= $countLeads; $loopidx=$loopidx+$this->nbOfItemsToBatch ) {
 
-			echo ("Index : ".$loopidx);
 
-			$sql = "SELECT * FROM Leads WHERE form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
-			echo "\n".$sql."\n";
+			//$sql = "SELECT * FROM Leads WHERE form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
 
+			$sql = "
+				SELECT 	L.id, L.email, L.firstname, L.lastname, DATE_FORMAT(L.createdAt, '%Y-%m-%dT%TZ') as createdAt, content, DATE_FORMAT(L.exportdate, '%Y-%m-%dT%TZ') as exportDate, 
+						L.ipadress as ipaddress, L.userAgent, L.utmcampaign, L.workflowStatus, L.workflowTheme, L.workflowType,
+						F.id as formId, F.name as formName, F.code as formCode,
+						U.id as userId, U.lastname as lastName, U.firstname as firstname,
+						S.id as scopeId, S.name as scopeName, S.code as scopeCode,
+						FT.id as formTypeId, FT.name as formTypeName
+				
+				FROM `Leads` as L
+				
+				LEFT JOIN `Users` U on L.user = U.id
+				LEFT JOIN `Form` F on L.form_id = F.id
+				LEFT JOIN `Scope` S on F.scope = S.id
+				LEFT JOIN `FormType` FT on F.type_id = FT.id
+
+				WHERE L.form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
+
+			//echo $sql."\n";
 			$result = mysqli_query( $this->dbConnection , $sql);
+
+			$leadStream = "";
+
+
+
 			while($obj = mysqli_fetch_assoc($result))
 			{
-				echo $idxElementNum++."/".$countLeads." -> ".$obj["id"]. " - ".$obj["email"]."\n";
 
-				// Send to Search Engine
-				$leads_array = $this->getContainer()->get('leadsfactory.leads_repository')->getLeadsArrayById($obj["id"]);
-				$response = $searchUtils->indexLeadObject( $leads_array, $scopeCode );
+				$obj["content"] = json_decode( $obj["content"] );
+
+				$tmpLeadStream = json_encode(  $obj  );
+
+				if (trim($tmpLeadStream) != "") {
+					$leadStream .= "{ \"index\" : { \"_index\" : \"leadsfactory-".$scopeCode."\", \"_type\" : \"leads\", \"_id\" : \"".$obj["id"]."\" } }\n";
+					$leadStream .= $tmpLeadStream."\n";
+				}
+
+				unset( $tmpLeadStream );
 			}
+
+			// Send Stream to search engine
+			$response = $searchUtils->request( ElasticSearchUtils::$PROTOCOL_POST, "/leadsfactory-".$scopeId."/leads/_bulk", $leadStream, false );
+
+			unset ($leadStream);
+
+			unset ($obj);
 			unset ($result);
 			unset ($sql);
+
+
+
+
 		}
 
 	}
