@@ -60,6 +60,12 @@ class ElasticSearchUtils extends SearchShared {
         $this->logger = $this->container->get("logger");
     }
 
+    /**
+     *
+     * This method is used to check if Kibana server is responding.
+     *
+     * @return bool
+     */
     public function isKibanaAlive () {
         $preferences = $this->container->get ("preferences_utils");
         $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_PREFERENCE_SEARCH_KIBANA_URL );
@@ -69,6 +75,12 @@ class ElasticSearchUtils extends SearchShared {
         return false;
     }
 
+    /**
+     *
+     * This method is used to check is elastic search server is responding.
+     *
+     * @return bool
+     */
     public function isElasticSearchAlive () {
         $preferences = $this->container->get ("preferences_utils");
         $baseUri = $preferences->getUserPreferenceByKey ( ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE );
@@ -113,6 +125,9 @@ class ElasticSearchUtils extends SearchShared {
 
     /**
      * Load saved search from Kibana
+     *
+     * @param $searchId : Code of search in KIBANA
+     * @param $nbDays : Number of days to include in search response
      *
      */
     public function getKibanaSavedSearch ( $searchId, $nbDays=60 ) {
@@ -286,66 +301,6 @@ class ElasticSearchUtils extends SearchShared {
     }
 
 
-    /**
-     * I believe bellow methods are all deprecated due to KIBANA USAGE
-     */
-
-    /**
-     *
-     * Basic search function
-     *
-     * @param $key
-     * @param $value
-     * @return mixed|SearchResult
-     */
-    public function searchQueryString ( $q, $field ) {
-
-        $query = "_search";
-
-        $parameters = '{"query":{"bool":{"must":[{"query_string":{"query":"'.$field.':\"'.$q.'\""}}],"must_not":[],"should":[]}},"from":0,"size":10,"sort":[],"facets":{}}';
-        $result = $this->request ( ElasticSearchUtils::$PROTOCOL_POST , $query, $parameters );
-
-        return $result;
-
-    }
-
-    public function getIndexFields ( ) {
-
-        $query = "leadsfactory/_mapping";
-
-        $parameters = '';
-
-        $result = $this->request( ElasticSearchUtils::$PROTOCOL_GET , $query, $parameters );
-
-        return $result;
-
-
-    }
-
-    /**
-     *
-     * Basic search function
-     *
-     * @param $key
-     * @param $value
-     * @return mixed|SearchResult
-     */
-    public function search ( $key, $value ) {
-
-        $query = "leadsfactory/_search";
-
-        $parameters = '{ "query": {
-                                "match": {
-                                    "'.$key.'": "'.$value.'"
-                                }
-                            }
-                        }';
-
-        $result = $this->request ( ElasticSearchUtils::$PROTOCOL_POST , $query, $parameters );
-
-        return $result;
-
-    }
 
     /**
      *

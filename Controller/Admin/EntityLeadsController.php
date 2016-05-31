@@ -288,6 +288,7 @@ class EntityLeadsController extends CoreController
 
 		$prefUtils = $this->get('preferences_utils');
 		$leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+
 		/**
 		 * Send notification to a user
 		 * Mail is sent to the user owner of the lead
@@ -301,6 +302,9 @@ class EntityLeadsController extends CoreController
 			$lead->getForm()->getScope()->getId()
 		);
 
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response('ok');
 
@@ -326,6 +330,10 @@ class EntityLeadsController extends CoreController
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($lead);
 		$em->flush();
+
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response($leadFieldValue);
 
@@ -419,6 +427,9 @@ class EntityLeadsController extends CoreController
 			$lead->getForm()->getScope()->getId()
 		);
 
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response('ok');
 
@@ -479,6 +490,10 @@ class EntityLeadsController extends CoreController
 													$leadsUrl,
 													$lead->getForm()->getScope()->getId()
 			);
+
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		if ($result)
 			return new Response('ok');
@@ -545,6 +560,9 @@ class EntityLeadsController extends CoreController
 			$lead->getForm()->getScope()->getId()
 		);
 
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response('ok');
 

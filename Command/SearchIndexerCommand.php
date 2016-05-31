@@ -123,8 +123,6 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
 			$leadStream = "";
 
-
-
 			while($obj = mysqli_fetch_assoc($result))
 			{
 
