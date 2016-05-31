@@ -8,10 +8,13 @@
 
 namespace Weka\LeadsExportBundle\Utils;
 
+
+use Tellaw\LeadsFactoryBundle\Entity\Users;
 use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
+use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 
 class Comundimail extends AbstractMethod {
@@ -33,6 +36,12 @@ class Comundimail extends AbstractMethod {
 
     public function __construct()
     {
+
+        PreferencesUtils::registerKey( "CORE_LEADSFACTORY_EMAIL_SENDER",
+            "Email used by the lead's factory as sender in emails",
+            PreferencesUtils::$_PRIORITY_OPTIONNAL
+        );
+
     }
 
     /**
@@ -57,6 +66,8 @@ class Comundimail extends AbstractMethod {
 
             $form_subject = $data['sujet'];
             $hasError = false;
+
+
 
             if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
 
@@ -186,8 +197,8 @@ class Comundimail extends AbstractMethod {
             } else {
 
                 // Mode CRM Affectation
-                $user_email = $this->_formConfig['mails'][$form_subject]['user_mail'];
-                $user = $this->getContainer()->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findByEmail ( $user_email );
+                $user_email = $this->_formConfig['mails'][$form_subject]['user_email'];
+                $user = $this->getContainer()->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail ( $user_email );
 
                 if ( trim($user_email) == "" ) {
                     $hasError = true;
@@ -204,14 +215,14 @@ class Comundimail extends AbstractMethod {
                 // Affect lead to user
                 $lead = $job->getLead();
                 $lead->setUser( $user );
-                $em = $this->getDoctrine()->getManager();
+                $em = $this->getContainer()->get("doctrine")->getManager();
                 $em->persist($lead);
                 $em->flush();
 
                 // Adding an entry to history
-                $this->get("history.utils")->push ( "Attribution à : " . ucfirst($user->getFirstName()). " ". ucfirst($user->getLastName()), $this->getUser(), $lead );
+                $this->getContainer()->get("history.utils")->push ( "Attribution à : " . ucfirst($user->getFirstName()). " ". ucfirst($user->getLastName()), null, $lead );
 
-                $prefUtils = $this->get('preferences_utils');
+                $prefUtils = $this->getContainer()->get('preferences_utils');
                 $leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
 
                 /**
@@ -247,4 +258,38 @@ class Comundimail extends AbstractMethod {
         }
     }
 
+    private function sendNotificationEmail ( $action, $detailAction, Users $user, $message, $urlLead, $urlApplication, $scopeId ) {
+
+        $toEmail = $user->getEmail();
+        $toName = ucfirst($user->getFirstname()) . ' ' . ucfirst($user->getLastname());
+
+        $to = array($toEmail => $toName);
+
+        $prefUtils = $this->getContainer()->get('preferences_utils');
+        $from = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_EMAIL_SENDER', $scopeId);
+
+        $subject = "Lead's Factory : ".$action;
+
+        $template = $this->getContainer()->get('templating')->render(
+            'TellawLeadsFactoryBundle::emails/lead_notification.html.twig',
+            array(
+                "action" => $action,
+                "detailAction" => $detailAction,
+                "user" => $user,
+                "message" => $message,
+                "urlLead" => $urlLead,
+                "urlApplication" => $urlApplication,
+            )
+        );
+
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($template, 'text/html');
+
+        return $this->getContainer()->get('mailer')->send($message);
+
+    }
+    
 }
