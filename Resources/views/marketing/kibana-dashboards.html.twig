@@ -12,7 +12,7 @@
         </div>
 
 	</div>
-    <div class="col-md-12">
+    <div class="col-md-6">
         <h3 class="custom-heading">Dashboards disponibles:</h3>
         <div class="">
             <div class="streaming-tables">
@@ -20,7 +20,7 @@
                     <thead>
                     <tr>
                         <th>Nom</th>
-                        <th>Actions</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -31,21 +31,34 @@
                                 <a href="{{ path('_marketing_kibana_dashboard_open', {'id': item._id}) }}" alt="Visualiser"><img title="Visualiser" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/></a>
                             </td>
                         </tr>
-
                     {% else %}
-
                         <tr>
                             <td colspan="5">Aucun élément dans cette liste</td>
-
                         </tr>
-
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
+        <h3 class="custom-heading">Rechercher un dashboard:</h3>
+        <div>
+            <select style="width:80%">
+                {% for item in dashboards %}
+                    <option value="{{ item._source.title }}">{{ item._source.title }}</option>
+                {% endfor %}
+            </select>
+            <input type="button" value="voir le détail"/>
+        </div>
     </div>
 
+    <div class="col-md-6">
+        <h3 class="custom-heading">Informations:</h3>
+        <div class="" id="dashboardDetail">
+            <!-- Detail d'un dashboard -->
+            Choisissez un dashboard à gauche, ou cherchez un nouveau dashboard dans la partie basse de l'ecran pour en afficher les details.
+
+        </div>
+    </div>
 
 
 </div>

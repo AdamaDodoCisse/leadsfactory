@@ -77,6 +77,9 @@ class MarketingController extends CoreController
 
         $dashboards = $search->getKibanaDashboards();
 
+        // get bookmark dashboards
+
+
         return $this->render(
             'TellawLeadsFactoryBundle:marketing:kibana-dashboards.html.twig',
             array(
