@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f3f64467ab13edcaa272f3e347a4be97",
-    "content-hash": "2a65e65f04e0adee3da60bc272125a6e",
+    "hash": "f8b869fd8aff95a65603dbe19e7b6b80",
+    "content-hash": "a4ba36c40dcbaa5146430de9257a001c",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2331,17 +2331,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.30",
+            "version": "1.0.34",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "3c19c1db15bdaa9fd6c551fcd857f83da30a9811"
+                "reference": "a4be09d06f82b2901ae22b1b74e6330da41bcb58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/3c19c1db15bdaa9fd6c551fcd857f83da30a9811",
-                "reference": "3c19c1db15bdaa9fd6c551fcd857f83da30a9811",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/a4be09d06f82b2901ae22b1b74e6330da41bcb58",
+                "reference": "a4be09d06f82b2901ae22b1b74e6330da41bcb58",
                 "shasum": ""
             },
             "require": {
@@ -2385,7 +2385,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-05-24 13:52:19"
+            "time": "2016-06-02 15:51:58"
         },
         {
             "name": "teodortalov/citrix",
@@ -2481,16 +2481,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.24.0",
+            "version": "v1.24.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8"
+                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
-                "reference": "3e5aa30ebfbafd5951fb1b01e338e1800ce7e0e8",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3566d311a92aae4deec6e48682dc5a4528c4a512",
+                "reference": "3566d311a92aae4deec6e48682dc5a4528c4a512",
                 "shasum": ""
             },
             "require": {
@@ -2538,7 +2538,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-01-25 21:22:18"
+            "time": "2016-05-30 09:11:59"
         },
         {
             "name": "twilio/sdk",
