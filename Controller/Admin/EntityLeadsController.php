@@ -76,14 +76,9 @@ class EntityLeadsController extends CoreController
 		$filterForm = $this->getLeadsFilterForm();
 		$filterForm->handleRequest($request);
 
-		if ($filterForm->isValid()) {
-			$filterParams = $filterForm->getData();
-			$filterParams["user"] = $user;
-			$list = $this->getDispatchList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-		}else{
-			$filterParams["user"] =  $this->getUser();
-			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-		}
+		$filterParams["user"] = $user;
+		$filterParams["affectation"] =  $user;
+		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 
 		return $this->render(
 			'TellawLeadsFactoryBundle:entity/Leads:dispatchList.html.twig',
@@ -91,7 +86,6 @@ class EntityLeadsController extends CoreController
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
 				'limit_options' => $list['limit_options'],
-				'filters_form'  => $filterForm->createView(),
 				'export_form'   => $this->getReportForm($filterParams)->createView()
 			)
 		);

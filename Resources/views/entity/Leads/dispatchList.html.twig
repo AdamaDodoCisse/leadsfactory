@@ -1,6 +1,5 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
-{% form_theme filters_form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
 {% block body %}
 
 
@@ -17,7 +16,7 @@
     <div class="col-md-12">
         <h3 class="custom-heading">Leads enregistrés:</h3>
         <div style="clear:both"></div>
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="streaming-tables">
                 <div>
                     <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
@@ -86,16 +85,6 @@
                 {% endif %}
 
             </div>
-        </div>
-        <div class="col-md-3">
-           <div class="widget-body custom-form">
-               <h2>Filtrer la liste</h2>
-               {{ form(filters_form) }}
-           </div>
-           <div  class="widget-body custom-form" style="margin:10px 0 0 0;">
-               <h2>Télécharger la liste</h2>
-               {{ form(export_form) }}
-           </div>
         </div>
     </div>
 
