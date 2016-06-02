@@ -14,11 +14,8 @@ class HackVendor extends AbstractTask
     public function run()
     {
         //Fix Twilio SSL bug
-        //return $this->runCommand('sed -i "/"curlopts" => array(/ a\\CURLOPT_SSL_VERIFYHOST => 0, CURLOPT_SSL_VERIFYPEER => 0 // hack" vendor/twilio/sdk/Services/Twilio.php');
+        $result = $this->runCommand('cp /data/apps/leads-factory/shared/vendor/twilio/sdk/Services/Twilio.php /data/apps/leads-factory/current/vendor/twilio/sdk/Services/Twilio.php');
 
-        //$result = $this->runCommandLocal('rm -rf /data/apps/leads-factory/current/vendor/twilio');
-        $result = $this->runCommandLocal('ln -s /data/apps/leads-factory/shared/twilio /data/apps/leads-factory/current/vendor/twilio');
-
-        return true;
+        return $result;
     }
 }
