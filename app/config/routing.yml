@@ -7,6 +7,11 @@ tellaw_leads_factory_theme:
     type:     annotation
     prefix:   /
 
+weka_project:
+    resource: "@WekaLeadsExportBundle/Controller/Admin/"
+    type:     annotation
+    prefix:   /admin
+
 tellaw_leads_factory:
     resource: "@TellawLeadsFactoryBundle/Resources/config/routing.yml"
 

@@ -1,0 +1,13 @@
+{
+  "Saisie" : {
+    "role" : "ROLE_USER",
+    "icon" : "fa-paperclip",
+    "submenu" : {
+      "Contact" : {
+        "role" : "ROLE_USER",
+        "alias" : "_project_form_display",
+        "params" : {"code" : "Contactez-nous"}
+      }
+    }
+  }
+}
