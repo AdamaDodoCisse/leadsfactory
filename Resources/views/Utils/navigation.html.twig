@@ -48,4 +48,20 @@
         </ul>
     </li>
     {% endif %}
+
+    {% for key, value in json %}
+        {% if is_granted(value.role) %}
+            <li>
+                <a href="#" title="" ><i class="fa {{ value.icon }}"></i>{{ key }}</a>
+                <ul>
+                    {% for key, value in value.submenu %}
+                        {% if is_granted(value.role) %}
+                            <li><a href="{{ path (value.alias, value.params ) }}" title="">{{ key }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
+    {% endfor %}
+
 </ul>
