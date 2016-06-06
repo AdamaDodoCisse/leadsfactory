@@ -79,10 +79,6 @@ class EntityFormController extends CoreController {
         $form->handleRequest($request);
         if ($form->isValid()) {
 
-            if (!$this->get("core_manager")->isNewFormAccepted ()) {
-                return $this->redirect($this->generateUrl('_security_licence_error'));
-            }
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
