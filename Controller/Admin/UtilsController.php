@@ -418,7 +418,15 @@ class UtilsController extends CoreController
 
         }
 
-        return $this->render('TellawLeadsFactoryBundle:Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute));
+        $json = null;
+        if ($this->getUser()->getScope() != null) {
+            $filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode()."-navigation.json";
+            if (file_exists( $filePath )) {
+                $json = json_decode(file_get_contents( $filePath ), true);
+            }
+        }
+
+        return $this->render('TellawLeadsFactoryBundle:Utils:navigation.html.twig', array ("sections" => $sections, "route" => $mainRoute, "json" => $json));
 
     }
 

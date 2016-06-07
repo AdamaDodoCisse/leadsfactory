@@ -17,15 +17,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Process\Process;
+use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
  * @Route("/search")
  */
 class SearchController extends CoreController {
 
-    public static $_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT__ELASTICSEARCH";
+    public static $_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT_ELASTICSEARCH";
 
     public function __construct () {
+
+        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE,
+            "Url to elastic search",
+            PreferencesUtils::$_PRIORITY_REQUIRED );
+
         parent::__construct();
     }
 
@@ -38,16 +44,14 @@ class SearchController extends CoreController {
     {
 
         $preferences = $this->get ("preferences_utils");
-        $searchEngineUrlAndPort = $preferences->getUserPreferenceByKey ( SearchController::$_SEARCH_URL_AND_PORT__ELASTICSEARCH_PREFERENCE );
+        $searchEngineUrlAndPort = $preferences->getUserPreferenceByKey ( SearchController::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE );
 
-        //$url="curl -XGET 127.0.0.1:9200/_cat/health?v";
         if ($this->get("core_manager")->isDomainAccepted ()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
         $request = '';
-        $searchUtils = $this->get("search.utils");
-        $response = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
+        $response = $this->get("search.utils")->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
 
         if (!is_object($response)){
             $status = false;
@@ -58,7 +62,6 @@ class SearchController extends CoreController {
         if (is_null($response) != "") {
             $response = json_decode( $response );
         }
-
 
         return $this->render(
 	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
@@ -178,8 +181,7 @@ class SearchController extends CoreController {
                                                 }}
                                             ],
                                 "properties": {
-                                    "_id":           { "type": "integer","index": "not_analyzed"},
-                                    "id":           { "type": "integer"},
+                                    "id":           { "type": "integer","index": "not_analyzed"},
                                     "firstname":    { "type": "string","index": "not_analyzed"},
                                     "lastname":     { "type": "string","index": "not_analyzed"},
                                     "status":       { "type": "integer"},
@@ -207,39 +209,8 @@ class SearchController extends CoreController {
                                     "workflowTheme": { "type": "string","index": "not_analyzed"},
                                     "content":  {
                                         "type":     "object",
-                                        "dynamic":  true,
-                                        "index": "analyzed"
+                                        "dynamic":  true
                                     }
-                                }
-                            },
-                            "form" : {
-                                "dynamic":      "strict",
-                                "properties": {
-                                    "_id":          { "type": "integer"},
-                                    "id":           { "type": "integer"},
-                                    "type_id":      { "type": "integer"},
-                                    "name":         { "type": "string"},
-                                    "description": { "type": "string"},
-                                    "code":        { "type": "string"},
-                                    "utmcampaign": { "type": "string"},
-                                    "scope":       { "type": "integer"},
-                                    "script":      { "type": "string"},
-                                    "secure_key":   { "type": "integer"}
-                                }
-                            },
-                            "export" : {
-                                "dynamic":      "strict",
-                                "properties": {
-                                    "_id":          { "type": "integer"},
-                                    "id":           { "type": "integer"},
-                                    "lead_id":      { "type": "integer"},
-                                    "form_id":      { "type": "integer"},
-                                    "method":       { "type": "string"},
-                                    "created_at":   { "type": "date"},
-                                    "scheduled_at": { "type": "date"},
-                                    "executed_at":  { "type": "date"},
-                                    "status":       { "type": "integer"},
-                                    "log":          { "type": "string"}
                                 }
                             }
                         }
@@ -252,119 +223,9 @@ class SearchController extends CoreController {
 
             $request = '/leadsfactory-'.$scope['s_code'];
             $searchUtils = $this->get("search.utils");
-            $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
 
         }
-
-    }
-
-    /**
-     * @Route("/indexDocuments", name="_search_index_documents")
-     * @Secure(roles="ROLE_USER")
-     */
-    public function indexDocuments () {
-
-        $dbUser = $this->container->getParameter('database_user');
-        $dbPwd = $this->container->getParameter('database_password');
-        $dbName = $this->container->getParameter('database_name');
-        $dbHost = $this->container->getParameter('database_host');
-        $dbPort = $this->container->getParameter('database_port');
-
-        if (trim ($dbPort) == "")
-            $dbPort = "3306";
-
-
-        $this->indexLeadsJdbc( $dbUser, $dbPwd, $dbName, $dbHost, $dbPort );
-        $this->indexFormJdbc( $dbUser, $dbPwd, $dbName, $dbHost, $dbPort );
-        $this->indexExportJdbc( $dbUser, $dbPwd, $dbName, $dbHost, $dbPort );
-
-        return $this->redirect($this->generateUrl('_search_config'));
-
-    }
-
-    /**
-     * Method used to index LEADS Objects
-     */
-    private function indexLeadsJdbc ( $dbUser, $dbPwd, $dbName, $dbHost, $dbPort ) {
-
-        $request = '_river/jdbc_river_leads/_meta';
-        $searchUtils = $this->get("search.utils");
-        $parameters =   '{
-                            "type" : "jdbc",
-                            "schedule" : "0 0-59 0-23 ? * *",
-                            "jdbc" : {
-                                "url" : "jdbc:mysql://'.$dbHost.':'.$dbPort.'/'.$dbName.'",
-                                "user" : "'.$dbUser.'",
-                                "password" : "'.$dbPwd.'",
-                                "index" : "leadsfactory",
-                                "type" : "leads",
-                                "sql" : "select l.id _id, l.* from Leads l"
-                            }
-                        }';
-        $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
-
-    }
-
-    private function indexFormJdbc ( $dbUser, $dbPwd, $dbName, $dbHost, $dbPort ) {
-
-        $request = '_river/jdbc_river_form/_meta';
-        $searchUtils = $this->get("search.utils");
-        $parameters =   '{
-                            "type" : "jdbc",
-                            "schedule" : "0 0-59 0-23 ? * *",
-                            "jdbc" : {
-                                "url" : "jdbc:mysql://'.$dbHost.':'.$dbPort.'/'.$dbName.'",
-                                "user" : "'.$dbUser.'",
-                                "password" : "'.$dbPwd.'",
-                                "index" : "leadsfactory",
-                                "type" : "form",
-                                "sql" : "select l.id _id, l.name, l.description, l.script, l.code, l.utmcampaign, l.secure_key, l.scope from Form l"
-                            }
-                        }';
-        $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
-
-    }
-
-    private function indexExportJdbc ( $dbUser, $dbPwd, $dbName, $dbHost, $dbPort ) {
-
-        $request = '_river/jdbc_river_export/_meta';
-        $searchUtils = $this->get("search.utils");
-        $parameters =   '{
-                            "type" : "jdbc",
-                            "schedule" : "0 0-59 0-23 ? * *",
-                            "jdbc" : {
-                                "url" : "jdbc:mysql://'.$dbHost.':'.$dbPort.'/'.$dbName.'",
-                                "user" : "'.$dbUser.'",
-                                "password" : "'.$dbPwd.'",
-                                "index" : "leadsfactory",
-                                "type" : "export",
-                                "sql" : "select l.id _id, l.lead_id, l.form_id, l.method, l.created_at, l.scheduled_at, l.executed_at, l.status, l.log from Export l"
-                            }
-                        }';
-        $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
-
-    }
-
-    /**
-     * @Route("/testSearch", name="_search_test")
-     * @Secure(roles="ROLE_USER")
-     */
-    public function testSearchAction () {
-
-        $query = "leadsfactory/_search";
-
-        $parameters = '{ "query": {
-                                "match": {
-                                    "content.test": "toto"
-                                }
-                            }
-                        }';
-
-        $searchUtils = $this->get("search.utils");
-        $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , $query, $parameters, true );
-
-        var_dump ($result);
-        die();
 
     }
 

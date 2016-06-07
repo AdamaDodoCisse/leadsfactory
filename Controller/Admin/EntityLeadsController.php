@@ -76,14 +76,9 @@ class EntityLeadsController extends CoreController
 		$filterForm = $this->getLeadsFilterForm();
 		$filterForm->handleRequest($request);
 
-		if ($filterForm->isValid()) {
-			$filterParams = $filterForm->getData();
-			$filterParams["user"] = $user;
-			$list = $this->getDispatchList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-		}else{
-			$filterParams["user"] =  $this->getUser();
-			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-		}
+		$filterParams["user"] = $user;
+		$filterParams["affectation"] =  $user;
+		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 
 		return $this->render(
 			'TellawLeadsFactoryBundle:entity/Leads:dispatchList.html.twig',
@@ -91,7 +86,6 @@ class EntityLeadsController extends CoreController
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],
 				'limit_options' => $list['limit_options'],
-				'filters_form'  => $filterForm->createView(),
 				'export_form'   => $this->getReportForm($filterParams)->createView()
 			)
 		);
@@ -288,6 +282,7 @@ class EntityLeadsController extends CoreController
 
 		$prefUtils = $this->get('preferences_utils');
 		$leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+
 		/**
 		 * Send notification to a user
 		 * Mail is sent to the user owner of the lead
@@ -301,6 +296,9 @@ class EntityLeadsController extends CoreController
 			$lead->getForm()->getScope()->getId()
 		);
 
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response('ok');
 
@@ -326,6 +324,10 @@ class EntityLeadsController extends CoreController
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($lead);
 		$em->flush();
+
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response($leadFieldValue);
 
@@ -419,6 +421,9 @@ class EntityLeadsController extends CoreController
 			$lead->getForm()->getScope()->getId()
 		);
 
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response('ok');
 
@@ -479,6 +484,10 @@ class EntityLeadsController extends CoreController
 													$leadsUrl,
 													$lead->getForm()->getScope()->getId()
 			);
+
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		if ($result)
 			return new Response('ok');
@@ -545,6 +554,9 @@ class EntityLeadsController extends CoreController
 			$lead->getForm()->getScope()->getId()
 		);
 
+		// Index leads on search engine
+		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
+		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
 		return new Response('ok');
 
