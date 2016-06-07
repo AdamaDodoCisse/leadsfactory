@@ -1,0 +1,35 @@
+
+
+{% if app.user.role == "ROLE_ADMIN" %}
+    <div class="admin-scope pull-right"  >
+        <div class="form-control" style="background: none; border: none">
+            <select id="changeScopeBar">
+                <option value="">Pas de scope</option>
+                {% for scope in scopes %}
+                    <option value="{{ scope.code }}" {% if app.user.scope == scope.name %} selected="selected" {% endif %}>
+                        {{ scope.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    $("#changeScopeBar").on("change", function() {
+//        var ans = true;
+        var ans = confirm("Vous allez changer de scope et être redirigé vers l'accueil.");
+        var new_scope = $(this).val();
+        if (ans) {
+            var p = $.post("{{ path('_user_scope_edit') }}", { scope: new_scope});
+            p.success(function(data) {
+                location.assign("{{ path('website_index') }}");
+            });
+            p.fail(function(xhr, textStatus, errorThrown) {
+                $('body').html(xhr.responseText);
+            });
+        } else {
+            location.reload();
+        }
+    })
+</script>

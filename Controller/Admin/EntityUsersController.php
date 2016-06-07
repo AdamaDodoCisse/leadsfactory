@@ -3,6 +3,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
 use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
 
@@ -65,6 +66,29 @@ class EntityUsersController extends ApplicationCrudController
                         "Login"       => "login",
                         "Scope"     => "scope.name",
                     );
+    }
+
+    /**
+    * @Route("/change_scope/", name="_user_scope_edit")
+    * @Secure(roles="ROLE_USER")
+    */
+    public function changescopeAction(Request $request) {
+        $scope_repository = $this->container->get('leadsfactory.scope_repository');
+        if ($request->getMethod() == 'POST') {
+            $new_scope = $scope_repository->findOneBy(array("code" => $request->get('scope')));
+            $user = $this->getUser()->setScope($new_scope);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+        }
+        $list = $scope_repository->getAll();
+        $scopes = array();
+        foreach ($list as $k => $element) {
+            $scopes[$k]['name'] = $element['s_name'];
+            $scopes[$k]['code'] = $element['s_code'];
+        }
+        return $this->render('TellawLeadsFactoryBundle:entity/Users:scope.html.twig', array("scopes" => $scopes));
     }
 
     /**
