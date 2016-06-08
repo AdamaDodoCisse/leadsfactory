@@ -283,6 +283,9 @@ class ApiController extends CoreController
 		try{
 			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($data['formCode']);
 
+			// Get the Json configuration of the form
+			$config = $form->getConfig();
+
 			$data = $this->get('form_utils')->preProcessData($form->getId(), $data);
 			$jsonContent = json_encode($data);
 
@@ -297,6 +300,39 @@ class ApiController extends CoreController
 			$leads->setForm($form);
 			$leads->setTelephone(@$data["phone"]);
 			$leads->setEmail(@$data['email']);
+
+			// Assignation de la leads si la configuration est presente
+			if ( array_key_exists( 'configuration', $config ) ) {
+
+				if (array_key_exists(  'assign' , $config["configuration"] )) {
+
+					$assign = trim($config["configuration"]["assign"] );
+					$user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($assign);
+
+					if ($user != null) {
+						$leads->setUser( $user );
+					} else {
+						$logger->info("Frontcontroller : Assign tu a User that does not exists! ".$assign);
+					}
+
+				}
+
+				if (array_key_exists(  'status' , $config["configuration"] )) {
+					$status = trim($config["configuration"]["status"] );
+					$leads->setWorkflowStatus( $status );
+				}
+
+				if (array_key_exists(  'type' , $config["configuration"] )) {
+					$type = trim($config["configuration"]["type"] );
+					$leads->setWorkflowType( $type );
+				}
+
+				if (array_key_exists(  'theme' , $config["configuration"] )) {
+					$theme = trim($config["configuration"]["theme"] );
+					$leads->setWorkflowTheme( $theme );
+				}
+
+			}
 
 			$status = $exportUtils->hasScheduledExport($form->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
 			$leads->setStatus($status);
@@ -314,6 +350,20 @@ class ApiController extends CoreController
 			// Create export job(s)
 			if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
 				$exportUtils->createJob($leads);
+			}
+
+			if ( array_key_exists(  'enableApiNotificationEmail' , $config["configuration"] ) && $config["configuration"]["enableApiNotificationEmail"] == true) {
+				//Send notification
+				if(isset($config['notification'])){
+					$this->sendNotification($config['notification'], $leads);
+				}
+			}
+
+			if ( array_key_exists(  'enableApiConfirmationEmail' , $config["configuration"] )  && $config["configuration"]["enableApiConfirmationEmail"] == true ) {
+				//Send confirmation email
+				if(isset($config['confirmation_email'])){
+					$this->sendConfirmationEmail($config['confirmation_email'], $leads);
+				}
 			}
 
 			return new Response(1);

@@ -14,7 +14,11 @@
         {% if elements %}
 
     {% for element in elements %}
-                <tr><td>{{ element.createdAt |date("m/d/Y - H:i") }}</td><td>{{ element.user.firstName|capitalize }} {{ element.user.lastName|capitalize }}</td><td>{{ element.log }}</td></tr>
+        {% if element.user %}
+            <tr><td>{{ element.createdAt |date("m/d/Y - H:i") }}</td><td>{{ element.user.firstName|capitalize }} {{ element.user.lastName|capitalize }}</td><td>{{ element.log }}</td></tr>
+        {% else %}
+            <tr><td>{{ element.createdAt |date("m/d/Y - H:i") }}</td><td> Inconnu </td><td>{{ element.log }}</td></tr>
+        {% endif %}
 
     {% endfor %}
 {% else %}
