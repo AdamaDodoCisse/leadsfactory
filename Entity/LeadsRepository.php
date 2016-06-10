@@ -169,8 +169,21 @@ class LeadsRepository extends EntityRepository
                 $dql .= " AND f.scope = ".$args['user']->getScope()->getId();
             }
 
-			if (isset($args['affectation']) && !empty($args['affectation'])) {
-				$dql .= " AND l.user = " . $args['user']->getId();
+			if (isset($args['affectation']) && is_array($args['affectation'])) {
+				if (isset($args['affectation']) && !empty($args['affectation'])) {
+					$ids = array();
+					foreach ( $args['affectation'] as $affectation ) {
+						$ids[]=$affectation->getId();
+					}
+					$dql .= " AND l.user IN ( " . implode(',', $ids ). ") ";
+				}
+			} else {
+				if (isset($args['affectation']) && !empty($args['affectation'])) {
+					$dql .= " AND l.user = " . $args['affectation']->getId();
+				}
+			}
+			if (isset($args['utmcampaign']) && !empty($args['utmcampaign'])) {
+				$dql .= " AND l.utmcampaign = '" . $args['utmcampaign'] . "'";
 			}
 
 			if (isset($args['workflowStatus']) && !empty($args['workflowStatus'])) {
@@ -212,6 +225,7 @@ class LeadsRepository extends EntityRepository
 					$dql .= ' AND';
 					$dql .= " l.data LIKE '%".$keyword."%'";
 				}
+				var_dump($dql);
 			}
 
 			if(!empty($args['datemin'])){

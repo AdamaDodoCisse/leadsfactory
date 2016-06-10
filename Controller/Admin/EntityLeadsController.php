@@ -132,6 +132,9 @@ class EntityLeadsController extends CoreController
 	}
 
     /**
+	 *
+	 * Page de listing toutes les Leads
+	 *
      * @Secure(roles="ROLE_USER")
      * @Route("/leads/list/{page}/{limit}/{keyword}", name="_leads_list")
      */
@@ -151,8 +154,10 @@ class EntityLeadsController extends CoreController
 		    $filterParams = $filterForm->getData();
 			$filterParams["user"] = $this->getUser();
 
-			if ($name = explode(" ", $filterParams["affectation"]))
-				$filterParams["user"] = $usersRepository->findOneBy(array("firstname"=>$name, "lastname"=>$name));
+		if ($name = explode(" ", $filterParams["affectation"]))
+			$filterParams["user"] = $this->getUser();
+			$affectationUser = $usersRepository->findOneBy(array("firstname"=>$name, "lastname"=>$name));
+			$filterParams["affectation"] = $affectationUser;
 			$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 	    }else{
 			$filterParams["user"] =  $this->getUser();
@@ -172,12 +177,159 @@ class EntityLeadsController extends CoreController
         );
     }
 
+
+	/**
+	 *
+	 * Page de Suivi mode CRM des leads
+	 *
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/suivi/{page}/{limit}/{keyword}", name="_leads_suivi")
+	 */
+	public function crmAction (Request $request, $page=1, $limit=25, $keyword='') {
+
+		$filterParams = null;
+		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
+
+		if ($this->get("core_manager")->isDomainAccepted ()) {
+			return $this->redirect($this->generateUrl('_security_licence_error'));
+		}
+
+		// Chargement des leads pour le dispatch
+		$prefUtils = $this->get('preferences_utils');
+
+		// First load from preferences the dispatch email for the current scope
+		if (  $this->getUser()->getScope() != null )
+			$dispatchUserEmail = $prefUtils->getUserPreferenceByKey ('CORE_LEADSFACTORY_DISPATCH_EMAIL', $this->getUser()->getScope()->getId() );
+		else
+			$dispatchUserEmail = $prefUtils->getUserPreferenceByKey ('CORE_LEADSFACTORY_DISPATCH_EMAIL' );
+
+		// Then load the user
+		$user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
+
+		if ($user == null) {
+			throw new Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : ".$dispatchUserEmail);
+		}
+
+		$filterForm = $this->getLeadsFilterForm("_leads_suivi");
+		$filterForm->handleRequest($request);
+
+		if ($this->get('security.authorization_checker')->isGranted('ROLE_DISPATCH')) {
+			$filterParams["user"] = $this->getUser();
+			$filterParams["affectation"] = $user;
+			$listDispatch = $this->getList('TellawLeadsFactoryBundle:Leads', 1, 1000, '', $filterParams);
+		} else {
+			$listDispatch= array("collection" => "");
+		}
+
+		// Chargement des Leads
+		$filterParams["affectation"] = null;
+		if ($filterForm->isValid()) {
+			$filterParams = $filterForm->getData();
+		}
+		if ($filterForm->isValid()) {
+
+			if ($name = explode(" ", $filterParams["affectation"])) {
+				$affectationUser = $usersRepository->findOneBy(array("firstname"=>$name, "lastname"=>$name));
+				$filterParams["affectation"] = $affectationUser;
+			}
+
+		}
+
+		if ($filterParams["affectation"] == "") {
+			$filterParams["affectation"] = $this->getuser();
+			$filterForm->get("affectation")->setData(ucfirst($this->getUser()->getFirstName())." ".ucfirst($this->getUser()->getlastName()));
+		}
+
+		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
+		// Checking if user is related to a team
+		$json = null;
+		if ($this->getUser()->getScope() != null) {
+			$filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode()."-team-description.json";
+			if (file_exists( $filePath )) {
+				$jsonArray = json_decode(file_get_contents( $filePath ), true);
+			}
+		}
+
+		$isManagerOfATeam = false;
+		$teamName = "";
+		$teamList = "";
+		$listTeam = array();
+		if ( $jsonArray ) {
+
+			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
+				if (array_key_exists($this->getUser()->getEmail(), $jsonArray )) {
+					$isManagerOfATeam = true;
+					$teamName =  $jsonArray[$this->getUser()->getEmail()]["name"];
+					$members =  $jsonArray[$this->getUser()->getEmail()]["members"];
+					$teamList = "";
+					$affectationUsers = $usersRepository->findBy(array("email"=>$members));
+					$filterParams["affectation"] = $affectationUsers;
+					$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+				}
+			}
+
+		}
+
+
+		return $this->render(
+			'TellawLeadsFactoryBundle:entity/Leads:suivi.html.twig',
+			array(
+				'type'			=> 'list',
+				'isManagerOfATeam' => $isManagerOfATeam,
+				'listTeam'		=> $listTeam['collection'],
+				'teamName'		=> $teamName,
+				'teamList'		=> $teamList,
+				'user'			=> $this->getUser(),
+				'affectation'	=> $filterForm->get("affectation")->getData(),
+				'dispatch'		=>  $listDispatch['collection'],
+				'elements'      => $list['collection'],
+				'pagination'    => $list['pagination'],
+				'limit_options' => $list['limit_options'],
+				'filters_form'  => $filterForm->createView(),
+				'export_form'   => $this->getReportForm($filterParams)->createView(),
+			)
+		);
+
+	}
+
+	/**
+	 * @Route("/leads/suivi-edit/{id}/{origin}", name="_leads_suivi_edit")
+	 * @Secure(roles="ROLE_USER")
+	 * @Template()
+	 */
+	public function suiviEditAction( Request $request, $id, $origin = 0 )
+	{
+
+		$lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($id);
+
+		$leadDetail = json_decode($lead->getData(), true);
+		unset($leadDetail["firstname"]);
+		unset($leadDetail["firstName"]);
+		unset($leadDetail["lastName"]);
+		unset($leadDetail["lastname"]);
+		unset($leadDetail["email"]);
+
+		if ($lead->getUser() != null) {
+			$assignUser = ucfirst($lead->getUser()->getFirstName()). " " .ucfirst($lead->getUser()->getLastName());
+		} else {
+			$assignUser = "";
+		}
+
+
+		return $this->render('TellawLeadsFactoryBundle:entity/Leads:suivi-edit.html.twig', array(  'lead' => $lead,
+			'origin' => $origin,
+			'leadDetail' => $leadDetail,
+			'assignUser' => $assignUser,
+			'title' => "Edition d'un leads"));
+	}
+
     /**
-     * @Route("/leads/edit/{id}", name="_leads_edit")
+     * @Route("/leads/edit/{id}/{origin}", name="_leads_edit")
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction( Request $request, $id )
+    public function editAction( Request $request, $id, $origin = 0 )
     {
 
 		$lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($id);
@@ -197,6 +349,7 @@ class EntityLeadsController extends CoreController
 
 
         return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array(  'lead' => $lead,
+																							 'origin' => $origin,
 																								'leadDetail' => $leadDetail,
 																								'assignUser' => $assignUser,
                                                                                              'title' => "Edition d'un leads"));
@@ -587,11 +740,11 @@ class EntityLeadsController extends CoreController
 	 *
 	 * @return Form
 	 */
-	protected function getLeadsFilterForm()
+	protected function getLeadsFilterForm( $controller = "_leads_list" )
 	{
-		$form = $this->createFormBuilder(array())
+		$form = $this->createFormBuilder(array(),array( 'attr' => ['id' => 'filterform']))
 			->setMethod('GET')
-			->setAction($this->generateUrl('_leads_list'))
+			->setAction($this->generateUrl($controller))
 			->add('form', 'choice', array(
 					'choices'   => $this->getUserFormsOptions(),
 					'label'     => 'Formulaire',
@@ -601,6 +754,7 @@ class EntityLeadsController extends CoreController
 			->add('firstname', 'text', array('attr'=>array('class'=>'long'), 'label' => 'Prénom', 'required' => false))
 			->add('lastname', 'text', array('label' => 'Nom', 'required' => false))
 			->add('email', 'text', array('label' => 'E-mail', 'required' => false))
+			->add('utmcampaign', 'text', array('label' => 'Code Action', 'required' => false))
 			->add('datemin', 'date', array('label' => 'Date de début', 'widget'=>'single_text', 'required' => false))
 			->add('datemax', 'date', array('label' => 'Date de fin', 'widget'=>'single_text', 'required' => false))
 			->add('keyword', 'text', array('label' => 'Mot-clé', 'required' => false))

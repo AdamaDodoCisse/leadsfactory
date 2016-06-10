@@ -31,6 +31,9 @@
         #row-form_form {
             width: 92.5% !important;
         }
+        .filter_form form .form-actions {
+            display:block !important;
+        }
         .filter_form form .form-actions .span3{
             display: none !important;
         }
@@ -219,6 +222,7 @@
 
         function toggleFilters() {
             $("#row-form_email").slideToggle('fast');
+            $("#row-form_utmcampaign").slideToggle('fast');
             $("#row-form_firstname").slideToggle('fast');
             $("#row-form_lastname").slideToggle('fast');
             $("#row-form_datemin").slideToggle('fast');

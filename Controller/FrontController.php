@@ -324,7 +324,6 @@ class FrontController extends CoreController
                 }
             }
 
-
             // Create export job(s)
             if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
                 $exportUtils->createJob($leads);

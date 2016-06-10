@@ -29,7 +29,18 @@ class LeadsFactoryExtension extends \Twig_Extension
 		return array(
 			new \Twig_SimpleFunction('field', array($this, 'field'), array('is_safe' => array('html'))),
 			new \Twig_SimpleFunction('objectget', array($this, 'objectget'), array('is_safe' => array('html'))),
+			new \Twig_SimpleFunction('getdata', array($this, 'getdata'), array('is_safe' => array('html'))),
 		);
+	}
+
+	public function getdata ($data, $key  ) {
+
+		$json = json_decode( $data, true );
+		if (array_key_exists($key, $json ))
+			return $json["$key"];
+		else
+			return "-";
+
 	}
 
 	public function objectget ($params) {

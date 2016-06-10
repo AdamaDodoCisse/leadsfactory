@@ -292,6 +292,16 @@ class UtilsController extends CoreController
             $sections[] = array (   "name" => "Géstion des leads", "url" => $this->get('router')->generate('_leads_list'));
             $sections[] = array (   "name" => "Edition d'un LEAD", "url" => "");
 
+        } else if (substr ($parentRoute, 0, strlen ("_leads_suivi_edit")) == "_leads_suivi_edit") {
+
+            $sections[] = array (   "name" => "Suivi commercial", "url" => $this->get('router')->generate('_leads_suivi'));
+            $sections[] = array (   "name" => "Edition d'un LEAD", "url" => "");
+
+        } else if (substr ($parentRoute, 0, strlen ("_leads_suivi")) == "_leads_suivi") {
+
+            $sections[] = array (   "name" => "Suivi commercial", "url" => "");
+
+
         } else if (substr ($parentRoute, 0, strlen ("_export_history")) == "_export_history") {
 
             $sections[] = array (   "name" => "Historique des leads exportés", "url" => "");

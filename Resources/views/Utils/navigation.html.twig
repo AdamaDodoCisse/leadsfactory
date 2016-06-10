@@ -16,10 +16,7 @@
     <li>
         <a href="#" title="" ><i class="fa fa-heart-o"></i>Données</a>
         <ul>
-            <li><a href="{{ path ('_leads_userList') }}" title="">Mes Leads</a></li>
-            {% if is_granted('ROLE_DISPATCH') %}
-            <li><a href="{{ path ('_leads_dispatchList') }}" title="">Le Dispatch</a></li>
-            {% endif %}
+            <li><a href="{{ path ('_leads_suivi') }}" title="">Suivi Commercial</a></li>
             <li><a href="{{ path ('_leads_list') }}" title="">Toutes les leads</a></li>
             <li><a href="{{ path ('_export_history') }}" title="">Exports</a></li>
         </ul>
