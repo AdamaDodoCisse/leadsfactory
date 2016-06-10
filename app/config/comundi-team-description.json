@@ -1,0 +1,17 @@
+{
+
+  "ewallet@weka.fr" : {
+    "name" : "Equipe DSI",
+    "members" :[
+      "n@weka.fr"
+    ]
+  },
+
+  "n@weka.fr": {
+    "name" : "Equipe DSI Nico",
+    "members" :[
+      "ewallet@weka.fr"
+    ]
+  }
+
+}

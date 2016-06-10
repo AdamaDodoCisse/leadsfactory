@@ -3,10 +3,10 @@
     "role" : "ROLE_USER",
     "icon" : "fa-paperclip",
     "submenu" : {
-      "Contact" : {
+      "Demandes entrantes Tél" : {
         "role" : "ROLE_USER",
         "alias" : "_project_form_display",
-        "params" : {"code" : "Contactez-nous"}
+        "params" : {"code" : "co-demandes-entrantes-tel"}
       }
     }
   }
