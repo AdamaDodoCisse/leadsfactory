@@ -253,7 +253,6 @@ class EntityLeadsController extends CoreController
 
 		$isManagerOfATeam = false;
 		$teamName = "";
-		$teamList = "";
 		$listTeam = array();
 		if ( $jsonArray ) {
 
@@ -262,7 +261,6 @@ class EntityLeadsController extends CoreController
 					$isManagerOfATeam = true;
 					$teamName =  $jsonArray[$this->getUser()->getEmail()]["name"];
 					$members =  $jsonArray[$this->getUser()->getEmail()]["members"];
-					$teamList = "";
 					$affectationUsers = $usersRepository->findBy(array("email"=>$members));
 					$filterParams["affectation"] = $affectationUsers;
 					$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
@@ -271,15 +269,54 @@ class EntityLeadsController extends CoreController
 
 		}
 
+		// Loading informations of departement
+		$json = null;
+		if ($this->getUser()->getScope() != null) {
+			$filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode()."-dpt-description.json";
+			if (file_exists( $filePath )) {
+				$jsonArray = json_decode(file_get_contents( $filePath ), true);
+			}
+		}
+		$isInADpt = false;
+		$dptName = "";
+		$dptTeam = array();
+		if ( $jsonArray ) {
+
+			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
+
+				foreach ( $jsonArray as $dpt ) {
+
+					$members =  $dpt["members"];
+					if (in_array( $this->getUser()->getEmail() , $members )) {
+						$dptName =  $dpt["name"];
+						$isInADpt = true;
+						$affectationUsers = $usersRepository->findBy(array("email"=>$members));
+						$filterParams["affectation"] = $affectationUsers;
+						$dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+						break;
+					}
+				}
+			}
+
+		}
 
 		return $this->render(
 			'TellawLeadsFactoryBundle:entity/Leads:suivi.html.twig',
 			array(
 				'type'			=> 'list',
-				'isManagerOfATeam' => $isManagerOfATeam,
-				'listTeam'		=> $listTeam['collection'],
-				'teamName'		=> $teamName,
-				'teamList'		=> $teamList,
+
+				'dptName'			=> $dptName,
+				'isInADpt' 			=> $isInADpt,
+				'dptTeam'			=> $dptTeam['collection'],
+				'paginationDpt'    	=> $dptTeam['pagination'],
+				'limit_optionsDpt' 	=> $dptTeam['limit_options'],
+
+				'teamName'			=> $teamName,
+				'isManagerOfATeam' 	=> $isManagerOfATeam,
+				'listTeam'			=> $listTeam['collection'],
+				'paginationTeam'    => $listTeam['pagination'],
+				'limit_optionsTeam' => $listTeam['limit_options'],
+
 				'user'			=> $this->getUser(),
 				'affectation'	=> $filterForm->get("affectation")->getData(),
 				'dispatch'		=>  $listDispatch['collection'],
