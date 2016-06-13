@@ -225,7 +225,6 @@ class LeadsRepository extends EntityRepository
 					$dql .= ' AND';
 					$dql .= " l.data LIKE '%".$keyword."%'";
 				}
-				var_dump($dql);
 			}
 
 			if(!empty($args['datemin'])){

@@ -491,8 +491,12 @@ function setAutoComplete () {
     function replaceFieldByInput ( id, leadId) {
         var obj = $("#td-"+id);
         if (obj.html().indexOf("<input") == -1) {
-            var content = "<input type='hidden' id='cancel-"+id+"' value='"+obj.text()+"'/><input type='text' id='field-" + id + "' value='" + obj.text() + "' style='width:60%'/><input type='button' value='ok' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/><input type='button' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>";
+            var content = "<input type='hidden' id='cancel-"+id+"' value=''/><input value='' type='text' id='field-" + id + "' style='width:60%'/><input type='button' value='ok' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/><input type='button' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>";
+            var textContent = obj.text()+"";
             obj.html(content);
+
+            $("#cancel-"+id).val (textContent);
+            $("#field-"+id).val (textContent);
         }
     }
 

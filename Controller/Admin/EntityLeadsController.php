@@ -177,6 +177,225 @@ class EntityLeadsController extends CoreController
         );
     }
 
+	/**
+	 *
+	 * Page de Suivi mode CRM des leads
+	 *
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/fragment/myleads/{page}/{limit}/{keyword}", name="_leads_fragment_myleads")
+	 */
+	public function crmMyLeadsFragmentAction ( Request $request, $page=1, $limit=25, $keyword='' ) {
+
+		$session = $request->getSession();
+		$filterParams = $session->get ("filterParamsSuivi");
+
+		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
+
+		if ($this->get("core_manager")->isDomainAccepted ()) {
+			return $this->redirect($this->generateUrl('_security_licence_error'));
+		}
+
+		// Chargement des leads pour le dispatch
+		$prefUtils = $this->get('preferences_utils');
+
+		// First load from preferences the dispatch email for the current scope
+		if (  $this->getUser()->getScope() != null )
+			$dispatchUserEmail = $prefUtils->getUserPreferenceByKey ('CORE_LEADSFACTORY_DISPATCH_EMAIL', $this->getUser()->getScope()->getId() );
+		else
+			$dispatchUserEmail = $prefUtils->getUserPreferenceByKey ('CORE_LEADSFACTORY_DISPATCH_EMAIL' );
+
+		// Then load the user
+		$user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
+
+		if ($user == null) {
+			throw new Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : ".$dispatchUserEmail);
+		}
+
+
+		if ($this->get('security.authorization_checker')->isGranted('ROLE_DISPATCH')) {
+			$filterParams["user"] = $this->getUser();
+			$filterParams["affectation"] = $user;
+			$listDispatch = $this->getList('TellawLeadsFactoryBundle:Leads', 1, 1000, '', $filterParams);
+		} else {
+			$listDispatch= array("collection" => "");
+		}
+
+		// Chargement des Leads
+		$filterParams["affectation"] = null;
+
+		if ($filterParams["affectation"] == "") {
+			$filterParams["affectation"] = $this->getuser();
+		}
+
+		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
+		return $this->render(
+			'TellawLeadsFactoryBundle:entity/Leads:_fragment_myleads.html.twig',
+			array(
+				'type'			=> 'list',
+				'user'			=> $this->getUser(),
+				'affectation'	=> $this->getuser()->getFirstName(). " ". $user->getLastName(),
+				'dispatch'		=>  $listDispatch['collection'],
+				'elements'      => $list['collection'],
+				'pagination'    => $list['pagination'],
+				'limit_options' => $list['limit_options'],
+				'export_form'   => $this->getReportForm($filterParams)->createView(),
+			)
+		);
+
+
+	}
+
+	/**
+	 *
+	 * Page de Suivi mode CRM des leads
+	 *
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/fragment/teamleads/{page}/{limit}/{keyword}", name="_leads_fragment_teamleads")
+	 */
+	public function crmTeamLeadsFragmentAction ( Request $request, $page=1, $limit=25, $keyword='' ) {
+
+		$session = $request->getSession();
+		$filterParams = $session->get ("filterParamsSuivi");
+
+		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
+
+		if ($this->get("core_manager")->isDomainAccepted ()) {
+			return $this->redirect($this->generateUrl('_security_licence_error'));
+		}
+
+		// Checking if user is related to a team
+		$json = null;
+		if ($this->getUser()->getScope() != null) {
+			$filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode()."-team-description.json";
+			if (file_exists( $filePath )) {
+				$jsonArray = json_decode(file_get_contents( $filePath ), true);
+			}
+		}
+
+		$isManagerOfATeam = false;
+		$teamName = "";
+		$listTeam = array();
+		if ( $jsonArray ) {
+
+			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
+				if (array_key_exists($this->getUser()->getEmail(), $jsonArray )) {
+					$isManagerOfATeam = true;
+					$teamName =  $jsonArray[$this->getUser()->getEmail()]["name"];
+					$members =  $jsonArray[$this->getUser()->getEmail()]["members"];
+					$affectationUsers = $usersRepository->findBy(array("email"=>$members));
+					$filterParams["affectation"] = $affectationUsers;
+					$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
+				}
+			}
+
+		}
+
+
+		return $this->render(
+			'TellawLeadsFactoryBundle:entity/Leads:_fragment_teamleads.html.twig',
+			array(
+				'type'			=> 'list',
+
+				'teamName'			=> $teamName,
+				'isManagerOfATeam' 	=> $isManagerOfATeam,
+				'listTeam'			=> $listTeam['collection'],
+				'paginationTeam'    => $listTeam['pagination'],
+				'limit_optionsTeam' => $listTeam['limit_options'],
+
+				'user'			=> $this->getUser(),
+			)
+		);
+
+	}
+
+	/**
+	 *
+	 * Page de Suivi mode CRM des leads
+	 *
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/fragment/filterParam", name="_leads_fragment_filterparam")
+	 */
+	public function crmFilterParamAction ( Request $request ) {
+
+		$filterForm = $this->getLeadsFilterForm("_leads_suivi");
+		$filterForm->handleRequest($request);
+		$filterParams = $filterForm->getData();
+
+		$session = $request->getSession();
+		$session->set('filterParamsSuivi', $filterParams);
+
+		return new Response("ok");
+
+	}
+
+	/**
+	 *
+	 * Page de Suivi mode CRM des leads
+	 *
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/leads/fragment/dptleads/{page}/{limit}/{keyword}", name="_leads_fragment_dptleads")
+	 */
+	public function crmDptLeadsFragmentAction ( Request $request, $page=1, $limit=25, $keyword='' ) {
+
+		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
+
+		if ($this->get("core_manager")->isDomainAccepted ()) {
+			return $this->redirect($this->generateUrl('_security_licence_error'));
+		}
+
+		$session = $request->getSession();
+		$filterParams = $session->get ("filterParamsSuivi");
+
+		// Loading informations of departement
+		$json = null;
+		if ($this->getUser()->getScope() != null) {
+			$filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode()."-dpt-description.json";
+			if (file_exists( $filePath )) {
+				$jsonArray = json_decode(file_get_contents( $filePath ), true);
+			}
+		}
+		$isInADpt = false;
+		$dptName = "";
+		$dptTeam = array();
+		if ( $jsonArray ) {
+
+			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
+
+				foreach ( $jsonArray as $dpt ) {
+
+					$members =  $dpt["members"];
+					if (in_array( $this->getUser()->getEmail() , $members )) {
+						$dptName =  $dpt["name"];
+						$isInADpt = true;
+						$affectationUsers = $usersRepository->findBy(array("email"=>$members));
+						$filterParams["affectation"] = $affectationUsers;
+						$dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+						//var_dump($dptTeam);
+						break;
+					}
+				}
+			}
+
+		}
+
+		return $this->render(
+			'TellawLeadsFactoryBundle:entity/Leads:_fragment_dptleads.html.twig',
+			array(
+				'type'			=> 'list',
+
+				'dptName'			=> $dptName,
+				'isInADpt' 			=> $isInADpt,
+				'dptTeam'			=> $dptTeam['collection'],
+				'paginationDpt'    	=> $dptTeam['pagination'],
+				'limit_optionsDpt' 	=> $dptTeam['limit_options'],
+
+				'user'			=> $this->getUser(),
+			)
+		);
+
+	}
 
 	/**
 	 *
@@ -237,7 +456,9 @@ class EntityLeadsController extends CoreController
 
 		if ($filterParams["affectation"] == "") {
 			$filterParams["affectation"] = $this->getuser();
-			$filterForm->get("affectation")->setData(ucfirst($this->getUser()->getFirstName())." ".ucfirst($this->getUser()->getlastName()));
+			if (!$filterForm->isSubmitted()) {
+				$filterForm->get("affectation")->setData(ucfirst($this->getUser()->getFirstName())." ".ucfirst($this->getUser()->getlastName()));
+			}
 		}
 
 		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
@@ -264,6 +485,7 @@ class EntityLeadsController extends CoreController
 					$affectationUsers = $usersRepository->findBy(array("email"=>$members));
 					$filterParams["affectation"] = $affectationUsers;
 					$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
 				}
 			}
 
@@ -293,6 +515,7 @@ class EntityLeadsController extends CoreController
 						$affectationUsers = $usersRepository->findBy(array("email"=>$members));
 						$filterParams["affectation"] = $affectationUsers;
 						$dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+						//var_dump($dptTeam);
 						break;
 					}
 				}
