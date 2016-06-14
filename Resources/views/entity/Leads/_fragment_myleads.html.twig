@@ -163,17 +163,17 @@
                 <div class="st_pagination">
                     <ul class="pagination">
                         {% if pagination.page > 1 %}
-                            <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" class="first">Début</a></li>
-                            <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">&larr; Précédent</a></li>
+                            <li><a href="javascript:loadMyLeadsTab('{{ path(pagination.route, {'page': 1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}');return false;" class="first">Début</a></li>
+                            <li><a href="javascript:loadMyLeadsTab('{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">&larr; Précédent</a></li>
                         {% endif %}
                         {% for i in pagination.pagination_min..pagination.pagination_max %}
                             <li {% if pagination.page == i %}class="active" {% endif %}>
-                                <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                <a href="javascript:loadMyLeadsTab('{{ path(pagination.route, {'page': i, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}');return false;" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
                             </li>
                         {% endfor %}
                         {% if pagination.page < pagination.pages_count %}
-                            <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Suivant &rarr;</a></li>
-                            <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}">Fin</a></li>
+                            <li><a href="javascript:loadMyLeadsTab('{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">Suivant &rarr;</a></li>
+                            <li><a href="javascript:loadMyLeadsTab('{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">Fin</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -182,3 +182,6 @@
         </div>
     </div>
 </div>
+<script language="text/javascript">
+    $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
+</script>

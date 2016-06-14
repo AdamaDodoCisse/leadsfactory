@@ -234,7 +234,7 @@ class EntityLeadsController extends CoreController
 			array(
 				'type'			=> 'list',
 				'user'			=> $this->getUser(),
-				'affectation'	=> $this->getuser()->getFirstName(). " ". $user->getLastName(),
+				'affectation'	=> ucfirst($this->getuser()->getFirstName()). " ". ucfirst($this->getuser()->getLastName()),
 				'dispatch'		=>  $listDispatch['collection'],
 				'elements'      => $list['collection'],
 				'pagination'    => $list['pagination'],

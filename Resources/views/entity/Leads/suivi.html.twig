@@ -76,18 +76,9 @@
 
 
 
-        <div class="col-md-12">
+        <div class="col-md-9">
 
-            <div class="widget-body custom-form">
-                <div class="col-md-8 filter_form" style="border-right: 1px solid #ddd">
-                    <h2>Filtrer la liste</h2>
-                    {{ form(filters_form) }}
-                </div>
-                <div class="col-md-4 pull-right">
-                    <h2>Télécharger la liste</h2>
-                    {{ form(export_form) }}
-                </div>
-            </div>
+
 
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
@@ -105,6 +96,10 @@
             <div class="tab-content" style="display:block">
                 <div role="tabpanel" class="tab-pane active in" id="home">
 
+                    <div class="col-md-12" style="min-height:400px">
+                        &nbsp;
+                    </div>
+
                     <!-- Ajax loaded content -->
 
 
@@ -117,30 +112,38 @@
                 <div role="tabpanel" class="tab-pane" id="equipe">
 
                     <!-- Ajax loaded content -->
+                    <div class="col-md-12" style="min-height:400px">
+                        &nbsp;
+                    </div>
 
                 </div>
 
                 <div role="tabpanel" class="tab-pane" id="departement">
 
                     <!-- Ajax loaded content -->
+                    <div class="col-md-12" style="min-height:400px">
+                        &nbsp;
+                    </div>
 
                  </div>
 
-
+{% endif %}
 
             </div>
 
         </div>
+    <div class="col-md-3 filter_form">
+        <div class="widget-body custom-form">
+            <h2 style="margin-left:20px;">Filtrer la liste</h2>
+            {{ form(filters_form) }}
+        </div>
+    </div>
 
-{% endif %}
+
 
     <script type="text/javascript">
         $( document ).ready(function() {
-            $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
-            $("#st_per_pageDpt option[value='{{ paginationDpt.limit }}']").attr('selected', 'selected');
-            $("#st_per_pageTeam option[value='{{ paginationTeam.limit }}']").attr('selected', 'selected');
 
-            initViewFilter();
             setAutoComplete();
 
             // Javascript to enable link to tab
@@ -177,30 +180,72 @@
         var tabs = [];
 
         // Load default tab content
-        function loadMyLeadsTab () {
-            var url = "{{ path ('_leads_fragment_myleads') }}";
+        function loadMyLeadsTab ( url ) {
+            if (!url) {
+                var url = "{{ path ('_leads_fragment_myleads') }}";
+            }
             var data = { } ;
-            var container = $("#home")
+            var container = $("#home");
+
+            $.ai.mask({
+                aiMask:'home',
+                aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
+            })
+
             fragmentAjaxCall ( url, data, container,
-                    function (result){} );
+                    function (result){
+                        $('#st_per_page').change(function(){
+                            var route = '{{ path ('_leads_fragment_myleads') }}';
+                            loadMyLeadsTab( route + '/1/' + $(this).val());
+                        });
+                    } );
         }
 
         // Load default tab content
-        function loadTeamLeadsTab () {
-            var url = "{{ path ('_leads_fragment_teamleads') }}";
+        function loadTeamLeadsTab ( url ) {
+            if (!url) {
+                var url = "{{ path ('_leads_fragment_teamleads') }}";
+            }
             var data = { } ;
-            var container = $("#equipe")
+            var container = $("#equipe");
+
+            $.ai.mask({
+                aiMask:'equipe',
+                aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
+            })
+
             fragmentAjaxCall ( url, data, container,
-                    function (result){} );
+                    function (result){
+
+                        $('#st_per_pageTeam').change(function(){
+                            var route = '{{ path ('_leads_fragment_teamleads') }}';
+                            loadTeamLeadsTab( route + '/1/' + $(this).val());
+                        });
+
+                    } );
         }
 
         // Load default tab content
-        function loadDptLeadsTab () {
-            var url = "{{ path ('_leads_fragment_dptleads') }}";
+        function loadDptLeadsTab ( url ) {
+            if (!url) {
+                var url = "{{ path ('_leads_fragment_dptleads') }}";
+            }
             var data = { } ;
-            var container = $("#departement")
+            var container = $("#departement");
+
+            $.ai.mask({
+                aiMask:'departement',
+                aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
+            })
+
             fragmentAjaxCall ( url, data, container,
-                    function (result){} );
+                    function (result){
+
+                        $('#st_per_pageDpt').change(function(){
+                            var route = '{{ path ('_leads_fragment_dptleads') }}';
+                            loadDptLeadsTab( route + '/1/' + $(this).val());
+                        });
+                    } );
         }
 
         $( "#filterform" ).submit(function( event ) {
@@ -209,20 +254,6 @@
             }
         });
 
-        $('#st_per_page').change(function(){
-            var route = '{{ path(pagination.route) }}';
-            window.location.href = route + '/1/' + $(this).val()+location.search+"#home";
-        });
-
-        $('#st_per_pageDpt').change(function(){
-            var route = '{{ path(pagination.route) }}';
-            window.location.href = route + '/1/' + $(this).val()+location.search+"#departement";
-        });
-
-        $('#st_per_pageTeam').change(function(){
-            var route = '{{ path(pagination.route) }}';
-            window.location.href = route + '/1/' + $(this).val()+location.search+"equipe";
-        });
 
         $.fn.scrollView = function () {
             return this.each(function () {
@@ -231,32 +262,6 @@
                 }, 1000);
             });
         };
-
-        function initViewFilter() {
-            $("#filterform").prepend('<div class="form-group toggle-filters-btn ' +
-                    'col-md-12"><strong>[<i class="toggle-filters-i">-</i>] Filtrage avancé</strong></div>');
-
-            var url = window.location.href;
-            var matches = url.match(/[a-z\d]+=[a-z\d]+/gi);
-            var queryCount = matches? matches.length : 0;
-
-            // Scroll to results Or hide filters
-            if (queryCount > 0) $('#results-list').scrollView();
-            else toggleFilters();
-
-            // init filter button action
-            $(".toggle-filters-btn").on('click', function(){toggleFilters()})
-            //$(".toggle-filters-btn").click();
-
-            // If Page is MyList then change affectation
-            {% if type == 'mylist' %}
-            console.log("looo");
-            $("#row-form_affectation input")
-                    .val('{{ firstName }} {{ lastName }}')
-                    .attr('disabled', 'disabled');
-            $(".filter_form form").attr('action', "{{ path(app.request.attributes.get('_route')) }}");
-            {% endif %}
-        }
 
         function setAutoComplete () {
             $( "#form_affectation" ).autocomplete({

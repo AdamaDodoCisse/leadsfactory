@@ -87,17 +87,17 @@
                 <div class="st_pagination">
                     <ul class="pagination">
                         {% if paginationTeam.page > 1 %}
-                            <li><a href="{{ path(paginationTeam.route, {'page': 1, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}" class="first">Début</a></li>
-                            <li><a href="{{ path(paginationTeam.route, {'page': paginationTeam.page-1, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}">&larr; Précédent</a></li>
+                            <li><a href="javascript:loadTeamLeadsTab('{{ path(paginationTeam.route, {'page': 1, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}');return false;" class="first">Début</a></li>
+                            <li><a href="javascript:loadTeamLeadsTab('{{ path(paginationTeam.route, {'page': paginationTeam.page-1, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">&larr; Précédent</a></li>
                         {% endif %}
                         {% for i in paginationTeam.pagination_min..paginationTeam.pagination_max %}
                             <li {% if paginationTeam.page == i %}class="active" {% endif %}>
-                                <a href="{{ path(paginationTeam.route, {'page': i, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}" {% if paginationTeam.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                <a href="javascript:loadTeamLeadsTab('{{ path(paginationTeam.route, {'page': i, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}');return false;" {% if paginationTeam.page == i %}class="active" {% endif %}>{{ i }}</a>
                             </li>
                         {% endfor %}
                         {% if paginationTeam.page < paginationTeam.pages_count %}
-                            <li><a href="{{ path(paginationTeam.route, {'page': paginationTeam.page+1, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}">Suivant &rarr;</a></li>
-                            <li><a href="{{ path(paginationTeam.route, {'page': paginationTeam.pages_count, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}">Fin</a></li>
+                            <li><a href="javascript:loadTeamLeadsTab('{{ path(paginationTeam.route, {'page': paginationTeam.page+1, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">Suivant &rarr;</a></li>
+                            <li><a href="javascript:loadTeamLeadsTab('{{ path(paginationTeam.route, {'page': paginationTeam.pages_count, 'limit': paginationTeam.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">Fin</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -107,3 +107,6 @@
     </div>
 
 </div>
+<script language="text/javascript">
+    $("#st_per_pageTeam option[value='{{ paginationTeam.limit }}']").attr('selected', 'selected');
+</script>
