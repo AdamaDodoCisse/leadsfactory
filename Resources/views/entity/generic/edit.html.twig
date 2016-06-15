@@ -4,6 +4,14 @@
 {% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
 {% block body %}
 
+    <div class="col-md-8">
+        {% for flashMessage in app.session.flashbag.get('error') %}
+        <div class="notifications widget-body pink">
+            <p style="line-height:normal">{{ flashMessage }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
     <div class="col-md-12">
         <div class="heading-sec" id="intro6">
             <h1>{{ title }}</h1>

@@ -108,7 +108,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
             case FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT:
 
                 // 1/ Check or create Jasper file for testing
-                $testContent = $this->createJasperScript( $form );
+                $testContent = $this->createCasperScript( $form );
                 return $this->saveTest( $form, $testContent );
 
                 break;
@@ -233,7 +233,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
 
     public function testForm ( $client, $form, $fields ) {
 
-        $this->createJasperScript ( $form );
+        $this->createCasperScript ( $form );
 
     }
 
@@ -267,14 +267,14 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * @param $form
      * @return string
      */
-    public function createJasperScript ( $form ) {
+    public function createCasperScript ( $form ) {
 
         $formUtils = $this->container->get("form_utils");
         $fields = array();
 
-        $formId = $form->getConfig();
-        if (isset( $formId ["configuration"]["formId"] )) {
-            $formId = $formId ["configuration"]["formId"];
+        $formConfig = $form->getConfig();
+        if (isset( $formConfig ["configuration"]["formId"] )) {
+            $formId = $formConfig ["configuration"]["formId"];
         } else {
             $formId = "leadsfactory-form";
         }
@@ -434,7 +434,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     /**
      *
      * Method used to find Test value for a field
-     * First look for attributes 'test-value' in the field
+     * First look for attributes 'testValue' in the field
      * Then : Ask field factory to find a value for the test. The factory receive a data-type as context for the field
      *
      * @param $field
@@ -442,8 +442,8 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      */
     private function getValueForField ( $field ) {
 
-        if (isset ( $field["attributes"]["test-value"] )) {
-            return $field["attributes"]["test-value"];
+        if (isset ( $field["attributes"]["testValue"] )) {
+            return $field["attributes"]["testValue"];
         }
 
         $field_factory = $this->container->get("leadsfactory.field_factory");

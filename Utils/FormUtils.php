@@ -4,12 +4,15 @@ namespace Tellaw\LeadsFactoryBundle\Utils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
+use Tellaw\LeadsFactoryBundle\Entity\Field;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory;
 use Tellaw\LeadsFactoryBundle\DependencyInjection\TimeConfiguratorAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Doctrine\ORM\Query;
+
 
 class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterface
 {
@@ -385,7 +388,6 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
      */
     public function getFieldsAsArray ( $form_source ) {
 
-        $matches = "";
         $result = preg_match_all( "/field\(([^)]*)\)/",$form_source, $matches );
 
         $fields = array();
@@ -395,6 +397,7 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
             $item = json_decode($content, true);
 
             if (isset ($item["attributes"]["id"])) {
+                $item = $this->_parseFieldConfig($item);
                 $fields[$item["attributes"]["id"]] = $item;
             } else if (isset ($item["attributes"]["name"])) {
                 $fields[$item["attributes"]["name"]] = $item;
@@ -404,10 +407,31 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
             }
 
         }
-
-
         return $fields;
+    }
 
+    /**
+     * Add default field config if not set locally
+     *
+     * @param array $item
+     * @return array
+     */
+    private function _parseFieldConfig($item)
+    {
+        $fieldDefaults = $this->container->get('doctrine')->getManager()
+            ->getRepository('TellawLeadsFactoryBundle:Field')
+            ->findOneByCodeAsArray($item["attributes"]["id"]);
+
+        if(!empty($fieldDefaults)) {
+            $fieldDefaults = array_slice($fieldDefaults, 3);
+            foreach ($fieldDefaults as $name => $value) {
+
+                if (empty($item['attributes'][$name])) {
+                    $item['attributes'][$name] = $value;
+                }
+            }
+        }
+        return $item;
     }
 
     public function getApiKey($form)

@@ -93,13 +93,15 @@ abstract class AbstractGenericCrudController extends CoreController {
         }
 
         $list = $this->getList ($this->_entity , $page, $limit, $keyword, array () );
-        $listTitles = array_keys( $this->_list_columns );
+        $columnNames = array_keys( $this->_list_columns );
 
         return $this->render(
             $this->_list_template,
             array(
+                'title'         => $this->_list_title,
+                'description'   => $this->_description,
                 'newRoute'      => $this->setNewRoute(),
-                'listTitle'     => $listTitles,
+                'columnNames'   => $columnNames,
                 'listColumns'   => $this->_list_columns,
                 'listActions'   => $this->_list_actions,
                 'elements'      => $list['collection'],
@@ -124,18 +126,19 @@ abstract class AbstractGenericCrudController extends CoreController {
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($form->getData());
+                $em->flush();
 
-
-            return $this->redirect($this->generateUrl('_users_list'));
+                return $this->redirect($this->generateUrl($this->_redirect_route));
+            }catch(\Exception $e){
+                $this->get('session')->getFlashBag()->add('error', 'Erreur : ' . $e->getMessage());
+            }
         }
 
-        return $this->render( $this->_form_template , array(  'form' => $form->createView(),
-            'title' => "Création d'un utilisateur"));
+        return $this->render( $this->_form_template , array(  'form' => $form->createView(), 'title' => $this->_create_title));
     }
 
     public function editAction( Request $request, $id )
@@ -146,7 +149,7 @@ abstract class AbstractGenericCrudController extends CoreController {
          */
 
         // crée une tâche et lui donne quelques données par défaut pour cet exemple
-        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
+        $formData = $this->getDoctrine()->getRepository($this->_entity)->find($id);
 
         $form = $this->createForm(  $this->_formType,
             $formData,
@@ -158,20 +161,23 @@ abstract class AbstractGenericCrudController extends CoreController {
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            // fait quelque chose comme sauvegarder la tâche dans la bdd
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($form->getData());
-            $em->flush();
+            try {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($form->getData());
+                $em->flush();
 
-            return $this->redirect($this->generateUrl('_users_list'));
+                return $this->redirect($this->generateUrl($this->_redirect_route));
+            }catch(\Exception $e){
+                $this->get('session')->getFlashBag()->add('error', 'Erreur : ' . $e->getMessage());
+            }
         }
 
         return $this->render($this->_form_template,
             array(
                 'form' => $form->createView(),
-                'helpMessage' => $this->_help_message,
-                'title' => "Edition d'un profil utilisateur")
+                'helpMessage' => $this->_description,
+                'title' => $this->_edition_title)
             );
 
     }
@@ -181,13 +187,13 @@ abstract class AbstractGenericCrudController extends CoreController {
         /**
          * This is the deletion action
          */
-        $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
+        $object = $this->getDoctrine()->getRepository($this->_entity)->find($id);
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('_users_list'));
+        return $this->redirect($this->generateUrl($this->_redirect_route));
 
     }
 
