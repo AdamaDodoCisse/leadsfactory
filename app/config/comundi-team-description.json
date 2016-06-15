@@ -1,17 +1,32 @@
 {
 
-  "ewallet@weka.fr" : {
-    "name" : "Equipe DSI",
-    "members" :[
-      "n@weka.fr"
-    ]
-  },
+  "ewallet@weka.fr" : [
+    {
+      "name" : "Equipe DSI",
+      "id"   : "dsi1",
+      "members" :[
+        "n@weka.fr",
+        "ewallet@weka.fr"
+      ]
+    }
+  ],
 
-  "n@weka.fr": {
-    "name" : "Equipe DSI Nico",
-    "members" :[
-      "ewallet@weka.fr"
-    ]
-  }
+  "n@weka.fr":
+  [
+    {
+      "name" : "Equipe DSI Nico",
+      "id"   : "dsi2",
+      "members" :[
+        "ewallet@weka.fr"
+      ]
+    },
+    {
+      "name" : "Equipe DSI 3",
+      "id"   : "dsi3",
+      "members" :[
+        "ewallet@weka.fr"
+      ]
+    }
+  ]
 
 }

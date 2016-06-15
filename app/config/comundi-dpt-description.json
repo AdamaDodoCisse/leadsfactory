@@ -2,6 +2,14 @@
 
   "intra" : {
     "name" : "Equipe INTRA",
+    "id" : "intra1",
+    "members" :[
+      "n@weka.fr"
+    ]
+  },
+  "intra bis" : {
+    "name" : "Equipe INTRA BIS",
+    "id" : "intra2",
     "members" :[
       "n@weka.fr"
     ]
