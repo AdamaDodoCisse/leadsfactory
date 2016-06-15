@@ -21,6 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Tellaw\LeadsFactoryBundle\Utils\EmailUtils;
 use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 use Swift_Message;
 
@@ -255,6 +256,8 @@ class EntityLeadsController extends CoreController
 	 */
 	public function crmTeamLeadsFragmentAction ( Request $request, $page=1, $limit=25, $keyword='' ) {
 
+		$id = $request->get("id");
+
 		$session = $request->getSession();
 		$filterParams = $session->get ("filterParamsSuivi");
 
@@ -280,13 +283,17 @@ class EntityLeadsController extends CoreController
 
 			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
 				if (array_key_exists($this->getUser()->getEmail(), $jsonArray )) {
-					$isManagerOfATeam = true;
-					$teamName =  $jsonArray[$this->getUser()->getEmail()]["name"];
-					$members =  $jsonArray[$this->getUser()->getEmail()]["members"];
-					$affectationUsers = $usersRepository->findBy(array("email"=>$members));
-					$filterParams["affectation"] = $affectationUsers;
-					$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-
+					foreach ( $jsonArray[$this->getUser()->getEmail()] as $teamDetail ) {
+						$isManagerOfATeam = true;
+						$teamName =  $teamDetail["name"];
+						$teamId =  $teamDetail["id"];
+						$members =  $teamDetail["members"];
+						if( $id == $teamId ) {
+							$filterParams["affectation"] = $usersRepository->findBy(array("email"=>$members));
+							$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+							break;
+						}
+					}
 				}
 			}
 
@@ -297,7 +304,7 @@ class EntityLeadsController extends CoreController
 			'TellawLeadsFactoryBundle:entity/Leads:_fragment_teamleads.html.twig',
 			array(
 				'type'			=> 'list',
-
+				'objectId'			=> $id,
 				'teamName'			=> $teamName,
 				'isManagerOfATeam' 	=> $isManagerOfATeam,
 				'listTeam'			=> $listTeam['collection'],
@@ -339,6 +346,7 @@ class EntityLeadsController extends CoreController
 	 */
 	public function crmDptLeadsFragmentAction ( Request $request, $page=1, $limit=25, $keyword='' ) {
 
+		$id = $request->get("id");
 		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
 
 		if ($this->get("core_manager")->isDomainAccepted ()) {
@@ -368,12 +376,15 @@ class EntityLeadsController extends CoreController
 					$members =  $dpt["members"];
 					if (in_array( $this->getUser()->getEmail() , $members )) {
 						$dptName =  $dpt["name"];
+						$dptId =  $dpt["id"];
 						$isInADpt = true;
-						$affectationUsers = $usersRepository->findBy(array("email"=>$members));
-						$filterParams["affectation"] = $affectationUsers;
-						$dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-						//var_dump($dptTeam);
-						break;
+
+						if ($dptId == $id) {
+							$filterParams["affectation"] = $usersRepository->findBy(array("email"=>$members));
+							$dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+
+							break;
+						}
 					}
 				}
 			}
@@ -384,7 +395,7 @@ class EntityLeadsController extends CoreController
 			'TellawLeadsFactoryBundle:entity/Leads:_fragment_dptleads.html.twig',
 			array(
 				'type'			=> 'list',
-
+				'objectId'			=> $id,
 				'dptName'			=> $dptName,
 				'isInADpt' 			=> $isInADpt,
 				'dptTeam'			=> $dptTeam['collection'],
@@ -444,27 +455,30 @@ class EntityLeadsController extends CoreController
 		$filterParams["affectation"] = null;
 		if ($filterForm->isValid()) {
 			$filterParams = $filterForm->getData();
-		}
-		if ($filterForm->isValid()) {
 
+			// Si le formulaire à été validé, nous remplissons le champ de recherche Ajax avec la bonne valeur.
 			if ($name = explode(" ", $filterParams["affectation"])) {
 				$affectationUser = $usersRepository->findOneBy(array("firstname"=>$name, "lastname"=>$name));
 				$filterParams["affectation"] = $affectationUser;
 			}
-
 		}
 
+		// Si le champs affectation est vide, nous le remplissons avec l'utilisateur actuel.
 		if ($filterParams["affectation"] == "") {
+
+			// FilterParam ne sert que pour la recherche.
 			$filterParams["affectation"] = $this->getuser();
+
+			// Nous remplissons egallement le champs pour le formulaire.
 			if (!$filterForm->isSubmitted()) {
 				$filterForm->get("affectation")->setData(ucfirst($this->getUser()->getFirstName())." ".ucfirst($this->getUser()->getlastName()));
 			}
-		}
 
+		}
 		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 
-		// Checking if user is related to a team
 		$json = null;
+		// Checking if user is related to a team
 		if ($this->getUser()->getScope() != null) {
 			$filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode()."-team-description.json";
 			if (file_exists( $filePath )) {
@@ -473,22 +487,22 @@ class EntityLeadsController extends CoreController
 		}
 
 		$isManagerOfATeam = false;
-		$teamName = "";
-		$listTeam = array();
+		$teams = array();
 		if ( $jsonArray ) {
 
 			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
 				if (array_key_exists($this->getUser()->getEmail(), $jsonArray )) {
-					$isManagerOfATeam = true;
-					$teamName =  $jsonArray[$this->getUser()->getEmail()]["name"];
-					$members =  $jsonArray[$this->getUser()->getEmail()]["members"];
-					$affectationUsers = $usersRepository->findBy(array("email"=>$members));
-					$filterParams["affectation"] = $affectationUsers;
-					$listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
+					foreach ( $jsonArray[$this->getUser()->getEmail()] as $teamDetail ) {
 
+						$isManagerOfATeam = true;
+						$teamName =  $teamDetail["name"];
+						$teamId =  $teamDetail["id"];
+
+						$teams[$teamName] = $teamId;
+
+					}
 				}
 			}
-
 		}
 
 		// Loading informations of departement
@@ -499,24 +513,22 @@ class EntityLeadsController extends CoreController
 				$jsonArray = json_decode(file_get_contents( $filePath ), true);
 			}
 		}
+
 		$isInADpt = false;
-		$dptName = "";
-		$dptTeam = array();
+		$departements = array();
 		if ( $jsonArray ) {
 
 			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
-
 				foreach ( $jsonArray as $dpt ) {
-
 					$members =  $dpt["members"];
 					if (in_array( $this->getUser()->getEmail() , $members )) {
+
 						$dptName =  $dpt["name"];
+						$dptId =  $dpt["id"];
 						$isInADpt = true;
-						$affectationUsers = $usersRepository->findBy(array("email"=>$members));
-						$filterParams["affectation"] = $affectationUsers;
-						$dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-						//var_dump($dptTeam);
-						break;
+
+						$departements [ $dptName ] = $dptId;
+
 					}
 				}
 			}
@@ -530,15 +542,11 @@ class EntityLeadsController extends CoreController
 
 				'dptName'			=> $dptName,
 				'isInADpt' 			=> $isInADpt,
-				'dptTeam'			=> $dptTeam['collection'],
-				'paginationDpt'    	=> $dptTeam['pagination'],
-				'limit_optionsDpt' 	=> $dptTeam['limit_options'],
+				'teams'				=> $teams,
 
 				'teamName'			=> $teamName,
 				'isManagerOfATeam' 	=> $isManagerOfATeam,
-				'listTeam'			=> $listTeam['collection'],
-				'paginationTeam'    => $listTeam['pagination'],
-				'limit_optionsTeam' => $listTeam['limit_options'],
+				'departements'		=> $departements,
 
 				'user'			=> $this->getUser(),
 				'affectation'	=> $filterForm->get("affectation")->getData(),
@@ -885,18 +893,30 @@ class EntityLeadsController extends CoreController
 
 		$prefUtils = $this->get('preferences_utils');
 		$leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+
 		/**
 		 * Send notification to a user
 		 * Mail is sent to the user owner of the lead
 		 */
-		$result = $this->sendNotificationEmail (  	"Changement de thème pour une LEAD",
-													"Un utilisateur vient de modifier le thème associé à une lead.",
-													$this->getUser(),
-													"Le ".date ("d/m/Y à h:i"). " ".ucfirst($this->getUser()->getFirstName()). " ".ucfirst($this->getUser()->getLastName()). " vient de modifier le thème de la lead : ".$leadId." pour le passer à '".$listValue."'"  ,
-													$leadsUrl,
-													$leadsUrl,
-													$lead->getForm()->getScope()->getId()
-			);
+
+		/* @var EmailUtils $emailUtils */
+		$emailUtils = $this->get("emails_utils");
+
+		$action 		= sprintf(EmailUtils::$_ACTION_THEME_LEADS,$leadId);
+		$detailedAction = EmailUtils::$_DETAILED_ACTION_THEME_LEADS;
+		$message 		= sprintf(EmailUtils::$_MESSAGE_THEME_LEADS, array( 	date ("d/m/Y à h:i"),
+																				ucfirst($this->getUser()->getFirstName()),
+																				ucfirst($this->getUser()->getLastName()),
+																				$leadId)) ;
+
+		$result = $emailUtils->sendUserNotification (
+			$this->getUser(),
+			$action,
+			$detailedAction,
+			$message,
+			$leadsUrl,
+			$leadsUrl
+		);
 
 		// Index leads on search engine
 		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
@@ -958,13 +978,24 @@ class EntityLeadsController extends CoreController
 		 * Send notification to a user
 		 * Mail is sent to the user owner of the lead
 		 */
-		$result = $this->sendNotificationEmail (  	"Changement d'affectation pour la LEAD #".$leadId,
-			"Un utilisateur vient de modifier l'affectation d'une lead.",
+
+		/* @var EmailUtils $emailUtils */
+		$emailUtils = $this->get("emails_utils");
+
+		$action 		= sprintf(EmailUtils::$_ACTION_AFFECT_LEADS,$leadId);
+		$detailedAction = EmailUtils::$_DETAILED_ACTION_AFFECT_LEADS;
+		$message 		= sprintf(EmailUtils::$_MESSAGE_AFFECT_LEADS, array( 	date ("d/m/Y à h:i"),
+																				ucfirst($this->getUser()->getFirstName()),
+																				ucfirst($this->getUser()->getLastName()),
+																				$leadId)) ;
+
+		$emailUtils->sendUserNotification (
 			$user,
-			"Le ".date ("d/m/Y à h:i"). " ".ucfirst($this->getUser()->getFirstName()). " ".ucfirst($this->getUser()->getLastName()). " vient de vous assigner la lead : ".$leadId  ,
+			$action,
+			$detailedAction,
+			$message,
 			$leadsUrl,
-			$leadsUrl,
-			$lead->getForm()->getScope()->getId()
+			$leadsUrl
 		);
 
 		// Index leads on search engine
