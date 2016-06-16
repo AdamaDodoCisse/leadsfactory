@@ -31,6 +31,7 @@ class Users implements UserInterface {
      */
     public static $_ROLES = array (
         "ROLE_USER" => "Utilisateur",
+        "ROLE_COMMERCIAL" => "Commercial",
         "ROLE_MARKETING" => "Marketing",
         "ROLE_DISPATCH" => "Dispatch",
         "ROLE_DEV" => "Developpeur",

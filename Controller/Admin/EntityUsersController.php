@@ -4,6 +4,7 @@ namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tellaw\LeadsFactoryBundle\Form\Type\UsersLimitedType;
 use Tellaw\LeadsFactoryBundle\Form\Type\UsersType;
 use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
 
@@ -46,7 +47,16 @@ class EntityUsersController extends ApplicationCrudController
     }
 
     public function setFormType () {
+
         return new UsersType();
+
+        /*
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            return new UsersType();
+        } else {
+            return new UsersLimitedType();
+        }*/
+
     }
 
 
