@@ -40,7 +40,11 @@
             ).done(function() {
                 jQuery('#form-content').html(leadsfactory.html);
                 jQuery('#form-content').removeClass('loading-leads');
-                var params = {"origine-co" : "AD"};
+
+                {% if userEmail %}
+                var params = {"lf-assign" : "{{ userEmail }}"};
+                {% endif %}
+
                 var options = {};
                 leadsfactory.init('{{ code }}', params, options);
                 $("#Contactez-nous").bind("", $("#lffield\\[sujet\\]").val());

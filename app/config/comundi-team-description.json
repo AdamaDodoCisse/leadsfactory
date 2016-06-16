@@ -1,30 +1,71 @@
 {
 
-  "ewallet@weka.fr" : [
+  "ehervet@comundi.fr" : [
     {
-      "name" : "Equipe DSI",
-      "id"   : "dsi1",
+      "name" : "Equipe SST",
+      "id"   : "sst",
       "members" :[
-        "n@weka.fr",
-        "ewallet@weka.fr"
+        "ehervet@comundi.fr",
+        "jganon@comundi.fr"
       ]
     }
   ],
 
-  "n@weka.fr":
-  [
+  "gbernard@comundi.fr" : [
     {
-      "name" : "Equipe DSI Nico",
-      "id"   : "dsi2",
+      "name" : "Equipe HS",
+      "id"   : "hs",
       "members" :[
-        "ewallet@weka.fr"
+        "gbernard@comundi.fr",
+        "jchassagne@comundi.fr"
       ]
-    },
+    }
+  ],
+
+  "gbernard@comundi.fr" : [
     {
-      "name" : "Equipe DSI 3",
-      "id"   : "dsi3",
+      "name" : "Equipe DEC",
+      "id"   : "dec",
       "members" :[
-        "ewallet@weka.fr"
+        "gbernard@comundi.fr",
+        "gazard@comundi.fr",
+        "agaucher@comundi.fr",
+        "llhermite@comundi.fr",
+        "msteinebach@comundi.fr"
+      ]
+    }
+  ],
+
+  "criccobene@comundi.fr" : [
+    {
+      "name" : "Equipe Soft RH",
+      "id"   : "softrh",
+      "members" :[
+        "criccobene@comundi.fr",
+        "cdidier@comundi.fr",
+        "gruflin@comundi.fr"
+      ]
+    }
+  ],
+
+  "mrodier@comundi.fr" : [
+    {
+      "name" : "Equipe Public",
+      "id"   : "public",
+      "members" :[
+        "mrodier@comundi.fr",
+        "ncomiant@comundi.fr",
+        "cgorsse@comundi.fr"
+      ]
+    }
+  ],
+
+  "slebrun@comundi.fr" : [
+    {
+      "name" : "Equipe LN",
+      "id"   : "ln",
+      "members" :[
+        "slebrun@comundi.fr"
       ]
     }
   ]

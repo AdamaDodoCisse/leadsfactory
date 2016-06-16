@@ -3,7 +3,8 @@ security:
         Tellaw\LeadsFactoryBundle\Entity\Users: plaintext
 
     role_hierarchy:
-        ROLE_MARKETING: ROLE_USER
+        ROLE_COMMERCIAL: ROLE_USER
+        ROLE_MARKETING: [ROLE_USER, ROLE_COMMERCIAL]
         ROLE_DISPATCH:  [ROLE_USER, ROLE_MARKETING]
         ROLE_DEV: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH]
         ROLE_DEV_SCOPE: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV]

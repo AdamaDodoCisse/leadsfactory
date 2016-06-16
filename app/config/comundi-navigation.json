@@ -1,13 +1,23 @@
 {
   "Saisie" : {
+
     "role" : "ROLE_USER",
     "icon" : "fa-paperclip",
+
     "submenu" : {
+
+      "Saisir une intéraction" : {
+        "role" : "ROLE_USER",
+        "alias" : "_project_formForceUser_display",
+        "params" : {"code" : "co-saisie-contact"}
+      },
       "Demandes entrantes Tél" : {
         "role" : "ROLE_USER",
         "alias" : "_project_form_display",
         "params" : {"code" : "co-demandes-entrantes-tel"}
       }
+
+
     }
   }
 }

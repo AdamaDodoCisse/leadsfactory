@@ -46,8 +46,26 @@ class AdminFormController extends CoreController
 		return $this->render(
 			'WekaLeadsExportBundle:Custom:pageForForms.html.twig',
 			array(
-				"code" => $code
+				"code" => $code,
+				"userEmail" => ""
 			)
 		);
 	}
+
+	/**
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/saisie/formForceUser/{code}", name="_project_formForceUser_display")
+	 */
+	public function indexForceUserAction(Request $request, $code)
+	{
+
+		return $this->render(
+			'WekaLeadsExportBundle:Custom:pageForForms.html.twig',
+			array(
+				"code" => $code,
+				"userEmail" => $this->getUser()->getEmail()
+			)
+		);
+	}
+
 }
