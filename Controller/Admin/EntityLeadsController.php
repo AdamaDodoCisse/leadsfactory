@@ -488,6 +488,7 @@ class EntityLeadsController extends CoreController
 
 		$isManagerOfATeam = false;
 		$teams = array();
+		$teamName = "";
 		if ( $jsonArray ) {
 
 			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
@@ -515,6 +516,7 @@ class EntityLeadsController extends CoreController
 		}
 
 		$isInADpt = false;
+		$dptName = "";
 		$departements = array();
 		if ( $jsonArray ) {
 
