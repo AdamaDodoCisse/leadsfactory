@@ -109,16 +109,16 @@
                         {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
                     {% elseif item.workflowStatus == 'en_attente' %}
                         {% set statusLibelle = "En attente" %}
-                        {% set color =  "style=background-color:#FFFFFF;color:#000000;" %}
+                        {% set color =  "style=background-color:#33CC33;color:#FFFFFF;" %}
                     {% elseif item.workflowStatus == 'gagne' %}
                         {% set statusLibelle = "Gagné" %}
-                        {% set color =  "style=background-color:#33CC33;color:#FFFFCC;" %}
+                        {% set color =  "style=background-color:#CCCC66;color:#99FF00;" %}
                     {% elseif item.workflowStatus == 'perdu' %}
                         {% set statusLibelle = "Perdu" %}
-                        {% set color =  "style=background-color:#FF6600;color:#FFFFFF;" %}
+                        {% set color =  "style=background-color:#FF3300;color:#FF6600;" %}
                     {% elseif item.workflowStatus == 'inexploitable' %}
                         {% set statusLibelle = "inéxploitable" %}
-                        {% set color =  "style=background-color:#DCDCDC;color:#000000;" %}
+                        {% set color =  "style=background-color:#FF3300;color:#DCDCDC;" %}
                     {% else %}
                         {% set statusLibelle = "-" %}
                         {% set color =  "" %}
