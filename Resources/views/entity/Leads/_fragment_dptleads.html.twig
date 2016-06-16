@@ -85,17 +85,17 @@
                 <div class="st_pagination">
                     <ul class="pagination">
                         {% if paginationDpt.page > 1 %}
-                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': 1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}');return false;" class="first">Début</a></li>
-                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.page-1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">&larr; Précédent</a></li>
+                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': 1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');return false;" class="first">Début</a></li>
+                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.page-1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');return false;">&larr; Précédent</a></li>
                         {% endif %}
                         {% for i in paginationDpt.pagination_min..paginationDpt.pagination_max %}
                             <li {% if paginationDpt.page == i %}class="active" {% endif %}>
-                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': i, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}');return false;" {% if paginationDpt.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': i, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');return false;" {% if paginationDpt.page == i %}class="active" {% endif %}>{{ i }}</a>
                             </li>
                         {% endfor %}
                         {% if paginationDpt.page < paginationDpt.pages_count %}
-                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.page+1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">Suivant &rarr;</a></li>
-                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.pages_count, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}');return false;">Fin</a></li>
+                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.page+1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');return false;">Suivant &rarr;</a></li>
+                            <li><a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.pages_count, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');return false;">Fin</a></li>
                         {% endif %}
                     </ul>
                 </div>

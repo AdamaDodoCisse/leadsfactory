@@ -31,7 +31,11 @@ class EmailUtils implements ContainerAwareInterface {
     public static $_ACTION_THEME_LEADS = "Changement de thème pour une LEAD";
     public static $_DETAILED_ACTION_THEME_LEADS = "Un utilisateur vient de modifier le thème associé à une lead.";
     public static $_MESSAGE_THEME_LEADS = "Le %s %s %s vient de vous assigner la lead : %s";
-    
+
+    public static $_ACTION_TYPE_LEADS = "Changement de type pour une LEAD";
+    public static $_DETAILED_ACTION_TYPE_LEADS = "Un utilisateur vient de modifier le type associé à une lead.";
+    public static $_MESSAGE_TYPE_LEADS = "Le %s %s %s vient de modifier le type la lead : %s";
+
     /**
      * @param ContainerInterface $container
      */

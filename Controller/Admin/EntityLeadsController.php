@@ -829,19 +829,31 @@ class EntityLeadsController extends CoreController
 
 		$prefUtils = $this->get('preferences_utils');
 		$leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+
 		/**
 		 * Send notification to a user
 		 * Mail is sent to the user owner of the lead
 		 */
-		$result = $this->sendNotificationEmail (  	"Changement de type pour une LEAD",
-			"Un utilisateur vient de modifier le type associé à une lead.",
+		/* @var EmailUtils $emailUtils */
+		$emailUtils = $this->get("emails_utils");
+
+		$action 		= sprintf(EmailUtils::$_ACTION_TYPE_LEADS,$leadId);
+		$detailedAction = EmailUtils::$_DETAILED_ACTION_TYPE_LEADS;
+		$message 		= sprintf(EmailUtils::$_MESSAGE_TYPE_LEADS, array( 	date ("d/m/Y à h:i"),
+			ucfirst($this->getUser()->getFirstName()),
+			ucfirst($this->getUser()->getLastName()),
+			$leadId)) ;
+
+		$result = $emailUtils->sendUserNotification (
 			$this->getUser(),
-			"Le ".date ("d/m/Y à h:i"). " ".ucfirst($this->getUser()->getFirstName()). " ".ucfirst($this->getUser()->getLastName()). " vient de modifier le type de la lead : ".$leadId." pour le passer à '".$listValue."'"  ,
+			$action,
+			$detailedAction,
+			$message,
 			$leadsUrl,
-			$leadsUrl,
-			$lead->getForm()->getScope()->getId()
+			$leadsUrl
 		);
 
+		
 		// Index leads on search engine
 		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
 		$this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
