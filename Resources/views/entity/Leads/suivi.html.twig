@@ -74,9 +74,14 @@
         </div>
     </div>
 
+    <div class="col-md-12 filter_form">
+        <div class="widget-body custom-form">
+            <h2 style="margin-left:20px;">Filtrer la liste</h2>
+            {{ form(filters_form) }}
+        </div>
+    </div>
 
-
-        <div class="col-md-9">
+        <div class="col-md-12">
 
 
 
@@ -145,18 +150,13 @@
             </div>
 
         </div>
-    <div class="col-md-3 filter_form">
-        <div class="widget-body custom-form">
-            <h2 style="margin-left:20px;">Filtrer la liste</h2>
-            {{ form(filters_form) }}
-        </div>
-    </div>
+
 
 
 
     <script type="text/javascript">
         $( document ).ready(function() {
-
+            initViewFilter();
             setAutoComplete();
 
             // Javascript to enable link to tab
@@ -182,6 +182,30 @@
             updateTabs();
 
         });
+        function initViewFilter() {
+            $(".filter_form form").prepend('<div class="form-group toggle-filters-btn ' +
+                    'col-md-12"><strong>[<i class="toggle-filters-i">-</i>] Filtrage avancé</strong></div>');
+
+            var url = window.location.href;
+            var matches = url.match(/[a-z\d]+=[a-z\d]+/gi);
+            var queryCount = matches? matches.length : 0;
+
+            // Scroll to results Or hide filters
+            if (queryCount > 0) $('#results-list').scrollView();
+            else toggleFilters();
+
+            // init filter button action
+            $(".toggle-filters-btn").on('click', function(){toggleFilters()})
+
+            // If Page is MyList then change affectation
+            {% if type == 'mylist' %}
+            console.log("looo");
+            $("#row-form_affectation input")
+                    .val('{{ firstName }} {{ lastName }}')
+                    .attr('disabled', 'disabled');
+            $(".filter_form form").attr('action', "{{ path(app.request.attributes.get('_route')) }}");
+            {% endif %}
+        }
 
         function updateTabs () {
             loadMyLeadsTab();
