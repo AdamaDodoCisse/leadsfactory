@@ -21,17 +21,23 @@ class Comundimail extends AbstractMethod {
 
     private $_formConfig;
     private $subjects = array(
-        '1'     => "Poser une question sur une formation",
-        '2'     => "Demander un programme",
-        '3'     => "Demander une formation sur mesure dans vos locaux",
-        '4'     => "Déposer un appel d'offres pour une formation en intra",
-        '5'     => "Procéder à une inscription",
-        '6'     => "Avoir des informations sur une inscription en cours",
-        '7'     => "Bénéficier de réductions sur votre transport et votre hébergement",
-        '8'     => "Obtenir des renseignements administratifs sur Comundi",
-        '9'     => "Nous référencer",
-        '10'    => 'Exercer vos droits "Données personnelles - Informatique et Libertés"',
-        '11'    => 'Autre'
+        "1" => "Poser une question sur une formation",
+        "2" => "Demander un programme",
+        "3" => "Demander une formation sur mesure dans vos locaux",
+        "4" => "Déposer un appel d'offres pour une formation en intra",
+        "5" => "Procéder à une inscription",
+        "6" => "Avoir des informations sur une inscription en cours",
+        "7" => "Bénéficier de réductions sur votre hébergement",
+        "8" => "Obtenir des renseignements administratifs sur Comundi",
+        "9" => "Nous référencer",
+        "10" => 'Exercer vos droits "Données personnelles - Informatique et Libertés" ',
+        "11" => "Autre",
+        "12" => "Demande d'information pour Comundi Consulting",
+        "13" => "Demande d'information sur l'externalisation des entretiens professionnels",
+        "14" => "Demande d'information ou devis pour le MOOC",
+        "15" => "Demande d'information pour Comundimix",
+        "16" => "Demande d'information sur l'actualité",
+        "17" => "Demande d'information sur le coaching"
     );
 
     public function __construct()
