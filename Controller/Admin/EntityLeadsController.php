@@ -475,6 +475,7 @@ class EntityLeadsController extends CoreController
 			}
 
 		}
+
 		$list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
 
 		$json = null;
@@ -489,15 +490,15 @@ class EntityLeadsController extends CoreController
 		$isManagerOfATeam = false;
 		$teams = array();
 		$teamName = "";
-		if ( $jsonArray ) {
 
-			if ( $this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "" ) {
-				if (array_key_exists($this->getUser()->getEmail(), $jsonArray )) {
-					foreach ( $jsonArray[$this->getUser()->getEmail()] as $teamDetail ) {
+		if ( $jsonArray ) {
+			if ($this->getUser()->getEmail() != null && $this->getUser()->getEmail() != "") {
+				if (array_key_exists($this->getUser()->getEmail(), $jsonArray)) {
+					foreach ($jsonArray[$this->getUser()->getEmail()] as $teamDetail) {
 
 						$isManagerOfATeam = true;
-						$teamName =  $teamDetail["name"];
-						$teamId =  $teamDetail["id"];
+						$teamName = $teamDetail["name"];
+						$teamId = $teamDetail["id"];
 
 						$teams[$teamName] = $teamId;
 
