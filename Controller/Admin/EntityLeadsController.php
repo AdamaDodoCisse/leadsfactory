@@ -588,10 +588,20 @@ class EntityLeadsController extends CoreController
 		}
 
 
+		$file = "";
+		if ( array_key_exists( "user_file", $leadDetail  )) {
+			$ext = substr(strrchr($leadDetail["user_file"], '.'), 1);
+			$filePath = $this->get('kernel')->getRootDir()."/../datas/".$lead->getForm()->getid()."/".$id."_user_file.".$ext;
+			if (file_exists( $filePath )) {
+				$file = $lead->getForm()->getId()."/".$id."-user_file.".$ext;
+			}
+		}
+
 		return $this->render('TellawLeadsFactoryBundle:entity/Leads:suivi-edit.html.twig', array(  'lead' => $lead,
 			'origin' => $origin,
 			'leadDetail' => $leadDetail,
 			'assignUser' => $assignUser,
+			"file"	=> $file,
 			'title' => "Edition d'un leads"));
 	}
 
@@ -618,12 +628,22 @@ class EntityLeadsController extends CoreController
 			$assignUser = "";
 		}
 
+		$file = "";
+		if ( array_key_exists( "user_file", $leadDetail  )) {
+			$ext = substr(strrchr($leadDetail["user_file"], '.'), 1);
+			$filePath = $this->get('kernel')->getRootDir()."/../datas/".$lead->getForm()->getid()."/".$id."_user_file.".$ext;
+			if (file_exists( $filePath )) {
+				$file = $lead->getForm()->getId()."/".$id."-user_file.".$ext;
+			}
+		}
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array(  'lead' => $lead,
-																							 'origin' => $origin,
-																								'leadDetail' => $leadDetail,
-																								'assignUser' => $assignUser,
-                                                                                             'title' => "Edition d'un leads"));
+
+        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array( "lead" => $lead,
+																							"origin" => $origin,
+																							"leadDetail" => $leadDetail,
+																							"assignUser" => $assignUser,
+																							"file"	=> $file,
+                                                                                            "title" => "Edition d'un leads"));
     }
 
 	/**
