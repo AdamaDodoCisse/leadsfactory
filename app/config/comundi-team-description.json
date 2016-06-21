@@ -19,10 +19,7 @@
         "gbernard@comundi.fr",
         "jchassagne@comundi.fr"
       ]
-    }
-  ],
-
-  "gbernard@comundi.fr" : [
+    },
     {
       "name" : "Equipe DEC",
       "id"   : "dec",
@@ -32,18 +29,6 @@
         "agaucher@comundi.fr",
         "llhermite@comundi.fr",
         "msteinebach@comundi.fr"
-      ]
-    }
-  ],
-
-  "criccobene@comundi.fr" : [
-    {
-      "name" : "Equipe Soft RH",
-      "id"   : "softrh",
-      "members" :[
-        "criccobene@comundi.fr",
-        "cdidier@comundi.fr",
-        "gruflin@comundi.fr"
       ]
     }
   ],
@@ -65,7 +50,10 @@
       "name" : "Equipe LN",
       "id"   : "ln",
       "members" :[
-        "slebrun@comundi.fr"
+        "slebrun@comundi.fr",
+        "aqueti@comundi.fr",
+        "csteimle@comundi.fr",
+        "adelom@comundi.fr"
       ]
     }
   ]
