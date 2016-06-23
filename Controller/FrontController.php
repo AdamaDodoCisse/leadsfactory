@@ -303,6 +303,36 @@ class FrontController extends CoreController
 
             }
 
+            // Assignation de la leads si  l'information est contenue dans les données de la leads
+            if (array_key_exists(  'lf-assign' , $fields )) {
+
+                $assign = trim($fields["lfassign"] );
+                $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($assign);
+
+                if ($user != null) {
+                    $leads->setUser( $user );
+                } else {
+                    $logger->info("Frontcontroller : Assign tu a User that does not exists! ".$assign);
+                }
+
+            }
+
+            if (array_key_exists(  'lf-status' , $fields ) && trim($fields["lf-status"] != "")) {
+                $status = trim($fields["lf-status"] );
+                $leads->setWorkflowStatus( $status );
+            }
+
+            if (array_key_exists(  'lf-type' , $fields ) && trim($fields["lf-type"] != "")) {
+                $type = trim($fields["lf-type"] );
+                $leads->setWorkflowType( $type );
+            }
+
+            if (array_key_exists(  'lf-theme' , $fields ) && trim($fields["lf-theme"] != "")) {
+                $theme = trim($fields["lf-theme"] );
+                $leads->setWorkflowTheme( $theme );
+            }
+
+
             $status = $exportUtils->hasScheduledExport($formObject->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
             $leads->setStatus($status);
 

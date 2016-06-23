@@ -52,11 +52,10 @@
                     </h4>
                 </div>
                 <div class="panel-collapse in" id="collapseOne" style="height: auto;">
-                    <div class="panel-body">
 
+                    <div class="panel-body">
                         <div class="widget-body custom-form">
                             <form class="sec" role="form">
-
                                 <div class="form-group">
                                     <label for="leadLastName">Nom</label>
                                     <input readonly="readonly" type="text" class="form-control" id="leadLastName" placeholder="Enter email" value="{{ lead.lastName }}">
@@ -69,11 +68,16 @@
                                     <label for="leadEmail">Email</label>
                                     <input readonly="readonly" type="email" class="form-control" id="leadEmail" placeholder="Email" value="{{ lead.email }}">
                                 </div>
-
+                                {% if leadDetail.user_file is defined %}
+                                    <div class="form-group">
+                                        <label>Piece jointe : </label>
+                                        <a href="http://weka.fr/leads-factory/datas/{{ file }}" target="_blank">{{ leadDetail.user_file }}</a>
+                                    </div>
+                                {% endif %}
                             </form>
                         </div>
-
                     </div>
+
                 </div>
             </div>
         </div>

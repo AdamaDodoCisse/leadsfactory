@@ -74,9 +74,14 @@
         </div>
     </div>
 
+    <div class="col-md-12 filter_form">
+        <div class="widget-body custom-form">
+            <h2 style="margin-left:20px;">Filtrer la liste</h2>
+            {{ form(filters_form) }}
+        </div>
+    </div>
 
-
-        <div class="col-md-9">
+        <div class="col-md-12">
 
 
 
@@ -84,10 +89,14 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Suivi commercial</a></li>
                 {% if (isManagerOfATeam) %}
-                <li role="presentation"><a href="#equipe" aria-controls="profile" role="tab" data-toggle="tab">Suivi de mon équipe</a></li>
+                {% for teamName, teamId in teams %}
+                    <li role="presentation"><a href="#{{ teamId }}" aria-controls="profile" role="tab" data-toggle="tab">{{ teamName }}</a></li>
+                {% endfor %}
                 {% endif %}
                 {% if (isInADpt) %}
-                <li role="presentation"><a href="#departement" aria-controls="profile" role="tab" data-toggle="tab">Suivi du département "{{ dptName }}"</a></li>
+                {% for dptName, dptId in departements %}
+                <li role="presentation"><a href="#{{ dptId }}" aria-controls="profile" role="tab" data-toggle="tab">Suivi du département "{{ dptName }}"</a></li>
+                {% endfor %}
                 {% endif %}
 
             </ul>
@@ -104,12 +113,13 @@
 
 
                 </div>
+
 {% if (isManagerOfATeam) %}
 
-
+                {% for teamName, teamId in teams %}
 
                 <!-- Panel mon equipe -->
-                <div role="tabpanel" class="tab-pane" id="equipe">
+                <div role="tabpanel" class="tab-pane" id="{{ teamId }}">
 
                     <!-- Ajax loaded content -->
                     <div class="col-md-12" style="min-height:400px">
@@ -118,7 +128,13 @@
 
                 </div>
 
-                <div role="tabpanel" class="tab-pane" id="departement">
+                {% endfor %}
+
+{% endif %}
+
+                {% for dptName, dptId in departements %}
+
+                <div role="tabpanel" class="tab-pane" id="{{ dptId }}">
 
                     <!-- Ajax loaded content -->
                     <div class="col-md-12" style="min-height:400px">
@@ -127,23 +143,20 @@
 
                  </div>
 
-{% endif %}
+                {% endfor %}
+
+
 
             </div>
 
         </div>
-    <div class="col-md-3 filter_form">
-        <div class="widget-body custom-form">
-            <h2 style="margin-left:20px;">Filtrer la liste</h2>
-            {{ form(filters_form) }}
-        </div>
-    </div>
+
 
 
 
     <script type="text/javascript">
         $( document ).ready(function() {
-
+            initViewFilter();
             setAutoComplete();
 
             // Javascript to enable link to tab
@@ -169,11 +182,35 @@
             updateTabs();
 
         });
+        function initViewFilter() {
+            $(".filter_form form").prepend('<div class="form-group toggle-filters-btn ' +
+                    'col-md-12"><strong>[<i class="toggle-filters-i">-</i>] Filtrage avancé</strong></div>');
+
+            var url = window.location.href;
+            var matches = url.match(/[a-z\d]+=[a-z\d]+/gi);
+            var queryCount = matches? matches.length : 0;
+
+            // Scroll to results Or hide filters
+            if (queryCount > 0) $('#results-list').scrollView();
+            else toggleFilters();
+
+            // init filter button action
+            $(".toggle-filters-btn").on('click', function(){toggleFilters()})
+
+            // If Page is MyList then change affectation
+            {% if type == 'mylist' %}
+            console.log("looo");
+            $("#row-form_affectation input")
+                    .val('{{ firstName }} {{ lastName }}')
+                    .attr('disabled', 'disabled');
+            $(".filter_form form").attr('action', "{{ path(app.request.attributes.get('_route')) }}");
+            {% endif %}
+        }
 
         function updateTabs () {
             loadMyLeadsTab();
-            loadTeamLeadsTab();
-            loadDptLeadsTab();
+            loadTeamLeadsTabs();
+            loeadDptLeadsTabs();
         }
 
         // Ajax Page
@@ -201,16 +238,31 @@
                     } );
         }
 
+        function loadTeamLeadsTabs (  ) {
+
+            // Create Array of teams
+            var teams = [];
+            {% for teamName, teamId in teams %}
+            teams.push ("{{ teamId }}");
+            {% endfor %}
+
+            for (var i = 0, len = teams.length; i < len; i++) {
+                loadTeamLeadsTab ( null, teams[i] );
+            }
+
+        }
+
         // Load default tab content
-        function loadTeamLeadsTab ( url ) {
+        function loadTeamLeadsTab ( url, id ) {
+
             if (!url) {
                 var url = "{{ path ('_leads_fragment_teamleads') }}";
             }
-            var data = { } ;
-            var container = $("#equipe");
+            var data = { "id" : id } ;
+            var container = $("#"+id);
 
             $.ai.mask({
-                aiMask:'equipe',
+                aiMask: id,
                 aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
             })
 
@@ -225,16 +277,30 @@
                     } );
         }
 
+        function loeadDptLeadsTabs (  ) {
+
+            var departements = [];
+            {% for dptName, dptId in departements %}
+            departements.push ("{{ dptId }}");
+            {% endfor %}
+
+            for (var i = 0, len = departements.length; i < len; i++) {
+                loadDptLeadsTab ( null, departements[i] );
+            }
+
+        }
+
         // Load default tab content
-        function loadDptLeadsTab ( url ) {
+        function loadDptLeadsTab ( url, id ) {
+
             if (!url) {
                 var url = "{{ path ('_leads_fragment_dptleads') }}";
             }
-            var data = { } ;
-            var container = $("#departement");
+            var data = { "id" : id } ;
+            var container = $("#"+id);
 
             $.ai.mask({
-                aiMask:'departement',
+                aiMask: id,
                 aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
             })
 

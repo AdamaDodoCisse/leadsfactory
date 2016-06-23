@@ -82,6 +82,11 @@ services:
     calls:
                   - [ setContainer, [ @service_container ] ]
 
+  emails_utils:
+    class:        Tellaw\LeadsFactoryBundle\Utils\EmailUtils
+    calls:
+                  - [ setContainer, [ @service_container ] ]
+
   leadsfactory.field_factory:
     class:        Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory
 
