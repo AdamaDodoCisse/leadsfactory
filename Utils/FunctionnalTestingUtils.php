@@ -357,6 +357,9 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
                 $fieldArr = $this->getValueForField ( $field );
                 $scope = $form->getScope()->getCode();
                 $fieldValue = "";
+
+                
+                // Get default value if there is no one for scope
                 if (isset($fieldArr[$scope]))
                     $fieldValue = empty($fieldArr[$scope]) ? $fieldArr["default"] : $fieldArr[$scope];
 
