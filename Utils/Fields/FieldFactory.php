@@ -11,6 +11,10 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
 class FieldFactory
 {
+    /**
+     * @param $type
+     * @return CheckboxFieldType|EmailFieldType|FileFieldType|HiddenFieldType|LinkedReferenceListFieldType|RadioFieldType|ReferenceListFieldType|TextareaFieldType|TextFieldType
+     */
     public function createFromType($type)
     {
         switch ($type) {

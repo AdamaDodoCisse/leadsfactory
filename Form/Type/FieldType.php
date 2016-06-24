@@ -29,6 +29,9 @@ class FieldType extends AbstractType
         $resolver->setDefaults(
             array(
                 'data_class' => 'Tellaw\LeadsFactoryBundle\Entity\Field',
+                'attr' => array('id' => 'form-form',
+                    'onSubmit' => 'validateFormAction();'
+                )
             )
         );
 
@@ -39,8 +42,7 @@ class FieldType extends AbstractType
 
         $builder->add('code');
         $builder->add('description');
-        $builder->add('testvalue', null, array('label' => 'Valeur de test'));
-
+        $builder->add('testvalue', new JsonType(), array('label' => 'Valeur de test'));
         $builder->add('save', 'submit');
     }
 

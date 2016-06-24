@@ -54,15 +54,14 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
 
         foreach ( $forms as $form ) {
 
-            $output->writeln ("Traitement formulaire : ".$form->getName());
-
-            $form_config = $form->getConfig();
-
             // If updating fields
             if ($fields_update) {
-                $this->get_reference_fields($form->getSource(), $fields_list);
+                $fields_list[] = $formUtils->getFieldsAsArray($form->getSource());
                 continue;
             }
+
+            $output->writeln ("Traitement formulaire : ".$form->getName());
+            $form_config = $form->getConfig();
 
             // If functional test purpose
             if (isset( $form_config ["configuration"]["functionnalTestingEnabled"] ) && $form_config ["configuration"]["functionnalTestingEnabled"] == true) {
@@ -74,53 +73,72 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
         }
 
         if ($fields_list) {
-            $fields_list = array_values(array_unique($fields_list));
-            sort($fields_list);
-            print_r($fields_list);
-            $this->update_reference_fields($fields_list);
+            $output->writeln ("Mise à jour des champs du reférentiel ...");
+            $count = $this->update_reference_fields($fields_list);
+            $output->writeln ("Nombre de nouveaux champs : $count");
         }
+
     }
 
 
-    protected function update_reference_fields($fields) {
+    protected function getScopesArray() {
+        $scopeList = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Scope')->getAll();
+        $arr_scope = array();
+        $arr_scope["default"] = "";
+        if ($scopeList)
+            foreach ($scopeList as $scope)
+                $arr_scope[$scope['s_code']] = "";
 
+        return $arr_scope;
+    }
+
+    protected function mergeFields($fieldsList) {
+        $fields_list = array_filter($fieldsList);
+        $merged_list = array();
+        foreach ($fields_list as $fields) {
+            foreach ($fields as $key=>$field) {
+                if (!isset($merged_list[$key]))
+                    $merged_list[$key] = $field['attributes'];
+            }
+        }
+        return $merged_list;
+    }
+
+    protected function update_reference_fields($fields) {
+        $count = 0;
         $fieldsRepository = $this->getContainer()->get("doctrine")->getManager()->getRepository('TellawLeadsFactoryBundle:Field');
+        $arr_scope = $this->getScopesArray();
         $em = $this->getContainer()->get("doctrine")->getEntityManager();
-        foreach ( $fields as $field) {
-            $search = $fieldsRepository->findByCode($field);
+        $fields = $this->mergeFields($fields);
+        foreach ( $fields as $code=>$field) {
+            $testValues = $arr_scope;
+            $testValues['default'] = isset($field['test-value']) ? $field['test-value'] : "";
+            $field = $fieldsRepository->findOneByCode($code);
             // No match
-            if (!$search) {
+            if (!$field) {
                 $new_field = new Field();
-                $new_field->setCode($field);
+                $new_field->setCode($code);
+                $new_field->setTestValue(json_encode($testValues));
                 $em->persist($new_field);
+                $em->flush();
+                $count++;
+            } else {
+                // first check if data is already set
+                // If is is already check and not empty form form source replace (default)
+                $testValuesArr = json_decode($field->getTestValue(), true);
+                if (is_array($testValuesArr)) { // data is valid JSON
+                    foreach ($testValuesArr as $scope => $item)
+                        if ($testValuesArr[$scope] != $testValues[$scope] && !empty($testValues[$scope]))
+                            $testValuesArr[$scope] = $testValues[$scope];
+                    $field->setTestValue(json_encode($testValuesArr));
+                } else { // data is not valid JSON
+                    $field->setTestValue(json_encode($testValues));
+                }
+                $em->persist($field);
                 $em->flush();
             }
         }
-        $query = $em->createQuery("SELECT f FROM TellawLeadsFactoryBundle:Field f");
-        $res = $query->getResult();
-        print_r($res);
+        return $count;
     }
 
-    protected function get_reference_fields($form_source, &$data_fields) {
-        $clean_source = strip_tags($form_source);
-        $fields = array();
-        $ret = preg_match_all("({{(.*)}})", $clean_source, $fields);
-
-        if ($ret) {
-            foreach ($fields[1] as $field) {
-                $json_field = array();
-                $ret2 = preg_match_all("(field\\((.*)\\))", $field, $json_field);
-                if ($ret2) {
-                    $json_string = str_replace("'", '"', $json_field[1][0]);
-                    $json_data = json_decode($json_string, true);
-                    if (isset($json_data["attributes"])) {
-                        $attributes = $json_data["attributes"];
-                        if (isset($attributes["id"])) {
-                            $data_fields[] = $attributes["id"];
-                        }
-                    }
-                }
-            }
-        }
-    }
 }

@@ -29,7 +29,7 @@ class EntityFieldController extends ApplicationCrudController
     public function __construct ()
     {
         $this->_list_title = "Champs";
-        $this->_description = "Description de l'admin des champs";
+        $this->_description = "Liste des champs reférencés et indexés pour les tests fonctionnels.";
         $this->_edition_title = "Edition d'un champ";
         $this->_create_title = "Création d'un champ";
         $this->_list_actions = array (
@@ -65,9 +65,9 @@ class EntityFieldController extends ApplicationCrudController
 
     public function setListColumns () {
         return array(
-                        "Id"        => "id",
-                        "Code"      => "code"
-                    );
+            "Identifiant du champ"      => "code",
+            "Valeurs par défaut (par scope)" => "testValue"
+        );
     }
 
     /**

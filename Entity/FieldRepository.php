@@ -54,8 +54,18 @@ class FieldRepository extends EntityRepository
             ->getOneOrNullResult(Query::HYDRATE_ARRAY);
 
         return $result;
+    }
 
 
+    public function getListByScopeName($scope_name) {
+        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Field f';
+        $result = $this->getEntityManager()->createQuery($dql)->getResult();
+        foreach ($result as $key=>$field) {
+            if ($value = $field->getTestValue()) {
+                print_r($value);
+            }
+        }
+        return ($result);
     }
 
 }

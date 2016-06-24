@@ -266,6 +266,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      *
      * @param $form
      * @return string
+     * @throws \Exception
      */
     public function createCasperScript ( $form ) {
 
@@ -353,7 +354,11 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
             foreach ( $sequence['fields'] as $field ) {
 
                 // Find value for field
-                $fieldValue = $this->getValueForField ( $field );
+                $fieldArr = $this->getValueForField ( $field );
+                $scope = $form->getScope()->getCode();
+                $fieldValue = "";
+                if (isset($fieldArr[$scope]))
+                    $fieldValue = empty($fieldArr[$scope]) ? $fieldArr["default"] : $fieldArr[$scope];
 
                 // Create field
                 if ( isset( $field["attributes"]["test-alias"] ) ) {
@@ -371,6 +376,10 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
                 }
                 $fieldIdx++;
             }
+
+            // set delay  for every thing
+            ///!\ MUST CHECK
+            $sequence["delay"] = "200";
 
             $item.= "
                         },
@@ -437,25 +446,30 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * First look for attributes 'testValue' in the field
      * Then : Ask field factory to find a value for the test. The factory receive a data-type as context for the field
      *
+     * Latest Edit : Request from Fields entity list
      * @param $field
      * @return mixed
      */
     private function getValueForField ( $field ) {
 
-        if (isset ( $field["attributes"]["testValue"] )) {
-            return $field["attributes"]["testValue"];
-        }
+        $field = $this->container->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Field')->findOneByCode($field["attributes"]['id']);
+        $arrField = $field->getValues();
+        return $arrField;
 
-        $field_factory = $this->container->get("leadsfactory.field_factory");
-        $fieldObj = $field_factory->createFromType( $field["type"] );
-
-        if (isset($field["data-type"])) {
-            $dataType = $field["data-type"];
-        } else {
-            $dataType = "";
-        }
-
-        return $fieldObj->getTestValue( $dataType, $field  );
+//        if (isset ( $field["attributes"]["testValue"] )) {
+//            return $field["attributes"]["testValue"];
+//        }
+//
+//        $field_factory = $this->container->get("leadsfactory.field_factory");
+//        $fieldObj = $field_factory->createFromType( $field["type"] );
+//
+//        if (isset($field["data-type"])) {
+//            $dataType = $field["data-type"];
+//        } else {
+//            $dataType = "";
+//        }
+//
+//        return $fieldObj->getTestValue( $dataType, $field  );
 
     }
 
@@ -560,7 +574,10 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * Method used to find the recorded test in history
      * This method will filter results by type of form.
      *
-     * @param $fields
+     * @param Form $form
+     * @param int $searchInHistoryOfNbPost
+     * @return
+     * @internal param $fields
      */
     public function findLeadsInDatabase ( Form $form, $searchInHistoryOfNbPost = 10 ) {
         return $this->container->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Leads')->findLastNByType($form, $searchInHistoryOfNbPost);
@@ -593,7 +610,8 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * it return true if content is equal, false if not
      *
      * @param $fields
-     * @param Array $leads
+     * @param array|Array $leads
+     * @return int
      */
     public function validateTestResults ( $fields, array $leads ) {
 

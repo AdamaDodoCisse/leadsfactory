@@ -6,9 +6,9 @@
 
     <div class="col-md-8">
         {% for flashMessage in app.session.flashbag.get('error') %}
-        <div class="notifications widget-body pink">
-            <p style="line-height:normal">{{ flashMessage }}</p>
-        </div>
+            <div class="notifications widget-body pink">
+                <p style="line-height:normal">{{ flashMessage }}</p>
+            </div>
         {% endfor %}
     </div>
 
@@ -25,24 +25,11 @@
     </div>
 
     {% if helpMessage is defined %}
-    <div class="col-md-4">
-        <b>Aide :</b><br/>
-        {{ helpMessage }}
-    </div>
+        <div class="col-md-4">
+            <b>Aide :</b><br/>
+            {{ helpMessage }}
+        </div>
     {% endif %}
 
-
-{% endblock %}
-
-{% block javascript %}
-
-<script>
-
-    function validateFormAction() {
-        if (undefined !== typeof(editor))
-            $("#field_testvalue").val(editor.getText());
-    }
-
-</script>
 
 {% endblock %}

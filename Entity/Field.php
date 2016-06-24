@@ -33,8 +33,8 @@ class Field {
     protected $description;
 
     /**
-     * @var string $test_value
-     * @ORM\Column(type="string", nullable=true, name="test_value")
+     * @var longtext $test_value
+     * @ORM\Column(type="text", nullable=true, name="test_value")
      */
     protected $testValue;
 
@@ -115,5 +115,13 @@ class Field {
     public function getTestValue()
     {
         return $this->testValue;
+    }
+
+    /**
+     * Get test Values by scope
+     * @return mixed
+     */
+    public function getValues() {
+        return json_decode(trim($this->getTestValue()), true);
     }
 }
