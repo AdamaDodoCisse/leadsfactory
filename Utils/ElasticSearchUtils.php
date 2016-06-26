@@ -270,6 +270,18 @@ class ElasticSearchUtils extends SearchShared {
     }
 
     /**
+     * @param $fields Array of fields to represent Lead object
+     * @param $scopeId
+     * @return mixed|SearchResult
+     */
+    public function indexStatisticObject ( $fields, $scopeId ) {
+
+        $fields = $this->getIndexableLeadsObject( $fields );
+        return $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/statistic/".$fields["id"], json_encode($fields), false );
+
+    }
+
+    /**
      *
      * Method used to apply formating to leads content before sending it to the search engine
      *

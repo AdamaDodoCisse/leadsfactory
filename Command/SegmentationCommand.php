@@ -42,8 +42,6 @@ class SegmentationCommand extends ContainerAwareCommand {
                 // We must run this task if:
                 // * time() is larger or equal to $nextrun
                 //$run = @(time() >= $nextrun);
-
-
                 if ( $segment->getNextrun() <= $now ) {
 
                     $this->output = new BufferedOutput();

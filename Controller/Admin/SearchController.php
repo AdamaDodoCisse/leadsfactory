@@ -159,6 +159,7 @@ class SearchController extends CoreController {
     public function createIndex () {
 
         $this->createLeadsIndex();
+        $this->createStatisticIndex();
 
         return $this->redirect($this->generateUrl('_search_config'));
 
@@ -203,7 +204,7 @@ class SearchController extends CoreController {
                                     "userId":       { "type": "string","index": "not_analyzed"},
                                     "userFirstName":{ "type": "string","index": "not_analyzed"},
                                     "userLastName": { "type": "string","index": "not_analyzed"},
-                                    "userName":     { "type": "string","index": "not_analyzed"},
+                                    "userEmail":    { "type": "string","index": "not_analyzed"},
                                     "workflowStatus":{ "type": "string","index": "not_analyzed"},
                                     "workflowType":  { "type": "string","index": "not_analyzed"},
                                     "workflowTheme": { "type": "string","index": "not_analyzed"},
@@ -211,6 +212,47 @@ class SearchController extends CoreController {
                                         "type":     "object",
                                         "dynamic":  true
                                     }
+                                }
+                            }
+                        }
+                    }';
+
+        $sr = $this->get('leadsfactory.scope_repository');
+        $scope_list = $sr->getAll();
+
+        foreach ($scope_list as $scope) {
+
+            $request = '/leadsfactory-'.$scope['s_code'];
+            $searchUtils = $this->get("search.utils");
+            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
+
+        }
+
+    }
+
+    private function createStatisticIndex () {
+
+        $parameters =    '{
+                        "mappings": {
+                            "statistic": {
+                                "dynamic":      true,
+                                "dynamic_templates": [
+                                                { "contentfields": {
+                                                      "match":              "*",
+                                                      "match_mapping_type": "string",
+                                                      "mapping": {
+                                                          "type": "string",
+                                                          "index": "not_analyzed"
+                                                      }
+                                                }}
+                                            ],
+                                "properties": {
+                                    "id":       { "type": "integer","index": "not_analyzed"},
+                                    "code":     { "type": "string","index": "not_analyzed"},
+                                    "name":     { "type": "string","index": "not_analyzed"},
+                                    "label":    { "type": "string","index": "not_analyzed"},
+                                    "value":    { "type": "integer"},
+                                    "createdAt":{ "type": "date"},
                                 }
                             }
                         }

@@ -74,12 +74,14 @@ class LeadsRepository extends EntityRepository
 				$result_array["userId"] = $result_object->getUser()->getId();
 				$result_array["userLastName"] = strtolower($result_object->getUser()->getFirstName());
 				$result_array["userFirstName"] =strtolower($result_object->getUser()->getLastName());
+				$result_array["userEmail"] =strtolower($result_object->getUser()->getEmail());
 				$result_array["userName"] =strtolower($result_object->getUser()->getFirstName() . " " . $result_object->getUser()->getLastName());
 			} else {
 				$result_array["userId"] = 0;
 				$result_array["userLastName"] = "";
-				$result_array["userFirstName"] ="";
-				$result_array["userName"] ="";
+				$result_array["userFirstName"] = "";
+				$result_array["userName"] = "";
+				$result_array["userEmail"] = "";
 			}
 
 			if ($result_object->getForm()->getScope()) {

@@ -103,18 +103,18 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
 			$sql = "
 				SELECT 	L.id, L.email, L.firstname, L.lastname, DATE_FORMAT(L.createdAt, '%Y-%m-%dT%TZ') as createdAt, content, DATE_FORMAT(L.exportdate, '%Y-%m-%dT%TZ') as exportDate, 
-						L.ipadress as ipaddress, L.userAgent, L.utmcampaign, L.workflowStatus, L.workflowTheme, L.workflowType,
+						L.ipadress as ipaddress, L.userAgent, L.utmcampaign, L.workflowStatus, L.workflowTheme, L.workflowType, L.user,
 						F.id as formId, F.name as formName, F.code as formCode,
-						U.id as userId, U.lastname as lastName, U.firstname as firstname,
+						U.id as userId, U.lastname as userLastName, U.firstname as userFirstName, U.email as userEmail,
 						S.id as scopeId, S.name as scopeName, S.code as scopeCode,
 						FT.id as formTypeId, FT.name as formTypeName
 				
 				FROM `Leads` as L
 				
-				LEFT JOIN `Users` U on L.user = U.id
-				LEFT JOIN `Form` F on L.form_id = F.id
-				LEFT JOIN `Scope` S on F.scope = S.id
-				LEFT JOIN `FormType` FT on F.type_id = FT.id
+				LEFT JOIN `Users` as U on L.user = U.id
+				LEFT JOIN `Form` as F on L.form_id = F.id
+				LEFT JOIN `Scope` as S on F.scope = S.id
+				LEFT JOIN `FormType` as FT on F.type_id = FT.id
 
 				WHERE L.form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
 
@@ -129,6 +129,10 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 				$obj["content"] = json_decode( $obj["content"] );
 
 				$tmpLeadStream = json_encode(  $obj  );
+
+				if ($obj["id"] == "188776")
+					var_dump($obj);
+
 
 				if (trim($tmpLeadStream) != "") {
 					$leadStream .= "{ \"index\" : { \"_index\" : \"leadsfactory-".$scopeCode."\", \"_type\" : \"leads\", \"_id\" : \"".$obj["id"]."\" } }\n";
