@@ -45,6 +45,18 @@
     }
   ],
 
+  "criccobene@comundi.fr" : [
+    {
+      "name" : "Equipe Soft RH",
+      "id"   : "softrh",
+      "members" :[
+        "criccobene@comundi.fr",
+        "cdidier@comundi.fr",
+        "gruflin@comundi.fr"
+      ]
+    }
+  ],
+
   "slebrun@comundi.fr" : [
     {
       "name" : "Equipe LN",

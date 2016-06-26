@@ -9,7 +9,7 @@
       "Saisir une intéraction" : {
         "role" : "ROLE_USER",
         "alias" : "_project_formForceUser_display",
-        "params" : {"code" : "co-saisie-contact"}
+        "params" : {"code" : "co-demandes-entrantes-tel"}
       },
       "Demandes entrantes Tél" : {
         "role" : "ROLE_USER",
