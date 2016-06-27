@@ -24,10 +24,9 @@
         <!-- Formulaire LeadsFactory Contactez-nous -->
         <div id="form-content" class="loading-leads">
             <center>
-                <img class="loading-leads-img" src="/image/loader.gif" alt="Chargement" width="100" height="100" />
                 <p class="loading-leads-txt">Merci de patienter ...</p>
             </center>
-            {{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}
+
         </div>
         <script type="text/javascript">// <![CDATA[
             jQuery.when(
@@ -43,11 +42,13 @@
 
                 {% if userEmail %}
                 var params = {"lf-assign" : "{{ userEmail }}"};
+                {% else %}
+                var params = {};
                 {% endif %}
 
                 var options = {};
                 leadsfactory.init('{{ code }}', params, options);
-                $("#Contactez-nous").bind("", $("#lffield\\[sujet\\]").val());
+
             });
             // ]]></script>
         <!-- /Formulaire LeadsFactory -->
