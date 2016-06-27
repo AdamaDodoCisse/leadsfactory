@@ -141,6 +141,7 @@ class EntityLeadsController extends CoreController
      */
     public function indexAction(Request $request, $page=1, $limit=25, $keyword='')
     {
+
 		$filterParams = null;
 		$usersRepository = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users');
 
@@ -177,6 +178,7 @@ class EntityLeadsController extends CoreController
             )
         );
     }
+
 
 	/**
 	 *
@@ -574,6 +576,16 @@ class EntityLeadsController extends CoreController
 
 		$lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($id);
 
+
+		$printMode = $request->query->get("printMode");
+
+		if (is_null($printMode))
+			$printMode = false;
+		else
+			$printMode = true;
+
+
+
 		$leadDetail = json_decode($lead->getData(), true);
 		unset($leadDetail["firstname"]);
 		unset($leadDetail["firstName"]);
@@ -597,7 +609,13 @@ class EntityLeadsController extends CoreController
 			}
 		}
 
-		return $this->render('TellawLeadsFactoryBundle:entity/Leads:suivi-edit.html.twig', array(  'lead' => $lead,
+		if (!$printMode) {
+			$page = "suivi-edit";
+		} else {
+			$page = "suivi-edit-print";
+		}
+
+		return $this->render('TellawLeadsFactoryBundle:entity/Leads:'.$page.'.html.twig', array(  'lead' => $lead,
 			'origin' => $origin,
 			'leadDetail' => $leadDetail,
 			'assignUser' => $assignUser,

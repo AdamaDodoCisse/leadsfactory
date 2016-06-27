@@ -32,11 +32,16 @@
     <input type="hidden" id="leadid" value="{{ lead.id }}"/>
     <input type="hidden" id="scopeId" value="{{ lead.form.scope.id }}"/>
 
-    <div class="col-md-12">
+    <div class="col-md-8">
         <div class="heading-sec" id="intro6">
             <h1>Edition de la lead #{{ lead.id }}-{{ lead.form.scope.code }}</h1>
         </div>
     </div>
+
+    <div class="col-md-4" style="text-align:right">
+            <a href="?printMode=true" target="_blank" style="margin-right:15px;">Imprimer la page</a>
+    </div>
+
 
     <div class="col-md-6">
 
