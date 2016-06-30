@@ -276,7 +276,7 @@ class ElasticSearchUtils extends SearchShared {
      */
     public function indexStatisticObject ( $fields, $scopeId ) {
 
-        $fields = $this->getIndexableLeadsObject( $fields );
+        //$fields = $this->getIndexableLeadsObject( $fields );
         return $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/statistic/".$fields["id"], json_encode($fields), false );
 
     }
@@ -289,12 +289,17 @@ class ElasticSearchUtils extends SearchShared {
      * @return mixed Array of formated fields for search engine index
      */
     public function getIndexableLeadsObject ( $fields ) {
-
+        var_dump( $fields );
+        try {
         if (array_key_exists( "exportdate" , $fields ) && $fields["exportdate"] != null) {
             $fields["exportdate"] = $fields["exportdate"]->format("c");
         }
         if (array_key_exists( "createdAt" , $fields ) && $fields["createdAt"] != null) {
             $fields["createdAt"] = $fields["createdAt"]->format("c");
+        }
+        } catch ( \Exception $e ) {
+            echo($e->getMessage());
+            var_dump( $fields );
         }
 
         return $fields;
