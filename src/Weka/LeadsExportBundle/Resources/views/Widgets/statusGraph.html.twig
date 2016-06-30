@@ -1,0 +1,19 @@
+<script>
+    var chart = c3.generate({
+        bindto: '#widget-{{ id }}',
+        data: {
+            {{ data|raw }}
+        },
+        pie: {
+            label: {
+                format: function(value, ratio, id) {
+                    return value;
+                }
+            }
+        }
+    });
+
+    $("#title-{{ id }}").text("{{ widget.name | raw }}");
+    $("#description-{{ id }}").text("{{ widget.description | raw }}");
+
+</script>

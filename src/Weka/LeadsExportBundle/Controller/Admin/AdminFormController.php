@@ -21,8 +21,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
-use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
-use Swift_Message;
+
+
 
 /**
  * @Route("/project")
@@ -66,6 +66,60 @@ class AdminFormController extends CoreController
 				"userEmail" => $this->getUser()->getEmail()
 			)
 		);
+	}
+
+	/**
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/dashboard/manager/{pageId}", name="_project_dashboard_manager")
+	 */
+	public function managerDashboardAction ( $pageId ) {
+
+		// Loading informations of departement
+		$filePath = $this->get('kernel')->getRootDir()."/config/dashboard-".$pageId.".json";
+		if (file_exists( $filePath )) {
+			$jsonArray = json_decode(file_get_contents( $filePath ), true);
+		}
+
+		return $this->render('WekaLeadsExportBundle:Default:dashboard-manager.html.twig', array( "configuration" => $jsonArray ));
+
+	}
+
+	/**
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/dashboard/widget", name="_project_dashboard_widget")
+	 */
+	public function graphWidgetAction (Request $request) {
+
+		// Get parameters
+		$id = $request->request->get("id");
+
+		$filePath = $this->get('kernel')->getRootDir()."/config/dashboard-widgets.json";
+		if (file_exists( $filePath )) {
+			$jsonArray = json_decode(file_get_contents( $filePath ), true);
+		} else {
+			throw new \Exception ("Widget configuration file doesn't exists");
+		}
+
+		if (!array_key_exists($id,$jsonArray )) {
+			return new Response("");
+		}
+
+		$dataProviderClass = $jsonArray[$id]["dataProvider"];
+		//$dataProviderClass = "Weka\LeadsExportBundle\Utils\DataProviders\DemoDataProviders";
+		$renderProviderView = $jsonArray[$id]["renderProvider"];
+
+		// Load a widget
+		$dataProvider = new $dataProviderClass();
+		$dataProvider->setSearchUtils ( $this->get("search.utils") );
+		$dataProvider->setContainer ( $this->container );
+
+		// Output
+		return $this->render('WekaLeadsExportBundle:'.$renderProviderView.'.html.twig', array(
+			"id" => $id,
+			"widget"=>$jsonArray[$id],
+			"data" => $dataProvider->getDatas($jsonArray[$id]["renderArgument"]),
+			"renderArgument" => $jsonArray[$id]["renderArgument"]
+		));
 	}
 
 }

@@ -146,7 +146,11 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
             ->getResult();
         $nbGagne = count($gagnes);
 
+        echo ("Leads : Gagné => ".$nbGagne."\n");
+
         $nbTotal = $this->getNumberOfLeadsForUser($users);
+
+        echo ("Leads : Total => ".$nbTotal."\n");
 
         $attente = $this->getContainer()->get("doctrine")
             ->getManager()
@@ -157,11 +161,15 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
             ->getResult();
         $nbAttente = count($attente);
 
+        echo ("Leads : Attente => ".$nbAttente."\n");
+
         if ( $nbTotal > $nbAttente && $nbTotal != 0 ) {
             $tx = (100*$nbGagne) / ($nbTotal-$nbAttente);
         } else {
             $tx = 0;
         }
+
+        echo ("Leads : TX => ".$tx."\n");
 
         return (string)$tx;
 
