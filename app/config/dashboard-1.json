@@ -1,0 +1,32 @@
+{
+  "id" : "1",
+  "name" : "Dashboard Manager",
+  "description" : "Description du dashboard",
+
+  "content" : [
+    {
+      "title" : "Données générales",
+      "widgets" : [
+        {
+          "id" : "coIntraStatusForAll",
+          "size" : "2"
+        },
+        {
+          "id" : "coIntraLeadsForAll",
+          "size" : "9"
+        }
+      ]
+    },
+    {
+      "title" : "Données par Business Units",
+      "widgets" : [
+        {"id" : "coIntraStatusForTeamSST", "size" : "2"},
+        {"id" : "coIntraStatusForTeamHS", "size" : "2"},
+        {"id" : "coIntraStatusForTeamPublic", "size" : "2"},
+        {"id" : "coIntraStatusForTeamRH", "size" : "2"},
+        {"id" : "coIntraStatusForTeamLN", "size" : "2"}
+      ]
+    }
+  ]
+
+}

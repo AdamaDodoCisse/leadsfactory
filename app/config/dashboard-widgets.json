@@ -1,0 +1,75 @@
+{
+  "coIntraStatusForAll" : {
+    "name": "Repartition des statuts",
+    "description": "Repartition des statuts de traitement pour l'ensemble des personnes de l'intra",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie"
+    }
+  },
+    "coIntraLeadsForAll" : {
+      "name": "Historique de récéption des leads",
+      "description": "Repartition des leads par personnes de l'intra",
+      "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+      "renderProvider": "Widgets:leadsGraph",
+      "renderArgument": {
+        "type": "timeseries"
+      }
+    },
+  "coIntraStatusForTeamSST" : {
+    "name": "Statuts pour la BU SST",
+    "description": "Repartition des statuts de traitement pour la BU SST",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie",
+      "bu": "SST",
+      "email": "ehervet@comundi.fr"
+    }
+  },
+  "coIntraStatusForTeamHS" : {
+    "name": "Statuts pour la BU HS & DEC",
+    "description": "Repartition des statuts de traitement pour la BU HS & DEC",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie",
+      "bu": "HS & DEC",
+      "email": "gbernard@comundi.fr"
+    }
+  },
+  "coIntraStatusForTeamPublic" : {
+    "name": "Statuts pour la BU Public",
+    "description": "Repartition des statuts de traitement pour la BU Public",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie",
+      "bu": "PUBLIC",
+      "email": "mrodier@comundi.fr"
+    }
+  },
+  "coIntraStatusForTeamRH" : {
+    "name": "Statuts pour la BU RH",
+    "description": "Repartition des statuts de traitement pour la BU RH",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie",
+      "bu": "RH",
+      "email": "criccobene@comundi.fr"
+    }
+  },
+  "coIntraStatusForTeamLN" : {
+    "name": "Statuts pour la BU LN",
+    "description": "Repartition des statuts de traitement pour la BU LN",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie",
+      "bu": "LN",
+      "email": "slebrun@comundi.fr"
+    }
+  }
+}
