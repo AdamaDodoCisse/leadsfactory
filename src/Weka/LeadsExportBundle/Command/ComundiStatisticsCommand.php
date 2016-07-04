@@ -40,6 +40,8 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
          * LOADING TX INFORMATIONS FOR USERS
          */
 
+        $scope = $this->getContainer()->get("doctrine")->getRepository("TellawLeadsFactoryBundle:Scope")->find( $scopeId );
+
         // 1) Faire une boucle sur l'ensemble des utilisateurs du scope Comundi
         $users = $this->getContainer()->get("doctrine")->getRepository("TellawLeadsFactoryBundle:Users")->findByScope( $scopeId );
 
@@ -49,22 +51,26 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
         foreach ($users as $user) {
 
             $output->writeln(sprintf('User name : <info>%s</info>', $user->getLastName() . " - ".$user->getId() ));
+            $obj = $this->calculateTxRateForUser( array($user) );
 
-            $txRate = $this->calculateTxRateForUser( array($user) );
-            $statisticObject = $this->saveStatisticValue( "user-tx-".$user->getId(), ucfirst($user->getLastName()). " ".ucfirst($user->getFirstName()), $txRate );
-            $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scopeId );
+            $statisticObject = $this->saveStatisticValue( "user-tx-".$user->getId(), ucfirst($user->getLastName()). " ".ucfirst($user->getFirstName()), $obj["txRate"] );
+            $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
+
+            $statisticObject = $this->saveStatisticValue( "user-gagne-".$user->getId(), ucfirst($user->getLastName()). " ".ucfirst($user->getFirstName()), $obj["nbGagne"] );
+            $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
+
+            $statisticObject = $this->saveStatisticValue( "user-perdu-".$user->getId(), ucfirst($user->getLastName()). " ".ucfirst($user->getFirstName()), $obj["nbPerdu"] );
+            $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
 
             $total = $this->getNumberOfLeadsForUser( array($users) );
             $statisticObject = $this->saveStatisticValue( "user-total-".$user->getId(), ucfirst($user->getLastName()). " ".ucfirst($user->getFirstName()), $total );
-            $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scopeId );
+            $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
 
         }
 
         /**
          * LOADING TX INFORMATIONS FOR BU
          */
-        // Checking if user is related to a team
-        $scope = $this->getContainer()->get("doctrine")->getRepository("TellawLeadsFactoryBundle:Scope")->find( $scopeId );
 
         $jsonArray = null;
         $json = null;
@@ -87,14 +93,21 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
                     $output->writeln(sprintf('Team name : <info>%s</info>', $teamName ));
 
                     $users = $this->getContainer()->get("doctrine")->getRepository("TellawLeadsFactoryBundle:Users")->findBy( array("email" => $members) );
-                    $txRate = $this->calculateTxRateForUser( $users );
-                    $statisticObject = $this->saveStatisticValue( "team-tx-".$teamId, $teamName, $txRate );
-                    $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scopeId );
+                    $obj = $this->calculateTxRateForUser( $users );
+
+                    $statisticObject = $this->saveStatisticValue( "team-tx-".$teamId, $teamName, $obj["txRate"] );
+                    $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
+
+                    $statisticObject = $this->saveStatisticValue( "team-gagne-".$teamId, $teamName, $obj["nbGagne"] );
+                    $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
+
+                    $statisticObject = $this->saveStatisticValue( "team-perdu-".$teamId, $teamName, $obj["nbPerdu"] );
+                    $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
 
                     // Save Number of leads for Team
                     $total = $this->getNumberOfLeadsForUser( $users );
                     $statisticObject = $this->saveStatisticValue( "team-total-".$teamId, $teamName, $total );
-                    $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scopeId );
+                    $searchUtils->indexStatisticObject ( $statisticObject->asArray(), $scope->getCode() );
                 }
 
             }
@@ -137,6 +150,13 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
 
     private function calculateTxRateForUser ( $users ) {
 
+        /**
+         * Le calcul du taux de transformation est :
+         *
+         * 100 * ( NB_GAGNE / ( NB_GAGNE + NB_PERDU ) )
+         *
+         */
+
         $gagnes = $this->getContainer()->get("doctrine")
             ->getManager()
             ->createQuery('SELECT e FROM TellawLeadsFactoryBundle:Leads e WHERE e.user IN (:userId) AND e.workflowStatus = :workflowStatus AND e.createdAt >= :beginDate')
@@ -148,30 +168,26 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
 
         echo ("Leads : Gagné => ".$nbGagne."\n");
 
-        $nbTotal = $this->getNumberOfLeadsForUser($users);
-
-        echo ("Leads : Total => ".$nbTotal."\n");
-
-        $attente = $this->getContainer()->get("doctrine")
+        $perdu = $this->getContainer()->get("doctrine")
             ->getManager()
             ->createQuery('SELECT e FROM TellawLeadsFactoryBundle:Leads e WHERE e.user IN (:userId) AND e.workflowStatus = :workflowStatus AND e.createdAt >= :beginDate')
             ->setParameter (":userId",$users )
-            ->setParameter (":workflowStatus", "en_attente"  )
+            ->setParameter (":workflowStatus", "perdu"  )
             ->setParameter (":beginDate", \DateTime::createFromFormat('j-M-Y', '1-1-2016'))
             ->getResult();
-        $nbAttente = count($attente);
+        $nbPerdu = count($perdu);
 
-        echo ("Leads : Attente => ".$nbAttente."\n");
+        echo ("Leads : Perdu => ".$nbPerdu."\n");
 
-        if ( $nbTotal > $nbAttente && $nbTotal != 0 ) {
-            $tx = (100*$nbGagne) / ($nbTotal-$nbAttente);
+        if ( $nbGagne +  $nbPerdu > 0 ) {
+            $tx = (100*$nbGagne) / ($nbGagne +  $nbPerdu);
         } else {
             $tx = 0;
         }
 
         echo ("Leads : TX => ".$tx."\n");
 
-        return (string)$tx;
+        return array( "txRate" => (string)$tx, "nbGagne" => (string)$nbGagne, "nbPerdu" => $nbPerdu );
 
     }
 
@@ -188,5 +204,8 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
         return $nbTotal;
 
     }
+
+
+
 
 }
