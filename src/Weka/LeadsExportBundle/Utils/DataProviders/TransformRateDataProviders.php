@@ -24,20 +24,20 @@ class TransformRateDataProviders extends AbstractDataProvider{
     public function getDatas ( $args ) {
 
         // Load the correct BU
-        $this->code = $args["code"];
-
         if (array_key_exists( "bu" , $args )) {
+
+            $this->code = $args["code"];
 
             // This is a BU
             $this->isBu= true;
-            $this->id = $args["buId"];
+            $this->id = $args["code"];
 
         } else {
 
             // If is not a BU, we'll load a team
             $this->isBu = false;
 
-            $user = $this->$this->_container->get("doctrine")->getRepository("TellawLeadsFactoryBundle:Users")->findByEmail($args["email"]);
+            $user = $this->_container->get("doctrine")->getRepository("TellawLeadsFactoryBundle:Users")->findOneByEmail($args["code"]);
             $this->id = $user->getId();
 
         }

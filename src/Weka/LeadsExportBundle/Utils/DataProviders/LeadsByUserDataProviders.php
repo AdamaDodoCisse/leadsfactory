@@ -30,7 +30,6 @@ class LeadsByUserDataProviders extends AbstractDataProvider{
 
             // This is a BU
             $this->isBu= true;
-            $this->id = $args["buId"];
 
             // Checking if user is related to a team
             $json = null;
@@ -90,6 +89,8 @@ class LeadsByUserDataProviders extends AbstractDataProvider{
 
             }
         }
+
+        ksort($output);
 
         return $output;
 

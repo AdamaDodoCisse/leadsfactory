@@ -80,9 +80,26 @@ class AdminFormController extends CoreController
 			$jsonArray = json_decode(file_get_contents( $filePath ), true);
 		}
 
-		return $this->render('WekaLeadsExportBundle:Default:dashboard-manager.html.twig', array( "configuration" => $jsonArray ));
+		return $this->render('WekaLeadsExportBundle:Default:dashboard-manager.html.twig', array( "configuration" => $jsonArray, "mypage" => "0" ));
 
 	}
+
+	/**
+	 * @Secure(roles="ROLE_USER")
+	 * @Route("/dashboard/mypage", name="_project_my_dashboard")
+	 */
+	public function myDashboardAction () {
+
+		// Loading informations of departement
+		$filePath = $this->get('kernel')->getRootDir()."/config/dashboard-user.json";
+		if (file_exists( $filePath )) {
+			$jsonArray = json_decode(file_get_contents( $filePath ), true);
+		}
+
+		return $this->render('WekaLeadsExportBundle:Default:dashboard-manager.html.twig', array( "configuration" => $jsonArray, "mypage" => "1" ));
+
+	}
+
 
 	/**
 	 * @Secure(roles="ROLE_USER")
@@ -92,6 +109,7 @@ class AdminFormController extends CoreController
 
 		// Get parameters
 		$id = $request->request->get("id");
+		$mypage = $request->request->get("mypage");
 
 		$filePath = $this->get('kernel')->getRootDir()."/config/dashboard-widgets.json";
 		if (file_exists( $filePath )) {
@@ -113,13 +131,23 @@ class AdminFormController extends CoreController
 		$dataProvider->setSearchUtils ( $this->get("search.utils") );
 		$dataProvider->setContainer ( $this->container );
 
+		$renderArgument = $jsonArray[$id]["renderArgument"];
+		$renderArgument["currentuser"] = $this->getUser()->getEmail();
+
+		if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_DISPATCH') || $mypage == "1") {
+			// If user hasn't got dispatch ROLE, we force him to see his datas!
+			$renderArgument["code"] = $this->getUser()->getEmail();
+		}
+
 		// Output
 		return $this->render('WekaLeadsExportBundle:'.$renderProviderView.'.html.twig', array(
 			"id" => $id,
 			"widget"=>$jsonArray[$id],
-			"data" => $dataProvider->getDatas($jsonArray[$id]["renderArgument"]),
-			"renderArgument" => $jsonArray[$id]["renderArgument"]
+			"data" => $dataProvider->getDatas($renderArgument),
+			"renderArgument" => $renderArgument
 		));
 	}
+
+
 
 }
