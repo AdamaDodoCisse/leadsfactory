@@ -130,10 +130,6 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
 				$tmpLeadStream = json_encode(  $obj  );
 
-				if ($obj["id"] == "188776")
-					var_dump($obj);
-
-
 				if (trim($tmpLeadStream) != "") {
 					$leadStream .= "{ \"index\" : { \"_index\" : \"leadsfactory-".$scopeCode."\", \"_type\" : \"leads\", \"_id\" : \"".$obj["id"]."\" } }\n";
 					$leadStream .= $tmpLeadStream."\n";

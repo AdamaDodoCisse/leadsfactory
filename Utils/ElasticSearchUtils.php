@@ -266,7 +266,6 @@ class ElasticSearchUtils extends SearchShared {
 
         $fields = $this->getIndexableLeadsObject( $fields );
         return $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/leads/".$fields["id"], json_encode($fields), false );
-
     }
 
     /**
@@ -275,10 +274,8 @@ class ElasticSearchUtils extends SearchShared {
      * @return mixed|SearchResult
      */
     public function indexStatisticObject ( $fields, $scopeId ) {
-
         //$fields = $this->getIndexableLeadsObject( $fields );
-        return $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/statistic/".$fields["id"], json_encode($fields), false );
-
+        $result = $this->request( ElasticSearchUtils::$PROTOCOL_PUT, "/leadsfactory-".$scopeId."/statistic/".$fields["id"], json_encode($fields), false );
     }
 
     /**

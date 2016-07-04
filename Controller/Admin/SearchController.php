@@ -140,13 +140,9 @@ class SearchController extends CoreController {
         $sr = $this->get('leadsfactory.scope_repository');
         $scope_list = $sr->getAll();
 
-        foreach ($scope_list as $s) {
-
-            $request = '/leadsfactory-'.$s['s_code'];
-            $searchUtils = $this->get("search.utils");
-            $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_DELETE , $request );
-
-        }
+        $request = '/leadsfactory-*';
+        $searchUtils = $this->get("search.utils");
+        $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_DELETE , $request );
 
         return $this->redirect($this->generateUrl('_search_config'));
 
@@ -159,8 +155,6 @@ class SearchController extends CoreController {
     public function createIndex () {
 
         $this->createLeadsIndex();
-        $this->createStatisticIndex();
-
         return $this->redirect($this->generateUrl('_search_config'));
 
     }
@@ -213,27 +207,7 @@ class SearchController extends CoreController {
                                         "dynamic":  true
                                     }
                                 }
-                            }
-                        }
-                    }';
-
-        $sr = $this->get('leadsfactory.scope_repository');
-        $scope_list = $sr->getAll();
-
-        foreach ($scope_list as $scope) {
-
-            $request = '/leadsfactory-'.$scope['s_code'];
-            $searchUtils = $this->get("search.utils");
-            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
-
-        }
-
-    }
-
-    private function createStatisticIndex () {
-
-        $parameters =    '{
-                        "mappings": {
+                            },
                             "statistic": {
                                 "dynamic":      true,
                                 "dynamic_templates": [
@@ -252,7 +226,7 @@ class SearchController extends CoreController {
                                     "name":     { "type": "string","index": "not_analyzed"},
                                     "label":    { "type": "string","index": "not_analyzed"},
                                     "value":    { "type": "integer"},
-                                    "createdAt":{ "type": "date"},
+                                    "createdAt":{ "type": "date"}
                                 }
                             }
                         }
@@ -270,5 +244,6 @@ class SearchController extends CoreController {
         }
 
     }
+
 
 }
