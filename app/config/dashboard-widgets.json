@@ -71,5 +71,16 @@
       "bu": "LN",
       "email": "slebrun@comundi.fr"
     }
+  },
+
+  "leadsByStatusPerUsers" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html"
+    }
   }
+
 }

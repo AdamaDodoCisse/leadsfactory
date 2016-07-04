@@ -26,6 +26,12 @@
         {"id" : "coIntraStatusForTeamRH", "size" : "2"},
         {"id" : "coIntraStatusForTeamLN", "size" : "2"}
       ]
+    },
+    {
+      "title" : "Leads par personnes",
+      "widgets" : [
+        {"id" : "leadsByStatusPerUsers", "size" : "12"}
+      ]
     }
   ]
 
