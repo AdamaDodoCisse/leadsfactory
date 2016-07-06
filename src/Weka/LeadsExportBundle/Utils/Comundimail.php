@@ -60,20 +60,24 @@ class Comundimail extends AbstractMethod {
     {
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
+        $testUtils = $this->container->get("functionnal_testing.utils");
 
         $this->_formConfig = $form->getConfig();
         $logger->info('############ COMUNDI - EXPORT ###############');
-		
+
         foreach($jobs as $job) {
 
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
-
             $logger->info('[ComundiMail] - Traitement Lead : '.$job->getLead()->getId());
-
             $form_subject = $data['sujet'];
             $hasError = false;
 
-
+            // Verifier si le job doit être traité
+            if ($testUtils->isTestLead($job->getLead())) {
+                $exportUtils->updateJob($job, ExportUtils::$_EXPORT_NOT_SCHEDULED, 'TEST - pas d\'export');
+                $exportUtils->updateLead($job->getLead(), ExportUtils::$_EXPORT_NOT_SCHEDULED, 'TEST - pas d\'export');
+                continue;
+            }
 
             if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
 
@@ -235,7 +239,7 @@ class Comundimail extends AbstractMethod {
                  * Send notification to a user
                  * Mail is sent to the user owner of the lead
                  */
-                $result = $this->sendNotificationEmail (  	"Changement d'affectation pour la LEAD #".$job->getLead()->getId(),
+                $result = $this->sendNotificationEmail ("Changement d'affectation pour la LEAD #".$job->getLead()->getId(),
                     "Un utilisateur vient de modifier l'affectation d'une lead.",
                     $user,
                     "Le ".date ("d/m/Y à h:i"). " la lead's factory vient de vous assigner la lead : ".$job->getLead()->getId()  ,
