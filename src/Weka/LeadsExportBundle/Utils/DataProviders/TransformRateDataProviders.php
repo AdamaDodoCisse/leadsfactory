@@ -51,14 +51,37 @@ class TransformRateDataProviders extends AbstractDataProvider{
         $i = 0;
         $len = count ($result->aggregations->my_agg->buckets);
         $output = "";
+
+        $timeSeries = array();
+        $column = array();
+
         foreach ( $result->aggregations->my_agg->buckets as $bucket ) {
-            if ($i == $len - 1) {
-                $output .= "['" . $bucket->key . "', " . $bucket->doc_count . "]";
+
+            if ($bucket->av_agg->value != null) {
+                $value = $bucket->av_agg->value;
             } else {
-                $output .= "['" . $bucket->key . "', " . $bucket->doc_count . "],";
+                $value = 0;
+            }
+
+            $timeSeries[] = $bucket->key_as_string;
+            $column[] = $value;
+
+        }
+
+        $seriesX = "";
+        foreach ($timeSeries as $timeItem) {
+            if ($i == $len - 1) {
+                $seriesX .= "'" . $timeItem . "'";
+            } else {
+                $seriesX .= "'" . $timeItem . "',";
             }
             $i++;
         }
+
+        $output = "
+        ['x', ".$seriesX."],
+        ['Taux de transformation', ".implode (",",$column)."],
+        ";
 
         return $output;
 
@@ -98,11 +121,11 @@ class TransformRateDataProviders extends AbstractDataProvider{
                 \"bool\": {
                   \"must\": {
                     \"match\": {
-                      \"scopeId\" : \"4\"
+                      \"name\": \"".$codeToFind."\"
                     }
                   },
                   \"filter\" : [
-                      {\"terms\": {\"code\": [\"".$codeToFind."\"]} },
+            
                       {\"range\": {\"createdAt\": {\"gte\":\"2016-01-01\"}}}
                       
                     ]
@@ -117,6 +140,11 @@ class TransformRateDataProviders extends AbstractDataProvider{
                     \"min_doc_count\" : 0,
                     \"format\": \"yyyy-MM-dd\",
                     \"interval\": \"day\"
+                  },
+                  \"aggs\" : {
+                    \"av_agg\": {
+                       \"avg\" : { \"field\" : \"value\" } 
+                    }
                   }
                 }
               }

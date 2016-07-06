@@ -87,8 +87,8 @@ class ComundiStatisticsCommand extends ContainerAwareCommand {
                 foreach ($manager as $team) {
 
                     $members = $team["members"];
-                    $teamId = $team["name"];
-                    $teamName = $team["id"];
+                    $teamId = $team["id"];
+                    $teamName = $team["name"];
 
                     $output->writeln(sprintf('Team name : <info>%s</info>', $teamName ));
 
