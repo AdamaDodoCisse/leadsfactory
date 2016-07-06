@@ -33,8 +33,6 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
      * @return int|null|void
      */
     protected function execute(InputInterface $input, OutputInterface $output) {
-
-
         $alertUtils = $this->getContainer()->get("alertes_utils");
         $formUtils = $this->getContainer()->get("form_utils");
         $testUtils = $this->getContainer()->get("functionnal_testing.utils");
@@ -140,5 +138,5 @@ class FonctionnalTestingCommand extends ContainerAwareCommand {
         }
         return $count;
     }
-
+    
 }

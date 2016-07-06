@@ -45,13 +45,13 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     public function __construct (  ) {
 
         PreferencesUtils::registerKey( "CORE_LEADSFACTORY_URL",
-                                        "Url de l'application, sur le scope global pour le BO, et sur les scopes pour les formulaires",
-                                        PreferencesUtils::$_PRIORITY_OPTIONNAL
-            );
+            "Url de l'application, sur le scope global pour le BO, et sur les scopes pour les formulaires",
+            PreferencesUtils::$_PRIORITY_OPTIONNAL
+        );
 
         PreferencesUtils::registerKey( "CORE_CASPER_PATH",
-                                        "Path to Casper install for functionnal testings.",
-                                        PreferencesUtils::$_PRIORITY_OPTIONNAL);
+            "Path to Casper install for functionnal testings.",
+            PreferencesUtils::$_PRIORITY_OPTIONNAL);
 
     }
 
@@ -61,7 +61,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * @return bool
      */
     public function isTestLead ( Leads $lead ) {
-        if (strstr ($lead->getUserAgent(), 'casperjs')) {
+        if (stristr ($lead->getUserAgent(), 'phantomjs')) {
             return true;
         }
         return false;
@@ -91,9 +91,8 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     public function log ( $msg ) {
 
         if ($this->logger != null) {
-            $this->logger->info ( $msg );
-            $this->logContent .= $msg."<br/>";
-            echo ($msg."<br/>");
+            $this->logger->info ( $msg."\n" );
+            $this->logContent .= $msg."<br />";
             \flush();
         }
         if ($this->outputInterface != null) {
@@ -110,23 +109,17 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
                 // 1/ Check or create Jasper file for testing
                 $testContent = $this->createCasperScript( $form );
                 return $this->saveTest( $form, $testContent );
-
                 break;
-
             case FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT:
                 // 2/ Run Casper test
                 if ($this->isCasperScriptExist( $form )) {
-
                     list ($status, $log) = $this->executeCasperTest( $form );
                     return array ($status, $log);
-
                 } else {
                     throw new \Exception ("Issue while creating CASPER Script");
                 }
                 break;
-
             case FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS:
-
                 // 3/ Find in leads the test result
                 if ($status) {
                     $leads = $this->findLeadsInDatabase( $form );
@@ -134,26 +127,24 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
                     return $resultOfTheTest;
                 }
                 break;
-
             case FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS:
-
                 // 4/ Save status of test
                 $form->setTestStatus( $resultOfTheTest );
                 $form->setTestLog( $this->logContent );
-
                 $this->log ("-- Saving test result");
-
                 $em = $this->container->get("doctrine")->getManager();
                 $em->persist($form);
                 $em->flush();
                 break;
-
         }
 
     }
 
     public function run (Form $form) {
 
+        // Step 0
+        $this->pretest_operations();
+        
         // Step 1
         $status = $this->runByStep( FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT, $form );
 
@@ -177,24 +168,13 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * Method used to get the path and name of the screenshot file
      * This is for the screenshot of the form
      *
-     * @param  Form Object targeted by the screenshot
-     * @return [String] path and filename
+     * @param Form $form
+     * @param bool $ask_url
+     * @return null|string [String] path and filename
+     * @internal param Object $Form targeted by the screenshot
      */
-    public function getScreenPathOfForm ( Form $form ) {
-
-
-        // ex : /var/www/weka-leadsfactory/app
-        $base = $this->container->get('kernel')->getRootDir();
-
-
-        $screenshotDir = $base."/cache/screenshots";
-
-        if (!is_dir( $screenshotDir )) {
-            \mkdir ( $screenshotDir );
-        }
-
-        return $base."/cache/screenshots/form-".$form->getId().".jpg";
-
+    public function getScreenPathOfForm ( Form $form, $ask_url=false  ) {
+        return $this->getScreenshotPath("form", $form, $ask_url);
     }
 
     /**
@@ -202,22 +182,38 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * Method used to get the path and name of the screenshot file
      * This is for the screenshot of the result
      *
-     * @param  Form Object targeted by the screenshot
-     * @return [String] path and filename
+     * @param Form $form
+     * @param bool $ask_url
+     * @return null|string [String] path and filename
+     * @internal param Object $Form targeted by the screenshot
      */
-    public function getScreenPathOfResult ( Form $form ) {
+    public function getScreenPathOfResult ( Form $form, $ask_url=false ) {
+        return $this->getScreenshotPath("result", $form, $ask_url);
+    }
 
+    /**
+     * @param $type
+     * @param Form $form
+     * @param $ask_url
+     * @return null|string
+     */
+    private function getScreenshotPath($type, Form $form, $ask_url) {
         // ex : /var/www/weka-leadsfactory/app
-        $base = $this->container->get('kernel')->getRootDir();
+        $base_dir = $this->container->get('kernel')->getRootDir();
+        $screenshotDir = $base_dir."/../web/screenshots";
+        $path = "$screenshotDir/$type-".$form->getId().".jpg";
 
-        $screenshotDir = $base."/cache/screenshots";
-
-        if (!is_dir( $screenshotDir )) {
-            \mkdir ( $screenshotDir );
+        if ($ask_url) {
+            $base_url = $this->container->get('router')->getContext()->getBaseUrl();
+            $url = "$base_url/screenshots/$type-".$form->getId().".jpg";
+            if (!file_exists($path)) return null;
+            return $url;
+        } else {
+            if (!is_dir( $screenshotDir )) {
+                \mkdir ( $screenshotDir );
+            }
+            return $path;
         }
-
-        return $base."/cache/screenshots/result-".$form->getId().".jpg";
-
     }
 
     /**
@@ -232,9 +228,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
     }
 
     public function testForm ( $client, $form, $fields ) {
-
         $this->createCasperScript ( $form );
-
     }
 
     private function getCasperScriptPath ( Form $form ) {
@@ -249,8 +243,9 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      *
      * Checks if the casper script test file exists
      *
-     * @param  Form Object to test with Casper
-     * @return boolean
+     * @param Form $form
+     * @return bool
+     * @internal param Object $Form to test with Casper
      */
     public function isCasperScriptExist ( Form $form ) {
 
@@ -258,6 +253,38 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
             return true;
         }
         return false;
+    }
+
+
+    private function update_field_by_code($code, $value, $scope="default") {
+        $field = $this->container->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Field')->findOneByCode($code);
+        $data = json_decode($field->getTestValue(), true);
+        if ($data) {
+            $data[$scope] = $value;
+            $field->setTestValue(json_encode($data));
+            $em = $this->container->get("doctrine")->getEntityManager();
+            $em->persist($field);
+            $em->flush();
+            return true;
+        }
+        return false;
+    }
+    
+    private function pretest_operations() {
+        // update twillio code
+        $twillio_code = round(intval(date("dm")) / 2, 0, PHP_ROUND_HALF_DOWN);
+        $this->update_field_by_code("twilio_validation", (String)$twillio_code);
+    }
+    
+    /**
+     * Special transformations for fields
+     * @param $fieldName
+     * @param $value
+     * @return string
+     * @internal param $fields
+     */
+    private function fieldsSpecificTreatment($fieldName, $value) {
+        return $value;
     }
 
     /**
@@ -274,19 +301,22 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
         $fields = array();
 
         $formConfig = $form->getConfig();
+
         if (isset( $formConfig ["configuration"]["formId"] )) {
             $formId = $formConfig ["configuration"]["formId"];
         } else {
+            $this->log("### Attention : Veuillez rajouter un \"formId\" dans la fonfiguration!");
             $formId = "leadsfactory-form";
         }
-
+        $this->log("FORMID : $formId");
+        
+        
         // Init variables
         $sequences = array();
         $item = "";
 
         // Init values of test
         $frontUrl = $form->getUrl();
-
         if ( trim($frontUrl) == "" ) {
 
             // build preview URL
@@ -296,11 +326,9 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
             if ( trim($leadsUrl) == "" ) {
                 throw new \Exception ("Lead's Factory URL not set in preference : CORE_LEADSFACTORY_URL");
             }
-
-            $frontUrl = $leadsUrl."web/app_dev.php/client/preview/twig/".$form->getCode();
-
+            
+            $frontUrl = $leadsUrl."client/preview/twig/".$form->getCode();
             $this->log ("Using preview url : ".$frontUrl);
-
         } else{
             $this->log ("Using declared url : ".$frontUrl);
         }
@@ -322,43 +350,32 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
         $sequenceIdx = 1;
         foreach ( $sequencesToTest as $idx => $sequence ) {
 
-            if ($sequenceIdx == count ($sequencesToTest)) {
+            // set delay  for every thing
+            ///!\ MUST CHECK
+            $sequence["delay"] = "100";
+
+            if ($sequenceIdx == count($sequence['fields'])) {
                 $submit = "true";
             }
-            $sequenceIdx++;
 
-            $item .= $this->getScreenShot( "statusscreen" );
+            $item   .= $this->getScreenShot( "statusscreen" );
+            $item   .= "casper.then(function() {\n\t";
 
-            $item .= "
-                casper.then(function() {";
-
-            // Adding delay to sequence if needed
-            if (isset($sequence["delay"])) {
-                $item .= "
-                this.wait(".trim($sequence["delay"]).", function() {
-            ";
-            }
-
-            $item .= "
-                    this.echo (\"Sequence ".($idx+1)."/".$nbSequences."\");
-                    this.fill(	'form[id=\"".$formId."\"]',
-                        {
-                            ";
-
-
-            //
             // Loop over fields to add test values to the casperjs file
             // It also saves fields and value to this class for test validation
-            //
             $fieldIdx = 0;
+            $item   .= "this.echo (\"Sequence ".($idx+1)."/".$nbSequences."\");\n\t";
+
             foreach ( $sequence['fields'] as $field ) {
+            $sequenceIdx++;
+            $item   .= "this.wait(".trim($sequence["delay"]).", function() {\n\t";
+            $item   .= "this.fill('form[id=\"".$formId."\"]',\n\t{";
 
                 // Find value for field
                 $fieldArr = $this->getValueForField ( $field );
                 $scope = $form->getScope()->getCode();
                 $fieldValue = "";
 
-                
                 // Get default value if there is no one for scope
                 if (isset($fieldArr[$scope]))
                     $fieldValue = empty($fieldArr[$scope]) ? $fieldArr["default"] : $fieldArr[$scope];
@@ -369,78 +386,45 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
                 } else {
                     $fieldName = $field["attributes"]["id"];
                 }
-                $item .= "'lffield[".$fieldName."]': '".$fieldValue."'";
+                $item .= "'lffield[".$fieldName."]' : '".$fieldValue."'";
 
                 // Saves to this object value for later verification
                 $this->saveFieldValue( $fieldName, $fieldValue );
-
-                if ($fieldIdx != count ($sequence['fields'])-1) {
-                    $item.= ",\r";
-                }
+                
                 $fieldIdx++;
+                if ($fieldIdx == count($sequence['fields'])) $submit = "true";
+                $item.= "}, ".$submit.");";
+                $item.= "});\n";
             }
-
-            // set delay  for every thing
-            ///!\ MUST CHECK
-            $sequence["delay"] = "200";
-
-            $item.= "
-                        },
-                    ".$submit.");";
-
-            // Closing for delay desction
-            if (isset($sequence["delay"])) {
-                $item .= "});";
-            }
-
-            $item.= "
-                });
-            ";
+            $item.= "});\n\n";
 
         }
+        $item.= "});\n\n";
 
-        $startItem = "
-            var formscreen = \"".$this->getScreenPathOfForm($form).".jpg\";
-            var statusscreen = \"".$this->getScreenPathOfResult($form).".jpg\";
-
-            var websiteUrl = \"".$frontUrl."\";
-
-            casper.test.begin('Test de remplissage du formulaire : ".$form->getName()."', 1, function(test) {
-
-                casper.start( websiteUrl , function() {
-                    this.echo (\"Opening website page : [\" + websiteUrl+\"]\");
-                });
-        ";
-
+        $startItem = "\nvar formscreen = \"".$this->getScreenPathOfForm($form)."\";\n" .
+            "var statusscreen = \"".$this->getScreenPathOfResult($form)."\";\n" .
+            "var websiteUrl = \"".$frontUrl."\";\n\n" .
+            "casper.test.begin('Test de remplissage du formulaire : ".$form->getName()."', 1, function(test) {\n\t" .
+            "casper.start( websiteUrl , function() {\n\t" .
+            "this.echo (\"Opening website page : [\" + websiteUrl+\"]\");\n" .
+            "});\n\n";
         $startItem .= $this->getScreenShot("formscreen");
 
-        $endItem = "
-            casper.then(function() {
-                this.echo (\"Sequence : Test des messages d'erreurs \");
-                console.log('Wait and check error message (3 seconds) ');
-                this.wait(3000, function() {
-                    casper.test.assertDoesntExist( '.formErrorContent', 'Acun message d\'erreur n\'est affiché ?' );
-                });
-            });";
-
-        $endItem .= "
-            casper.then(function() {
-                this.echo (\"Sequence : Log de l'url de destination\");
-                console.log('clicked ok, new location is ' + this.getCurrentUrl());
-            });
-        ";
-
+        $endItem = "casper.then(function() {\n\t" .
+            "this.echo (\"Sequence : Test des messages d'erreurs \");\n\t" .
+            "console.log('Wait and check error message (2 seconds) ');\n\t" .
+            "this.wait(2000, function() {\n\t" .
+            "\tif (casper.exists('.formErrorContent')){console.log('Erreurs de saisie.'); console.log(casper.getHTML('.formErrorContent'));};\n\t" .
+            "});\n" .
+            "});\n\n";
+        $endItem .= "casper.then(function() {\n\t" .
+            "this.echo (\"Sequence : Log de l'url de destination\");\n\t" .
+            "console.log('clicked ok, new location is ' + this.getCurrentUrl());\n" .
+            "});\n\n";
         $endItem .= $this->getScreenShot( "statusscreen" );
-
-        $endItem .= "
-        });
-
-        casper.run();
-        ";
+        $endItem .= "casper.run();\n";
 
         return $startItem.$item.$endItem;
-
-
     }
 
     /**
@@ -455,25 +439,10 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      */
     private function getValueForField ( $field ) {
 
-        $field = $this->container->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Field')->findOneByCode($field["attributes"]['id']);
-        $arrField = $field->getValues();
-        return $arrField;
-
-//        if (isset ( $field["attributes"]["testValue"] )) {
-//            return $field["attributes"]["testValue"];
-//        }
-//
-//        $field_factory = $this->container->get("leadsfactory.field_factory");
-//        $fieldObj = $field_factory->createFromType( $field["type"] );
-//
-//        if (isset($field["data-type"])) {
-//            $dataType = $field["data-type"];
-//        } else {
-//            $dataType = "";
-//        }
-//
-//        return $fieldObj->getTestValue( $dataType, $field  );
-
+        $dfield = $this->container->get("doctrine")->getRepository('TellawLeadsFactoryBundle:Field')->findOneByCode($field["attributes"]['id']);
+        if ($dfield)
+            return $dfield->getValues();
+        return null;
     }
 
     /**
@@ -482,13 +451,12 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      */
     private function getScreenShot ( $fileName ) {
 
-        $content = "
-                casper.then(function() {
-                    this.echo (\"Sequence : Génération de la capture d\'ecran \");
-                    this.viewport (1280, 1024);
-                    this.capture(".$fileName.");
-                });
-        ";
+        $content = "casper.then(function() {\n\t" .
+            "this.echo (\"Sequence : Génération de la capture d'écran \");\n\t" .
+            "this.viewport (1280, 1024);\n\t" .
+            "this.capture(".$fileName.");\n" .
+            "});\n\n";
+
 
         return $content;
 
@@ -543,14 +511,15 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
         }
 
         $filename = $this->getCasperScriptPath($form);
+        $this->log("FILE : ".$filename);
 
         if (!$fp = fopen( $filename , 'w')) {
-            echo ("Unable to write file : ".$filename);
+            $this->log ("Unable to write file : ".$filename);
             return false;
         }
 
         if (fwrite($fp, $content) === FALSE) {
-            echo ("Impossible d'ecrire le contenu du fichier dans : ".$filename);
+            $this->log("Impossible d'ecrire le contenu du fichier dans : ".$filename);
             return false;
         }
         fclose($fp);
@@ -568,7 +537,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * @param $value
      */
     public function saveFieldValue ( $fieldName, $value ) {
-        $this->fieldSet[$fieldName] = $value;
+        $this->fieldSet[$fieldName] = $this->fieldsSpecificTreatment($fieldName, $value);
     }
 
 
@@ -623,43 +592,38 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
 
             // Cope de travail des champs attendus
             $tmpFields = $fields;
-
-            $this->log( "** Analyzing lead : ".$lead["id"] );
-
+            $this->log( 'LEAD ID: "'.$lead["id"].'"' );
+            $this->log("--");
             // Decodage des données de la lead
             $content = json_decode( $lead["data"], true );
             foreach ( $tmpFields as $srcField => $srcValue ) {
-
                 // Si la clée des données attendue existe dans la lead
                 if (array_key_exists( $srcField, $content )) {
-
-                    $this->log( "-- field exists : ".$srcField );
-
                     // Comparaison des valeurs attendue et de la lead
                     if ( $content[$srcField] == $srcValue ) {
-                        $this->log( "-- field match : ".$srcField."/".$srcValue );
+                        $this->log( '[ok] Field found : "'.$srcField.'"' );
+                        $this->log( '>>> "'.$srcValue.'"' );
                         unset ( $tmpFields[$srcField] );
-                    } else {
-
-                        // Les valeurs ne match pas
-                        $this->log( "-- field value mismatch : ".$srcField."/".$srcValue." => have : ".$content[$srcField] );
+                    } else { // 
+                        $this->log( '[ko] Field found : "'.$srcField.'"' );
+                        $this->log( '>>> "'.$srcValue.'"' );
+                        $this->log( '<<< "'.$content[$srcField].'"' );
                     }
-
-                } else{
-
-                    // Le champs n'existe pas
-                    $this->log( "-- field NOT matching : ".$srcField );
+                } else { // Le champs n'existe pas
+                    $this->log( "Field not found : ".$srcField );
                 }
-
+                $this->log("--");
             }
 
             // Pour chaque formulaire, on regarde si tous les champs ont été trouvés ou non
             if (count ( $tmpFields ) == 0) {
-                $this->log( "-- Returning perfect MATCH " );
+                $this->log( "PERFECT MATCH " );
                 return FunctionnalTestingUtils::$_VALIDATION_MATCH;
             } else if (count ( $tmpFields ) <  count ($fields)) {
-                $this->log( "-- Returning partial MATCH " );
-                var_dump($tmpFields);
+                $this->log( "PARTIAL MATCH " );
+                echo "<pre>";
+                print_r($tmpFields);
+                echo "</pre>";
                 return FunctionnalTestingUtils::$_VALIDATION_PARTIAL_MATCH;
             }
 

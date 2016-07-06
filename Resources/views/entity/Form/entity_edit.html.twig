@@ -58,20 +58,18 @@
             <p style="color:#aa0000">votre formulaire n'a pas passé les tests fonctionnels!</p>
         {% endif %}
 
-        {% if screenofForm is defined %}
-        <a href="{{ screenofForm }}"><img src="{{ screenofForm }}"/></a>
+        {% if screenofForm %}
+            <a class="btn-sm blue" target="_blank" href="{{ screenofForm }}">Vue du formulaire</a>
         {% endif %}
-
-        {% if screenofResult is defined %}
-            <a href="{{ screenofResult }}"><img src="{{ screenofResult }}"/></a>
+        {% if screenofResult %}
+            <a class="btn-sm blue" target="_blank" href="{{ screenofResult }}">Vue du résultat des tests</a>
         {% endif %}
 
         {% if formObj.testLog %}
-            <h3 class="custom-heading">Log du test</h3>
-            <div>
-
-            {{ formObj.testLog|raw }}
-
+            <hr/>
+            <h3 class="">Log du test</h3>
+            <div class="well well-sm" style="height: 500px; overflow: auto">
+                {{ formObj.testLog | raw }}
             </div>
         {% endif %}
 

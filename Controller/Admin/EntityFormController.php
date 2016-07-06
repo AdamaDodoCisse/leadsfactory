@@ -139,21 +139,11 @@ class EntityFormController extends CoreController {
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
-//            return $this->redirect($this->generateUrl('_form_list'));
         }
 
-        if (file_exists( $testUtils->getScreenPathOfForm( $formEntity ) )) {
-            $screenofForm = $testUtils->getScreenPathOfForm( $formEntity );
-        } else {
-            $screenofForm = null;
-        }
-
-        if (file_exists( $testUtils->getScreenPathOfResult( $formEntity ) )) {
-            $screenofResult = $testUtils->getScreenPathOfResult( $formEntity );
-        } else {
-            $screenofResult = null;
-        }
-
+        // Get screenshots
+        $screenofForm = $testUtils->getScreenPathOfForm( $formEntity, true );
+        $screenofResult = $testUtils->getScreenPathOfResult( $formEntity, true );
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Form:entity_edit.html.twig',
             array(
