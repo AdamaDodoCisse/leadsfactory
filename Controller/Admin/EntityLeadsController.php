@@ -744,19 +744,23 @@ class EntityLeadsController extends CoreController
 
 		$prefUtils = $this->get('preferences_utils');
 		$leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+		$testUtils = $this->container->get("functionnal_testing.utils");
 
 		/**
 		 * Send notification to a user
 		 * Mail is sent to the user owner of the lead
+		 * Only in case lead is not test
 		 */
-		$result = $this->sendNotificationEmail (  	"Changement de status pour une LEAD",
-			"Un utilisateur vient de modifier le status associé à une lead.",
-			$this->getUser(),
-			"Le ".date ("d/m/Y à h:i"). " ".ucfirst($this->getUser()->getFirstName()). " ".ucfirst($this->getUser()->getLastName()). " vient de modifier le status de la lead : ".$leadId." pour le passer à '".$listValue."'"  ,
-			$leadsUrl,
-			$leadsUrl,
-			$lead->getForm()->getScope()->getId()
-		);
+		if (!$testUtils->isTestLead($lead)) {
+			$result = $this->sendNotificationEmail("Changement de status pour une LEAD",
+				"Un utilisateur vient de modifier le status associé à une lead.",
+				$this->getUser(),
+				"Le " . date("d/m/Y à h:i") . " " . ucfirst($this->getUser()->getFirstName()) . " " . ucfirst($this->getUser()->getLastName()) . " vient de modifier le status de la lead : " . $leadId . " pour le passer à '" . $listValue . "'",
+				$leadsUrl,
+				$leadsUrl,
+				$lead->getForm()->getScope()->getId()
+			);
+		}
 
 		// Index leads on search engine
 		$leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
