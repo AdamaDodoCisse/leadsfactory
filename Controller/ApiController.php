@@ -16,6 +16,7 @@ use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Swift_Message;
 
 class ApiController extends CoreController
 {
@@ -356,7 +357,12 @@ class ApiController extends CoreController
 				//Send notification
 				if(isset($config['notification'])){
 					$this->sendNotification($config['notification'], $leads);
+					$logger->info ("API : Envoi de notifications");
+				} else {
+					$logger->info ("API : Le bloc de configuration de Notification n'existe pas en config");
 				}
+			} else {
+				$logger->info ("API : Le formulaire refuse l'envoi de mail par notification");
 			}
 
 			if ( array_key_exists(  'enableApiConfirmationEmail' , $config["configuration"] )  && $config["configuration"]["enableApiConfirmationEmail"] == true ) {
@@ -373,4 +379,130 @@ class ApiController extends CoreController
 			return new Response(0);
 		}
 	}
+
+	/**
+	 * @Route("/getList")
+	 * @Method("GET")
+	 */
+	public function getListAction(Request $request) {
+
+		$code = $request->query->get('code');
+
+		$list = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode($code);
+
+		$formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode($code);
+		$referingLists = $this->get("lf.utils")->getListOfLists( $list->getId() );
+		$json = $formData->getJson($referingLists);
+
+		return new Response($json);
+
+	}
+
+	/**
+	 * Send email notification
+	 *
+	 * @param array $params
+	 * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
+	 */
+	protected function sendNotification($params, $leads)
+	{
+		$logger = $this->get('logger');
+		$exportUtils = $this->get('export_utils'); 
+
+		$data = json_decode($leads->getData(), true);
+
+		if(!isset($params['to'])){
+			$logger->error('No recipient available, check JSON form config');
+			return;
+		}
+
+		$to = $params['to'];
+		$from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
+		$subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName();
+		$template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
+
+		$message = Swift_Message::newInstance()
+			->setSubject($subject)
+			->setFrom($from)
+			->setTo($to)
+			->setBody(
+				$this->renderView(
+					'TellawLeadsFactoryBundle:'.$template,
+					array(
+						'fields' => $data,
+						'intro' => 'Nouvelle DI issue du formulaire '.$leads->getForm()->getName()
+					)
+				),
+				'text/html'
+			);
+
+		try{
+			$result = $this->get('mailer')->send($message);
+		}catch(Exception $e){
+			$logger->error($e->getMessage());
+		}
+	}
+
+	/**
+	 * Send confirmation email
+	 *
+	 * @param array $params
+	 * @param $leads
+	 */
+	protected function sendConfirmationEmail($params, $leads)
+	{
+		$logger = $this->get('logger');
+
+		$form = $leads->getForm();
+
+		if(empty($params['to']['email_input_id']) || empty($params['to']['firstname_input_id']) || empty($params['to']['lastname_input_id'])){
+			$logger->error('bad confirmation email configuration (form '.$form->getName().')');
+			return;
+		}
+
+		$data = json_decode($leads->getData(), true);
+
+		$toEmail = $data[$params['to']['email_input_id']];
+		$toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+
+		$to = array($toEmail => $toName);
+		$from = $params['from'];
+		$subject = $this->renderTemplate($params['subject'], $data);
+
+		$template = $form->getConfirmationEmailSource();
+
+		$body = $this->renderTemplate($template, $data);
+
+		$message = Swift_Message::newInstance()
+			->setSubject($subject)
+			->setFrom($from)
+			->setTo($to)
+			->setBody($body, 'text/html');
+
+		try{
+			$result = $this->get('mailer')->send($message);
+		}catch(Exception $e){
+			$logger->error($e->getMessage());
+		}
+	}
+
+	/**
+	 * Render template variables {{ var }}
+	 *
+	 * @param string $template
+	 * @param array $data
+	 * @return mixed
+	 */
+	protected function renderTemplate($template, $data)
+	{
+		$data['template'] = $template;
+
+		$string = $this->renderView(
+			'TellawLeadsFactoryBundle::template_from_string.raw.twig',
+			$data
+		);
+
+		return $string;
+	}
+
 }
