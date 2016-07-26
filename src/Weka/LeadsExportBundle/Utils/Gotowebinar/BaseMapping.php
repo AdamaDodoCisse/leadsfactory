@@ -33,7 +33,7 @@ class BaseMapping
             "country"		            => 'pays',
             "phone"		                => 'phone',
             "timeZone"		            => '',
-            "industry"		            => '',
+            "industry"		            => 'secteur-activite',
             "organization"		        => 'etablissement',
             "jobTitle"		            => 'fonction',
             "purchasingTimeFrame"		=> '',
@@ -42,11 +42,6 @@ class BaseMapping
             "status"		            => ''
         );
     }
-
-	public function getCountry($data)
-	{
-		return 'France';
-	}
 
 	public function getTimeZone($data)
 	{

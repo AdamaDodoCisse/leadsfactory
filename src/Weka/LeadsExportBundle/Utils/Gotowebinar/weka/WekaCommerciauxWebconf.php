@@ -7,6 +7,11 @@ use Weka\LeadsExportBundle\Utils\Gotowebinar\BaseMapping;
 
 class WekaCommerciauxWebconf extends BaseMapping{
 
+	public function getCountry($data)
+	{
+		return 'France';
+	}
+
 	public function getCity($data)
 	{
 		$city = $this->list_element_repository->getNameUsingListCode('ville', $data['ville_id']);
