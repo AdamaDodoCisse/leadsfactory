@@ -25,18 +25,29 @@
     "renderArgument": {
       "type": "pie",
       "bu": "SST",
-      "email": "ehervet@comundi.fr"
+      "code": "sst"
     }
   },
-  "coIntraStatusForTeamHS" : {
-    "name": "Statuts pour la BU HS & DEC",
-    "description": "Repartition des statuts de traitement pour la BU HS & DEC",
+  "coIntraStatusForTeamDEC" : {
+    "name": "Statuts pour la BU DEC",
+    "description": "Repartition des statuts de traitement pour la BU DEC",
     "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
     "renderProvider": "Widgets:statusGraph",
     "renderArgument": {
       "type": "pie",
-      "bu": "HS & DEC",
-      "email": "gbernard@comundi.fr"
+      "bu": "DEC",
+      "code": "dec"
+    }
+  },
+  "coIntraStatusForTeamHS" : {
+    "name": "Statuts pour la BU HS",
+    "description": "Repartition des statuts de traitement pour la BU HS",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type": "pie",
+      "bu": "HS",
+      "code": "hs"
     }
   },
   "coIntraStatusForTeamPublic" : {
@@ -47,7 +58,7 @@
     "renderArgument": {
       "type": "pie",
       "bu": "PUBLIC",
-      "email": "mrodier@comundi.fr"
+      "code": "public"
     }
   },
   "coIntraStatusForTeamRH" : {
@@ -58,7 +69,7 @@
     "renderArgument": {
       "type": "pie",
       "bu": "RH",
-      "email": "criccobene@comundi.fr"
+      "code": "softrh"
     }
   },
   "coIntraStatusForTeamLN" : {
@@ -69,7 +80,632 @@
     "renderArgument": {
       "type": "pie",
       "bu": "LN",
-      "email": "slebrun@comundi.fr"
+      "code": "ln"
+    }
+  },
+
+  "leadsByStatusPerUsers" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html"
+    }
+  },
+  "leadsByStatusPerUsersForTeamSST" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html",
+      "bu" : true,
+      "code" : "sst"
+    }
+  },
+  "leadsByStatusPerUsersForTeamHS" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html",
+      "bu" : true,
+      "code" : "hs"
+    }
+  },
+  "leadsByStatusPerUsersForTeamDEC" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html",
+      "bu" : true,
+      "code" : "dec"
+    }
+  },
+  "leadsByStatusPerUsersForTeamPublic" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html",
+      "bu" : true,
+      "code" : "public"
+    }
+  },
+  "leadsByStatusPerUsersForTeamRH" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html",
+      "bu" : true,
+      "code" : "softrh"
+    }
+  },
+  "leadsByStatusPerUsersForTeamLN" : {
+    "name": "Tableau des leads par statut et utilisateur",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsByUserDataProviders",
+    "renderProvider": "Widgets:leadsByUserGraph",
+    "renderArgument": {
+      "type" : "html",
+      "bu" : true,
+      "code" : "ln"
+    }
+  },
+
+  "txPerTeamSST" : {
+    "name": "Historique des taux de transformation SST",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "bu" : true,
+      "type" : "timeseries",
+      "code": "sst"
+    }
+  },
+  "txPerTeamHS" : {
+    "name": "Historique des taux de transformation HS",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "bu" : true,
+      "type" : "timeseries",
+      "code": "hs"
+    }
+  },
+  "txPerTeamDEC" : {
+    "name": "Historique des taux de transformation SST",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "bu" : true,
+      "type" : "timeseries",
+      "code": "dec"
+    }
+  },
+  "txPerTeamPublic" : {
+    "name": "Historique des taux de transformation PUBLIC",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "bu" : true,
+      "type" : "timeseries",
+      "code": "public"
+    }
+  },
+  "txPerTeamRH" : {
+    "name": "Historique des taux de transformation RH",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "bu" : true,
+      "type" : "timeseries",
+      "code": "softrh"
+    }
+  },
+  "txPerTeamLN" : {
+    "name": "Historique des taux de transformation LN",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "bu" : true,
+      "type" : "timeseries",
+      "code": "ln"
+    }
+  },
+
+
+  "coIntraLeadsHistoryForSST" : {
+    "name": "Historique de récéption des leads SST",
+    "description": "Repartition des leads par personnes",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type": "timeseries",
+      "bu" : true,
+      "code" : "sst"
+    }
+  },
+  "coIntraLeadsHistoryForHS" : {
+    "name": "Historique de récéption des leads HS",
+    "description": "Repartition des leads par personnes",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type": "timeseries",
+      "bu" : true,
+      "code" : "hs"
+    }
+  },
+  "coIntraLeadsHistoryForDEC" : {
+    "name": "Historique de récéption des leads DEC",
+    "description": "Repartition des leads par personnes",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type": "timeseries",
+      "bu" : true,
+      "code" : "dec"
+    }
+  },
+  "coIntraLeadsHistoryForPublic" : {
+    "name": "Historique de récéption des leads PUBLIC",
+    "description": "Repartition des leads par personnes",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type": "timeseries",
+      "bu" : true,
+      "code" : "public"
+    }
+  },
+  "coIntraLeadsHistoryForRh" : {
+    "name": "Historique de récéption des leads SOFTRH",
+    "description": "Repartition des leads par personnes",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type": "timeseries",
+      "bu" : true,
+      "code" : "softrh"
+    }
+  },
+  "coIntraLeadsHistoryForLN" : {
+    "name": "Historique de récéption des leads LN",
+    "description": "Repartition des leads par personnes",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\LeadsDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type": "timeseries",
+      "bu" : true,
+      "code" : "ln"
+    }
+  },
+
+  "statusForUserGeneric" : {
+    "name": "Répartition statuts",
+    "description": "",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "moi@weka.fr"
+    }
+  },
+  "statusForUserEHervet" : {
+    "name": "Statuts : ehervet@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "ehervet@comundi.fr"
+    }
+  },
+  "statusForUserJGanon" : {
+    "name": "Statuts : jganon@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "jganon@comundi.fr"
+    }
+  },
+  "statusForUserGBernard" : {
+    "name": "Statuts : gbernard@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "gbernard@comundi.fr"
+    }
+  },
+  "statusForUserJChassagne" : {
+    "name": "Statuts : jchassagne@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "jchassagne@comundi.fr"
+    }
+  },
+  "statusForUserGazard" : {
+    "name": "Statuts : gazard@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "gazard@comundi.fr"
+    }
+  },
+  "statusForUserAGaucher" : {
+    "name": "Statuts : agaucher@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "agaucher@comundi.fr"
+    }
+  },
+  "statusForUserLLhermite" : {
+    "name": "Statuts : llhermite@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "llhermite@comundi.fr"
+    }
+  },
+  "statusForUserMRodier" : {
+    "name": "Statuts : mrodier@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "mrodier@comundi.fr"
+    }
+  },
+  "statusForUserMSteinebach" : {
+    "name": "Statuts : msteinebach@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "msteinebach@comundi.fr"
+    }
+  },
+  "statusForUserNComiant" : {
+    "name": "Statuts : ncomiant@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "ncomiant@comundi.fr"
+    }
+  },
+  "statusForUserCGorsse" : {
+    "name": "Statuts : cgorsse@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "cgorsse@comundi.fr"
+    }
+  },
+  "statusForUserCRiccobene" : {
+    "name": "Statuts : criccobene@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "criccobene@comundi.fr"
+    }
+  },
+  "statusForUserCDidier" : {
+    "name": "Statuts : cdidier@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "cdidier@comundi.fr"
+    }
+  },
+  "statusForUserGRuflin" : {
+    "name": "Statuts : gruflin@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "gruflin@comundi.fr"
+    }
+  },
+  "statusForUserSLebrun" : {
+    "name": "Statuts : slebrun@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "slebrun@comundi.fr"
+    }
+  },
+  "statusForUserAQueti" : {
+    "name": "Statuts : aqueti@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "aqueti@comundi.fr"
+    }
+  },
+  "statusForUserADelom" : {
+    "name": "Statuts : adelom@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "adelom@comundi.fr"
+    }
+  },
+  "statusForUserCSteimle" : {
+    "name": "Statuts : csteimle@comundi.fr",
+    "description": "Tableau des leads par statut et utilisateur",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\StatusDataProviders",
+    "renderProvider": "Widgets:statusGraph",
+    "renderArgument": {
+      "type" : "pie",
+      "user" : true,
+      "code" : "csteimle@comundi.fr"
+    }
+  },
+
+
+
+  "txPerUserEHervet" : {
+    "name": "Historique des taux de transformation ehervet@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "ehervet@comundi.fr"
+    }
+  },
+  "txPerUserJGanon" : {
+    "name": "Historique des taux de transformation jganon@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "jganon@comundi.fr"
+    }
+  },
+  "txPerUserJChassagne" : {
+    "name": "Historique des taux de transformation jchassagne@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "jchassagne@comundi.fr"
+    }
+  },
+  "txPerUserGAzard" : {
+    "name": "Historique des taux de transformation gazard@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "gazard@comundi.fr"
+    }
+  },
+  "txPerUserGBernard" : {
+    "name": "Historique des taux de transformation gbernard@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "gbernard@comundi.fr"
+    }
+  },
+  "txPerUserAGaucher" : {
+    "name": "Historique des taux de transformation agaucher@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "agaucher@comundi.fr"
+    }
+  },
+  "txPerUserLLhermite" : {
+    "name": "Historique des taux de transformation llhermite@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "llhermite@comundi.fr"
+    }
+  },
+  "txPerUserMSteinebach" : {
+    "name": "Historique des taux de transformation msteinebach@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "msteinebach@comundi.fr"
+    }
+  },
+  "txPerUserGBernard" : {
+    "name": "Historique des taux de transformation gbernard@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "gbernard@comundi.fr"
+    }
+  },
+  "txPerUserMRodier" : {
+    "name": "Historique des taux de transformation mrodier@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "mrodier@comundi.fr"
+    }
+  },
+  "txPerUserNComiant" : {
+    "name": "Historique des taux de transformation ncomiant@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "ncomiant@comundi.fr"
+    }
+  },
+  "txPerUserCGorsse" : {
+    "name": "Historique des taux de transformation cgorsse@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "cgorsse@comundi.fr"
+    }
+  },
+  "txPerUserCRiccobene" : {
+    "name": "Historique des taux de transformation criccobene@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "criccobene@comundi.fr"
+    }
+  },
+  "txPerUserCDidier" : {
+    "name": "Historique des taux de transformation cdidier@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "cdidier@comundi.fr"
+    }
+  },
+  "txPerUserGRuflin" : {
+    "name": "Historique des taux de transformation gruflin@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "gruflin@comundi.fr"
+    }
+  },
+  "txPerUserSLebrun" : {
+    "name": "Historique des taux de transformation slebrun@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "slebrun@comundi.fr"
+    }
+  },
+  "txPerUserAQueti" : {
+    "name": "Historique des taux de transformation aqueti@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "aqueti@comundi.fr"
+    }
+  },
+  "txPerUserCSteimle" : {
+    "name": "Historique des taux de transformation csteimle@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "csteimle@comundi.fr"
+    }
+  },
+  "txPerUserADelom" : {
+    "name": "Historique des taux de transformation adelom@comundi.fr",
+    "description": "Taux de transofmation",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "adelom@comundi.fr"
+    }
+  },
+  "txPerUserGeneric" : {
+    "name": "Historique des taux de transformation",
+    "description": "",
+    "dataProvider": "Weka\\LeadsExportBundle\\Utils\\DataProviders\\TransformRateDataProviders",
+    "renderProvider": "Widgets:leadsGraph",
+    "renderArgument": {
+      "type" : "timeseries",
+      "code": "toto@comundi.fr"
     }
   }
+
 }

@@ -1,11 +1,11 @@
 {
   "id" : "1",
-  "name" : "Dashboard Manager",
+  "name" : "Dashboard Global",
   "description" : "Description du dashboard",
 
   "content" : [
     {
-      "title" : "Données générales",
+      "title" : "Données globales pour l'intra",
       "widgets" : [
         {
           "id" : "coIntraStatusForAll",
@@ -13,18 +13,37 @@
         },
         {
           "id" : "coIntraLeadsForAll",
-          "size" : "9"
+          "size" : "10"
         }
       ]
     },
     {
-      "title" : "Données par Business Units",
+      "title" : "Données par BU",
       "widgets" : [
         {"id" : "coIntraStatusForTeamSST", "size" : "2"},
         {"id" : "coIntraStatusForTeamHS", "size" : "2"},
+        {"id" : "coIntraStatusForTeamDEC", "size" : "2"},
         {"id" : "coIntraStatusForTeamPublic", "size" : "2"},
         {"id" : "coIntraStatusForTeamRH", "size" : "2"},
         {"id" : "coIntraStatusForTeamLN", "size" : "2"}
+      ]
+    },
+    {
+      "title" : "Taux de transformation",
+      "widgets" : [
+        {"id" : "txPerTeamSST", "size" : "4"},
+        {"id" : "txPerTeamHS", "size" : "4"},
+        {"id" : "txPerTeamDEC", "size" : "4"},
+        {"id" : "txPerTeamPublic", "size" : "4"},
+        {"id" : "txPerTeamRH", "size" : "4"},
+        {"id" : "txPerTeamLN", "size" : "4"}
+
+      ]
+    },
+    {
+      "title" : "Leads par personnes",
+      "widgets" : [
+        {"id" : "leadsByStatusPerUsers", "size" : "12"}
       ]
     }
   ]

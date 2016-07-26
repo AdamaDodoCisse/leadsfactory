@@ -20,19 +20,16 @@
         {% endif %}
     <div class="col-md-12">
         {% for widget in line.widgets  %}
-
-
-
             <div class="col-md-{{ widget.size }}"  style="min-height:320px;">
                 <p id="title-{{ widget.id }}" style="font-weight:bold">&nbsp;</p>
-                <div class="col-md-12"  style="padding:0px;margin:0px;border:1px solid #e0e0e0;height:260px" id="widget-{{ widget.id }}">
+                <div class="col-md-12"  style="padding:0px;margin:0px;border:1px solid #e0e0e0;min-height:260px" id="widget-{{ widget.id }}">
                 Loading content for : {{ widget.id }}<br/>
                 </div>
                 <div id="description-{{ widget.id }}" style="font-size:12px;">&nbsp;</div>
             </div>
         {% endfor %}
     </div>
-
+<div>&nbsp;</div>
 {% endfor %}
 
 {% endblock %}
@@ -65,7 +62,7 @@
         if (!url) {
         var url = "{{ path ('_project_dashboard_widget') }}";
         }
-        var data = { "id" : id } ;
+        var data = { "id" : id, "mypage" : "{{ mypage }}" } ;
         var container = $("#widget-"+id);
 
         $.ai.mask({

@@ -98,15 +98,26 @@ class AthenaV2 extends AbstractMethod{
         }
     }
 
-    public function isExportable ( $job, $form, $data ) {
+    public function isExportable ( $job, $form, $data )
+    {
 
         //on dégage si profil étudiant (TI et WK) ou si type d'établissement Particulier/étudiant (WK)
-        if(isset($data['profil']) && strtoupper($data['profil']) == 'ETUDIANT'
-            || isset($data['type-etablissement']) && $data['type-etablissement'] == 'particulier_etudiant'){
+        // On enlève aussi en cas de test
+        $testUtils = $this->container->get("functionnal_testing.utils");
+
+        if ($testUtils->isTestLead($job->getLead())) {
+
+            $this->_exportUtils->updateJob($job, ExportUtils::$_EXPORT_NOT_SCHEDULED, 'TEST - pas d\'export');
+            $this->_exportUtils->updateLead($job->getLead(), ExportUtils::$_EXPORT_NOT_SCHEDULED, 'TEST - pas d\'export');
+            return false;
+
+        } else if (isset($data['profil']) && strtoupper($data['profil']) == 'ETUDIANT'
+            || isset($data['type-etablissement']) && $data['type-etablissement'] == 'particulier_etudiant') {
 
             $this->_exportUtils->updateJob($job, ExportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
             $this->_exportUtils->updateLead($job->getLead(), ExportUtils::$_EXPORT_NOT_SCHEDULED, 'Profil étudiant - pas d\'export');
             return false;
+
         }
 
         if ($job->getStatus() == ExportUtils::$_EXPORT_MULTIPLE_ERROR) {
@@ -400,12 +411,9 @@ class AthenaV2 extends AbstractMethod{
      */
     private function _postToAthena($request)
     {
-        $logger = $this->getLogger();
         $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : Envoie des Leads vers ATHENA -> " . $this->_athenaUrl);
-
         $rawData = http_build_query(array('entryPoint' => 'gatewayv2', 'data' => $request));
         $this->_logger->info("[".$this->_current_job."]"."[".$this->_current_lead."]"." ATHENAV2 : HTTP Query -> [" . $request ."]" );
-
         $max_exe_time = 30050; // time in milliseconds
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->_athenaUrl);

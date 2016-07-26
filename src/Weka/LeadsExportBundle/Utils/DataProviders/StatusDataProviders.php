@@ -5,7 +5,7 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 
 class StatusDataProviders extends AbstractDataProvider{
 
-    private $isBu = false;
+    private $code = null;
     private $bu = null;
     private $members = array();
 
@@ -15,11 +15,12 @@ class StatusDataProviders extends AbstractDataProvider{
 
             // is a BU Graph
             $this->bu = $args["bu"];
-            $email = $args["email"];
+            $this->code = $args["code"];
+
 
             // Checking if user is related to a team
             $json = null;
-            if ($email != null) {
+            if ($this->code != null) {
                 $filePath = $this->_container->get('kernel')->getRootDir()."/config/comundi-team-description.json";
                 if (file_exists( $filePath )) {
                     $jsonArray = json_decode(file_get_contents( $filePath ), true);
@@ -27,17 +28,21 @@ class StatusDataProviders extends AbstractDataProvider{
             }
 
             if ( $jsonArray ) {
-
-                if ( $email != null && $email != "" ) {
-                    if (array_key_exists($email, $jsonArray )) {
-                        foreach ( $jsonArray[$email] as $teamDetail ) {
-                            $this->members =  $teamDetail["members"];
+                if ( $this->code != null && $this->code != "" ) {
+                    foreach ( $jsonArray as $manager ) {
+                        foreach ( $manager as $team ) {
+                            if ( $team["id"] == $this->code ) {
+                                $this->members = $team["members"];
+                            }
                         }
-                    } else {
-                        throw new \Exception("Email is not a team Manager");
                     }
                 }
             }
+
+        } else if (array_key_exists( "user" , $args )) {
+
+            $this->members[] = $args["code"];
+            $this->bu = $args["user"];
 
         }
 
@@ -93,7 +98,7 @@ class StatusDataProviders extends AbstractDataProvider{
             }
         ";
 
-        var_dump($request);
+        //var_dump($request);
 
         return $request;
 

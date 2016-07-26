@@ -31,6 +31,10 @@ class AbstractDataProvider {
                 ".$output."
             ]        ";
 
+        } else if ($args["type"] == "html") {
+
+            return $output;
+
         } else {
 
             return "
