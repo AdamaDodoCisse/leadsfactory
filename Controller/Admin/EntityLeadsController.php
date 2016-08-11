@@ -651,7 +651,7 @@ class EntityLeadsController extends CoreController
 			$ext = substr(strrchr($leadDetail["user_file"], '.'), 1);
 			$filePath = $this->get('kernel')->getRootDir()."/../datas/".$lead->getForm()->getid()."/".$id."_user_file.".$ext;
 			if (file_exists( $filePath )) {
-				$file = $lead->getForm()->getId()."/".$id."-user_file.".$ext;
+				$file = $lead->getForm()->getId()."/".$id."_user_file.".$ext;
 			}
 		}
 
