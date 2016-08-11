@@ -25,7 +25,9 @@
 		"mtdowling/cron-expression": "~1.0",
         "jms/serializer-bundle": "~0.13",
         "vresh/twilio-bundle": "~0.4",
-        "teodortalov/citrix": "~1.1"
+        "teodortalov/citrix": "~1.1",
+        "symfony/assetic-bundle": "~2.6",
+        "beberlei/DoctrineExtensions": "~1.0"
     },
     "config": {
         "bin-dir": "bin"
