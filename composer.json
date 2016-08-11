@@ -1,7 +1,5 @@
 {
     "name": "tellaw/leadsfactory",
-    "license": "MIT",
-    "type": "project",
     "description": "LeadsFactory Core Bundle Project",
     "type" : "symfony-bundle",
     "authors" : [{
@@ -16,24 +14,16 @@
     ],
     "require": {
 		"php": ">=5.3.3",
-		"symfony/symfony": "2.7.2",
-		"doctrine/orm": "v2.4.7",
-		"doctrine/doctrine-bundle": "v1.5.0",
-		"twig/extensions": "v1.2.0",
-		"symfony/assetic-bundle": "v2.6.1",
-		"symfony/swiftmailer-bundle": "v2.3.8",
-		"symfony/monolog-bundle": "v2.7.1",
-		"sensio/distribution-bundle": "v2.3.22",
-		"sensio/framework-extra-bundle": "v3.0.9",
-		"sensio/generator-bundle": "v2.5.3",
-		"incenteev/composer-parameter-handler": "v2.1.1",
-		"jms/security-extra-bundle": "1.5.1",
-		"mtdowling/cron-expression": "v1.0.4",
-        "jms/serializer-bundle": "0.13.0",
-        "friendsofsymfony/elastica-bundle": "3.0.8"
-    },
-    "require-dev": {
-        "phpspec/phpspec": "~2.0"
+		"symfony/symfony": "~2.7",
+		"doctrine/doctrine-bundle": "~1.5",
+		"twig/extensions": "~1.2",
+		"symfony/swiftmailer-bundle": "~2.3",
+		"symfony/monolog-bundle": "~2.7",
+		"sensio/distribution-bundle": "~2.3",
+		"sensio/framework-extra-bundle": "~3.0",
+		"jms/security-extra-bundle": "~1.5",
+		"mtdowling/cron-expression": "~1.0",
+        "jms/serializer-bundle": "~0.13"
     },
     "config": {
         "bin-dir": "bin"
