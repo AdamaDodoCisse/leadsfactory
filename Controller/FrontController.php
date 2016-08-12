@@ -188,12 +188,11 @@ class FrontController extends CoreController
         $fields = $request->get ("lffield");
         $exportUtils = $this->get('export_utils');
         $searchUtils = $this->get('search.utils');
+        $testUtils = $this->container->get("functionnal_testing.utils");
 
 //         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
 //            throw new \Exception ("Form Key is not allowed");
-
         try {
-
             $formTypeObject = $this->get('leadsfactory.form_type_repository')->find((string)$request->get ("lfFormType"));
             $formId = $request->get("lfFormId");
             $logger->info ("Id FORM Posted : ".$formId);
@@ -363,12 +362,12 @@ class FrontController extends CoreController
             $searchUtils->indexLeadObject($leads_array, $leads->getForm()->getScope()->getCode());
 
             //Send notification
-            if(isset($config['notification'])){
+            if(!$testUtils->isTestLead($leads) && isset($config['notification'])){
                 $this->sendNotification($config['notification'], $leads);
             }
 
             //Send confirmation email
-            if(isset($config['confirmation_email'])){
+            if(!$testUtils->isTestLead($leads) && isset($config['confirmation_email'])) {
                 $this->sendConfirmationEmail($config['confirmation_email'], $leads);
             }
 

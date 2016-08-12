@@ -61,7 +61,8 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
      * @return bool
      */
     public function isTestLead ( Leads $lead ) {
-        if (stristr ($lead->getUserAgent(), 'phantomjs')) {
+        if (stristr ($lead->getUserAgent(), 'phantomjs')
+        || stristr ($lead->getUserAgent(), 'casperjs')) {
             return true;
         }
         return false;
