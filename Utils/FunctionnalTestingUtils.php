@@ -622,7 +622,7 @@ class FunctionnalTestingUtils implements ContainerAwareInterface {
             } else if (count ( $tmpFields ) <  count ($fields)) {
                 $this->log( "PARTIAL MATCH " );
                 echo "<pre>";
-                print_r($tmpFields);
+                echo ($tmpFields."\r\n");
                 echo "</pre>";
                 return FunctionnalTestingUtils::$_VALIDATION_PARTIAL_MATCH;
             }
