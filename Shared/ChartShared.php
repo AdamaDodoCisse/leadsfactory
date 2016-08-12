@@ -14,7 +14,8 @@ use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Tellaw\LeadsFactoryBundle\Utils\Chart;
 
-class ChartShared {
+class ChartShared
+{
 
     /**
      * @return array
@@ -54,9 +55,9 @@ class ChartShared {
      */
     public function setFormType($formType)
     {
-        if(empty($formType)){
+        if (empty($formType)) {
             $this->formType = $this->_getAllFormTypes();
-        }else{
+        } else {
             $this->formType = (empty($formType) || is_array($formType)) ? $formType : array($formType);
         }
     }
@@ -87,7 +88,6 @@ class ChartShared {
     }
 
 
-
     /**
      * Fetch leads counts grouped by form type
      *
@@ -99,7 +99,7 @@ class ChartShared {
         $em = $this->container->get('doctrine')->getManager();
         $data = array();
 
-        foreach($this->formType as $formType){
+        foreach ($this->formType as $formType) {
 
             if (!is_object($formType)) {
                 $formType = $this->getContainer()->get('leadsfactory.form_type_repository')->findOneById($formType);
@@ -116,12 +116,11 @@ class ChartShared {
                 ->setParameter('format', $this->_getSqlDateFormat())
                 ->setParameter('form_type_id', $formType->getId())
                 ->setParameter('minDate', $this->_getRangeMinDate()->format('Y-m-d'))
-                ->setParameter('maxDate', $this->_getRangeMaxDate()->format('Y-m-d'))
-            ;
+                ->setParameter('maxDate', $this->_getRangeMaxDate()->format('Y-m-d'));
             $qb = $this->excludeInternalLeads($qb);
             $results = $qb->getQuery()->getResult();
 
-            array_unshift($results,$formType->getName());
+            array_unshift($results, $formType->getName());
             $data[$formType->getName()] = $results;
         }
 
@@ -153,14 +152,14 @@ class ChartShared {
                 ->groupBy($this->_getSqlGroupByClause())
                 ->setParameter('format', $this->_getSqlDateFormat())
                 ->setParameter('form_id', $form->getId())
-                ->setParameter('minDate', $minDate)
-            ;
+                ->setParameter('minDate', $minDate);
             $qb = $this->excludeInternalLeads($qb);
             $results = $qb->getQuery()->getResult();
 
             array_unshift($results, $form->getName());
             $data[$form->getId()] = $results;
         }
+
         return $data;
     }
 
@@ -176,7 +175,7 @@ class ChartShared {
         $data = array();
 
         foreach ($this->form as $form) {
-            if(!($form instanceof Form)) {
+            if (!($form instanceof Form)) {
                 $form = $this->container->get('leadsfactory.form_repository')->findOneById($form);
             }
             if ($form === null) {
@@ -194,8 +193,7 @@ class ChartShared {
                 ->setParameter('format', $this->_getSqlDateFormat())
                 ->setParameter('form_id', $form->getId())
                 ->setParameter('minDate', $this->_getRangeMinDate()->format('Y-m-d'))
-                ->setParameter('maxDate', $this->_getRangeMaxDate()->format('Y-m-d'))
-            ;
+                ->setParameter('maxDate', $this->_getRangeMaxDate()->format('Y-m-d'));
             $qb = $this->excludeInternalLeads($qb);
             $results = $qb->getQuery()->getResult();
 
@@ -263,46 +261,47 @@ class ChartShared {
      *
      * Origine :
      *
-    array (size=2)
-    'Demande info ' =>
-    array (size=366)
-    0 => string 'Demande info ' (length=17)
-    1 =>
-    array (size=4)
-    'date' => string '201501' (length=6)
-    'n' => string '5' (length=1)
-    'day' => string '1' (length=1)
-    'month' => string '1' (length=1)
-    2 =>
-    array (size=4)
-    'date' => string '201502' (length=6)
-    'n' => string '6' (length=1)
-    'day' => string '1' (length=1)
-    'month' => string '2' (length=1)
+     * array (size=2)
+     * 'Demande info ' =>
+     * array (size=366)
+     * 0 => string 'Demande info ' (length=17)
+     * 1 =>
+     * array (size=4)
+     * 'date' => string '201501' (length=6)
+     * 'n' => string '5' (length=1)
+     * 'day' => string '1' (length=1)
+     * 'month' => string '1' (length=1)
+     * 2 =>
+     * array (size=4)
+     * 'date' => string '201502' (length=6)
+     * 'n' => string '6' (length=1)
+     * 'day' => string '1' (length=1)
+     * 'month' => string '2' (length=1)
      *
      * Cible :
      *
      *                 var data = new google.visualization.DataTable();
-    var raw_data = [    ["Demande info ",6,9,7,8,7,7,9,8,4,5,7,6,11,0],
+     * var raw_data = [    ["Demande info ",6,9,7,8,7,7,9,8,4,5,7,6,11,0],
      *                      ["Type de d\u00e9monstration",2,3,4,2,2,1,2,4,6,2,3,2,4,0],
      *                      ["Moyenne",9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4,9.4],
      *                      ["Total",8,12,11,10,9,8,11,12,10,7,10,8,15,0] ]
-
-    var range =     ["Jun 13","Jul 13","Aug 13","Sep 13","Oct 13","Nov 13","Dec 13","Jan 14","Feb 14","Mar 14","Apr 14","May 14","Jun 14","Jul 14","Aug 14","Sep 14","Oct 14","Nov 14","Dec 14","Jan 15","Feb 15","Mar 15"]
+     *
+     * var range =     ["Jun 13","Jul 13","Aug 13","Sep 13","Oct 13","Nov 13","Dec 13","Jan 14","Feb 14","Mar 14","Apr 14","May 14","Jun 14","Jul 14","Aug 14","Sep 14","Oct 14","Nov 14","Dec 14","Jan 15","Feb 15","Mar 15"]
      *
      */
 
-    protected function _formatChartData($data) {
+    protected function _formatChartData($data)
+    {
 
         // determine if we are working on days of monthes
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $diff = $minDate->diff ($maxDate);
+        $diff = $minDate->diff($maxDate);
         $nbDiffDays = $diff->format('%R%a');
-        $nbDiffMonths = $diff->format ('%R%m');
+        $nbDiffMonths = $diff->format('%R%m');
 
-        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+        if ($nbDiffDays < Chart::ZOOM_SWITCH_RANGE) {
             // Nous affichons à la journée
             $workingOnDays = true;
         } else {
@@ -316,7 +315,7 @@ class ChartShared {
         $initialLoop = true;
 
         // Loop over Objects availables
-        foreach ( $data as $graphObject ) {
+        foreach ($data as $graphObject) {
 
             $type = array_shift($graphObject);
             $targetArray [$type] = array();
@@ -327,21 +326,21 @@ class ChartShared {
             // Create loop for building empty dates of timeframe
 
             // determine if we are working on days of monthes
-            if ( $workingOnDays ) {
+            if ($workingOnDays) {
 
                 // Building empty slots for every days
-                for ($a=0; $a<=$nbDiffDays; $a++) {
+                for ($a = 0; $a <= $nbDiffDays; $a++) {
 
                     if ($initialLoop) $timeRange[] = (string)$startingDate->format('d/m/Y');
 
-                    $targetArray [$type][ (string)$startingDate->format('d/m/Y') ] = 0;
+                    $targetArray [$type][(string)$startingDate->format('d/m/Y')] = 0;
                     $startingDate->add(new \DateInterval('P1D'));
                 }
                 $initialLoop = false;
 
                 // filling with good values
-                foreach ( $graphObject as $object ) {
-                    $targetArray [$type][ (string)$object['date'] ] = $object['n'];
+                foreach ($graphObject as $object) {
+                    $targetArray [$type][(string)$object['date']] = $object['n'];
                 }
 
             }
@@ -354,12 +353,12 @@ class ChartShared {
         $googleFormat = array();
         // Extract Data to Google Format
         $nbGraph = 0;
-        foreach ( $targetArray as $key => $graphObject ) {
+        foreach ($targetArray as $key => $graphObject) {
 
-            $googleFormat[$nbGraph] = array ();
+            $googleFormat[$nbGraph] = array();
             $googleFormat[$nbGraph][] = $key;
 
-            foreach ( $graphObject as $graphElement ) {
+            foreach ($graphObject as $graphElement) {
 
                 $googleFormat[$nbGraph][] = (int)$graphElement;
             }
@@ -400,11 +399,11 @@ class ChartShared {
         //if(count($chartData) != $this->graph_count) {
         $this->setSpecialGraphIndexes($chartData);
         $this->setNormalGraph($chartData);
+
         //}
 
         return $chartData;
     }
-
 
 
     /**
@@ -417,13 +416,14 @@ class ChartShared {
     {
         $graphLength = count($chartData[0]);
         $total = array('Total');
-        for($i=1; $i<$graphLength; $i++){
+        for ($i = 1; $i < $graphLength; $i++) {
             $value = 0;
-            for($j=0; $j<$this->graph_count; $j++){
+            for ($j = 0; $j < $this->graph_count; $j++) {
                 $value += $chartData[$j][$i];
             }
             $total[$i] = $value;
         }
+
         return $total;
     }
 
@@ -436,17 +436,17 @@ class ChartShared {
     protected function _addAverageGraph($chartData)
     {
         $graphLength = count($chartData[0]);
-        $nbGraphs = count ($chartData);
+        $nbGraphs = count($chartData);
         $value = 0;
 
         $moyenne = array('Moyenne');
-        for($i=1; $i<$graphLength; $i++){
+        for ($i = 1; $i < $graphLength; $i++) {
             $value = 0;
-            foreach($chartData as $graphData){
+            foreach ($chartData as $graphData) {
                 $value += $graphData[$i];
 
             }
-            $moyenne[] = $value/$nbGraphs;
+            $moyenne[] = $value / $nbGraphs;
         }
 
         return $moyenne;
@@ -475,10 +475,11 @@ class ChartShared {
         $start = $this->_getRangeMinDate();
 
         $range = array();
-        while($start <= $end){
+        while ($start <= $end) {
             $range[] = $start->format('M y');
             $start->modify('+1 month');
         }
+
         return $range;
     }
 
@@ -495,10 +496,11 @@ class ChartShared {
         $start = $this->_getRangeMinDate();
 
         $range = array();
-        while($start <= $end){
+        while ($start <= $end) {
             $range[] = $start->format('d/m');
             $start->modify('+1 day');
         }
+
         return $range;
     }
 
@@ -511,7 +513,7 @@ class ChartShared {
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $title = "Lead\'s du ".$minDate->format ('d m Y')." au ".$maxDate->format ('d m Y');
+        $title = "Lead\'s du " . $minDate->format('d m Y') . " au " . $maxDate->format('d m Y');
 
         return $title;
     }
@@ -522,10 +524,10 @@ class ChartShared {
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $diff = $minDate->diff ($maxDate);
+        $diff = $minDate->diff($maxDate);
         $nbDiffDays = $diff->format('%R%a');
 
-        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+        if ($nbDiffDays < Chart::ZOOM_SWITCH_RANGE) {
             // Nous affichons à la journée
             return '%d/%m/%Y';
         } else {
@@ -542,10 +544,10 @@ class ChartShared {
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $diff = $minDate->diff ($maxDate);
+        $diff = $minDate->diff($maxDate);
         $nbDiffDays = $diff->format('%R%a');
 
-        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+        if ($nbDiffDays < Chart::ZOOM_SWITCH_RANGE) {
             // Nous affichons à la journée
             return 'md';
         } else {
@@ -562,10 +564,10 @@ class ChartShared {
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $diff = $minDate->diff ($maxDate);
+        $diff = $minDate->diff($maxDate);
         $nbDiffDays = $diff->format('%R%a');
 
-        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+        if ($nbDiffDays < Chart::ZOOM_SWITCH_RANGE) {
             // Nous affichons à la journée
             return 'day';
         } else {
@@ -582,12 +584,13 @@ class ChartShared {
      */
     protected function _getIndexNumber($date)
     {
-        switch($this->period){
+        switch ($this->period) {
             case self::PERIOD_YEAR:
                 return 13;
             case self::PERIOD_MONTH:
                 $minDate = $this->_getRangeMinDate();
-                return (cal_days_in_month(CAL_GREGORIAN, $minDate->format('m'), $minDate->format('Y')) +1);
+
+                return (cal_days_in_month(CAL_GREGORIAN, $minDate->format('m'), $minDate->format('Y')) + 1);
             default:
                 throw new \Exception('Unknown timeframe');
         }
@@ -602,10 +605,10 @@ class ChartShared {
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $diff = $minDate->diff ($maxDate);
+        $diff = $minDate->diff($maxDate);
         $nbDiffDays = $diff->format('%R%a');
 
-        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+        if ($nbDiffDays < Chart::ZOOM_SWITCH_RANGE) {
             return array('DAY(l.createdAt) as day', 'MONTH(l.createdAt) as month');
         } else {
             return array('MONTH(l.createdAt) as month', 'YEAR(l.createdAt) as year');
@@ -622,10 +625,10 @@ class ChartShared {
         $minDate = $this->_getRangeMinDate();
         $maxDate = $this->_getRangeMaxDate();
 
-        $diff = $minDate->diff ($maxDate);
+        $diff = $minDate->diff($maxDate);
         $nbDiffDays = $diff->format('%R%a');
 
-        if ( $nbDiffDays < Chart::ZOOM_SWITCH_RANGE ) {
+        if ($nbDiffDays < Chart::ZOOM_SWITCH_RANGE) {
 
             // Nous affichons à la journée
             return 'day, month';
@@ -644,8 +647,8 @@ class ChartShared {
     public function setSpecialGraphIndexes($chartData)
     {
         $specials = array();
-        foreach($chartData as $key=>$data){
-            if($key >= ($this->graph_count)){
+        foreach ($chartData as $key => $data) {
+            if ($key >= ($this->graph_count)) {
                 $specials[] = $key;
             }
         }
@@ -656,29 +659,31 @@ class ChartShared {
     {
 
         $specials = array();
-        foreach($chartData as $key=>$data){
-            if($key < ($this->graph_count)){
+        foreach ($chartData as $key => $data) {
+            if ($key < ($this->graph_count)) {
                 $specials[] = $data[0];
             }
         }
         $this->normalGraph = $specials;
     }
 
-    public function getNormalGraph () {
-        return json_encode( $this->normalGraph );
+    public function getNormalGraph()
+    {
+        return json_encode($this->normalGraph);
     }
 
     // TODO: move to fixtures or remove
-    public function loadDemoData ( $formId = null ) {
+    public function loadDemoData($formId = null)
+    {
 
-        echo ("Loading demo data\r\n");
+        echo("Loading demo data\r\n");
 
         $em = $this->container->get('doctrine')->getManager();
 
         if ($formId == null)
             $forms = $this->container->get('leadsfactory.form_repository')->findAll();
         else
-            $forms = array($this->container->get('leadsfactory.form_repository')->find( $formId ));
+            $forms = array($this->container->get('leadsfactory.form_repository')->find($formId));
 
         // Loop over forms
         foreach ($forms as $form) {
@@ -686,9 +691,9 @@ class ChartShared {
             $day = new \DateTime();
             $dateInterval = new \DateInterval('P1D');
 
-            echo ("Processing form (".$form->getId()." -> ".$form->getName().")\r\n");
+            echo("Processing form (" . $form->getId() . " -> " . $form->getName() . ")\r\n");
 
-            echo ("--> Deleting leads\r\n");
+            echo("--> Deleting leads\r\n");
 
             // Delete leads for form
             $query = $em->getConnection()->prepare('DELETE FROM Leads WHERE form_id = :form_id');
@@ -696,24 +701,24 @@ class ChartShared {
             $query->execute();
 
             // Reload leads for two years
-            for ( $i=0; $i<365; $i++ ) {
+            for ($i = 0; $i < 365; $i++) {
 
                 // Random a number of leads for that day beetween 0 and 20
-                $leadsNumberForDay = rand (0, 5);
+                $leadsNumberForDay = rand(0, 5);
 
-                echo ("--> Creating Lead DAY : ".$i."/365 (form : ".$form->getId()." / number of leads to create : ".$leadsNumberForDay.")\r\n");
+                echo("--> Creating Lead DAY : " . $i . "/365 (form : " . $form->getId() . " / number of leads to create : " . $leadsNumberForDay . ")\r\n");
 
-                $day->sub( $dateInterval );
+                $day->sub($dateInterval);
 
-                for ($j=0; $j<=$leadsNumberForDay; $j++) {
+                for ($j = 0; $j <= $leadsNumberForDay; $j++) {
 
                     $lead = new Leads();
-                    $lead->setFirstname("firstname-(".$j."/".$leadsNumberForDay.")-".rand());
-                    $lead->setLastname( "lastname-".rand() );
-                    $lead->setStatus( 1 );
-                    $lead->setFormType( $form->getFormType() );
-                    $lead->setForm( $form );
-                    $lead->setCreatedAt( $day );
+                    $lead->setFirstname("firstname-(" . $j . "/" . $leadsNumberForDay . ")-" . rand());
+                    $lead->setLastname("lastname-" . rand());
+                    $lead->setStatus(1);
+                    $lead->setFormType($form->getFormType());
+                    $lead->setForm($form);
+                    $lead->setCreatedAt($day);
                     $em->persist($lead);
                     $em->flush();
 
@@ -721,7 +726,7 @@ class ChartShared {
                 }
 
                 // Ajout des listes
-                $this->createPageViewsForDemo ( $leadsNumberForDay, $form, $day );
+                $this->createPageViewsForDemo($leadsNumberForDay, $form, $day);
 
             }
 
@@ -731,19 +736,20 @@ class ChartShared {
     }
 
     // TODO: move to fixtures or remove
-    protected function createPageViewsForDemo ( $leadsNumberForDay, $form, $day ) {
+    protected function createPageViewsForDemo($leadsNumberForDay, $form, $day)
+    {
 
         // Now create page views
         //echo ("--> Creating page views for the day\r\n");
 
         // Calculate % of variation
-        $variation = rand (1, 99);
+        $variation = rand(1, 99);
 
         // Calculate number of page views
         $nbPageViews = ($variation / 100) * $leadsNumberForDay + $leadsNumberForDay;
 
 
-        for ($j=0; $j<=$nbPageViews; $j++) {
+        for ($j = 0; $j <= $nbPageViews; $j++) {
 
             //echo ("--> Creating Page view : ".$j."/".$nbPageViews." (form : ".$form->getId().")\r\n");
 
@@ -751,12 +757,12 @@ class ChartShared {
             $tracking = new Tracking();
 
             // random if UTM is origin (1) or not (0)
-            $hasUtm = rand (0,1);
+            $hasUtm = rand(0, 1);
 
             // if utm is not origin, calculate it from 1 to 5;
             if ($hasUtm) {
-                $utm_campaign = rand (1,5);
-                $utm_campaign = "demo_utm_code_".$utm_campaign;
+                $utm_campaign = rand(1, 5);
+                $utm_campaign = "demo_utm_code_" . $utm_campaign;
                 $tracking->setUtmCampaign($utm_campaign);
             }
 

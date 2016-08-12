@@ -2,11 +2,15 @@
 
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-interface IScheduledJob {
+interface IScheduledJob
+{
 
-    public function getExpression ();
+    public function getExpression();
+
     public function getName();
+
     public function getCommands();
+
     public function getEnabled();
 
 }

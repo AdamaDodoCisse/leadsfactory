@@ -10,15 +10,18 @@ class PreferenceType extends AbstractType
 
     private $entity = "preference";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
@@ -27,13 +30,14 @@ class PreferenceType extends AbstractType
         );
 
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add('keyval', null, array('label' => 'Clée'));
         $builder->add('value', null, array('label' => 'Valeur'));
 
-        $builder->add ( 'scope', null, array('label' => 'Scope du formulaire') );
+        $builder->add('scope', null, array('label' => 'Scope du formulaire'));
 
         $builder->add('save', 'submit');
 

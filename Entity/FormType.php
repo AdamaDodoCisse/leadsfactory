@@ -1,8 +1,10 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\FormType
@@ -10,7 +12,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\FormTypeRepository")
  */
-class FormType {
+class FormType
+{
 
     public $type = "formType";
 
@@ -25,17 +28,18 @@ class FormType {
         $this->leads = new ArrayCollection();
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -210,24 +214,26 @@ class FormType {
     /**
      * Get scope
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Scope 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Scope
      */
     public function getScope()
     {
         return $this->scope;
     }
 
-    public function getRules () {
+    public function getRules()
+    {
         $alertRules = json_decode(trim($this->getAlertRules()), true);
+
         return $alertRules;
     }
 
     public $todayValue = null;
     public $yesterdayValue = null;
-	public $weekBeforeValue = null;
-	public $yesterdayStatusColor = null;
-	public $yesterdayStatusText = null;
-	public $yesterdayVariation = null;
+    public $weekBeforeValue = null;
+    public $yesterdayStatusColor = null;
+    public $yesterdayStatusText = null;
+    public $yesterdayVariation = null;
 
     public $textualYesterdayDay = null;
     public $textualWeekBeforeDay = null;

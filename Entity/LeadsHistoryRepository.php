@@ -14,7 +14,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsHistoryRepository extends EntityRepository
 {
 
-    public function getHistoryForLead ( $leadId ) {
+    public function getHistoryForLead($leadId)
+    {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
 
@@ -32,6 +33,7 @@ class LeadsHistoryRepository extends EntityRepository
         } catch (\Exception $e) {
             throw new \Exception ($e);
         }
+
         return $result;
 
     }

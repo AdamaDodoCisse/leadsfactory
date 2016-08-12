@@ -15,5 +15,4 @@ class ClientAdressRepository extends EntityRepository
 {
 
 
-
 }

@@ -2,18 +2,19 @@
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceList
  *
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository")
  */
-class ReferenceList {
+class ReferenceList
+{
 
     /**
      * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement", mappedBy="referenceList", cascade={"persist"})
@@ -26,13 +27,13 @@ class ReferenceList {
         $this->elements = new ArrayCollection();
     }
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -74,7 +75,6 @@ class ReferenceList {
     {
         $this->scope = $scope;
     }
-
 
 
     /**
@@ -180,46 +180,48 @@ class ReferenceList {
         $this->elements->removeElement($elements);
     }
 
-    public function getJson ( $referingLists ) {
+    public function getJson($referingLists)
+    {
 
         $data = array();
 
-        $elements = $this->getElements ();
+        $elements = $this->getElements();
         //var_dump(($elements));
 
         $data["lists"] = $referingLists;
-        $data["elements"] = $this->getChilds( $elements );
+        $data["elements"] = $this->getChilds($elements);
 
 //        var_dump(($elements));
 //        die();
-        $json = json_encode( $data, JSON_FORCE_OBJECT|JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT );
+        $json = json_encode($data, JSON_FORCE_OBJECT | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 
         return $json;
     }
 
-    public function getChilds ( $elements ) {
+    public function getChilds($elements)
+    {
 
         $dataChilds = array();
 
         foreach ($elements as $element) {
 
 
-            if ( $element->getChildren()->count() ) {
+            if ($element->getChildren()->count()) {
 
-                $dataChilds[] = array (
-                    "id"=>$element->getId(),
-                    "name"=>$element->getName(),
-                    "value"=>$element->getValue(),
-                    "childrens" => $this->getChilds( $element->getChildren() )
+                $dataChilds[] = array(
+                    "id" => $element->getId(),
+                    "name" => $element->getName(),
+                    "value" => $element->getValue(),
+                    "childrens" => $this->getChilds($element->getChildren())
 
                 );
 
             } else {
 
-                $dataChilds[] = array (
-                    "id"=>$element->getId(),
-                    "name"=>$element->getName(),
-                    "value"=>$element->getValue()
+                $dataChilds[] = array(
+                    "id" => $element->getId(),
+                    "name" => $element->getName(),
+                    "value" => $element->getValue()
 
                 );
 
@@ -227,7 +229,6 @@ class ReferenceList {
             }
             //var_dump ($element->getChildren());
             //if ( count($element->getChildren()) ) {
-
 
 
             //}
@@ -238,8 +239,8 @@ class ReferenceList {
 
     }
 
-    public function setJson ( $json ) {
-
+    public function setJson($json)
+    {
 
 
     }

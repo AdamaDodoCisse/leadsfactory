@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="statistic_pool")
  */
-class StatisticPool {
+class StatisticPool
+{
 
     /**
      * @ORM\Id
@@ -96,6 +97,5 @@ class StatisticPool {
         $this->created_at = $created_at;
     }
 
-    
 
 }

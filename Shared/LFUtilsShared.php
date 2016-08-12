@@ -10,17 +10,18 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
-use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 
-class LFUtilsShared {
+class LFUtilsShared
+{
 
     /**
      * Method used to update elements of the Reference List
      * @param $jsonElements
      */
-    public function updateListElements ( $jsonElements ) {
+    public function updateListElements($jsonElements)
+    {
 
-        $jsonObject = json_decode( $jsonElements, true );
+        $jsonObject = json_decode($jsonElements, true);
         $validIdByLevels = array();
 
         // Step 1 : Get referring lists
@@ -30,13 +31,14 @@ class LFUtilsShared {
         $level = 0;
 
         // Step 2 : Update list
-        if (count ($childs) > 0) list ($validIdByLevels, $lists) = $this->updateChilds( $childs, $lists, $validIdByLevels, $level, null );
+        if (count($childs) > 0) list ($validIdByLevels, $lists) = $this->updateChilds($childs, $lists, $validIdByLevels, $level, null);
 
-        $this->deleteOldChilds( $validIdByLevels, $lists );
+        $this->deleteOldChilds($validIdByLevels, $lists);
 
     }
 
-    private function updateChilds ( $childs, $lists, $validIdByLevels, $level, $parentId ) {
+    private function updateChilds($childs, $lists, $validIdByLevels, $level, $parentId)
+    {
 
         /**
          *
@@ -49,14 +51,14 @@ class LFUtilsShared {
 
         $em = $this->container->get("doctrine")->getManager();
 
-        foreach ( $childs as $key => $child ) {
+        foreach ($childs as $key => $child) {
 
-            if ( array_key_exists( "id", $child ) ) {
+            if (array_key_exists("id", $child)) {
 
                 // Case of existing item, just update it.
-                $item = $em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find( $child["id"] );
-                $item->setName ( $child["name"] );
-                $item->setValue ( $child["value"] );
+                $item = $em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($child["id"]);
+                $item->setName($child["name"]);
+                $item->setValue($child["value"]);
                 $em->flush();
 
                 // Get this to keep in memory treated items to delete old ones.
@@ -67,16 +69,16 @@ class LFUtilsShared {
 
                 // Case of new Item, create it
                 $item = new ReferenceListElement();
-                $item->setName( $child["name"] );
-                $item->setValue ( $child["value"] );
+                $item->setName($child["name"]);
+                $item->setValue($child["value"]);
 
-                $referenceList = $em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find( $lists[$level] );
-                $item->setReferenceList ( $referenceList );
+                $referenceList = $em->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find($lists[$level]);
+                $item->setReferenceList($referenceList);
 
-                if ( $parentId != null ) {
+                if ($parentId != null) {
 
-                    $parent = $em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find( $parentId );
-                    $item->setParent ( $parent );
+                    $parent = $em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($parentId);
+                    $item->setParent($parent);
 
                 }
                 $em->persist($item);
@@ -90,15 +92,15 @@ class LFUtilsShared {
              * Digging into childrens
              */
             $parentIdTmp = $item->getId();
-            if (array_key_exists( "childrens",$child  )) {
-                if (count ($child["childrens"]) > 0) {
-                    list ($validIdByLevels, $lists) = $this->updateChilds( $child["childrens"], $lists, $validIdByLevels, $level+1, $parentIdTmp );
+            if (array_key_exists("childrens", $child)) {
+                if (count($child["childrens"]) > 0) {
+                    list ($validIdByLevels, $lists) = $this->updateChilds($child["childrens"], $lists, $validIdByLevels, $level + 1, $parentIdTmp);
                 }
             }
 
         }
 
-        return array ($validIdByLevels, $lists);
+        return array($validIdByLevels, $lists);
 
     }
 
@@ -107,14 +109,15 @@ class LFUtilsShared {
      * @param $validIdByLevels
      * @param $lists
      */
-    public function deleteOldChilds ( $validIdByLevels, $lists ) {
+    public function deleteOldChilds($validIdByLevels, $lists)
+    {
 
         // Reverse list to delete from the end. This is to avoid constraint violation
-        array_reverse( $lists );
+        array_reverse($lists);
 
         $em = $this->container->get('doctrine')->getManager();
 
-        foreach ( $lists as $list ) {
+        foreach ($lists as $list) {
 
             $sql = 'SELECT id FROM `ReferenceListElement` WHERE referencelist_id = :listId';
             $query = $em->getConnection()->prepare($sql);
@@ -124,9 +127,9 @@ class LFUtilsShared {
 
             foreach ($results as $result) {
 
-                if ( !array_key_exists( $result["id"], $validIdByLevels[$list] )) {
+                if (!array_key_exists($result["id"], $validIdByLevels[$list])) {
 
-                    $object =  $this->container->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($result["id"]);
+                    $object = $this->container->get('doctrine')->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($result["id"]);
 
                     $em = $this->container->get('doctrine')->getManager();
                     $em->remove($object);
@@ -140,25 +143,27 @@ class LFUtilsShared {
 
     }
 
-    public function getListOfLists ( $listId, $lists = array()  ) {
+    public function getListOfLists($listId, $lists = array())
+    {
 
-        if ( !in_array( $listId, $lists )) {
+        if (!in_array($listId, $lists)) {
             $lists[] = $listId;
         }
 
         //$lists = array();
-        $listId = $this->getLinkedLists( $listId );
+        $listId = $this->getLinkedLists($listId);
 
-        if ($listId)  {
+        if ($listId) {
             $lists[] = $listId;
-            $lists = $this->getListOfLists( $listId, $lists );
+            $lists = $this->getListOfLists($listId, $lists);
         }
 
         return $lists;
 
     }
 
-    public function getLinkedLists ( $listId ) {
+    public function getLinkedLists($listId)
+    {
 
         $em = $this->container->get('doctrine')->getManager();
 
@@ -169,8 +174,9 @@ class LFUtilsShared {
         $query->execute();
         $results = $query->fetchAll();
 
-        if (count ($results) > 0) {
+        if (count($results) > 0) {
             $id = $results[0]["referencelist_id"];
+
             return $id;
         } else {
             return false;
@@ -178,16 +184,17 @@ class LFUtilsShared {
 
     }
 
-    public function getUserPreferences () {
+    public function getUserPreferences()
+    {
 
         $session = $this->container->get('session');
 
-        if ($session->has ('user-preferences')) {
+        if ($session->has('user-preferences')) {
             return $session->get('user-preferences');
 
         } else {
             $userPreferences = new UserPreferences();
-            $session->set ('user-preferences', $userPreferences);
+            $session->set('user-preferences', $userPreferences);
             $session->save();
 
             return $userPreferences;
@@ -196,9 +203,10 @@ class LFUtilsShared {
 
     }
 
-    public function setUserPreferences ( $userPreferences ) {
+    public function setUserPreferences($userPreferences)
+    {
         $session = $this->container->get('session');
-        $session->set ('user-preferences', $userPreferences);
+        $session->set('user-preferences', $userPreferences);
         $session->save();
 
     }

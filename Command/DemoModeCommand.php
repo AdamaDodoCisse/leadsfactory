@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
@@ -8,24 +8,26 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DemoModeCommand extends ContainerAwareCommand {
-	
-	private $cronjobs = array();
-	
-	protected function configure() {
-		$this
-		->setName('leadsfactory:demomode')
-		->setDescription('Cron Job Demo Mode data feeder')
-		->addArgument('formid', InputArgument::OPTIONAL, 'Specify form ID')
-		;
-	}
+class DemoModeCommand extends ContainerAwareCommand
+{
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    private $cronjobs = array();
 
-		$formid = trim($input->getArgument('formid'));
+    protected function configure()
+    {
+        $this
+            ->setName('leadsfactory:demomode')
+            ->setDescription('Cron Job Demo Mode data feeder')
+            ->addArgument('formid', InputArgument::OPTIONAL, 'Specify form ID');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+
+        $formid = trim($input->getArgument('formid'));
 
         $this->getContainer()->get("chart")->loadDemoData($formid);
 
-	}
+    }
 
 }

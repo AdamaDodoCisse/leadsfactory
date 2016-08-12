@@ -10,42 +10,46 @@ class FormType extends AbstractType
 
     private $entity = "form";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
                 'data_class' => 'Tellaw\LeadsFactoryBundle\Entity\Form',
                 'attr' => array('id' => 'form-form',
-                            'onSubmit' => 'validateFormAction();'
+                    'onSubmit' => 'validateFormAction();'
                 )
             )
         );
 
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
         $builder->add('name');
         $builder->add('description');
-        $builder->add('url',null, array('label' => 'URL de test du formulaire'));
+        $builder->add('url', null, array('label' => 'URL de test du formulaire'));
 
-        $builder->add('code',null, array('label' => 'Code (identifiant technique) du formulaire'));
+        $builder->add('code', null, array('label' => 'Code (identifiant technique) du formulaire'));
 
-	    $builder->add('secure_key',null, array('label' => 'Code de sécurité'));
+        $builder->add('secure_key', null, array('label' => 'Code de sécurité'));
 
-        $builder->add('utmcampaign',null, array('label' => 'Code action par défaut'));
+        $builder->add('utmcampaign', null, array('label' => 'Code action par défaut'));
 
-	    $builder->add ( 'scope', null, array('label' => 'Scope du formulaire'));
+        $builder->add('scope', null, array('label' => 'Scope du formulaire'));
 
-        $builder->add ('formType',null, array('label' => 'Type du formulaire'));
+        $builder->add('formType', null, array('label' => 'Type du formulaire'));
 
         $builder->add('source', new SourceType(), array('label' => 'Source Pseudo HTML', 'required' => false));
         $builder->add('script', new ScriptType(), array('label' => 'Javascript', 'required' => false));

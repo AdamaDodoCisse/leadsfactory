@@ -12,7 +12,8 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class CoreManager  implements ContainerAwareInterface {
+class CoreManager implements ContainerAwareInterface
+{
 
     private static $v1 = 3.14;
     private static $v2 = 5;
@@ -33,7 +34,8 @@ class CoreManager  implements ContainerAwareInterface {
      * @param ContainerInterface $container
      *
      */
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
 
         $this->container = $container;
         $this->logger = $this->container->get("logger");
@@ -48,27 +50,28 @@ class CoreManager  implements ContainerAwareInterface {
     }
 
 
-    public static function getLicenceInfos () {
+    public static function getLicenceInfos()
+    {
 
-        if (file_exists ( "../licence/licence.php" )) {
+        if (file_exists("../licence/licence.php")) {
 
-            $key = implode("",file ("../licence/licence.php"));
-            
-            $datas = explode( "|", $key );
+            $key = implode("", file("../licence/licence.php"));
 
-            $dtf = ($datas[2] + CoreManager::$v2)/CoreManager::$v1;
+            $datas = explode("|", $key);
+
+            $dtf = ($datas[2] + CoreManager::$v2) / CoreManager::$v1;
             $plateform = $datas[3];
-            $nbf = ( ($datas[4] * ( (CoreManager::$v2/CoreManager::$v3) ) ) / (CoreManager::$v7/2) );
-            $nbs = ($datas[5] + CoreManager::$v5) / CoreManager::$v4 ;
+            $nbf = (($datas[4] * ((CoreManager::$v2 / CoreManager::$v3))) / (CoreManager::$v7 / 2));
+            $nbs = ($datas[5] + CoreManager::$v5) / CoreManager::$v4;
             $stats = $datas[6];
             $nomClient = $datas[9];
             $socClient = $datas[7];
             $domains = $datas[8];
 
             $key = $datas[1];
-            $calculation = md5($datas[2].":".$datas[3].":".$datas[4].":".$datas[5].":".$datas[6].":".$datas[8].":".$datas[7]);
+            $calculation = md5($datas[2] . ":" . $datas[3] . ":" . $datas[4] . ":" . $datas[5] . ":" . $datas[6] . ":" . $datas[8] . ":" . $datas[7]);
 
-            if ( $key != $calculation ) throw new \Exception ("Licence is not valid");
+            if ($key != $calculation) throw new \Exception ("Licence is not valid");
 
             $eol = new \DateTime();
             $eol->setTimestamp($dtf);
@@ -79,7 +82,7 @@ class CoreManager  implements ContainerAwareInterface {
                 throw new \Exception ("Licence expirée");
             }
 
-            return array (
+            return array(
                 "isvalid" => true,
                 "dtf" => $dtf,
                 "plateform" => $plateform,
@@ -88,7 +91,7 @@ class CoreManager  implements ContainerAwareInterface {
                 "stats" => $stats,
                 "nom" => $nomClient,
                 "societe" => $socClient,
-                "domains" => explode (',',$domains)
+                "domains" => explode(',', $domains)
             );
 
         } else {
@@ -99,7 +102,8 @@ class CoreManager  implements ContainerAwareInterface {
 
     }
 
-    public function isNewFormAccepted () {
+    public function isNewFormAccepted()
+    {
 
         $infos = CoreManager::getLicenceInfos();
         $repo = $this->container->get('leadsfactory.form_repository');
@@ -109,7 +113,7 @@ class CoreManager  implements ContainerAwareInterface {
             ->getQuery()
             ->getSingleScalarResult();
 
-        if ($nbForms < $infos["nbf"]){
+        if ($nbForms < $infos["nbf"]) {
             return true;
         } else {
             return false;
@@ -125,7 +129,8 @@ class CoreManager  implements ContainerAwareInterface {
      * @throws \Exception
      *
      */
-    public function isNewScopeAccepted () {
+    public function isNewScopeAccepted()
+    {
 
         $infos = CoreManager::getLicenceInfos();
         $repo = $this->container->get('leadsfactory.scope_repository');
@@ -135,7 +140,7 @@ class CoreManager  implements ContainerAwareInterface {
             ->getQuery()
             ->getSingleScalarResult();
 
-        if ($nbScopes < $infos["nbs"]){
+        if ($nbScopes < $infos["nbs"]) {
             return false;
         } else {
             return true;
@@ -143,9 +148,11 @@ class CoreManager  implements ContainerAwareInterface {
 
     }
 
-    public function isMonitoringAccepted () {
+    public function isMonitoringAccepted()
+    {
 
         $infos = CoreManager::getLicenceInfos();
+
         return $infos["stats"];
 
     }
@@ -154,16 +161,18 @@ class CoreManager  implements ContainerAwareInterface {
      * @return int response inverted
      * @throws \Exception
      */
-    public function isDomainAccepted () {
+    public function isDomainAccepted()
+    {
 
         $host = $_SERVER["HTTP_HOST"];
         $infos = CoreManager::getLicenceInfos();
         $domains = $infos["domains"];
         foreach ($domains as $domain) {
-            if ( strstr ( $host, $domain ) ) {
+            if (strstr($host, $domain)) {
                 return 0;
             }
         }
+
         return 1;
 
     }

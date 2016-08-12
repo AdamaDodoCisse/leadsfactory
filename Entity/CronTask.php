@@ -1,32 +1,32 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
-* @ORM\Entity
-* @UniqueEntity("name")
-* @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\CronTaskRepository")
-*/
+ * @ORM\Entity
+ * @UniqueEntity("name")
+ * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\CronTaskRepository")
+ */
 class CronTask
 {
     /**
-    * @ORM\Id
-    * @ORM\Column(type="integer")
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     private $id;
 
     /**
-    * @ORM\Column(type="string")
-    */
+     * @ORM\Column(type="string")
+     */
     private $name;
 
     /**
-    * @ORM\Column(type="string")
-    */
+     * @ORM\Column(type="string")
+     */
     private $commands;
 
     /**
@@ -40,8 +40,8 @@ class CronTask
     private $enabled;
 
     /**
-    * @ORM\Column(type="datetime", nullable=true)
-    */
+     * @ORM\Column(type="datetime", nullable=true)
+     */
     private $lastrun;
 
     /**
@@ -86,17 +86,19 @@ class CronTask
     public function setName($name)
     {
         $this->name = $name;
+
         return $this;
     }
 
     public function getCommands()
     {
-        return explode("|",$this->commands);
+        return explode("|", $this->commands);
     }
 
     public function setCommands($commands)
     {
-        $this->commands = implode("|",$commands);
+        $this->commands = implode("|", $commands);
+
         return $this;
     }
 
@@ -108,6 +110,7 @@ class CronTask
     public function setCommandsAsString($commands)
     {
         $this->commands = $commands;
+
         return $this;
     }
 
@@ -151,6 +154,7 @@ class CronTask
     public function setLastRun($lastrun)
     {
         $this->lastrun = $lastrun;
+
         return $this;
     }
 

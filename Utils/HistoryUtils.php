@@ -1,11 +1,11 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\LeadsHistory;
 
@@ -16,7 +16,8 @@ use Tellaw\LeadsFactoryBundle\Entity\LeadsHistory;
  *
  * @author Eric Wallet
  */
-class HistoryUtils implements ContainerAwareInterface {
+class HistoryUtils implements ContainerAwareInterface
+{
 
     /**
      * @var ContainerInterface
@@ -26,7 +27,8 @@ class HistoryUtils implements ContainerAwareInterface {
     /**
      * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
 
         $this->container = $container;
         $this->logger = $this->container->get("logger");
@@ -38,7 +40,8 @@ class HistoryUtils implements ContainerAwareInterface {
      * @param $object
      * @return bool
      */
-    public function isAvailable ( $object ) {
+    public function isAvailable($object)
+    {
 
         if ($object instanceof \Tellaw\LeadsFactoryBundle\Entity\Leads) {
             return true;
@@ -56,9 +59,10 @@ class HistoryUtils implements ContainerAwareInterface {
      * @param $user \Tellaw\LeadsFactoryBundle\Entity\Users object
      * @param object Object on which history log will apply to. The system will throw an Exception if the object type is not supported
      */
-    public function push ( $logMessage, $user, $object ) {
+    public function push($logMessage, $user, $object)
+    {
 
-        if (!$this->isAvailable( $object )) {
+        if (!$this->isAvailable($object)) {
             throw new \Exception ("Object is not supported for history management");
         }
 
@@ -66,10 +70,10 @@ class HistoryUtils implements ContainerAwareInterface {
         if ($object instanceof Leads) {
 
             $history = new LeadsHistory();
-            $history->setLead( $object );
-            $history->setUser( $user );
-            $history->setLog( $logMessage );
-            $history->setCreatedAt( new \DateTime() );
+            $history->setLead($object);
+            $history->setUser($user);
+            $history->setLog($logMessage);
+            $history->setCreatedAt(new \DateTime());
 
             $em = $this->container->get('doctrine')->getManager();
             $em->persist($history);

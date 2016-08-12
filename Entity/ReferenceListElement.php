@@ -1,6 +1,7 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -9,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ReferenceListElementRepository")
  */
-class ReferenceListElement {
+class ReferenceListElement
+{
 
     public static $_STATUS_ENABLED = 1;
     public static $_STATUS_DISABLED = 1;
@@ -19,13 +21,13 @@ class ReferenceListElement {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -161,7 +163,7 @@ class ReferenceListElement {
     /**
      * Get parent
      *
-     * @return string 
+     * @return string
      */
     public function getParent()
     {
@@ -201,7 +203,6 @@ class ReferenceListElement {
     }
 
 
-
     /**
      * Add children
      *
@@ -228,7 +229,7 @@ class ReferenceListElement {
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {

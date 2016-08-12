@@ -1,17 +1,16 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
-
 class HiddenFieldType extends AbstractFieldType
 {
 
-    public function getTestValue ( $dataType, $field ) {
+    public function getTestValue($dataType, $field)
+    {
 
         if (isset($field["attributes"]["id"])) {
-            return "hidden-".$field["attributes"]["id"];
-        }else {
-            return "hidden-".time();
+            return "hidden-" . $field["attributes"]["id"];
+        } else {
+            return "hidden-" . time();
         }
 
     }
@@ -22,12 +21,12 @@ class HiddenFieldType extends AbstractFieldType
      * @param Object $tag Tag object
      * @return string Html Content formatted
      */
-    public function renderToHtml ( $tag )
+    public function renderToHtml($tag)
     {
         if (array_key_exists('id', $tag["attributes"])) {
             $id = $tag["attributes"]["id"];
         } else {
-	        $id = false;
+            $id = false;
         }
 
         if (array_key_exists('name', $tag["attributes"])) {
@@ -37,11 +36,11 @@ class HiddenFieldType extends AbstractFieldType
         }
 
         $html = '<input type="hidden"';
-        $html .= ' name="lffield['.$name.']"';
+        $html .= ' name="lffield[' . $name . ']"';
         if ($id) {
-            $html .= ' id="lffield['.$id.']"';
+            $html .= ' id="lffield[' . $id . ']"';
         }
-        $html .= ' '.$this->getAttributes( $tag ).'/>';
+        $html .= ' ' . $this->getAttributes($tag) . '/>';
 
         return $html;
     }

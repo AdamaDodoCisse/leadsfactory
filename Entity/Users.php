@@ -1,16 +1,19 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Users
  *
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\UsersRepository")
  */
-class Users implements UserInterface {
+class Users implements UserInterface
+{
 
     /**
      * Roles par ordre d'heritage
@@ -22,14 +25,14 @@ class Users implements UserInterface {
      * => Developpeur Transverse    : Changement de scope
      * => Administrateur            : Configuration
      *
-    ROLE_MARKETING: ROLE_USER
-    ROLE_DISPATCH:  [ROLE_USER, ROLE_MARKETING]
-    ROLE_DEV: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH]
-    ROLE_DEV_SCOPE: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV]
-    ROLE_ADMIN: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV, ROLE_DEV_SCOPE]
+     * ROLE_MARKETING: ROLE_USER
+     * ROLE_DISPATCH:  [ROLE_USER, ROLE_MARKETING]
+     * ROLE_DEV: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH]
+     * ROLE_DEV_SCOPE: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV]
+     * ROLE_ADMIN: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV, ROLE_DEV_SCOPE]
      *
      */
-    public static $_ROLES = array (
+    public static $_ROLES = array(
         "ROLE_USER" => "Utilisateur",
         "ROLE_COMMERCIAL" => "Commercial",
         "ROLE_MARKETING" => "Marketing",
@@ -39,13 +42,13 @@ class Users implements UserInterface {
         "ROLE_ADMIN" => "Administrateur"
     );
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -187,11 +190,12 @@ class Users implements UserInterface {
         return $this->password;
     }
 
-    public function getRoles() {
+    public function getRoles()
+    {
         if ($this->getRole() != "") {
-            return array( $this->getRole() );
+            return array($this->getRole());
         } else {
-            return array ( "ROLE_USER" );
+            return array("ROLE_USER");
         }
     }
 
@@ -212,21 +216,24 @@ class Users implements UserInterface {
     }
 
 
-
-    public function getSalt() {
+    public function getSalt()
+    {
         return null;
     }
 
-    public function eraseCredentials() {
+    public function eraseCredentials()
+    {
         return null;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->getLogin();
 
     }
 
-    public function equals(UserInterface $user) {
+    public function equals(UserInterface $user)
+    {
 
         if ($user->getLogin() == $this->getLogin())
             return true;
@@ -251,7 +258,7 @@ class Users implements UserInterface {
     /**
      * Get scope
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Scope 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Scope
      */
     public function getScope()
     {

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
@@ -9,20 +9,21 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Tellaw\LeadsFactoryBundle\Entity\StatusHistory;
 use Symfony\Component\Security\Acl\Exception\Exception;
+use Tellaw\LeadsFactoryBundle\Entity\StatusHistory;
 
-class StatusHistoryUpdateCommand extends ContainerAwareCommand {
-	
-	private $cronjobs = array();
-	
-	protected function configure() {
-		$this
-		->setName('leadsfactory:statusHistory:update')
-		->setDescription('Command updating statuses history.')
-		//->addArgument('mode', InputArgument::OPTIONAL, 'set to true to force cronjob execution')
-		;
-	}
+class StatusHistoryUpdateCommand extends ContainerAwareCommand
+{
+
+    private $cronjobs = array();
+
+    protected function configure()
+    {
+        $this
+            ->setName('leadsfactory:statusHistory:update')
+            ->setDescription('Command updating statuses history.')//->addArgument('mode', InputArgument::OPTIONAL, 'set to true to force cronjob execution')
+        ;
+    }
 
     /**
      *
@@ -34,7 +35,8 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
      * @param OutputInterface $output
      * @return int|null|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
 
         $logger = new Logger("STATUS");
         $results = array();
@@ -50,34 +52,34 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
         // Check theirs statuses for previous day
         foreach ($forms as $form) {
             $result = array();
-            $alertUtils->setValuesForAlerts ( $form );
+            $alertUtils->setValuesForAlerts($form);
 
-            $logger->info("Recherche du status du formulaire : ".$form->getName()." / Id : ".$form->getId());
+            $logger->info("Recherche du status du formulaire : " . $form->getName() . " / Id : " . $form->getId());
             // 1 - Load a potentially existing status from history :
             // If so, just update it.
 
             try {
 
                 $statusHistory = $this->getContainer()->get("doctrine")
-                                ->getManager()->getRepository('TellawLeadsFactoryBundle:StatusHistory')
-                                ->findByStatusDateAndForm( $minDate, $form );
-                if (count ($statusHistory)>0) {
+                    ->getManager()->getRepository('TellawLeadsFactoryBundle:StatusHistory')
+                    ->findByStatusDateAndForm($minDate, $form);
+                if (count($statusHistory) > 0) {
                     $statusHistory = $statusHistory[0];
                 } else {
                     $statusHistory = new StatusHistory();
-                    $statusHistory->setStatusDate( $minDate );
-                    $statusHistory->setForm( $form );
-                    $statusHistory->setData( '' );
-                    $statusHistory->setCreatedAt( $currentDate );
+                    $statusHistory->setStatusDate($minDate);
+                    $statusHistory->setForm($form);
+                    $statusHistory->setData('');
+                    $statusHistory->setCreatedAt($currentDate);
                 }
-                $statusHistory->setStatus( $form->yesterdayStatus );
-                $statusHistory->setUpdatedAt( $currentDate );
+                $statusHistory->setStatus($form->yesterdayStatus);
+                $statusHistory->setUpdatedAt($currentDate);
 
                 $em = $this->getContainer()->get("doctrine")->getManager();
                 $em->persist($statusHistory);
                 $em->flush();
 
-                $logger->info("Status enregistré : ".$form->yesterdayStatus);
+                $logger->info("Status enregistré : " . $form->yesterdayStatus);
 
                 if ($form->getScope()) {
                     $result['id'] = $form->getId();
@@ -89,17 +91,18 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
                     $results[$form->getScope()->getId()][$form->yesterdayStatus][] = $result;
                 }
 
-            }  catch (\Exception $e) {
-                $logger->error('ERROR for form :'.$form->getName().'/ id : '.$form->getId());
+            } catch (\Exception $e) {
+                $logger->error('ERROR for form :' . $form->getName() . '/ id : ' . $form->getId());
                 $logger->error($e->getTraceAsString());
             }
 
         }
         $this->sendStatusLogsMail($results, $scope);
-	}
+    }
 
 
-    private function sendStatusLogsMail($results, $scopes) {
+    private function sendStatusLogsMail($results, $scopes)
+    {
 
         $logger = new Logger("STATUS");
         $exportUtils = $this->getContainer()->get('export_utils');
@@ -111,7 +114,7 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
 
             $email = $prefUtils->getUserPreferenceByKey('CORE_STATUS_HISTORY_EMAIL', $id);
 
-            $title = "[LEADS Factory] Status des formulaires : ".$scopes[$id];
+            $title = "[LEADS Factory] Status des formulaires : " . $scopes[$id];
             $from = $exportUtils::NOTIFICATION_DEFAULT_FROM;
             if (count($scope)) {
                 $body = $templatingService->render('TellawLeadsFactoryBundle:emails:status_history_task.html.twig', array("results" => $scope, "scope" => $scopes[$id]));
@@ -124,16 +127,16 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand {
                             ->setTo($s_email)
                             ->setBody($body)
                             ->setContentType("text/html");
-                        $logger->info($scopes[$id]." : Envoie du mail à : " . $s_email);
+                        $logger->info($scopes[$id] . " : Envoie du mail à : " . $s_email);
                         try {
                             $this->getContainer()->get('mailer')->send($message);
-                        } catch(Exception $e){
+                        } catch (Exception $e) {
                             $logger->error($e->getMessage());
                         }
                     }
 
                 } else {
-                    $logger->info("Email d'export introuvalble : ".$scopes[$id]);
+                    $logger->info("Email d'export introuvalble : " . $scopes[$id]);
                 }
             }
         }

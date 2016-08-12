@@ -7,7 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ExportRepository")
  */
-class Export {
+class Export
+{
 
     /**
      * @ORM\Id
@@ -62,7 +63,7 @@ class Export {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -85,7 +86,7 @@ class Export {
     /**
      * Get status
      *
-     * @return integer 
+     * @return integer
      */
     public function getStatus()
     {
@@ -108,7 +109,7 @@ class Export {
     /**
      * Get lead
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Leads 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Leads
      */
     public function getLead()
     {
@@ -131,7 +132,7 @@ class Export {
     /**
      * Get form
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form
      */
     public function getForm()
     {
@@ -154,7 +155,7 @@ class Export {
     /**
      * Get log
      *
-     * @return string 
+     * @return string
      */
     public function getLog()
     {
@@ -177,7 +178,7 @@ class Export {
     /**
      * Get created_at
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -200,7 +201,7 @@ class Export {
     /**
      * Get scheduled_at
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getScheduledAt()
     {
@@ -223,7 +224,7 @@ class Export {
     /**
      * Get executed_at
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getExecutedAt()
     {
@@ -246,7 +247,7 @@ class Export {
     /**
      * Get method
      *
-     * @return string 
+     * @return string
      */
     public function getMethod()
     {
@@ -258,17 +259,18 @@ class Export {
      * @param $em   entity manager
      * @return $this
      */
-    public function populateFromSearch ( $source, $em ) {
+    public function populateFromSearch($source, $em)
+    {
 
-        $this->setId( $source->id );
-        if ($source->lead_id) $this->setLead( $em->getRepository('TellawLeadsFactoryBundle:Lead')->find( $source->lead_id ) );
-        if ($source->form_id) $this->setForm( $em->getRepository('TellawLeadsFactoryBundle:Form')->find( $source->form_id ) );
-        $this->setMethod( $source->method );
-        $this->setCreatedAt( $source->created_at );
-        $this->setScheduledAt( $source->scheduled_at );
-        $this->setExecutedAt( $source->executed_at );
-        $this->setStatus( $source->status );
-        $this->setLog( $source->log );
+        $this->setId($source->id);
+        if ($source->lead_id) $this->setLead($em->getRepository('TellawLeadsFactoryBundle:Lead')->find($source->lead_id));
+        if ($source->form_id) $this->setForm($em->getRepository('TellawLeadsFactoryBundle:Form')->find($source->form_id));
+        $this->setMethod($source->method);
+        $this->setCreatedAt($source->created_at);
+        $this->setScheduledAt($source->scheduled_at);
+        $this->setExecutedAt($source->executed_at);
+        $this->setStatus($source->status);
+        $this->setLog($source->log);
 
         return $this;
 

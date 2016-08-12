@@ -1,10 +1,9 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Doctrine\ORM\QueryBuilder;
-use Tellaw\LeadsFactoryBundle\Entity\FormType;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tellaw\LeadsFactoryBundle\Shared\AlertUtilsShared;
 
 /**
@@ -14,7 +13,8 @@ use Tellaw\LeadsFactoryBundle\Shared\AlertUtilsShared;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils
  */
-class AlertUtils extends AlertUtilsShared {
+class AlertUtils extends AlertUtilsShared
+{
 
     public static $_STATUS_UNKNOWN = 0;
     public static $_STATUS_OK = 1;
@@ -22,8 +22,8 @@ class AlertUtils extends AlertUtilsShared {
     public static $_STATUS_ERROR = 3;
     public static $_STATUS_DATA_PROBLEM = 4; // Not used yet
 
-    public $day = array ('','lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche');
-    public $month = array ('', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre');
+    public $day = array('', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche');
+    public $month = array('', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre');
 
     /** @var EntityManagerInterface */
     protected $entity_manager;
@@ -44,10 +44,10 @@ class AlertUtils extends AlertUtilsShared {
      * @param $minDate DateTime object
      * @return mixed
      */
-    protected function getLeadsCountForForms ($forms, $minDate)
+    protected function getLeadsCountForForms($forms, $minDate)
     {
 
-        foreach($forms as $form) {
+        foreach ($forms as $form) {
             $formIds[] = $form->getId();
         }
 
@@ -61,11 +61,11 @@ class AlertUtils extends AlertUtilsShared {
             ->where('l.form IN (:formIds)')
             ->andWhere('l.createdAt BETWEEN :minDate AND :maxDate')
             ->setParameter('formIds', $formIds)
-            ->setParameter('minDate', $formatedMinDate." 00:00:00")
-            ->setParameter('maxDate', $formatedMinDate." 23:59:59")
-        ;
+            ->setParameter('minDate', $formatedMinDate . " 00:00:00")
+            ->setParameter('maxDate', $formatedMinDate . " 23:59:59");
 
         $querybuilder = $this->excludeInternalLeads($querybuilder);
+
         return $querybuilder->getQuery()->getSingleScalarResult();
     }
 
@@ -77,11 +77,11 @@ class AlertUtils extends AlertUtilsShared {
     {
         $i = 0;
         foreach ($this->internal_email_patterns as $pattern) {
-            $qb->andWhere('l.email not like :pattern_'.$i)
-               ->setParameter('pattern_'.$i, $pattern)
-            ;
+            $qb->andWhere('l.email not like :pattern_' . $i)
+                ->setParameter('pattern_' . $i, $pattern);
             ++$i;
         }
+
         return $qb;
     }
 }

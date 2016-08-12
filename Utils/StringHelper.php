@@ -15,6 +15,7 @@ class StringHelper
         $s = str_replace(array('-', '_'), ' ', $s);
         $s = ucwords($s);
         $s = str_replace(array(' '), '', $s);
+
         return $s;
     }
 }

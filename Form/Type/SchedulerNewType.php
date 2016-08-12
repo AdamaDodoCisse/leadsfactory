@@ -21,11 +21,9 @@ class SchedulerNewType extends AbstractType
             ->add('commandsAsString')
             ->add('serviceName')
             ->add('cronexpression')
-
-            ->add('save', 'submit')
-        ;
+            ->add('save', 'submit');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

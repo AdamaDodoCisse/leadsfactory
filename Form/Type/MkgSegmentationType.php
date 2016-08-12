@@ -10,11 +10,13 @@ class MkgSegmentationType extends AbstractType
 
     private $searches = null;
 
-    public function __construct ( $searches ) {
+    public function __construct($searches)
+    {
         $this->searches = $searches;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
@@ -29,15 +31,15 @@ class MkgSegmentationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('name',null, array('label' => 'Nom de l\'export'));
-        $builder->add('description',null, array('label' => 'Description'));
+        $builder->add('name', null, array('label' => 'Nom de l\'export'));
+        $builder->add('description', null, array('label' => 'Description'));
 
-        $builder->add('config',new JsonType(), array('label' => 'Configuration', 'required' => false));
+        $builder->add('config', new JsonType(), array('label' => 'Configuration', 'required' => false));
 
-        $builder->add('scope',null, array('label' => 'Scope de l\'export (aucun impact sur la requete)'));
-        $builder->add('query_code' ,'choice', array('choices'  => $this->searches,'label' => 'Identifiant Kibana de la requete'));
+        $builder->add('scope', null, array('label' => 'Scope de l\'export (aucun impact sur la requete)'));
+        $builder->add('query_code', 'choice', array('choices' => $this->searches, 'label' => 'Identifiant Kibana de la requete'));
 
-        $builder->add('save', 'submit', array('label'=>'Enregistrer'));
+        $builder->add('save', 'submit', array('label' => 'Enregistrer'));
     }
 
     public function getName()

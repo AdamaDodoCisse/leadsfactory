@@ -1,28 +1,28 @@
-<?php 
+<?php
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
+use Cron\CronExpression;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
-use Cron\CronExpression;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
-use Swift_Message;
 use Tellaw\LeadsFactoryBundle\Utils\SegmentUtils;
 
 
-class SegmentationCommand extends ContainerAwareCommand {
-	
+class SegmentationCommand extends ContainerAwareCommand
+{
 
-	
-	protected function configure() {
-		$this->setName('leadsfactory:export:segmentation')
-		    ->setDescription('Segmentation : Export configured segments')
-		;
-	}
+
+    protected function configure()
+    {
+        $this->setName('leadsfactory:export:segmentation')
+            ->setDescription('Segmentation : Export configured segments');
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -42,7 +42,7 @@ class SegmentationCommand extends ContainerAwareCommand {
                 // We must run this task if:
                 // * time() is larger or equal to $nextrun
                 //$run = @(time() >= $nextrun);
-                if ( $segment->getNextrun() <= $now ) {
+                if ($segment->getNextrun() <= $now) {
 
                     $this->output = new BufferedOutput();
                     $output->writeln(sprintf('Running Cron Task <info>%s</info>', $segment->getName()));
@@ -53,19 +53,19 @@ class SegmentationCommand extends ContainerAwareCommand {
 
                         //$commands = $crontask->getCommands();
                         // Execute request
-                        $this->exportSegment( $segment, $output );
+                        $this->exportSegment($segment, $output);
 
                         $output->writeln('<info>SUCCESS EXPORT SEGMENT</info>');
-                        $segment->setLog( $this->output->fetch() );
-                        $segment->setStatus (1);
+                        $segment->setLog($this->output->fetch());
+                        $segment->setStatus(1);
 
                     } catch (\Exception $e) {
 
                         $output->writeln('<error>ERROR EXPORT SEGMENT</error>');
-                        $output->writeln('<error>'.$e->getMessage().'</error>');
-                        $output->writeln('<error>'.$e->getTraceAsString().'</error>');
-                        $segment->setStatus (2);
-                        $segment->setLog( $this->output->fetch()."\r\n-----------------\r\n".$e->getMessage()."\r\n-----------------\r\n".$e->getTraceAsString() );
+                        $output->writeln('<error>' . $e->getMessage() . '</error>');
+                        $output->writeln('<error>' . $e->getTraceAsString() . '</error>');
+                        $segment->setStatus(2);
+                        $segment->setLog($this->output->fetch() . "\r\n-----------------\r\n" . $e->getMessage() . "\r\n-----------------\r\n" . $e->getTraceAsString());
 
                     }
 
@@ -79,9 +79,9 @@ class SegmentationCommand extends ContainerAwareCommand {
                 // Get the last run time of this task, and calculate when it should run next
                 $lastrun = $segment->getLastrun() ? $segment->getLastrun() : 0;
                 $cron = CronExpression::factory($segment->getCronexpression());
-                $nextrun = $cron->getNextRunDate( $lastrun );
-                if (!$segment->getNextrun() || $segment->getNextrun() <= $now ) {
-                    $segment->setNextrun( $nextrun );
+                $nextrun = $cron->getNextRunDate($lastrun);
+                if (!$segment->getNextrun() || $segment->getNextrun() <= $now) {
+                    $segment->setNextrun($nextrun);
                     $em->persist($segment);
                     $em->flush();
                 }
@@ -96,26 +96,27 @@ class SegmentationCommand extends ContainerAwareCommand {
         $output->writeln('<comment>Done!</comment>');
     }
 
-    private function exportSegment ( $segment, $output ) {
+    private function exportSegment($segment, $output)
+    {
 
         $result = "";
         $query = "";
         $fieldsToDisplayRaw = "";
         $fieldsToDisplay = array();
-        $searchUtils = $this->getContainer()->get ("search.utils");
-        $exportUtils =  $this->getContainer()->get('export_utils');
+        $searchUtils = $this->getContainer()->get("search.utils");
+        $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('logger');
 
-        if($segment->getCode()) {
+        if ($segment->getCode()) {
 
             $segmentation = $this->getContainer()->get('leadsfactory.mkgsegmentation_repository')->find($segment->getSegmentation());
-            $savedSearch = $searchUtils->getKibanaSavedSearch ($segmentation->getQueryCode());
+            $savedSearch = $searchUtils->getKibanaSavedSearch($segmentation->getQueryCode());
             $query = $savedSearch->getQuery();
 
             SegmentUtils::addFilterConfig($query, $segment);
-            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_POST , "/_search", $query );
+            $result = $searchUtils->request(ElasticSearchUtils::$PROTOCOL_POST, "/_search", $query);
 
-            $fieldsToDisplayRaw = implode (";",$savedSearch->getColumns());
+            $fieldsToDisplayRaw = implode(";", $savedSearch->getColumns());
             $fieldsToDisplay = $savedSearch->getColumns();
         }
 
@@ -123,21 +124,21 @@ class SegmentationCommand extends ContainerAwareCommand {
             mkdir("datas/segments");
         }
 
-        $handle = fopen('datas/segments/segment-'.$segment->getId()."-".$segment->getCode().".csv", 'w');
-        fputcsv( $handle, $fieldsToDisplay, ";", "\"", "\\" );
+        $handle = fopen('datas/segments/segment-' . $segment->getId() . "-" . $segment->getCode() . ".csv", 'w');
+        fputcsv($handle, $fieldsToDisplay, ";", "\"", "\\");
         $elements = $result->hits->hits;
 
-        foreach ( $elements as $row)  {
+        foreach ($elements as $row) {
 
             $leadsource = $row->_source;
 
-            $content = array ();
-            foreach ( $fieldsToDisplay as $fied ) {
+            $content = array();
+            foreach ($fieldsToDisplay as $fied) {
 
                 try {
-                    if (trim($fied)!="") {
-                        if (strstr($fied,"content.")) {
-                            $headerrow = str_replace("content.","",$fied);
+                    if (trim($fied) != "") {
+                        if (strstr($fied, "content.")) {
+                            $headerrow = str_replace("content.", "", $fied);
                             $obj = $leadsource->content;
                             $content[] = $obj->$headerrow;
                         } else {
@@ -150,7 +151,7 @@ class SegmentationCommand extends ContainerAwareCommand {
 
             }
 
-            fputcsv( $handle, $content, ";", "\"", "\\" );
+            fputcsv($handle, $content, ";", "\"", "\\");
 
         }
 
@@ -160,9 +161,9 @@ class SegmentationCommand extends ContainerAwareCommand {
 
             $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
 
-            $emails = explode (";", $segment->getEmails());
+            $emails = explode(";", $segment->getEmails());
 
-            foreach ( $emails as $email ) {
+            foreach ($emails as $email) {
                 // Sending email
                 $message = Swift_Message::newInstance()
                     ->setSubject($segment->getConfirmationemailssubjects())
@@ -172,20 +173,19 @@ class SegmentationCommand extends ContainerAwareCommand {
 
 
                 $message->attach(
-                    \Swift_Attachment::fromPath('datas/segments/segment-'.$segment->getId()."-".$segment->getCode().".csv")->setFilename('segment-'.$segment->getId()."-".$segment->getCode().".csv")
+                    \Swift_Attachment::fromPath('datas/segments/segment-' . $segment->getId() . "-" . $segment->getCode() . ".csv")->setFilename('segment-' . $segment->getId() . "-" . $segment->getCode() . ".csv")
                 );
-                try{
-                    $output->writeln ("Sending mail for segment ".$segment->getName()." to ".$email);
-                    $output->writeln('<info>Sending mail for segment '.$segment->getName().' to '.$email.'</info>');
+                try {
+                    $output->writeln("Sending mail for segment " . $segment->getName() . " to " . $email);
+                    $output->writeln('<info>Sending mail for segment ' . $segment->getName() . ' to ' . $email . '</info>');
                     $result = $this->getContainer()->get('mailer')->send($message);
-                }catch(\Exception $e){
-                    $output->writeln ($e->getMessage());
+                } catch (\Exception $e) {
+                    $output->writeln($e->getMessage());
                     $logger->error($e->getMessage());
                 }
             }
 
         }
-
 
 
     }

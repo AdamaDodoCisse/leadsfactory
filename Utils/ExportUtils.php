@@ -1,17 +1,16 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Cron\CronExpression;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
-use Tellaw\LeadsFactoryBundle\Entity\Export;
-use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository;
 use Tellaw\LeadsFactoryBundle\Shared\ExportUtilsShared;
 use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
-use Cron\CronExpression;
-use Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository;
 
-class ExportUtils extends ExportUtilsShared {
+class ExportUtils extends ExportUtilsShared
+{
 
     public static $_EXPORT_NOT_PROCESSED = 0;
     public static $_EXPORT_SUCCESS = 1;

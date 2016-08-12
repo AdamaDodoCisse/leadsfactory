@@ -16,8 +16,7 @@ class TransparentPixelResponse extends Response
      * @var string
      */
     const IMAGE_CONTENT =
-        'R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw=='
-    ;
+        'R0lGODlhAQABAJAAAP8AAAAAACH5BAUQAAAALAAAAAABAAEAAAICBAEAOw==';
 
     /**
      * The response content type

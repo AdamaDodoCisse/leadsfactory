@@ -3,9 +3,6 @@
 namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 
 use Symfony\Component\Config\Definition\Exception\Exception;
-use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
-use Tellaw\LeadsFactoryBundle\Entity\Form;
-use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 /**
@@ -15,7 +12,8 @@ use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
  * This class is a mock built for unit testing and dev ONLY.
  *
  */
-class MockExport extends AbstractMethod{
+class MockExport extends AbstractMethod
+{
 
     public $_expectedResult = null;
 
@@ -28,12 +26,13 @@ class MockExport extends AbstractMethod{
         $this->_expectedResult = $expectedResult;
     }
 
-    public function export($jobs, $form) {
+    public function export($jobs, $form)
+    {
 
         $exportUtils = $this->getContainer()->get('export_utils');
         $logger = $this->getContainer()->get('export.logger');
 
-        $logger->info('Mock Export start : '.$form->getName());
+        $logger->info('Mock Export start : ' . $form->getName());
 
         foreach ($jobs as $job) {
 
@@ -42,16 +41,16 @@ class MockExport extends AbstractMethod{
                 $status = ExportUtils::$_EXPORT_SUCCESS;
                 $log = "Status du mock : Success";
 
-            } else if ( $this->_expectedResult == MockExport::$_EXPORT_ERROR ) {
+            } else if ($this->_expectedResult == MockExport::$_EXPORT_ERROR) {
 
                 //$status = ExportUtils::$_EXPORT_ONE_TRY_ERROR;
                 $status = $exportUtils->getErrorStatus($job);
-                $log = "Status du mock : Error : ".$status;
-                $this->notifyOfExportIssue( $log, $form, $job, $status );
+                $log = "Status du mock : Error : " . $status;
+                $this->notifyOfExportIssue($log, $form, $job, $status);
 
-            } else if ( $this->_expectedResult == MockExport::$_EXPORT_THROW_UNHANDLED_EXCEPTION ) {
+            } else if ($this->_expectedResult == MockExport::$_EXPORT_THROW_UNHANDLED_EXCEPTION) {
 
-                throw new Exception ( "Export Mock demo for Unhandled Exception thrown by export task" );
+                throw new Exception ("Export Mock demo for Unhandled Exception thrown by export task");
                 $log = "Status du mock : Exception!";
 
             }

@@ -14,7 +14,8 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsCommentRepository extends EntityRepository
 {
 
-    public function getCommentsForLead ( $leadId ) {
+    public function getCommentsForLead($leadId)
+    {
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('e')
@@ -30,6 +31,7 @@ class LeadsCommentRepository extends EntityRepository
         } catch (\Exception $e) {
             throw new \Exception ($e);
         }
+
         return $result;
 
     }

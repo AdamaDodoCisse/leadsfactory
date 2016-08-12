@@ -2,25 +2,22 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceList;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListType;
-use Tellaw\LeadsFactoryBundle\Form\Type\ReferenceListElementType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
-use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 use Tellaw\LeadsFactoryBundle\Utils\Messages;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/entity")
@@ -29,7 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
 class EntityReferenceListController extends CoreController
 {
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -39,21 +37,22 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction($page=1, $limit=10, $keyword='')
+    public function indexAction($page = 1, $limit = 10, $keyword = '')
     {
 
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:ReferenceList', $page, $limit, $keyword, array ('user'=>$this->getUser()) );
+        $list = $this->getList('TellawLeadsFactoryBundle:ReferenceList', $page, $limit, $keyword, array('user' => $this->getUser()));
+
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_list.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );
@@ -65,12 +64,12 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function newAction( Request $request )
+    public function newAction(Request $request)
     {
 
         $type = new ReferenceListType();
 
-        $form = $this->createForm(  $type,
+        $form = $this->createForm($type,
             null,
             array(
                 'method' => 'POST'
@@ -89,9 +88,9 @@ class EntityReferenceListController extends CoreController
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Création d'une liste de référence",
-                                                                                                    'refernceListId' => '-1'));
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_new.html.twig', array('form' => $form->createView(),
+            'title' => "Création d'une liste de référence",
+            'refernceListId' => '-1'));
     }
 
     /**
@@ -99,20 +98,21 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Method("GET")
      */
-    public function buildfileAction ( $id ) {
+    public function buildfileAction($id)
+    {
 
-        $fileName = '../datas/json-lists/'.$id.'.json';
+        $fileName = '../datas/json-lists/' . $id . '.json';
         $fs = new Filesystem();
         $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find($id);
-        $referingLists = $this->get("lf.utils")->getListOfLists( $id );
+        $referingLists = $this->get("lf.utils")->getListOfLists($id);
         $json = $formData->getJson($referingLists);
 
-        $fs->dumpFile( $fileName , $json);
+        $fs->dumpFile($fileName, $json);
 
         $messagesUtils = $this->container->get("messages.utils");
-        $messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été généré avec succès : ".$fileName );
+        $messagesUtils->pushMessage(Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été généré avec succès : " . $fileName);
 
-        return new Response("ok",200,array('Content-Type'=>'text/plain'));
+        return new Response("ok", 200, array('Content-Type' => 'text/plain'));
 
     }
 
@@ -121,18 +121,19 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Method("GET")
      */
-    public function importfileAction ( $id ) {
+    public function importfileAction($id)
+    {
 
-        $fileName = '../datas/json-lists/'.$id.'.json';
+        $fileName = '../datas/json-lists/' . $id . '.json';
 
-        $content = implode ('', file ( $fileName ));
+        $content = implode('', file($fileName));
 
-        $this->get("lf.utils")->updateListElements( $jsonElements );
+        $this->get("lf.utils")->updateListElements($jsonElements);
 
         $messagesUtils = $this->container->get("messages.utils");
-        $messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été importé avec succès : ".$fileName );
+        $messagesUtils->pushMessage(Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été importé avec succès : " . $fileName);
 
-        return new Response("ok",200,array('Content-Type'=>'text/plain'));
+        return new Response("ok", 200, array('Content-Type' => 'text/plain'));
 
     }
 
@@ -141,7 +142,7 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction( Request $request, $id )
+    public function editAction(Request $request, $id)
     {
 
         /**
@@ -153,11 +154,11 @@ class EntityReferenceListController extends CoreController
 
         $type = new ReferenceListType();
 
-        $form = $this->createForm(  $type,
-                                    $formData,
-                                    array(
-                                        'method' => 'POST'
-                                    )
+        $form = $this->createForm($type,
+            $formData,
+            array(
+                'method' => 'POST'
+            )
         );
 
         $form->handleRequest($request);
@@ -186,6 +187,7 @@ class EntityReferenceListController extends CoreController
                 $this->get("lf.utils")->updateListElements( $jsonElements );
             }
 */
+
             return $this->redirect($this->generateUrl('_referenceList_list'));
         }
 
@@ -196,10 +198,10 @@ class EntityReferenceListController extends CoreController
         $formData->getElements();
 
         return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_edit.html.twig',
-                                array(  'form' => $form->createView(),
-                                        'elements'=> $formData->getElements(),
-                                        'title' => "Edition d'une liste de référence",
-                                        'referenceListId' => $id));
+            array('form' => $form->createView(),
+                'elements' => $formData->getElements(),
+                'title' => "Edition d'une liste de référence",
+                'referenceListId' => $id));
 
     }
 
@@ -209,7 +211,8 @@ class EntityReferenceListController extends CoreController
      * @Method("GET")
      * @Template()
      */
-    public function deleteAction ( $id ) {
+    public function deleteAction($id)
+    {
 
         /**
          * This is the deletion action
@@ -224,9 +227,10 @@ class EntityReferenceListController extends CoreController
 
     }
 
-    private function saveJsonFeed ( $json ) {
+    private function saveJsonFeed($json)
+    {
 
-        $elements = json_decode ( $json, true );
+        $elements = json_decode($json, true);
 
         foreach ($elements as $element) {
 
@@ -240,17 +244,17 @@ class EntityReferenceListController extends CoreController
      * @Method("GET")
      * @Template()
      */
-    public function deleteElementAction ( Request $request, $id, $referenceListId ) {
+    public function deleteElementAction(Request $request, $id, $referenceListId)
+    {
 
         $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($id);
-
 
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('_referenceList_edit', array ('id' => $referenceListId)));
+        return $this->redirect($this->generateUrl('_referenceList_edit', array('id' => $referenceListId)));
 
     }
 
@@ -259,8 +263,9 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function addElementWidgetAction (Request $request, $referenceListId) {
-        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:modal.html.twig', array ("referenceListId" => $referenceListId));
+    public function addElementWidgetAction(Request $request, $referenceListId)
+    {
+        return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:modal.html.twig', array("referenceListId" => $referenceListId));
     }
 
     /**
@@ -268,7 +273,8 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function saveElementAction ( Request $request ) {
+    public function saveElementAction(Request $request)
+    {
 
         $name = $request->request->get('name');
         $value = $request->request->get('value');
@@ -276,7 +282,7 @@ class EntityReferenceListController extends CoreController
         $referenceListId = $request->request->get('referenceListId');
 
         // Valid datas
-        if ( trim ($name) == "" || trim ($value) == "" || trim ($referenceListId) == "" ) {
+        if (trim($name) == "" || trim($value) == "" || trim($referenceListId) == "") {
             // Error, forward back to form with error message
         }
 
@@ -284,10 +290,10 @@ class EntityReferenceListController extends CoreController
         $referenceList = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->find($referenceListId);
 
         $referenceListElement = new ReferenceListElement();
-        $referenceListElement->setName( $name );
-        $referenceListElement->setValue( $value );
-        $referenceListElement->setReferenceList( $referenceList );
-        $referenceList->getElements()->add ( $referenceListElement );
+        $referenceListElement->setName($name);
+        $referenceListElement->setValue($value);
+        $referenceListElement->setReferenceList($referenceList);
+        $referenceList->getElements()->add($referenceListElement);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($referenceListElement);
@@ -295,7 +301,7 @@ class EntityReferenceListController extends CoreController
         $em->flush();
 
         // Forward request to list controller
-        return $this->redirect($this->generateUrl('_referenceList_edit', array ('id' => $referenceListId)));
+        return $this->redirect($this->generateUrl('_referenceList_edit', array('id' => $referenceListId)));
 
     }
 
@@ -303,16 +309,17 @@ class EntityReferenceListController extends CoreController
      * @Route("/referenceList/sortElements", name="_referenceList_sortElements")
      * @Secure(roles="ROLE_USER")
      */
-    public function sortElementsAjaxAction ( Request $request ) {
+    public function sortElementsAjaxAction(Request $request)
+    {
 
         $elements = $request->request->get("element");
         $rank = 0;
 
         $em = $this->getDoctrine()->getManager();
 
-        foreach ( $elements as $element ){
+        foreach ($elements as $element) {
 
-            $rank = $rank +10;
+            $rank = $rank + 10;
             $element = $this->get('leadsfactory.reference_list_element_repository')->find($element);
             $element->setRank($rank);
             $em->flush();
@@ -327,7 +334,8 @@ class EntityReferenceListController extends CoreController
      * @Route("/referenceList/updateElement", name="_referenceList_updateElement")
      * @Secure(roles="ROLE_USER")
      */
-    public function updateElementAjaxAction ( Request $request ) {
+    public function updateElementAjaxAction(Request $request)
+    {
 
         $listId = $request->request->get("listid");
         $id = $request->request->get("id");
@@ -339,9 +347,9 @@ class EntityReferenceListController extends CoreController
             //var_dump("update");
             $em = $this->getDoctrine()->getManager();
             $element = $this->get('leadsfactory.reference_list_element_repository')->find($id);
-            $element->setName( $text );
-            $element->setValue ( $value );
-            $element->setStatus ( $enabled );
+            $element->setName($text);
+            $element->setValue($value);
+            $element->setStatus($enabled);
             $em->flush();
 
         } else {
@@ -350,13 +358,14 @@ class EntityReferenceListController extends CoreController
             $em = $this->getDoctrine()->getManager();
             $element = new ReferenceListElement();
             $element->setReferenceList($list);
-            $element->setName( $text );
-            $element->setValue ( $value );
-            $element->setStatus ( $enabled );
+            $element->setName($text);
+            $element->setValue($value);
+            $element->setStatus($enabled);
             $em->persist($element);
             //var_dump($element);
             $em->flush();
         }
+
         //var_dump($element);
         return new Response('Enregistré');
     }
@@ -365,18 +374,20 @@ class EntityReferenceListController extends CoreController
      * @Route("/referenceList/loadElement", name="_referenceList_loadElement")
      * @Secure(roles="ROLE_USER")
      */
-    public function loadElementAjaxAction ( Request $request ) {
+    public function loadElementAjaxAction(Request $request)
+    {
 
         $id = $request->request->get("id");
 
         if (trim($id) != "" && $id != 0) {
             $element = $this->get('leadsfactory.reference_list_element_repository')->find($id);
-            $response = array ();
+            $response = array();
             $response["id"] = $id;
             $response["name"] = $element->getName();
             $response["objvalue"] = $element->getValue();
             $response["enabled"] = $element->getStatus();
-            return new Response ( json_encode($response) );
+
+            return new Response (json_encode($response));
         }
 
         return null;
@@ -388,12 +399,13 @@ class EntityReferenceListController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template
      */
-    public function loadElementsTableAjaxAction ( Request $request ) {
+    public function loadElementsTableAjaxAction(Request $request)
+    {
 
         $listId = $request->request->get("listid");
 
         if (trim($listId) != "" && $listId != 0) {
-            $elements = $this->get('leadsfactory.reference_list_repository')->getElementsByOrder( $listId, "rank", "ASC", true );
+            $elements = $this->get('leadsfactory.reference_list_repository')->getElementsByOrder($listId, "rank", "ASC", true);
         } else {
             $list = new ReferenceList();
             $elements = $list->getElements();
@@ -401,7 +413,7 @@ class EntityReferenceListController extends CoreController
 
         return $this->render('TellawLeadsFactoryBundle:entity/ReferenceList:entity_referenceList_elements.html.twig',
             array(
-                'elements'=> $elements ));
+                'elements' => $elements));
     }
 
 }

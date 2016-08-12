@@ -11,15 +11,18 @@ class UsersCreationType extends AbstractType
 
     private $entity = "users";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
@@ -32,20 +35,20 @@ class UsersCreationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder->add('firstname',null, array("required" => true));
-        $builder->add('lastname',null, array("required" => true));
-        $builder->add('login',null, array("required" => true));
-        $builder->add('password', 'password', array ("label" => "mot de passe", "required" => true));
+        $builder->add('firstname', null, array("required" => true));
+        $builder->add('lastname', null, array("required" => true));
+        $builder->add('login', null, array("required" => true));
+        $builder->add('password', 'password', array("label" => "mot de passe", "required" => true));
 
         $builder->add('role', 'choice', array(
-            'choices'  =>  Users::$_ROLES,
-            'label' => "Rôle",
-            'required' => false
+                'choices' => Users::$_ROLES,
+                'label' => "Rôle",
+                'required' => false
             )
         );
 
         $builder->add('scope');
-        $builder->add('email',null, array("required" => true));
+        $builder->add('email', null, array("required" => true));
 
         $builder->add('save', 'submit');
 

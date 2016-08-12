@@ -25,18 +25,18 @@ class Messages
     public function pushMessage($messageType, $messageTitle, $messageContent)
     {
         if ($this->session->has(Messages::$_MESSAGES_POOL_NAME)) {
-            $poolOfMessages = $this->session->get ( Messages::$_MESSAGES_POOL_NAME );
+            $poolOfMessages = $this->session->get(Messages::$_MESSAGES_POOL_NAME);
         } else {
             $poolOfMessages = array();
         }
 
-        $poolOfMessages[] = array (
+        $poolOfMessages[] = array(
             "type" => $messageType,
             "title" => $messageTitle,
             "message" => $messageContent
         );
 
-        $this->session->set ( Messages::$_MESSAGES_POOL_NAME, $poolOfMessages );
+        $this->session->set(Messages::$_MESSAGES_POOL_NAME, $poolOfMessages);
     }
 
     public function pullMessages($parentRoute = null)

@@ -20,32 +20,32 @@ class PersonRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         //Get User scope
         $user = $params["user"];
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select ('f');
-        $qb->from ('TellawLeadsFactoryBundle:Person', 'f');
+        $qb->select('f');
+        $qb->from('TellawLeadsFactoryBundle:Person', 'f');
 
         if ($user->getScope() != null) {
-            $qb->where ('f.scope = :scope');
-            $qb->setParameter ('scope',$user->getScope() );
+            $qb->where('f.scope = :scope');
+            $qb->setParameter('scope', $user->getScope());
         }
 
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
 
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                $qb->where ('f.lastname LIKE :keyword');
-                $qb->where ('f.firstname LIKE :keyword');
-                $qb->setParameter ('keyword','%'.$keyword.'%' );
+            foreach ($keywords as $key => $keyword) {
+                $qb->where('f.lastname LIKE :keyword');
+                $qb->where('f.firstname LIKE :keyword');
+                $qb->setParameter('keyword', '%' . $keyword . '%');
             }
         }
 
-        $qb->setFirstResult(($page-1) * $limit);
+        $qb->setFirstResult(($page - 1) * $limit);
         $qb->setMaxResults($limit);
 
         return new Paginator($qb);

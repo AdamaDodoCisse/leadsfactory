@@ -12,7 +12,8 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class StatusHistoryUtilsShared  implements ContainerAwareInterface {
+class StatusHistoryUtilsShared implements ContainerAwareInterface
+{
 
     /**
      * @var ContainerInterface
@@ -27,7 +28,7 @@ class StatusHistoryUtilsShared  implements ContainerAwareInterface {
     /**
      * @param ContainerInterface $container
      */
-    public function setContainer (ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
@@ -46,7 +47,8 @@ class StatusHistoryUtilsShared  implements ContainerAwareInterface {
      * Method used to find the last monitored status for monitor.
      * Method will find last recorded status using a date MAX.
      */
-    public function getCurrentStatusForMonitor ( $monitorId ) {
+    public function getCurrentStatusForMonitor($monitorId)
+    {
 
 
     }
@@ -55,10 +57,10 @@ class StatusHistoryUtilsShared  implements ContainerAwareInterface {
      * @param $monitorId
      * This method will return a duration about the current status of a monitor.
      */
-    public function getActualStatusDurationForMonitor ( $monitorId ) {
+    public function getActualStatusDurationForMonitor($monitorId)
+    {
 
     }
-
 
 
 }

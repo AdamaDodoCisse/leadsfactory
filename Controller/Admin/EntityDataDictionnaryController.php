@@ -2,23 +2,22 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryElement;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceList;
 use Tellaw\LeadsFactoryBundle\Form\Type\DataDictionnaryType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 use Tellaw\LeadsFactoryBundle\Utils\Messages;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Route("/entity")
@@ -27,7 +26,8 @@ use Symfony\Component\HttpFoundation\Response;
 class EntityDataDictionnaryController extends CoreController
 {
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -37,21 +37,22 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction($page=1, $limit=10, $keyword='')
+    public function indexAction($page = 1, $limit = 10, $keyword = '')
     {
 
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:DataDictionnary', $page, $limit, $keyword, array ('user'=>$this->getUser()) );
+        $list = $this->getList('TellawLeadsFactoryBundle:DataDictionnary', $page, $limit, $keyword, array('user' => $this->getUser()));
+
         //$forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findAll();
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/DataDictionnary:entity_referenceList_list.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );
@@ -63,12 +64,12 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function newAction( Request $request )
+    public function newAction(Request $request)
     {
 
         $type = new DataDictionnaryType();
 
-        $form = $this->createForm(  $type,
+        $form = $this->createForm($type,
             null,
             array(
                 'method' => 'POST'
@@ -87,9 +88,9 @@ class EntityDataDictionnaryController extends CoreController
             return $this->redirect($this->generateUrl('_dataDictionnary_list'));
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/DataDictionnary:entity_referenceList_new.html.twig', array(  'form' => $form->createView(),
-                                                                                                    'title' => "Création d'un dictionnaire",
-                                                                                                    'refernceListId' => '-1'));
+        return $this->render('TellawLeadsFactoryBundle:entity/DataDictionnary:entity_referenceList_new.html.twig', array('form' => $form->createView(),
+            'title' => "Création d'un dictionnaire",
+            'refernceListId' => '-1'));
     }
 
     /**
@@ -97,20 +98,21 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Method("GET")
      */
-    public function buildfileAction ( $id ) {
+    public function buildfileAction($id)
+    {
 
-        $fileName = '../datas/json-lists/'.$id.'.json';
+        $fileName = '../datas/json-lists/' . $id . '.json';
         $fs = new Filesystem();
         $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:DataDictionnary')->find($id);
-        $referingLists = $this->get("lf.utils")->getListOfLists( $id );
+        $referingLists = $this->get("lf.utils")->getListOfLists($id);
         $json = $formData->getJson($referingLists);
 
-        $fs->dumpFile( $fileName , $json);
+        $fs->dumpFile($fileName, $json);
 
         $messagesUtils = $this->container->get("messages.utils");
-        $messagesUtils->pushMessage( Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été généré avec succès : ".$fileName );
+        $messagesUtils->pushMessage(Messages::$_TYPE_SUCCESS, "Liste de référence", "Le fichier à été généré avec succès : " . $fileName);
 
-        return new Response("ok",200,array('Content-Type'=>'text/plain'));
+        return new Response("ok", 200, array('Content-Type' => 'text/plain'));
 
     }
 
@@ -119,7 +121,7 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction( Request $request, $id )
+    public function editAction(Request $request, $id)
     {
 
         /**
@@ -131,11 +133,11 @@ class EntityDataDictionnaryController extends CoreController
 
         $type = new DataDictionnaryType();
 
-        $form = $this->createForm(  $type,
-                                    $formData,
-                                    array(
-                                        'method' => 'POST'
-                                    )
+        $form = $this->createForm($type,
+            $formData,
+            array(
+                'method' => 'POST'
+            )
         );
 
         $form->handleRequest($request);
@@ -151,10 +153,10 @@ class EntityDataDictionnaryController extends CoreController
         $formData->getElements();
 
         return $this->render('TellawLeadsFactoryBundle:entity/DataDictionnary:entity_referenceList_edit.html.twig',
-                                array(  'form' => $form->createView(),
-                                        'elements'=> $formData->getElements(),
-                                        'title' => "Edition d'un dictionnaire",
-                                        'referenceListId' => $id));
+            array('form' => $form->createView(),
+                'elements' => $formData->getElements(),
+                'title' => "Edition d'un dictionnaire",
+                'referenceListId' => $id));
 
     }
 
@@ -164,7 +166,8 @@ class EntityDataDictionnaryController extends CoreController
      * @Method("GET")
      * @Template()
      */
-    public function deleteAction ( $id ) {
+    public function deleteAction($id)
+    {
 
         /**
          * This is the deletion action
@@ -179,9 +182,10 @@ class EntityDataDictionnaryController extends CoreController
 
     }
 
-    private function saveJsonFeed ( $json ) {
+    private function saveJsonFeed($json)
+    {
 
-        $elements = json_decode ( $json, true );
+        $elements = json_decode($json, true);
 
         foreach ($elements as $element) {
 
@@ -195,17 +199,17 @@ class EntityDataDictionnaryController extends CoreController
      * @Method("GET")
      * @Template()
      */
-    public function deleteElementAction ( Request $request, $id, $dataDictionnaryId ) {
+    public function deleteElementAction(Request $request, $id, $dataDictionnaryId)
+    {
 
         $object = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:DataDictionnaryElement')->find($id);
-
 
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($object);
         $em->flush();
 
-        return $this->redirect($this->generateUrl('_dataDictionnary_edit', array ('id' => $dataDictionnaryId)));
+        return $this->redirect($this->generateUrl('_dataDictionnary_edit', array('id' => $dataDictionnaryId)));
 
     }
 
@@ -214,8 +218,9 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function addElementWidgetAction (Request $request, $dataDictionnaryId) {
-        return $this->render('TellawLeadsFactoryBundle:entity/DataDictionnary:modal.html.twig', array ("referenceListId" => $dataDictionnaryId));
+    public function addElementWidgetAction(Request $request, $dataDictionnaryId)
+    {
+        return $this->render('TellawLeadsFactoryBundle:entity/DataDictionnary:modal.html.twig', array("referenceListId" => $dataDictionnaryId));
     }
 
     /**
@@ -223,7 +228,8 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function saveElementAction ( Request $request ) {
+    public function saveElementAction(Request $request)
+    {
 
         $name = $request->request->get('name');
         $value = $request->request->get('value');
@@ -231,7 +237,7 @@ class EntityDataDictionnaryController extends CoreController
         $dataDictionnaryId = $request->request->get('dataDictionnaryId');
 
         // Valid datas
-        if ( trim ($name) == "" || trim ($value) == "" || trim ($dataDictionnaryId) == "" ) {
+        if (trim($name) == "" || trim($value) == "" || trim($dataDictionnaryId) == "") {
             // Error, forward back to form with error message
         }
 
@@ -239,10 +245,10 @@ class EntityDataDictionnaryController extends CoreController
         $dataDictionnary = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:DataDictionnary')->find($dataDictionnaryId);
 
         $element = new DataDictionnaryElement();
-        $element->setName( $name );
-        $element->setValue( $value );
-        $element->setDataDictionnary( $dataDictionnary );
-        $dataDictionnary->getElements()->add ( $element );
+        $element->setName($name);
+        $element->setValue($value);
+        $element->setDataDictionnary($dataDictionnary);
+        $dataDictionnary->getElements()->add($element);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($element);
@@ -250,7 +256,7 @@ class EntityDataDictionnaryController extends CoreController
         $em->flush();
 
         // Forward request to list controller
-        return $this->redirect($this->generateUrl('_dataDictionnary_edit', array ('id' => $dataDictionnaryId)));
+        return $this->redirect($this->generateUrl('_dataDictionnary_edit', array('id' => $dataDictionnaryId)));
 
     }
 
@@ -258,15 +264,16 @@ class EntityDataDictionnaryController extends CoreController
      * @Route("/dataDictionnary/sortElements", name="_dataDictionnary_sortElements")
      * @Secure(roles="ROLE_USER")
      */
-    public function sortElementsAjaxAction ( Request $request ) {
+    public function sortElementsAjaxAction(Request $request)
+    {
 
         $elements = $request->request->get("element");
         $rank = 0;
 
         $em = $this->getDoctrine()->getManager();
 
-        foreach ( $elements as $element ){
-            $rank = $rank +10;
+        foreach ($elements as $element) {
+            $rank = $rank + 10;
             $element = $this->get('leadsfactory.datadictionnary_element_repository')->find($element);
             $element->setRank($rank);
             $em->flush();
@@ -281,7 +288,8 @@ class EntityDataDictionnaryController extends CoreController
      * @Route("/dataDictionnary/updateElement", name="_dataDictionnary_updateElement")
      * @Secure(roles="ROLE_USER")
      */
-    public function updateElementAjaxAction ( Request $request ) {
+    public function updateElementAjaxAction(Request $request)
+    {
 
         $listId = $request->request->get("listid");
         $id = $request->request->get("id");
@@ -293,9 +301,9 @@ class EntityDataDictionnaryController extends CoreController
             //var_dump("update");
             $em = $this->getDoctrine()->getManager();
             $element = $this->get('leadsfactory.datadictionnary_element_repository')->find($id);
-            $element->setName( $text );
-            $element->setValue ( $value );
-            $element->setStatus ( $enabled );
+            $element->setName($text);
+            $element->setValue($value);
+            $element->setStatus($enabled);
             $em->flush();
 
         } else {
@@ -304,13 +312,14 @@ class EntityDataDictionnaryController extends CoreController
             $em = $this->getDoctrine()->getManager();
             $element = new DataDictionnaryElement();
             $element->setDataDictionnary($dictionnary);
-            $element->setName( $text );
-            $element->setValue ( $value );
-            $element->setStatus ( $enabled );
+            $element->setName($text);
+            $element->setValue($value);
+            $element->setStatus($enabled);
             $em->persist($element);
             //var_dump($element);
             $em->flush();
         }
+
         //var_dump($element);
         return new Response('Enregistré');
     }
@@ -319,18 +328,20 @@ class EntityDataDictionnaryController extends CoreController
      * @Route("/dataDictionnary/loadElement", name="_dataDictionnary_loadElement")
      * @Secure(roles="ROLE_USER")
      */
-    public function loadElementAjaxAction ( Request $request ) {
+    public function loadElementAjaxAction(Request $request)
+    {
 
         $id = $request->request->get("id");
 
         if (trim($id) != "" && $id != 0) {
             $element = $this->get('leadsfactory.datadictionnary_element_repository')->find($id);
-            $response = array ();
+            $response = array();
             $response["id"] = $id;
             $response["name"] = $element->getName();
             $response["objvalue"] = $element->getValue();
             $response["enabled"] = $element->getStatus();
-            return new Response ( json_encode($response) );
+
+            return new Response (json_encode($response));
         }
 
         return null;
@@ -342,12 +353,13 @@ class EntityDataDictionnaryController extends CoreController
      * @Secure(roles="ROLE_USER")
      * @Template
      */
-    public function loadElementsTableAjaxAction ( Request $request ) {
+    public function loadElementsTableAjaxAction(Request $request)
+    {
 
         $listId = $request->request->get("listid");
 
         if (trim($listId) != "" && $listId != 0) {
-            $elements = $this->get('leadsfactory.datadictionnary_repository')->getElementsByOrder( $listId, "rank", "ASC", true );
+            $elements = $this->get('leadsfactory.datadictionnary_repository')->getElementsByOrder($listId, "rank", "ASC", true);
         } else {
             $list = new ReferenceList();
             $elements = $list->getElements();
@@ -355,7 +367,7 @@ class EntityDataDictionnaryController extends CoreController
 
         return $this->render('TellawLeadsFactoryBundle:entity/DataDictionnary:entity_referenceList_elements.html.twig',
             array(
-                'elements'=> $elements ));
+                'elements' => $elements));
     }
 
 }

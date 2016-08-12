@@ -20,34 +20,36 @@ class ScopeRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         $dql = 'SELECT s FROM TellawLeadsFactoryBundle:Scope s';
 
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
             $where = ' WHERE';
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                if($key>0)
+            foreach ($keywords as $key => $keyword) {
+                if ($key > 0)
                     $where .= ' AND';
-                $where .= " s.name LIKE '%".$keyword."%' OR s.code LIKE '%".$keyword."%'";
+                $where .= " s.name LIKE '%" . $keyword . "%' OR s.code LIKE '%" . $keyword . "%'";
             }
             $dql .= $where;
         }
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
+            ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
 
         return new Paginator($query);
     }
 
-    public function getAll() {
+    public function getAll()
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('s')
             ->from('TellawLeadsFactoryBundle:Scope', 's');
+
         return $qb->getQuery()->getScalarResult();
     }
 

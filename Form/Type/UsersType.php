@@ -11,15 +11,18 @@ class UsersType extends AbstractType
 
     private $entity = "users";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
@@ -38,9 +41,9 @@ class UsersType extends AbstractType
         // $builder->add('password', 'password', array ("label" => "mot de passe", "required" => false));
 
         $builder->add('role', 'choice', array(
-            'choices'  =>  Users::$_ROLES,
-            'label' => "Rôle",
-            'required' => false
+                'choices' => Users::$_ROLES,
+                'label' => "Rôle",
+                'required' => false
             )
         );
 

@@ -2,15 +2,14 @@
 
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\Form;
-use Tellaw\LeadsFactoryBundle\Entity\Leads;
-use Tellaw\LeadsFactoryBundle\Entity\Tracking;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Tellaw\LeadsFactoryBundle\Shared\ChartShared;
 
-class Chart extends ChartShared {
+class Chart extends ChartShared
+{
 
     const DEBUG_MODE = false;
 
@@ -33,7 +32,7 @@ class Chart extends ChartShared {
      * @var array
      */
     protected $period_interval = array(
-        self::PERIOD_YEAR  => 'P1Y',
+        self::PERIOD_YEAR => 'P1Y',
         self::PERIOD_MONTH => 'P1M'
     );
 
@@ -62,7 +61,8 @@ class Chart extends ChartShared {
     protected $minDate = null;
     protected $maxDate = null;
 
-    public function __construct () {
+    public function __construct()
+    {
     }
 
     /**
@@ -70,7 +70,7 @@ class Chart extends ChartShared {
      */
     protected $container;
 
-    public function setContainer (ContainerInterface $container)
+    public function setContainer(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -91,11 +91,11 @@ class Chart extends ChartShared {
     {
         $i = 0;
         foreach ($this->container->getParameter('leadsfactory.internal_email_patterns') as $pattern) {
-            $qb->andWhere('l.email not like :pattern_'.$i)
-               ->setParameter('pattern_'.$i, $pattern)
-            ;
+            $qb->andWhere('l.email not like :pattern_' . $i)
+                ->setParameter('pattern_' . $i, $pattern);
             ++$i;
         }
+
         return $qb;
     }
 
@@ -107,10 +107,10 @@ class Chart extends ChartShared {
     public function loadChartData()
     {
 
-        if(!empty($this->form)){
+        if (!empty($this->form)) {
             // Loads datas from forms in array FORM
             $data = $this->_loadLeadsDataByForm();
-        }else{
+        } else {
             if (!empty($this->formType) && count($this->formType) > 1) {
                 $data = $this->_loadLeadsDataByTypes();
             } else {

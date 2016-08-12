@@ -19,7 +19,7 @@ class StatusHistoryScheduler implements IScheduledJob
 
     public function getCommands()
     {
-        return array ('leadsfactory:statusHistory:update');
+        return array('leadsfactory:statusHistory:update');
     }
 
     public function getEnabled()

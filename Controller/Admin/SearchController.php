@@ -2,35 +2,34 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Symfony\Component\Process\Process;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
-use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
-use Symfony\Component\Process\Process;
 use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
  * @Route("/search")
  */
-class SearchController extends CoreController {
+class SearchController extends CoreController
+{
 
     public static $_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE = "SEARCH_URL_AND_PORT_ELASTICSEARCH";
 
-    public function __construct () {
+    public function __construct()
+    {
 
-        PreferencesUtils::registerKey( ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE,
+        PreferencesUtils::registerKey(ElasticSearchUtils::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE,
             "Url to elastic search",
-            PreferencesUtils::$_PRIORITY_REQUIRED );
+            PreferencesUtils::$_PRIORITY_REQUIRED);
 
         parent::__construct();
     }
@@ -43,29 +42,29 @@ class SearchController extends CoreController {
     public function indexAction()
     {
 
-        $preferences = $this->get ("preferences_utils");
-        $searchEngineUrlAndPort = $preferences->getUserPreferenceByKey ( SearchController::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE );
+        $preferences = $this->get("preferences_utils");
+        $searchEngineUrlAndPort = $preferences->getUserPreferenceByKey(SearchController::$_SEARCH_URL_AND_PORT_ELASTICSEARCH_PREFERENCE);
 
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
         $request = '';
-        $response = $this->get("search.utils")->request ( ElasticSearchUtils::$PROTOCOL_GET , $request );
+        $response = $this->get("search.utils")->request(ElasticSearchUtils::$PROTOCOL_GET, $request);
 
-        if (!is_object($response)){
+        if (!is_object($response)) {
             $status = false;
         } else {
             $status = true;
         }
 
         if (is_null($response) != "") {
-            $response = json_decode( $response );
+            $response = json_decode($response);
         }
 
         return $this->render(
-	        'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
-            array (
+            'TellawLeadsFactoryBundle:Search:search_configuration.html.twig',
+            array(
                 'elasticResponse' => $response,
                 'status' => $status,
                 'searchEngineUrl' => $searchEngineUrlAndPort
@@ -74,37 +73,39 @@ class SearchController extends CoreController {
 
     }
 
-    protected function prettyPrint( $json )
+    protected function prettyPrint($json)
     {
         $result = '';
         $level = 0;
         $in_quotes = false;
         $in_escape = false;
         $ends_line_level = NULL;
-        $json_length = strlen( $json );
+        $json_length = strlen($json);
 
-        for( $i = 0; $i < $json_length; $i++ ) {
+        for ($i = 0; $i < $json_length; $i++) {
             $char = $json[$i];
             $new_line_level = NULL;
             $post = "";
-            if( $ends_line_level !== NULL ) {
+            if ($ends_line_level !== NULL) {
                 $new_line_level = $ends_line_level;
                 $ends_line_level = NULL;
             }
-            if ( $in_escape ) {
+            if ($in_escape) {
                 $in_escape = false;
-            } else if( $char === '"' ) {
+            } else if ($char === '"') {
                 $in_quotes = !$in_quotes;
-            } else if( ! $in_quotes ) {
-                switch( $char ) {
-                    case '}': case ']':
-                    $level--;
-                    $ends_line_level = NULL;
-                    $new_line_level = $level;
-                    break;
+            } else if (!$in_quotes) {
+                switch ($char) {
+                    case '}':
+                    case ']':
+                        $level--;
+                        $ends_line_level = NULL;
+                        $new_line_level = $level;
+                        break;
 
-                    case '{': case '[':
-                    $level++;
+                    case '{':
+                    case '[':
+                        $level++;
                     case ',':
                         $ends_line_level = $level;
                         break;
@@ -113,19 +114,22 @@ class SearchController extends CoreController {
                         $post = " ";
                         break;
 
-                    case " ": case "\t": case "\n": case "\r":
-                    $char = "";
-                    $ends_line_level = $new_line_level;
-                    $new_line_level = NULL;
-                    break;
+                    case " ":
+                    case "\t":
+                    case "\n":
+                    case "\r":
+                        $char = "";
+                        $ends_line_level = $new_line_level;
+                        $new_line_level = NULL;
+                        break;
                 }
-            } else if ( $char === '\\' ) {
+            } else if ($char === '\\') {
                 $in_escape = true;
             }
-            if( $new_line_level !== NULL ) {
-                $result .= "\n".str_repeat( "\t", $new_line_level );
+            if ($new_line_level !== NULL) {
+                $result .= "\n" . str_repeat("\t", $new_line_level);
             }
-            $result .= $char.$post;
+            $result .= $char . $post;
         }
 
         return $result;
@@ -135,14 +139,15 @@ class SearchController extends CoreController {
      * @Route("/deleteIndex", name="_search_delete_index")
      * @Secure(roles="ROLE_USER")
      */
-    public function deleteIndexAction () {
+    public function deleteIndexAction()
+    {
 
         $sr = $this->get('leadsfactory.scope_repository');
         $scope_list = $sr->getAll();
 
         $request = '/leadsfactory-*';
         $searchUtils = $this->get("search.utils");
-        $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_DELETE , $request );
+        $result = $searchUtils->request(ElasticSearchUtils::$PROTOCOL_DELETE, $request);
 
         return $this->redirect($this->generateUrl('_search_config'));
 
@@ -152,16 +157,19 @@ class SearchController extends CoreController {
      * @Route("/createIndex", name="_search_create_index")
      * @Secure(roles="ROLE_USER")
      */
-    public function createIndexAction () {
+    public function createIndexAction()
+    {
 
         $this->createLeadsIndex();
+
         return $this->redirect($this->generateUrl('_search_config'));
 
     }
 
-    private function createLeadsIndex () {
+    private function createLeadsIndex()
+    {
 
-        $parameters =    '{
+        $parameters = '{
                         "mappings": {
                             "leads": {
                                 "dynamic":      true,
@@ -237,9 +245,9 @@ class SearchController extends CoreController {
 
         foreach ($scope_list as $scope) {
 
-            $request = '/leadsfactory-'.$scope['s_code'];
+            $request = '/leadsfactory-' . $scope['s_code'];
             $searchUtils = $this->get("search.utils");
-            $result = $searchUtils->request ( ElasticSearchUtils::$PROTOCOL_PUT , $request, $parameters );
+            $result = $searchUtils->request(ElasticSearchUtils::$PROTOCOL_PUT, $request, $parameters);
 
         }
 

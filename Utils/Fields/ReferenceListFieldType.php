@@ -1,8 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
-
 /**
  * Field of type ReferenceList will be identified by the type <b>reference-list</b> and will be used to display content of a reference list.
  *
@@ -24,11 +22,11 @@ class ReferenceListFieldType extends AbstractFieldType
      * @param Object $tag Tag object
      * @return string Html Content formatted
      */
-    public function renderToHtml ( $tag )
+    public function renderToHtml($tag)
     {
         $displayMode = isset($tag['attributes']['display']) ? $tag['attributes']['display'] : $this->_defaultDisplay;
 
-        switch($displayMode){
+        switch ($displayMode) {
             case 'select':
                 return $this->_getSelectHtml($tag);
             case 'checkbox':
@@ -49,18 +47,19 @@ class ReferenceListFieldType extends AbstractFieldType
     private function _getSelectHtml($tag)
     {
         $id = $tag['attributes']['id'];
-        $name = isset($tag['attributes']['multiple']) ? 'lffield['.$id.'][]' : 'lffield['.$id.']';
+        $name = isset($tag['attributes']['multiple']) ? 'lffield[' . $id . '][]' : 'lffield[' . $id . ']';
         $optionsHtml = '';
 
-        if(isset($tag['attributes']['data-default']))
-            $optionsHtml = '<option value="">'.$tag['attributes']['data-default'].'</option>';
+        if (isset($tag['attributes']['data-default']))
+            $optionsHtml = '<option value="">' . $tag['attributes']['data-default'] . '</option>';
 
-        if(isset($tag['options'])){
-            foreach($tag['options'] as $option){
-                $optionsHtml .= '<option value="'.$option->getValue().'">'.$option->getName().'</option>';
+        if (isset($tag['options'])) {
+            foreach ($tag['options'] as $option) {
+                $optionsHtml .= '<option value="' . $option->getValue() . '">' . $option->getName() . '</option>';
             }
         }
-        $html = '<select id="lffield['.$id.']" name="'.$name.'" '.$this->getAttributes( $tag ).'>'.$optionsHtml.'</select>';
+        $html = '<select id="lffield[' . $id . ']" name="' . $name . '" ' . $this->getAttributes($tag) . '>' . $optionsHtml . '</select>';
+
         return $html;
     }
 
@@ -74,13 +73,14 @@ class ReferenceListFieldType extends AbstractFieldType
     {
         $id = $tag['attributes']['id'];
         $html = '';
-        foreach($tag['options'] as $option){
-            $html .= '<li class="'.$id.'-item">
-                        <label for="lffield['.$option->getValue().'-'.$option->getId().']">'.$option->getName().'</label>
-                        <input class="input input-checkbox" name="lffield['.$id.'][]" id="lffield['.$option->getValue().'-'.$option->getId().']" type="checkbox" value="'.$option->getValue().'"/>
+        foreach ($tag['options'] as $option) {
+            $html .= '<li class="' . $id . '-item">
+                        <label for="lffield[' . $option->getValue() . '-' . $option->getId() . ']">' . $option->getName() . '</label>
+                        <input class="input input-checkbox" name="lffield[' . $id . '][]" id="lffield[' . $option->getValue() . '-' . $option->getId() . ']" type="checkbox" value="' . $option->getValue() . '"/>
                       </li>';
         }
-        return '<ul id="'.$id.'">'.$html.'</ul>';
+
+        return '<ul id="' . $id . '">' . $html . '</ul>';
     }
 
     /**
@@ -93,16 +93,17 @@ class ReferenceListFieldType extends AbstractFieldType
     {
         $id = $tag['attributes']['id'];
 
-	    $validator = !empty($tag['attributes']['validator']) ? $tag['attributes']['validator'] : '';
-	    $validatorClass = !empty($validator) ? "validate[".$validator."]" : '';
+        $validator = !empty($tag['attributes']['validator']) ? $tag['attributes']['validator'] : '';
+        $validatorClass = !empty($validator) ? "validate[" . $validator . "]" : '';
 
         $html = '';
-        foreach($tag['options'] as $option){
-            $html .= '<li class="'.$id.'-item">
-                        <label for="lffield['.$id.'-'.$option->getValue().']">'.$option->getName().'</label>
-                        <input class="input input-radio '.$validatorClass.'" name="lffield['.$id.']" id="lffield['.$id.'-'.$option->getValue().']" type="radio" value="'.$option->getValue().'"/>
+        foreach ($tag['options'] as $option) {
+            $html .= '<li class="' . $id . '-item">
+                        <label for="lffield[' . $id . '-' . $option->getValue() . ']">' . $option->getName() . '</label>
+                        <input class="input input-radio ' . $validatorClass . '" name="lffield[' . $id . ']" id="lffield[' . $id . '-' . $option->getValue() . ']" type="radio" value="' . $option->getValue() . '"/>
                       </li>';
         }
-        return '<ul id="'.$id.'">'.$html.'</ul>';
+
+        return '<ul id="' . $id . '">' . $html . '</ul>';
     }
 }

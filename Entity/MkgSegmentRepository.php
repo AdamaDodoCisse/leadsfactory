@@ -18,12 +18,13 @@ class MkgSegmentRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function getListBySegmentation($id) {
+    public function getListBySegmentation($id)
+    {
         $dql = 'SELECT s FROM TellawLeadsFactoryBundle:MkgSegment s WHERE s.segmentation_id = :id';
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameter ('id', $id);
+            ->setParameter('id', $id);
 
         return $query->getScalarResult();
     }
@@ -32,12 +33,13 @@ class MkgSegmentRepository extends EntityRepository
      * @param $id
      * @return array
      */
-    public function getSegmentation($id) {
+    public function getSegmentation($id)
+    {
         $dql = 'SELECT s FROM TellawLeadsFactoryBundle:MkgSegmentation s WHERE s.id = :id';
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameter ('id', $id);
+            ->setParameter('id', $id);
 
         return $query->getScalarResult();
     }

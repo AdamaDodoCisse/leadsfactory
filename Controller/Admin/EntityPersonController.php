@@ -1,25 +1,24 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Person;
 use Tellaw\LeadsFactoryBundle\Form\Type\PersonType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
-use Symfony\Component\HttpFoundation\Request;
-use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity/person")
  */
-class EntityPersonController extends CoreController {
+class EntityPersonController extends CoreController
+{
 
 
     /**
@@ -28,20 +27,20 @@ class EntityPersonController extends CoreController {
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction($page=1, $limit=10, $keyword='')
+    public function indexAction($page = 1, $limit = 10, $keyword = '')
     {
 
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Person', $page, $limit, $keyword, array ('user'=>$this->getUser()));
+        $list = $this->getList('TellawLeadsFactoryBundle:Person', $page, $limit, $keyword, array('user' => $this->getUser()));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Person:entity_list.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );
@@ -53,7 +52,7 @@ class EntityPersonController extends CoreController {
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function newAction( Request $request )
+    public function newAction(Request $request)
     {
 
         $form = $this->createForm(
@@ -67,7 +66,7 @@ class EntityPersonController extends CoreController {
         $form->handleRequest($request);
         if ($form->isValid()) {
 
-            if (!$this->get("core_manager")->isNewFormAccepted ()) {
+            if (!$this->get("core_manager")->isNewFormAccepted()) {
                 return $this->redirect($this->generateUrl('_security_licence_error'));
             }
 
@@ -77,6 +76,7 @@ class EntityPersonController extends CoreController {
 
             return $this->redirect($this->generateUrl('_person_list'));
         }
+
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Person:entity_edit.html.twig',
             array(
@@ -93,7 +93,7 @@ class EntityPersonController extends CoreController {
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction( Request $request, $id )
+    public function editAction(Request $request, $id)
     {
 
         $formEntity = $this->get('leadsfactory.person_repository')->find($id);
@@ -131,7 +131,8 @@ class EntityPersonController extends CoreController {
      * @Method("GET")
      * @Template()
      */
-    public function deleteAction ( $id ) {
+    public function deleteAction($id)
+    {
 
     }
 
@@ -140,19 +141,20 @@ class EntityPersonController extends CoreController {
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function fragmentPersonsTableAction ( $entrepriseId = 0,$page=1, $limit=10, $keyword='' ) {
+    public function fragmentPersonsTableAction($entrepriseId = 0, $page = 1, $limit = 10, $keyword = '')
+    {
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Person', $page, $limit, $keyword, array ('user'=>$this->getUser()));
+        $list = $this->getList('TellawLeadsFactoryBundle:Person', $page, $limit, $keyword, array('user' => $this->getUser()));
 
         // Get array of persons
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Person:fragment_list.html.twig',
             array(
-                'entrepriseId'  => $entrepriseId,
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'entrepriseId' => $entrepriseId,
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options'],
-                'keyword'       => $keyword
+                'keyword' => $keyword
             )
         );
 
@@ -163,8 +165,8 @@ class EntityPersonController extends CoreController {
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function fragmentPersonsInEntrepriseTableAction ( $entrepriseId ) {
-
+    public function fragmentPersonsInEntrepriseTableAction($entrepriseId)
+    {
 
 
         $formEntity = $this->get('leadsfactory.entreprise_repository')->find($entrepriseId);
@@ -175,7 +177,7 @@ class EntityPersonController extends CoreController {
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Person:fragment_list_in_entreprise.html.twig',
             array(
-                'elements'      => $list
+                'elements' => $list
             )
         );
 

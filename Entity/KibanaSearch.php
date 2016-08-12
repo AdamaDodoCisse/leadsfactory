@@ -9,7 +9,8 @@ namespace Tellaw\LeadsFactoryBundle\Entity;
  *
  * @package Tellaw\LeadsFactoryBundle\Entity
  */
-class KibanaSearch {
+class KibanaSearch
+{
 
     protected $id;
     protected $title;
