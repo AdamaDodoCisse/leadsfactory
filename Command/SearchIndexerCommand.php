@@ -15,7 +15,7 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 	private $cronjobs = array();
 	private $dbConnection = null;
 
-	private $nbOfItemsToBatch = 1;
+	private $nbOfItemsToBatch = 30000;
 
 	private $leadsMaxId = null;
 
