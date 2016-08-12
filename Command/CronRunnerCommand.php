@@ -80,10 +80,12 @@ class CronRunnerCommand extends ContainerAwareCommand
 
                     // Persist crontask
                     $em->persist($crontask);
-                    $em->flush();
+
                 } else {
                     $output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask->getName()));
                 }
+
+                $em->flush();
 
             }
 

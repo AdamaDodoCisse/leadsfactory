@@ -164,7 +164,7 @@ class CoreManager implements ContainerAwareInterface
     public function isDomainAccepted()
     {
 
-        $host = $_SERVER["HTTP_HOST"];
+        $host = $this->container->get("request")->server->get('HTTP_HOST');
         $infos = CoreManager::getLicenceInfos();
         $domains = $infos["domains"];
         foreach ($domains as $domain) {

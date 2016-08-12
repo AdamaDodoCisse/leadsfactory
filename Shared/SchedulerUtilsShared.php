@@ -91,12 +91,14 @@ class SchedulerUtilsShared implements ContainerAwareInterface
                     $now = new \DateTime();
                     $cronTaskJob->setModifiedAt($now);
                     $em->persist($cronTaskJob);
-                    $em->flush();
+
                 }
 
             }
 
         }
+
+        $em->flush();
 
     }
 

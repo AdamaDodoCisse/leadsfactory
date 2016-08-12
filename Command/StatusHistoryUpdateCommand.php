@@ -49,6 +49,8 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand
         $currentDate = new \DateTime();
         $minDate = $minDate->sub(new \DateInterval("P01D"));
 
+        $em = $this->getContainer()->get("doctrine")->getManager();
+
         // Check theirs statuses for previous day
         foreach ($forms as $form) {
             $result = array();
@@ -74,10 +76,8 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand
                 }
                 $statusHistory->setStatus($form->yesterdayStatus);
                 $statusHistory->setUpdatedAt($currentDate);
-
-                $em = $this->getContainer()->get("doctrine")->getManager();
                 $em->persist($statusHistory);
-                $em->flush();
+
 
                 $logger->info("Status enregistré : " . $form->yesterdayStatus);
 
@@ -97,6 +97,7 @@ class StatusHistoryUpdateCommand extends ContainerAwareCommand
             }
 
         }
+        $em->flush();
         $this->sendStatusLogsMail($results, $scope);
     }
 

@@ -680,10 +680,11 @@ class ChartShared
 
         $em = $this->container->get('doctrine')->getManager();
 
-        if ($formId == null)
+        if ($formId == null) {
             $forms = $this->container->get('leadsfactory.form_repository')->findAll();
-        else
+        } else {
             $forms = array($this->container->get('leadsfactory.form_repository')->find($formId));
+        }
 
         // Loop over forms
         foreach ($forms as $form) {
@@ -720,7 +721,7 @@ class ChartShared
                     $lead->setForm($form);
                     $lead->setCreatedAt($day);
                     $em->persist($lead);
-                    $em->flush();
+
 
                     unset ($lead);
                 }
@@ -732,7 +733,7 @@ class ChartShared
 
         }
 
-
+        $em->flush();
     }
 
     // TODO: move to fixtures or remove

@@ -46,6 +46,8 @@ class ExportUtilsShared implements ContainerAwareInterface
         $logger = $this->getContainer()->get('export.logger');
 
         $config = $lead->getForm()->getConfig();
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
         foreach ($config['export'] as $method => $methodConfig) {
 
             $job = new Export();
@@ -64,9 +66,7 @@ class ExportUtilsShared implements ContainerAwareInterface
             $job->setScheduledAt($this->getScheduledDate($methodConfig));
 
             try {
-                $em = $this->getContainer()->get('doctrine')->getManager();
                 $em->persist($job);
-                $em->flush();
                 $logger->info('Job export (ID ' . $job->getId() . ') créé avec succès');
 
             } catch (Exception $e) {
@@ -74,6 +74,7 @@ class ExportUtilsShared implements ContainerAwareInterface
                 //Error
             }
         }
+        $em->flush();
     }
 
     /**

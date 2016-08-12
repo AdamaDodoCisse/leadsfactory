@@ -8314,7 +8314,7 @@ var errors = {
   E028: "Illegal comma.",
   E029: "Unclosed string.",
   E030: "Expected an identifier and instead saw '{a}'.",
-  E031: "Bad assignment.", // FIXME: Rephrase
+  E031: "Bad assignment.",
   E032: "Expected a small integer or 'false' and instead saw '{a}'.",
   E033: "Expected an operator and instead saw '{a}'.",
   E034: "get/set are ES5 features.",

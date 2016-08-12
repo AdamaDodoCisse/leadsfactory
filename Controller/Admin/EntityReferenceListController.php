@@ -322,9 +322,10 @@ class EntityReferenceListController extends CoreController
             $rank = $rank + 10;
             $element = $this->get('leadsfactory.reference_list_element_repository')->find($element);
             $element->setRank($rank);
-            $em->flush();
+
         }
 
+        $em->flush();
 
         return new Response('<html><body>ok !</body></html>');
 

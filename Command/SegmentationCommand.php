@@ -83,7 +83,6 @@ class SegmentationCommand extends ContainerAwareCommand
                 if (!$segment->getNextrun() || $segment->getNextrun() <= $now) {
                     $segment->setNextrun($nextrun);
                     $em->persist($segment);
-                    $em->flush();
                 }
 
             }

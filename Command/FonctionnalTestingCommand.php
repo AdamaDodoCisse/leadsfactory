@@ -138,9 +138,11 @@ class FonctionnalTestingCommand extends ContainerAwareCommand
                     $field->setTestValue(json_encode($testValues));
                 }
                 $em->persist($field);
-                $em->flush();
+
             }
         }
+
+        $em->flush();
 
         return $count;
     }

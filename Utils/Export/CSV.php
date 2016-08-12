@@ -25,6 +25,7 @@ class CSV extends AbstractMethod
         }
 
         $exportUtils = $this->getContainer()->get('export_utils');
+        $em = $this->getContainer()->get('doctrine')->getManager();
 
         foreach ($jobs as $job) {
             $lead = $job->getLead();
@@ -34,13 +35,11 @@ class CSV extends AbstractMethod
             $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Job export (ID " . $job->getId() . ") : erreur lors de l'édition du fichier CSV" : "Job export (ID " . $job->getId() . ") : exporté avec succès";
 
             $logger->info($log);
-
-            $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($lead);
-            $em->flush();
 
             $exportUtils->updateJob($job, $status, $log);
         }
+        $em->flush();
         fclose($handle);
     }
 } 

@@ -59,7 +59,6 @@ class LFUtilsShared
                 $item = $em->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->find($child["id"]);
                 $item->setName($child["name"]);
                 $item->setValue($child["value"]);
-                $em->flush();
 
                 // Get this to keep in memory treated items to delete old ones.
                 $validIdByLevels[$lists[$level]][$child["id"]] = true;
@@ -82,7 +81,6 @@ class LFUtilsShared
 
                 }
                 $em->persist($item);
-                $em->flush();
 
                 $validIdByLevels[$lists[$level]][$item->getId()] = true;
 
@@ -99,6 +97,8 @@ class LFUtilsShared
             }
 
         }
+
+        $em->flush();
 
         return array($validIdByLevels, $lists);
 
@@ -133,13 +133,14 @@ class LFUtilsShared
 
                     $em = $this->container->get('doctrine')->getManager();
                     $em->remove($object);
-                    $em->flush();
 
                 }
 
             }
 
         }
+
+        $em->flush();
 
     }
 
