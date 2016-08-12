@@ -71,7 +71,7 @@ class SegmentationCommand extends ContainerAwareCommand
 
                     // Persist crontask
                     $em->persist($segment);
-                    $em->flush();
+
                 } else {
                     $output->writeln(sprintf('Skipping Segmentation Task <info>%s</info>', $segment->getName()));
                 }

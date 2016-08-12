@@ -749,7 +749,7 @@ class ChartShared
         // Calculate number of page views
         $nbPageViews = ($variation / 100) * $leadsNumberForDay + $leadsNumberForDay;
 
-
+        $em = $this->container->get('doctrine')->getManager();
         for ($j = 0; $j <= $nbPageViews; $j++) {
 
             //echo ("--> Creating Page view : ".$j."/".$nbPageViews." (form : ".$form->getId().")\r\n");
@@ -769,17 +769,14 @@ class ChartShared
 
             $tracking->setForm($form);
             $tracking->setCreatedAt($day);
-
-            $em = $this->container->get('doctrine')->getManager();
             $em->persist($tracking);
-            $em->flush();
 
             unset ($tracking);
             unset ($hasUtm);
             unset ($utm_campaign);
 
         }
-
+        $em->flush();
         unset ($nbPageViews);
         unset ($variation);
 

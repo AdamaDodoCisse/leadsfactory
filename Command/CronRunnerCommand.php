@@ -85,7 +85,7 @@ class CronRunnerCommand extends ContainerAwareCommand
                     $output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask->getName()));
                 }
 
-                $em->flush();
+
 
             }
 
@@ -96,7 +96,6 @@ class CronRunnerCommand extends ContainerAwareCommand
             if (!$crontask->getNextrun() || $crontask->getNextrun() <= $now) {
                 $crontask->setNextrun($nextrun);
                 $em->persist($crontask);
-                $em->flush();
             }
 
         }

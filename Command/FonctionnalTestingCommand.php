@@ -123,7 +123,6 @@ class FonctionnalTestingCommand extends ContainerAwareCommand
                 $new_field->setCode($code);
                 $new_field->setTestValue(json_encode($testValues));
                 $em->persist($new_field);
-                $em->flush();
                 $count++;
             } else {
                 // first check if data is already set
