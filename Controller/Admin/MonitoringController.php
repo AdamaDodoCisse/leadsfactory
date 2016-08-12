@@ -560,7 +560,6 @@ class MonitoringController extends CoreController
 
     /**
      * @Secure(roles="ROLE_USER")
-     * TODO DEPRECATED : THIS FUNCTION IS NOW USELESS
      */
     public function getFormStatisticsValuesAction($form_id)
     {

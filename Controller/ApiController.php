@@ -60,7 +60,6 @@ class ApiController extends CoreController
      * @Route("/email/validate")
      * @Method("POST")
      *
-     * TODO : Securisation methode appel
      */
     public function validateEmailAction(Request $request)
     {
@@ -105,7 +104,6 @@ class ApiController extends CoreController
 
     /**
      * Retrieve leads based on creation date
-     * TODO : getLeadsAction sécurisation des données
      * @deprecated au profit getLeadsServiceAction
      * @Route("/leads")
      */
@@ -178,7 +176,6 @@ class ApiController extends CoreController
 
     /**
      * Retrieve leads based on creation date
-     * TODO : getLeadsAction sécurisation des données
      * @deprecated au profit getLeadsServiceAction
      * @Route("/getLeads")
      */
@@ -266,7 +263,6 @@ class ApiController extends CoreController
 
     /**
      * Enregistre une DI
-     * TODO : postLeadAction Securisation des données
      * @Route("/lead/post")
      * @Method("POST")
      */

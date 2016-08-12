@@ -672,7 +672,6 @@ class ChartShared
         return json_encode($this->normalGraph);
     }
 
-    // TODO: move to fixtures or remove
     public function loadDemoData($formId = null)
     {
 
@@ -736,7 +735,6 @@ class ChartShared
         $em->flush();
     }
 
-    // TODO: move to fixtures or remove
     protected function createPageViewsForDemo($leadsNumberForDay, $form, $day)
     {
 

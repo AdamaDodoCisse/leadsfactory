@@ -182,7 +182,7 @@
             $$.addHiddenLegendIds(config.legend_hide === true ? $$.mapToIds($$.data.targets) : config.legend_hide);
         }
 
-        // when gauge, hide legend // TODO: fix
+        // when gauge, hide legend
         if ($$.hasType('gauge')) {
             config.legend_show = false;
         }
@@ -259,7 +259,6 @@
         $$.initChartElements();
 
         // if zoom privileged, insert rect to forefront
-        // TODO: is this needed?
         main.insert('rect', config.zoom_privileged ? null : 'g.' + CLASS.regions)
             .attr('class', CLASS.zoomRect)
             .attr('width', $$.width)
@@ -1744,7 +1743,7 @@
             });
         } else if (isFunction(config.data_order)) {
             targets.sort(config.data_order);
-        } // TODO: accept name array for order
+        }
         return targets;
     };
     c3_chart_internal_fn.filterByX = function (targets, x) {
@@ -2214,7 +2213,6 @@
         eventRectUpdate = eventRectUpdate || $$.eventRect.data(function (d) { return d; });
 
         if ($$.isMultipleX()) {
-            // TODO: rotated not supported yet
             x = 0;
             y = 0;
             w = $$.width;
@@ -2879,7 +2877,7 @@
             if (isUndefined(regions) || ! isWithinRegions(d[i].x, regions)) {
                 s += " " + xValue(d[i]) + " " + yValue(d[i]);
             }
-            // Draw with region // TODO: Fix for horizotal charts
+            // Draw with region
             else {
                 xp = $$.getScale(d[i - 1].x, d[i].x, $$.isTimeSeries());
                 yp = $$.getScale(d[i - 1].value, d[i].value);
@@ -4126,7 +4124,6 @@
                 config.axis_x_tick_culling = false;
             }
         } else {
-            // TODO: move this to c3_axis
             axis.tickOffset = function () {
                 var scale = this.scale(),
                     edgeX = $$.getEdgeX($$.data.targets), diff = scale(edgeX[1]) - scale(edgeX[0]),
@@ -4378,7 +4375,6 @@
                     if (box.left >= 0 && maxWidth < box.width) { maxWidth = box.width; }
                 });
             });
-            // TODO: time lag to get maxWidth
             window.setTimeout(function () {
                 svg.remove();
             }, 100);
@@ -4595,7 +4591,6 @@
                 updated = $$.updateAngle(d);
                 return updated ? arc(updated) : "M 0 0";
             };
-        // TODO: extends all function
         newArc.centroid = arc.centroid;
         return newArc;
     };
@@ -4622,7 +4617,6 @@
             x = isNaN(c[0]) ? 0 : c[0];
             y = isNaN(c[1]) ? 0 : c[1];
             h = Math.sqrt(x * x + y * y);
-            // TODO: ratio should be an option?
             ratio = $$.radius && h ? (36 / $$.radius > 0.375 ? 1.175 - 36 / $$.radius : 0.8) * $$.radius / h : 0;
             translate = "translate(" + (x * ratio) +  ',' + (y * ratio) +  ")";
         }
@@ -5030,7 +5024,6 @@
             .attr('y', minY)
             .attr('width', maxX - minX)
             .attr('height', maxY - minY);
-        // TODO: binary search when multiple xs
         main.selectAll('.' + CLASS.shapes).selectAll('.' + CLASS.shape)
             .filter(function (d) { return config.data_selection_isselectable(d); })
             .each(function (d, i) {
@@ -5058,7 +5051,6 @@
                 }
                 if (isWithin ^ isIncluded) {
                     shape.classed(CLASS.INCLUDED, !isIncluded);
-                    // TODO: included/unincluded callback here
                     shape.classed(CLASS.SELECTED, !isSelected);
                     toggle.call($$, !isSelected, shape, d, i);
                 }
@@ -5138,7 +5130,7 @@
         if (that.nodeName === 'circle') {
             if ($$.isStepType(d)) {
                 // circle is hidden in step chart, so treat as within the click area
-                toggle = function () {}; // TODO: how to select step chart?
+                toggle = function () {};
             } else {
                 toggle = $$.togglePoint;
             }
@@ -5929,7 +5921,6 @@
         }
         // unload if needed
         if ('unload' in args) {
-            // TODO: do not unload if target will load (included in url/rows/columns)
             $$.unload($$.mapToTargetIds((typeof args.unload === 'boolean' && args.unload) ? null : args.unload), function () {
                 $$.loadFromArgs(args);
             });
@@ -6338,7 +6329,7 @@
         var $$ = this.internal;
         return this.xgrids($$.config.grid_x_lines.concat(grids ? grids : []));
     };
-    c3_chart_fn.xgrids.remove = function (params) { // TODO: multiple
+    c3_chart_fn.xgrids.remove = function (params) {
         var $$ = this.internal;
         $$.removeGridLines(params, true);
     };
@@ -6354,7 +6345,7 @@
         var $$ = this.internal;
         return this.ygrids($$.config.grid_y_lines.concat(grids ? grids : []));
     };
-    c3_chart_fn.ygrids.remove = function (params) { // TODO: multiple
+    c3_chart_fn.ygrids.remove = function (params) {
         var $$ = this.internal;
         $$.removeGridLines(params, false);
     };
@@ -6444,7 +6435,6 @@
         return config.axis_x_categories;
     };
 
-    // TODO: fix
     c3_chart_fn.color = function (id) {
         var $$ = this.internal;
         return $$.color(id); // more patterns
@@ -6476,7 +6466,6 @@
             });
             $$.updateAxisLabels();
         }
-        // TODO: return some values?
     };
     c3_chart_fn.axis.max = function (max) {
         var $$ = this.internal, config = $$.config;
@@ -6584,7 +6573,6 @@
                 mouse = [$$.x(args.data.x), $$.getYScale(args.data.id)(args.data.value)];
                 index = null;
             } else {
-                // TODO: when tooltip_grouped = false
                 index = isValue(args.data.index) ? args.data.index : $$.getIndexByX(args.data.x);
             }
         }
@@ -6600,7 +6588,6 @@
         $$.dispatchEvent('mousemove', index, mouse);
     };
     c3_chart_fn.tooltip.hide = function () {
-        // TODO: get target data by checking the state of focus
         this.internal.dispatchEvent('mouseout', 0);
     };
 

@@ -161,7 +161,6 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
 
     /**
      *
-     * Todo : Method to implement to ensure the correct creation of the form.
      * this should check hidden tags and inputs.
      *
      * @param $source

@@ -249,9 +249,6 @@ class Form
 
     /**
      * Set exportConfig
-     *
-     * @todo sanitize input data
-     *
      * @param string $exportConfig
      * @return Form
      */

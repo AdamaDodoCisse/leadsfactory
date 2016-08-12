@@ -16,7 +16,7 @@ snippet docs\n\
 	'''\n\
 snippet wh\n\
 	while ${1:condition}:\n\
-		${2:# TODO: write code...}\n\
+		${2:# TO DO: write code...}\n\
 # dowh - does the same as do...while in other languages\n\
 snippet dowh\n\
 	while True:\n\
@@ -25,7 +25,7 @@ snippet dowh\n\
 			break\n\
 snippet with\n\
 	with ${1:expr} as ${2:var}:\n\
-		${3:# TODO: write code...}\n\
+		${3:# TO DO: write code...}\n\
 # New Class\n\
 snippet cl\n\
 	class ${1:ClassName}(${2:object}):\n\
@@ -38,14 +38,14 @@ snippet cl\n\
 snippet def\n\
 	def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):\n\
 		\"\"\"${3:docstring for $1}\"\"\"\n\
-		${4:# TODO: write code...}\n\
+		${4:# TO DO: write code...}\n\
 snippet deff\n\
 	def ${1:fname}(${2:`indent('.') ? 'self' : ''`}):\n\
-		${3:# TODO: write code...}\n\
+		${3:# TO DO: write code...}\n\
 # New Method\n\
 snippet defs\n\
 	def ${1:mname}(self, ${2:arg}):\n\
-		${3:# TODO: write code...}\n\
+		${3:# TO DO: write code...}\n\
 # New Property\n\
 snippet property\n\
 	def ${1:foo}():\n\
@@ -57,17 +57,17 @@ snippet property\n\
 # Ifs\n\
 snippet if\n\
 	if ${1:condition}:\n\
-		${2:# TODO: write code...}\n\
+		${2:# TO DO: write code...}\n\
 snippet el\n\
 	else:\n\
-		${1:# TODO: write code...}\n\
+		${1:# TO DO: write code...}\n\
 snippet ei\n\
 	elif ${1:condition}:\n\
-		${2:# TODO: write code...}\n\
+		${2:# TO DO: write code...}\n\
 # For\n\
 snippet for\n\
 	for ${1:item} in ${2:items}:\n\
-		${3:# TODO: write code...}\n\
+		${3:# TO DO: write code...}\n\
 # Encodes\n\
 snippet cutf8\n\
 	# -*- coding: utf-8 -*-\n\
@@ -82,32 +82,32 @@ snippet .\n\
 	self.\n\
 snippet try Try/Except\n\
 	try:\n\
-		${1:# TODO: write code...}\n\
+		${1:# TO DO: write code...}\n\
 	except ${2:Exception}, ${3:e}:\n\
 		${4:raise $3}\n\
 snippet try Try/Except/Else\n\
 	try:\n\
-		${1:# TODO: write code...}\n\
+		${1:# TO DO: write code...}\n\
 	except ${2:Exception}, ${3:e}:\n\
 		${4:raise $3}\n\
 	else:\n\
-		${5:# TODO: write code...}\n\
+		${5:# TO DO: write code...}\n\
 snippet try Try/Except/Finally\n\
 	try:\n\
-		${1:# TODO: write code...}\n\
+		${1:# TO DO: write code...}\n\
 	except ${2:Exception}, ${3:e}:\n\
 		${4:raise $3}\n\
 	finally:\n\
-		${5:# TODO: write code...}\n\
+		${5:# TO DO: write code...}\n\
 snippet try Try/Except/Else/Finally\n\
 	try:\n\
-		${1:# TODO: write code...}\n\
+		${1:# TO DO: write code...}\n\
 	except ${2:Exception}, ${3:e}:\n\
 		${4:raise $3}\n\
 	else:\n\
-		${5:# TODO: write code...}\n\
+		${5:# TO DO: write code...}\n\
 	finally:\n\
-		${6:# TODO: write code...}\n\
+		${6:# TO DO: write code...}\n\
 # if __name__ == '__main__':\n\
 snippet ifmain\n\
 	if __name__ == '__main__':\n\
@@ -133,13 +133,13 @@ snippet \"\n\
 # test function/method\n\
 snippet test\n\
 	def test_${1:description}(${2:self}):\n\
-		${3:# TODO: write code...}\n\
+		${3:# TO DO: write code...}\n\
 # test case\n\
 snippet testcase\n\
 	class ${1:ExampleCase}(unittest.TestCase):\n\
 		\n\
 		def test_${2:description}(self):\n\
-			${3:# TODO: write code...}\n\
+			${3:# TO DO: write code...}\n\
 snippet fut\n\
 	from __future__ import ${1}\n\
 #getopt\n\
