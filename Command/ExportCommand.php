@@ -65,12 +65,10 @@ class ExportCommand extends ContainerAwareCommand {
 
         if (!$handle = fopen(ExportCommand::$_PID_FILE, 'a')) {
             throw new \Exception ("Impossible d'ouvrir le fichier (".ExportCommand::$_PID_FILE.")");
-            exit;
         }
 
         if (fwrite($handle, $somecontent) === FALSE) {
             throw new \Exception ("Impossible d'écrire dans le fichier (".ExportCommand::$_PID_FILE.")");
-            exit;
         }
 
         fclose($handle);

@@ -11,6 +11,7 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tellaw\LeadsFactoryBundle\Entity\CronTask;
 
 class SchedulerUtilsShared implements ContainerAwareInterface {
 

@@ -76,7 +76,7 @@ class CoreManager  implements ContainerAwareInterface {
             $now = new \DateTime();
 
             if ($eol < $now) {
-                throw new Exception ("Licence expirée");
+                throw new \Exception ("Licence expirée");
             }
 
             return array (

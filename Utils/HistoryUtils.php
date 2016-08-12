@@ -59,7 +59,7 @@ class HistoryUtils implements ContainerAwareInterface {
     public function push ( $logMessage, $user, $object ) {
 
         if (!$this->isAvailable( $object )) {
-            throw new Exception ("Object is not supported for history management");
+            throw new \Exception ("Object is not supported for history management");
         }
 
         // This factory is used to build the correct history object depending of the history target

@@ -8,6 +8,7 @@
 
 namespace Tellaw\LeadsFactoryBundle\Shared;
 
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
 use Tellaw\LeadsFactoryBundle\Entity\UserPreferences;
 use Tellaw\LeadsFactoryBundle\Entity\Form as FormEntity;
 

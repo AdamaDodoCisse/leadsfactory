@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryElement;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceList;
 use Tellaw\LeadsFactoryBundle\Form\Type\DataDictionnaryType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 

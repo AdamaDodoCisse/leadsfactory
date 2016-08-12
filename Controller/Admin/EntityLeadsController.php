@@ -978,7 +978,7 @@ class EntityLeadsController extends CoreController
 		if ($result)
 			return new Response('ok');
 		else
-			throw new Exception("Problem sending mail");
+			throw new \Exception("Problem sending mail");
 
 	}
 

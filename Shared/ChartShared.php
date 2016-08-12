@@ -9,6 +9,9 @@
 namespace Tellaw\LeadsFactoryBundle\Shared;
 
 
+use Tellaw\LeadsFactoryBundle\Entity\Form;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
+use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Tellaw\LeadsFactoryBundle\Utils\Chart;
 
 class ChartShared {
@@ -339,13 +342,6 @@ class ChartShared {
                 // filling with good values
                 foreach ( $graphObject as $object ) {
                     $targetArray [$type][ (string)$object['date'] ] = $object['n'];
-                }
-
-            } else {
-
-                // Building empty slots for every monthes
-                for ($a=0; $a<$nbDiffMonths; $a++) {
-                    die();
                 }
 
             }

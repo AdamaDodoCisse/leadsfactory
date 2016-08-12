@@ -10,6 +10,7 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class StatusHistoryUtilsShared  implements ContainerAwareInterface {
 

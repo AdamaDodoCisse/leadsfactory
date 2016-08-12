@@ -178,7 +178,7 @@ class SegmentationCommand extends ContainerAwareCommand {
                     $output->writeln ("Sending mail for segment ".$segment->getName()." to ".$email);
                     $output->writeln('<info>Sending mail for segment '.$segment->getName().' to '.$email.'</info>');
                     $result = $this->getContainer()->get('mailer')->send($message);
-                }catch(Exception $e){
+                }catch(\Exception $e){
                     $output->writeln ($e->getMessage());
                     $logger->error($e->getMessage());
                 }
