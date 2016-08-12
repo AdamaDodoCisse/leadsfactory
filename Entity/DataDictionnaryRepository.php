@@ -48,33 +48,29 @@ class DataDictionnaryRepository extends EntityRepository
         //Get User scope
         $user = $params["user"];
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:DataDictionnary f';
+		$qb = $this->getEntityManager()->createQueryBuilder();
+		$qb->select ('f');
+		$qb->from ('TellawLeadsFactoryBundle:DataDictionnary', 'f');
 
-        if ($user->getScope() != null) {
-            $where = ' WHERE f.scope = '.$user->getScope()->getId();
-        }else {
-            $where = "";
-        }
+		if ($user->getScope() != null) {
+			$qb->where ('f.scope = :scope');
+			$qb->setParameter ('scope',$user->getScope() );
+		}
 
-        if(!empty($keyword)){
-            $where = ' WHERE';
-            $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                if($key>0)
-                    $where .= ' AND';
-                $where .= " f.name LIKE '%".$keyword."%'";
-            }
+		if(!empty($keyword)){
 
-        }
+			$keywords = explode(' ', $keyword);
+			foreach($keywords as $key => $keyword){
+				$qb->where ('f.name LIKE :keyword');
+				$qb->setParameter ('keyword','%'.$keyword.'%' );
+			}
+		}
 
-        $dql .= $where;
+		$qb->setFirstResult(($page-1) * $limit);
+		$qb->setMaxResults($limit);
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
-            ->setMaxResults($limit);
+		return new Paginator($qb);
 
-        return new Paginator($query);
     }
 
 	/**

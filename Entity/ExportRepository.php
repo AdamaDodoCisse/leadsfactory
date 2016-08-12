@@ -48,42 +48,40 @@ class ExportRepository extends EntityRepository
         //Get User scope
         $user = $params["user"];
 
-        $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e JOIN e.form f';
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select ('e');
+        $qb->from ('TellawLeadsFactoryBundle:Export', 'e');
+        $qb->join ('e.form', 'f');
 
         if ($user->getScope() != null) {
-            $where = ' WHERE f.scope = '.$user->getScope()->getId();
-        }else {
-            $where = " WHERE 1=1";
+            $qb->where ('f.scope = :scope');
+            $qb->setParameter ('scope',$user->getScope() );
         }
 
         if(!empty($keyword)){
-            $where = ' WHERE';
+
             $keywords = explode(' ', $keyword);
             foreach($keywords as $key => $keyword){
-                if($key>0)
-                    $where .= ' AND';
-                $where .= " e.method LIKE '%".$keyword."%'";
-                $where .= " OR e.lead = '".$keyword."'";
-                $where .= " OR e.id = '".$keyword."'";
-                $where .= " OR e.log LIKE '%".$keyword."%'";
+                $qb->orWhere ("e.method LIKE :keyword");
+                $qb->orWhere ("e.lead = :keyword");
+                $qb->orWhere ("e.id = :keyword");
+                $qb->orWhere ("e.log LIKE :keyword");
+                $qb->setParameter ('keyword','%'.$keyword.'%' );
             }
-
         }
-
-        $dql .= $where;
 
         if ( array_key_exists("statuses", $params) && count ($params["statuses"])> 0) {
-            $dql .= " AND e.status IN (".implode (',',$params["statuses"]).")";
+            $qb->where ("e.status IN ( :statuses )");
+            $qb->setParameter ('statuses', $params["statuses"]);
         }
 
-	    $dql .= ' ORDER BY e.created_at DESC';
+        $qb->orderBy ('e.created_at','DESC');
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
-            ->setMaxResults($limit);
+        $qb->setFirstResult(($page-1) * $limit);
+        $qb->setMaxResults($limit);
 
-        return new Paginator($query);
+        return new Paginator($qb);
+
     }
 
     public function findByEmailWaitingValidation($email)

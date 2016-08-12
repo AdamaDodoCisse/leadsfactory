@@ -24,32 +24,6 @@ class MonitoringController extends CoreController {
     }
 
     /**
-     * @route("/dashboard", name="_monitoring_dashboard")
-     * @Secure(roles="ROLE_USER")
-     *//*
-    public function dashboardAction(Request $request)
-    {
-
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
-            return $this->redirect($this->generateUrl('_security_licence_error'));
-        }
-
-        // Logged User
-        $user_id = $this->get('security.context')->getToken()->getUser()->getId();
-
-        // Get All Types in the scope
-        $types = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsType();
-
-        // Load bookmarked types for user
-        $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getTypesForUser( $user_id );
-
-        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig", array(
-            'types' => $types,
-            'bookmarks' => $bookmarks
-        ));
-    }
-*/
-    /**
      * @route("/index", name="_monitoring_dashboard_forms")
      * @Secure(roles="ROLE_USER")
      */
@@ -384,7 +358,9 @@ class MonitoringController extends CoreController {
         if( $mode == 'FormType' && $objects == null ){ // Get Bookmarks of object's type FormType
             $query = $em->createQuery('SELECT f
                                       FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b
-                                      WHERE b.formType = f.id AND b.user ='.$user->getId());
+                                      WHERE b.formType = f.id AND b.user = :userId');
+
+            $query->setParameter ('userId', $user->getId());
             $formTypes = $query->getResult();
             $chart->setFormType($formTypes);
 
@@ -393,7 +369,9 @@ class MonitoringController extends CoreController {
                                       FROM TellawLeadsFactoryBundle:Form f
                                         JOIN TellawLeadsFactoryBundle:Scope s WITH s.id = f.scope,
                                       TellawLeadsFactoryBundle:Bookmark b
-                                      WHERE b.form = f.id AND b.user ='.$user->getId());
+                                      WHERE b.form = f.id AND b.user = :userId');
+
+            $query->setParameter ('userId', $user->getId());
             $forms = $query->getResult();
             $chart->setForm($forms);
 
@@ -432,7 +410,14 @@ class MonitoringController extends CoreController {
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:'.$mode.' f, TellawLeadsFactoryBundle:Bookmark b WHERE b.'.lcfirst($mode).' = f.id AND b.user ='.$user->getId());
+        if ( $mode == 'FormType' ) {
+            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b WHERE b.FormType = f.id AND b.user = :userId');
+        } else {
+            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:Bookmark b WHERE b.Form = f.id AND b.user = :userId');
+        }
+
+        $query->setParameter ('userId', $user->getId());
+
         $entities = $query->getResult();
 
         if($mode == 'FormType'){

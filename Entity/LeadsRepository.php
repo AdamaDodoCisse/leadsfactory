@@ -25,11 +25,12 @@ class LeadsRepository extends EntityRepository
     public function findLastNByType ( Form $form, $searchInHistoryOfNbPost ) {
 
         $dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l JOIN l.form f';
-        $dql .= " WHERE f.id='".$form->getId()."'";
+        $dql .= " WHERE f.id=:formId";
         $dql .= " ORDER BY l.createdAt DESC";
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
+			->setParameter ('formId', $form->getId())
             ->setMaxResults( $searchInHistoryOfNbPost );
 
 

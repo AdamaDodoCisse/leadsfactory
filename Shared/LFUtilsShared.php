@@ -131,7 +131,6 @@ class LFUtilsShared {
                     $em->remove($object);
                     $em->flush();
 
-                    echo ("Delete : ".$result["id"]. " - ");
                 }
 
             }

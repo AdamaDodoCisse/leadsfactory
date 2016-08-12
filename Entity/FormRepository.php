@@ -29,31 +29,29 @@ class FormRepository extends EntityRepository
         //Get User scope
         $user = $params["user"];
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Form f';
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select ('f');
+        $qb->from ('TellawLeadsFactoryBundle:Form', 'f');
 
         if ($user->getScope() != null) {
-            $where = ' WHERE f.scope = '.$user->getScope()->getId();
-        }else {
-            $where = " WHERE 1=1";
+            $qb->where ('f.scope = :scope');
+            $qb->setParameter ('scope',$user->getScope() );
         }
 
         if(!empty($keyword)){
 
             $keywords = explode(' ', $keyword);
             foreach($keywords as $key => $keyword){
-                $where .= " AND f.name LIKE '%".$keyword."%'";
+                $qb->where ('f.name LIKE :keyword');
+                $qb->setParameter ('keyword','%'.$keyword.'%' );
             }
-
         }
 
-        $dql .= $where;
+        $qb->setFirstResult(($page-1) * $limit);
+        $qb->setMaxResults($limit);
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
-            ->setMaxResults($limit);
+        return new Paginator($qb);
 
-        return new Paginator($query);
     }
 
     public function getBookmarkedFormsForUser ( $user_id ) {
