@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Tellaw\LeadsFactoryBundle\Entity\Scope;
 use Tellaw\LeadsFactoryBundle\Utils\ElasticSearchUtils;
 
 class SearchIndexerCommand extends ContainerAwareCommand {
@@ -14,7 +15,7 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 	private $cronjobs = array();
 	private $dbConnection = null;
 
-	private $nbOfItemsToBatch = 30000;
+	private $nbOfItemsToBatch = 1;
 
 	private $leadsMaxId = null;
 
@@ -26,33 +27,14 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-		// Get DB parameters. Not using Doctrine for better performances
-		$dbUser = $this->getContainer()->getParameter('database_user');
-		$dbPwd = $this->getContainer()->getParameter('database_password');
-		$dbName = $this->getContainer()->getParameter('database_name');
-		$dbHost = $this->getContainer()->getParameter('database_host');
-		$dbPort = $this->getContainer()->getParameter('database_port');
+		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
+		$query = $em->createQuery("SELECT s.id, s.name, s.code FROM TellawLeadsFactoryBundle:Scope s");
+		$results = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
-		if (trim ($dbPort) == "")
-			$dbPort = "3306";
-
-		$this->dbConnection = new \mysqli( $dbHost, $dbUser, $dbPwd, $dbName);
-		if (\mysqli_connect_error()) {
-			die('Erreur de connexion (' . \mysqli_connect_errno() . ') '
-				. \mysqli_connect_error());
-		}
-
-		mysqli_query($this->dbConnection, "SET character_set_results = 'utf8', character_set_client = 'utf8', character_set_connection = 'utf8', character_set_database = 'utf8', character_set_server = 'utf8'");
-
-		// Iterate of scopes
-		$sql = "SELECT id,name,code FROM Scope";
-		$result = mysqli_query( $this->dbConnection , $sql);
-
-		//$result = $mysqli->query( $sql );
-		while($donnees = mysqli_fetch_object($result))
+		foreach ($results as $donnees)
 		{
-			echo $donnees->id. " - ".$donnees->name. " - ".$donnees->code."\n";
-			$this->exportScope( $donnees->code, $donnees->id );
+			echo $donnees["id"]. " - ".$donnees["name"]. " - ".$donnees["code"]."\n";
+			$this->exportScope( $donnees["code"], $donnees["id"] );
 		}
 
 	}
@@ -61,11 +43,16 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
 		$forms = "-1";
 
-		$sql = "SELECT id FROM Form WHERE scope=".$scopeId;
-		$result = mysqli_query( $this->dbConnection , $sql);
-		while($obj = mysqli_fetch_object($result))
+		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
+		$query = $em->createQuery("SELECT f.id FROM TellawLeadsFactoryBundle:Form f WHERE f.scope=:scope");
+		$query->setParameter ("scope", $scopeId);
+		$results = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+		$forms = array();
+
+		foreach ($results as $obj)
 		{
-			$forms .= ",".$obj->id;
+			$forms []= $obj["id"];
 		}
 
 		return $forms;
@@ -76,11 +63,13 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 		$formsInScope = $this->getFormsInScope( $scopeId );
 
 		// SQL Query to get the max Lead
-		$sql = "SELECT count(id) as maxid FROM Leads WHERE form_id IN (".$formsInScope.")";
-		$result = mysqli_query( $this->dbConnection , $sql);
-		$obj = mysqli_fetch_object($result);
+		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
+		$query = $em->createQuery("SELECT count(l.id) as nbleads FROM TellawLeadsFactoryBundle:Leads l WHERE l.form IN ( :forms )");
+		$query->setParameter ("forms", $formsInScope);
 
-		return $obj->maxid;
+		$results = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+
+		return $results[0]["nbleads"];
 	}
 
 	private function exportScope ( $scopeCode, $scopeId ) {
@@ -96,34 +85,38 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 
 		$leadRepository = $this->getContainer()->get('leadsfactory.leads_repository');
 
-		for ($loopidx = 0; $loopidx <= $countLeads; $loopidx=$loopidx+$this->nbOfItemsToBatch ) {
+		$em = $this->getContainer()->get('doctrine.orm.entity_manager');
+		$formsInScope = $this->getFormsInScope($scopeId);
 
-
-			//$sql = "SELECT * FROM Leads WHERE form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
-
-			$sql = "
-				SELECT 	L.id, L.email, L.firstname, L.lastname, DATE_FORMAT(L.createdAt, '%Y-%m-%dT%TZ') as createdAt, content, DATE_FORMAT(L.exportdate, '%Y-%m-%dT%TZ') as exportDate, 
-						L.ipadress as ipaddress, L.userAgent, L.utmcampaign, L.workflowStatus, L.workflowTheme, L.workflowType, L.user,
+		$dql = "
+				SELECT 	L.id, L.email, L.firstname, L.lastname, DATE_FORMAT(L.createdAt, '%Y-%m-%dT%TZ') as createdAt, L.data as content, DATE_FORMAT(L.exportdate, '%Y-%m-%dT%TZ') as exportDate,
+						L.ipadress as ipaddress, L.userAgent, L.utmcampaign, L.workflowStatus, L.workflowTheme, L.workflowType, U.id as user,
 						F.id as formId, F.name as formName, F.code as formCode,
 						U.id as userId, U.lastname as userLastName, U.firstname as userFirstName, U.email as userEmail,
 						S.id as scopeId, S.name as scopeName, S.code as scopeCode,
 						FT.id as formTypeId, FT.name as formTypeName
-				
-				FROM `Leads` as L
-				
-				LEFT JOIN `Users` as U on L.user = U.id
-				LEFT JOIN `Form` as F on L.form_id = F.id
-				LEFT JOIN `Scope` as S on F.scope = S.id
-				LEFT JOIN `FormType` as FT on F.type_id = FT.id
 
-				WHERE L.form_id IN (".$this->getFormsInScope($scopeId).") LIMIT ".$loopidx.",".$this->nbOfItemsToBatch;
+				FROM TellawLeadsFactoryBundle:Leads as L
 
-			//echo $sql."\n";
-			$result = mysqli_query( $this->dbConnection , $sql);
+				LEFT JOIN L.user U
+				LEFT JOIN L.form F
+				LEFT JOIN F.scope S
+				LEFT JOIN F.formType FT
+
+				WHERE F.id IN ( :formsinScope )";
+
+		$query = $em->createQuery($dql);
+
+		for ($loopidx = 0; $loopidx <= $countLeads; $loopidx=$loopidx+$this->nbOfItemsToBatch ) {
+
+			$query->setParameter ("formsinScope", $formsInScope);
+			$query->setFirstResult ($loopidx);
+			$query->setMaxResults ($this->nbOfItemsToBatch);
+			$results = $query->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
 			$leadStream = "";
 
-			while($obj = mysqli_fetch_assoc($result))
+			foreach ( $results as $obj)
 			{
 
 				$obj["content"] = json_decode( $obj["content"] );
@@ -147,12 +140,8 @@ class SearchIndexerCommand extends ContainerAwareCommand {
 			unset ($result);
 			unset ($sql);
 
-
-
-
 		}
 
 	}
-
 
 }
