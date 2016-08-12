@@ -725,7 +725,7 @@ class EntityLeadsController extends CoreController
 	 * @Route("/leads/status/assign", name="_leads_status_assign_ajax")
 	 * @Secure(roles="ROLE_USER")
 	 */
-	public function affectStatusToLead( Request $request ) {
+	public function affectStatusToLeadAction( Request $request ) {
 
 		$id = $request->request->get("id");
 		$leadId = $request->request->get("leadId");
@@ -770,7 +770,7 @@ class EntityLeadsController extends CoreController
 	 * @Route("/leads/json/update", name="_leads_json_update_field")
 	 * @Secure(roles="ROLE_USER")
 	 */
-	public function updateJsonFieldToLead( Request $request ) {
+	public function updateJsonFieldToLeadAction( Request $request ) {
 
 		$leadId = $request->request->get ("leadId");
 		$leadField = $request->request->get ("leadField");
@@ -851,7 +851,7 @@ class EntityLeadsController extends CoreController
 	 * @Route("/leads/type/assign", name="_leads_type_assign_ajax")
 	 * @Secure(roles="ROLE_USER")
 	 */
-	public function affectTypeToLead( Request $request ) {
+	public function affectTypeToLeadAction( Request $request ) {
 
 		$id = $request->request->get("id");
 		$leadId = $request->request->get("leadId");
@@ -927,7 +927,7 @@ class EntityLeadsController extends CoreController
 	 * @Route("/leads/theme/assign", name="_leads_theme_assign_ajax")
 	 * @Secure(roles="ROLE_USER")
 	 */
-	public function affectThemeToLead( Request $request ) {
+	public function affectThemeToLeadAction ( Request $request ) {
 
 		$id = $request->request->get("id");
 		$leadId = $request->request->get("leadId");
@@ -1008,7 +1008,7 @@ class EntityLeadsController extends CoreController
 	 * @Route("/leads/users/assign", name="_leads_users_assign_ajax")
 	 * @Secure(roles="ROLE_USER")
 	 */
-	public function affectLeadToUser( Request $request ) {
+	public function affectLeadToUserAction ( Request $request ) {
 
 		$id = $request->request->get("id");
 		$leadId = $request->request->get("leadId");
@@ -1084,7 +1084,7 @@ class EntityLeadsController extends CoreController
 	 *
 	 * @return Form
 	 */
-	protected function getLeadsFilterForm( $controller = "_leads_list" )
+	protected function getLeadsFilterForm ( $controller = "_leads_list" )
 	{
 		$form = $this->createFormBuilder(array(),array( 'attr' => ['id' => 'filterform']))
 			->setMethod('GET')
@@ -1118,7 +1118,7 @@ class EntityLeadsController extends CoreController
 	 * @param null $target
 	 * @return array|null
      */
-	protected function getLeadsWorkflowOptions($target=null) {
+	protected function getLeadsWorkflowOptions ($target=null) {
 
 		if ($target == null) {
 			return null;
@@ -1166,7 +1166,7 @@ class EntityLeadsController extends CoreController
 	 *
 	 * @return Form
 	 */
-	protected function getReportForm($filterParams)
+	protected function getReportForm ($filterParams)
 	{
 		$export_formats = array('raw_csv' => 'CSV brut');
 
@@ -1213,7 +1213,7 @@ class EntityLeadsController extends CoreController
 	 *
 	 * @return Response
 	 */
-	public function generateRaw_csv($filterParams)
+	protected function generateRaw_csv($filterParams)
 	{
 		$em = $this->getDoctrine()->getEntityManager();
 		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
@@ -1256,7 +1256,7 @@ class EntityLeadsController extends CoreController
 	 *
 	 * @return Response
 	 */
-	public function generateNice_csv($filterParams)
+	protected function generateNice_csv ($filterParams)
 	{
 		$em = $this->getDoctrine()->getEntityManager();
 		$formUtils = $this->get('form_utils');

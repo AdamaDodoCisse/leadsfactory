@@ -146,8 +146,6 @@ class ReferenceListImportCommand extends ContainerAwareCommand
             $element->setStatus( 1 );
             $em->persist($element);
 
-            var_dump ($item);
-
             foreach ( $item["childrens"] as $children ) {
 
                 $childElement = new ReferenceListElement();

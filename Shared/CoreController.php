@@ -16,16 +16,9 @@ class CoreController extends AbstractLeadsController {
     public $logger;
 
     public function __construct () {
-
-        //$logger = $this->container->get('export.logger');
-        $informations = CoreManager::getLicenceInfos();
-        //var_dump($informations);
-
-        //$logger->info ($informations);
-
     }
 
-    public function getList($repository, $page, $limit, $keyword, $params=null) {
+    protected function getList($repository, $page, $limit, $keyword, $params=null) {
 
         $collection = $this->getDoctrine()->getRepository($repository)->getList($page, $limit, $keyword, $params);
 

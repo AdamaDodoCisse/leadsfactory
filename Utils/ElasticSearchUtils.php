@@ -163,7 +163,6 @@ class ElasticSearchUtils extends SearchShared {
         } catch (\Exception $e) {
 
             $this->logger->error($e->getMessage());
-            var_dump ($e->getMessage());
             return null;
 
         }
@@ -246,7 +245,6 @@ class ElasticSearchUtils extends SearchShared {
             $result = json_decode( $result);
             if (method_exists($result,"error")) {
                 echo ("ERROR : ".$baseUri.$query);
-                var_dump ($result);die();
             }
         }
 
@@ -286,7 +284,7 @@ class ElasticSearchUtils extends SearchShared {
      * @return mixed Array of formated fields for search engine index
      */
     public function getIndexableLeadsObject ( $fields ) {
-        var_dump( $fields );
+
         try {
         if (array_key_exists( "exportdate" , $fields ) && $fields["exportdate"] != null) {
             $fields["exportdate"] = $fields["exportdate"]->format("c");
@@ -296,7 +294,6 @@ class ElasticSearchUtils extends SearchShared {
         }
         } catch ( \Exception $e ) {
             echo($e->getMessage());
-            var_dump( $fields );
         }
 
         return $fields;
@@ -328,7 +325,6 @@ class ElasticSearchUtils extends SearchShared {
 
         $em = $this->container->get("doctrine")->getManager();
 
-        var_dump ( $json );
         $content = json_decode( $json );
 
         $results = new SearchResult();
@@ -338,8 +334,6 @@ class ElasticSearchUtils extends SearchShared {
         $results->setTotal( $content->hits->total );
 
         foreach ($content->hits->hits as $hit) {
-
-          var_dump ($hit);
 
             if ($hit->_type == 'leads') {
                 $object = new Leads();

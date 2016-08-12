@@ -42,33 +42,24 @@ class EntityUsersController extends ApplicationCrudController
         parent::__construct();
     }
 
-    public function setEntity () {
+    protected function setEntity () {
         return "TellawLeadsFactoryBundle:Users";
     }
 
-    public function setFormType () {
-
+    protected function setFormType () {
         return new UsersType();
-
-        /*
-        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            return new UsersType();
-        } else {
-            return new UsersLimitedType();
-        }*/
-
     }
 
 
-    public function setNewRoute () {
+    protected function setNewRoute () {
         return "_users_new";
     }
 
-    public function setRedirectRoute () {
+    protected function setRedirectRoute () {
         return "_users_list";
     }
 
-    public function setListColumns () {
+    protected function setListColumns () {
         return array(
                         "Id"        => "id",
                         "Prenom"    => "firstname",
@@ -82,7 +73,7 @@ class EntityUsersController extends ApplicationCrudController
     * @Route("/change_scope/", name="_user_scope_edit")
     * @Secure(roles="ROLE_USER")
     */
-    public function changescopeAction(Request $request) {
+    public function changescopeAction (Request $request) {
         $scope_repository = $this->container->get('leadsfactory.scope_repository');
         if ($request->getMethod() == 'POST') {
             $new_scope = $scope_repository->findOneBy(array("code" => $request->get('scope')));
@@ -105,7 +96,7 @@ class EntityUsersController extends ApplicationCrudController
      * @Route("/list/{page}/{limit}/{keyword}", name="_users_list")
      * @Secure(roles="ROLE_USER")
      */
-    public function indexAction($page=1, $limit=10, $keyword='') {
+    public function indexAction ($page=1, $limit=10, $keyword='') {
         return parent::indexAction($page, $limit, $keyword);
     }
 
@@ -113,7 +104,7 @@ class EntityUsersController extends ApplicationCrudController
      * @Route("/new", name="_users_new")
      * @Secure(roles="ROLE_USER")
      */
-    public function newAction( Request $request ){
+    public function newAction ( Request $request ){
         return parent::newAction( $request );
     }
 

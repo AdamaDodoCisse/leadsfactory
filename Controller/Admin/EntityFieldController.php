@@ -46,24 +46,24 @@ class EntityFieldController extends ApplicationCrudController
         parent::__construct();
     }
 
-    public function setEntity () {
+    protected function setEntity () {
         return "TellawLeadsFactoryBundle:Field";
     }
 
-    public function setFormType () {
+    protected function setFormType () {
         return new FieldType();
     }
 
 
-    public function setNewRoute () {
+    protected function setNewRoute () {
         return "_field_new";
     }
 
-    public function setRedirectRoute () {
+    protected function setRedirectRoute () {
         return "_field_list";
     }
 
-    public function setListColumns () {
+    protected function setListColumns () {
         return array(
             "Identifiant du champ"      => "code",
             "Valeurs par défaut (par scope)" => "testValue"

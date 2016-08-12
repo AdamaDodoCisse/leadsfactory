@@ -45,13 +45,13 @@ abstract class AbstractGenericCrudController extends CoreController {
     public $_edition_title = "Edition";
     public $_create_title = "Création";
 
-    abstract function setEntity ();
-    abstract function setFormType ();
-    abstract function setFormTemplate ();
-    abstract function setListTemplate ();
-    abstract function setRedirectRoute ();
-    abstract function setListColumns ();
-    abstract function setNewRoute();
+    abstract protected function setEntity ();
+    abstract protected function setFormType ();
+    abstract protected function setFormTemplate ();
+    abstract protected function setListTemplate ();
+    abstract protected function setRedirectRoute ();
+    abstract protected function setListColumns ();
+    abstract protected function setNewRoute();
 
     function __construct () {
 

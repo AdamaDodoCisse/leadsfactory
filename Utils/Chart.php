@@ -118,12 +118,6 @@ class Chart extends ChartShared {
             }
         }
 
-        if (Chart::DEBUG_MODE) {
-            echo "<pre>";
-            print_r($data);
-            echo "</pre>";
-        }
-
         $chartData = $this->_formatChartData($data);
         $chartData = $this->_addAdditionalGraphs($chartData);
 

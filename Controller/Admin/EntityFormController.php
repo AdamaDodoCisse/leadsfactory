@@ -102,7 +102,7 @@ class EntityFormController extends CoreController {
      * @Route("/preview/twig/{code}", name="_client_twig_preview")
      * @ParamConverter("form")
      */
-    public function getTwigFormPreview(Form $form)
+    public function getTwigFormPreviewAction (Form $form)
     {
         return $this->render(
             'TellawLeadsFactoryBundle:Front:display_twig_form.html.twig',

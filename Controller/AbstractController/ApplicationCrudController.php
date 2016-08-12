@@ -9,14 +9,14 @@ namespace Tellaw\LeadsFactoryBundle\Controller\AbstractController;
  */
 abstract class ApplicationCrudController extends AbstractGenericCrudController {
 
-    public function setEntity() {}
-    public function setFormType() {}
+    protected function setEntity() {}
+    protected function setFormType() {}
 
-    public function setFormTemplate () {
+    protected function setFormTemplate () {
         return "TellawLeadsFactoryBundle:entity/generic:edit.html.twig";
     }
 
-    public function setListTemplate () {
+    protected function setListTemplate () {
         return "TellawLeadsFactoryBundle:entity/generic:list.html.twig";
     }
 

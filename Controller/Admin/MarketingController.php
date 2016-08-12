@@ -295,7 +295,7 @@ class MarketingController extends CoreController
      * @Route("/kibana/segment/download/csv/{id}", name="_marketing_segment_download_csv")
      * @Secure(roles="ROLE_USER")
      */
-    public function mkgSegmentDownloadCsv ( Request $request, $id ) {
+    public function mkgSegmentDownloadCsvAction ( Request $request, $id ) {
         $searchUtils = $this->get ("search.utils");
         if (!$searchUtils->isKibanaAlive()) {
             return $this->redirectToRoute('_marketing_kibana_error');

@@ -348,7 +348,6 @@ class ChartShared {
                     die();
                 }
 
-
             }
 
         }
@@ -369,15 +368,6 @@ class ChartShared {
                 $googleFormat[$nbGraph][] = (int)$graphElement;
             }
             $nbGraph++;
-        }
-
-        if (Chart::DEBUG_MODE) {
-            var_dump ('Formated output');
-            var_dump ($targetArray);
-            var_dump ('Google Formated output <chartData>');
-            var_dump ($googleFormat);
-            var_dump ('TimeRange output');
-            var_dump ($timeRange);
         }
 
         return $googleFormat;

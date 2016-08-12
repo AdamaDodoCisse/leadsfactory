@@ -74,7 +74,7 @@ class SearchController extends CoreController {
 
     }
 
-    function prettyPrint( $json )
+    protected function prettyPrint( $json )
     {
         $result = '';
         $level = 0;
@@ -135,7 +135,7 @@ class SearchController extends CoreController {
      * @Route("/deleteIndex", name="_search_delete_index")
      * @Secure(roles="ROLE_USER")
      */
-    public function deleteIndex () {
+    public function deleteIndexAction () {
 
         $sr = $this->get('leadsfactory.scope_repository');
         $scope_list = $sr->getAll();
@@ -152,7 +152,7 @@ class SearchController extends CoreController {
      * @Route("/createIndex", name="_search_create_index")
      * @Secure(roles="ROLE_USER")
      */
-    public function createIndex () {
+    public function createIndexAction () {
 
         $this->createLeadsIndex();
         return $this->redirect($this->generateUrl('_search_config'));
