@@ -1,18 +1,17 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Tellaw\LeadsFactoryBundle\Form\Type\FieldType;
 use Tellaw\LeadsFactoryBundle\Controller\AbstractController\ApplicationCrudController;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
+use Tellaw\LeadsFactoryBundle\Form\Type\FieldType;
 use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
 
 /**
@@ -26,15 +25,15 @@ class EntityFieldController extends ApplicationCrudController
     public $_description;
     public $_list_actions;
 
-    public function __construct ()
+    public function __construct()
     {
         $this->_list_title = "Champs";
         $this->_description = "Liste des champs reférencés et indexés pour les tests fonctionnels.";
         $this->_edition_title = "Edition d'un champ";
         $this->_create_title = "Création d'un champ";
-        $this->_list_actions = array (
-            ["title" => "Editer",      "route"=>"_field_edit",    "color" => "blue"],
-            ["title" => "Supprimer",   "route"=>"_field_delete",  "color" => "pink",   "alert" => "Confirmez vous la suppression ?"]
+        $this->_list_actions = array(
+            ["title" => "Editer", "route" => "_field_edit", "color" => "blue"],
+            ["title" => "Supprimer", "route" => "_field_delete", "color" => "pink", "alert" => "Confirmez vous la suppression ?"]
         );
 
         PreferencesUtils::registerKey(
@@ -46,26 +45,31 @@ class EntityFieldController extends ApplicationCrudController
         parent::__construct();
     }
 
-    public function setEntity () {
+    protected function setEntity()
+    {
         return "TellawLeadsFactoryBundle:Field";
     }
 
-    public function setFormType () {
+    protected function setFormType()
+    {
         return new FieldType();
     }
 
 
-    public function setNewRoute () {
+    protected function setNewRoute()
+    {
         return "_field_new";
     }
 
-    public function setRedirectRoute () {
+    protected function setRedirectRoute()
+    {
         return "_field_list";
     }
 
-    public function setListColumns () {
+    protected function setListColumns()
+    {
         return array(
-            "Identifiant du champ"      => "code",
+            "Identifiant du champ" => "code",
             "Valeurs par défaut (par scope)" => "testValue"
         );
     }
@@ -74,7 +78,8 @@ class EntityFieldController extends ApplicationCrudController
      * @Route("/list/{page}/{limit}/{keyword}", name="_field_list")
      * @Secure(roles="ROLE_USER")
      */
-    public function indexAction($page=1, $limit=10, $keyword='') {
+    public function indexAction($page = 1, $limit = 10, $keyword = '')
+    {
         return parent::indexAction($page, $limit, $keyword);
     }
 
@@ -82,8 +87,9 @@ class EntityFieldController extends ApplicationCrudController
      * @Route("/new", name="_field_new")
      * @Secure(roles="ROLE_USER")
      */
-    public function newAction( Request $request ){
-        return parent::newAction( $request );
+    public function newAction(Request $request)
+    {
+        return parent::newAction($request);
     }
 
     /**
@@ -91,8 +97,9 @@ class EntityFieldController extends ApplicationCrudController
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction (  Request $request, $id ) {
-        return parent::editAction(  $request, $id );
+    public function editAction(Request $request, $id)
+    {
+        return parent::editAction($request, $id);
     }
 
     /**
@@ -101,7 +108,8 @@ class EntityFieldController extends ApplicationCrudController
      * @Method("GET")
      * @Template()
      */
-    public function deleteAction ($id) {
+    public function deleteAction($id)
+    {
         return parent::deleteAction($id);
     }
 

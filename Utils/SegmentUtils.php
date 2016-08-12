@@ -18,7 +18,8 @@ class SegmentUtils
      * @param $request
      * @param MkgSegment $segment
      */
-    public static function addFilterConfig(&$request, MkgSegment $segment) {
+    public static function addFilterConfig(&$request, MkgSegment $segment)
+    {
         $variables = array();
         $query_json = json_decode($request, true);
         $query = $query_json['query']['query_string']['query'];
@@ -50,13 +51,14 @@ class SegmentUtils
      * @param $range
      * @param $variables
      */
-    public static function fillRequestWithRangeVariable(&$range, $variables) {
+    public static function fillRequestWithRangeVariable(&$range, $variables)
+    {
         $new_range['time_zone'] = "";
         if (isset($range['time_zone']))
             $new_range['time_zone'] = $range['time_zone'];
         if ($variables['nbdays'] != '0') {
             $new_range['lte'] = 'now';
-            $new_range['gte'] = date("Y-m-d", time() - (84600 * $variables['nbdays'])) ;
+            $new_range['gte'] = date("Y-m-d", time() - (84600 * $variables['nbdays']));
             $range = $new_range;
         } else if ($variables['dateStart'] && $variables['dateEnd']) {
             $new_range['gte'] = $variables['dateStart']->format("Y-m-d");
@@ -70,7 +72,8 @@ class SegmentUtils
      * @param $query
      * @param $variables
      */
-    public static function fillRequestWithTextVariable(&$query, $variables) {
+    public static function fillRequestWithTextVariable(&$query, $variables)
+    {
         if (preg_match_all('#(@[\w-]*@)#ui', $query, $matches)) {
             if (count($matches) > 1) {
                 $matches = $matches[0];

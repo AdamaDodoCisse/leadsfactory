@@ -22,16 +22,16 @@ class ExportRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getForLeadID( $leadId )
+    public function getForLeadID($leadId)
     {
 
         $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e JOIN e.form f';
         $dql .= " WHERE e.lead = :id";
         $dql .= ' ORDER BY e.created_at DESC';
 
-        $query = $this  ->getEntityManager()
+        $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameters( array ( "id"=>$leadId ) );
+            ->setParameters(array("id" => $leadId));
 
         return $query->execute();
     }
@@ -42,48 +42,46 @@ class ExportRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         //Get User scope
         $user = $params["user"];
 
-        $dql = 'SELECT e FROM TellawLeadsFactoryBundle:Export e JOIN e.form f';
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('e');
+        $qb->from('TellawLeadsFactoryBundle:Export', 'e');
+        $qb->join('e.form', 'f');
 
         if ($user->getScope() != null) {
-            $where = ' WHERE f.scope = '.$user->getScope()->getId();
-        }else {
-            $where = " WHERE 1=1";
+            $qb->where('f.scope = :scope');
+            $qb->setParameter('scope', $user->getScope());
         }
 
-        if(!empty($keyword)){
-            $where = ' WHERE';
+        if (!empty($keyword)) {
+
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                if($key>0)
-                    $where .= ' AND';
-                $where .= " e.method LIKE '%".$keyword."%'";
-                $where .= " OR e.lead = '".$keyword."'";
-                $where .= " OR e.id = '".$keyword."'";
-                $where .= " OR e.log LIKE '%".$keyword."%'";
+            foreach ($keywords as $key => $keyword) {
+                $qb->orWhere("e.method LIKE :keyword");
+                $qb->orWhere("e.lead = :keyword");
+                $qb->orWhere("e.id = :keyword");
+                $qb->orWhere("e.log LIKE :keyword");
+                $qb->setParameter('keyword', '%' . $keyword . '%');
             }
-
         }
 
-        $dql .= $where;
-
-        if ( array_key_exists("statuses", $params) && count ($params["statuses"])> 0) {
-            $dql .= " AND e.status IN (".implode (',',$params["statuses"]).")";
+        if (array_key_exists("statuses", $params) && count($params["statuses"]) > 0) {
+            $qb->where("e.status IN ( :statuses )");
+            $qb->setParameter('statuses', $params["statuses"]);
         }
 
-	    $dql .= ' ORDER BY e.created_at DESC';
+        $qb->orderBy('e.created_at', 'DESC');
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
-            ->setMaxResults($limit);
+        $qb->setFirstResult(($page - 1) * $limit);
+        $qb->setMaxResults($limit);
 
-        return new Paginator($query);
+        return new Paginator($qb);
+
     }
 
     public function findByEmailWaitingValidation($email)
@@ -95,12 +93,13 @@ class ExportRepository extends EntityRepository
             ->where('l.email = :email')
             ->andWhere('e.status = :status')
             ->setParameter('email', $email)
-            ->setParameter('status', ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED)
-        ;
+            ->setParameter('status', ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED);
+
         return $qb->getQuery()->getResult();
     }
 
-    public function findByStatus($status, $date = null) {
+    public function findByStatus($status, $date = null)
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('e,s,f,l')
             ->from('TellawLeadsFactoryBundle:Export', 'e')
@@ -111,14 +110,15 @@ class ExportRepository extends EntityRepository
             ->setParameter('status', $status);
 
         if ($date) {
-            $qb ->andWhere('e.created_at >= :date')
+            $qb->andWhere('e.created_at >= :date')
                 ->setParameter('date', $date->format('Y-m-d h:i:s'));
         }
 
         return $qb->getQuery()->getScalarResult();
     }
 
-    public function resetFailedExports($date = null, $exports = array()) {
+    public function resetFailedExports($date = null, $exports = array())
+    {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->update('TellawLeadsFactoryBundle:Export', 'e')
             ->set('e.status', 0)
@@ -126,9 +126,10 @@ class ExportRepository extends EntityRepository
             ->andWhere('e.id IN (:exports)')
             ->setParameter('exports', $exports);
         if ($date) {
-                $qb ->andWhere('e.created_at >= :date')
-                    ->setParameter('date', $date->format('Y-m-d h:i:s'));
-            }
+            $qb->andWhere('e.created_at >= :date')
+                ->setParameter('date', $date->format('Y-m-d h:i:s'));
+        }
+
         return $qb->getQuery()->execute();
     }
 

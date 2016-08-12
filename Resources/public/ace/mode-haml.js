@@ -89,7 +89,7 @@ var RubyHighlightRules = function() {
         "constant.language": buildinConstants,
         "variable.language": builtinVariables,
         "support.function": builtinFunctions,
-        "invalid.deprecated": "debugger" // TODO is this a remnant from js mode?
+        "invalid.deprecated": "debugger"
     }, "identifier");
 
     this.$rules = {

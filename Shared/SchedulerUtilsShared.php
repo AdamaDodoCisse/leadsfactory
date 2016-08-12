@@ -11,8 +11,10 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tellaw\LeadsFactoryBundle\Entity\CronTask;
 
-class SchedulerUtilsShared implements ContainerAwareInterface {
+class SchedulerUtilsShared implements ContainerAwareInterface
+{
 
     /**
      * @var ContainerInterface
@@ -22,7 +24,7 @@ class SchedulerUtilsShared implements ContainerAwareInterface {
     /**
      * @param ContainerInterface $container
      */
-    public function setContainer (ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
@@ -31,39 +33,42 @@ class SchedulerUtilsShared implements ContainerAwareInterface {
      * Return an array with job's name as KEY and instance of job as array entry
      * @return array of OrganizedScheduledJobs
      */
-    public function getScheduledJobs () {
+    public function getScheduledJobs()
+    {
 
         if (!$this->organisedScheduledJobs) {
             foreach ($this->scheduledJobs as $scheduledJob) {
-                $job = $this->getContainer()->get( $scheduledJob );
-                $this->organisedScheduledJobs[ $job->getName() ] = array ("id" => $scheduledJob, "job" => $job);
+                $job = $this->getContainer()->get($scheduledJob);
+                $this->organisedScheduledJobs[$job->getName()] = array("id" => $scheduledJob, "job" => $job);
             }
         }
+
         return $this->organisedScheduledJobs;
     }
 
-    public function updateDatabaseJobs () {
+    public function updateDatabaseJobs()
+    {
 
         $jobs = $this->getScheduledJobs();
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         $cronTasksRepository = $em->getRepository('TellawLeadsFactoryBundle:CronTask');
 
-        foreach ( $jobs as $name => $idAndJobArray ) {
+        foreach ($jobs as $name => $idAndJobArray) {
 
             $job = $idAndJobArray["job"];
-            $cronTaskJob = $cronTasksRepository->findOneByName ( $name );
+            $cronTaskJob = $cronTasksRepository->findOneByName($name);
 
-            if ( !$cronTaskJob ) {
+            if (!$cronTaskJob) {
 
                 $cronTaskJob = new CronTask();
-                $cronTaskJob->setName( $job->getName() );
-                $cronTaskJob->setCronexpression( $job->getExpression() );
-                $cronTaskJob->setCommands( $job->getCommands() );
-                $cronTaskJob->setEnabled( $job->getEnabled() );
+                $cronTaskJob->setName($job->getName());
+                $cronTaskJob->setCronexpression($job->getExpression());
+                $cronTaskJob->setCommands($job->getCommands());
+                $cronTaskJob->setEnabled($job->getEnabled());
                 $now = new \DateTime();
-                $cronTaskJob->setCreatedAt( $now );
-                $cronTaskJob->setModifiedAt( $now );
-                $cronTaskJob->setServiceName( $idAndJobArray["id"] );
+                $cronTaskJob->setCreatedAt($now);
+                $cronTaskJob->setModifiedAt($now);
+                $cronTaskJob->setServiceName($idAndJobArray["id"]);
                 $em->persist($cronTaskJob);
 
             } else {
@@ -77,21 +82,23 @@ class SchedulerUtilsShared implements ContainerAwareInterface {
                     $updateNeed = true;
                 }
                 */
-                if ( $job->getCommands() != $cronTaskJob->getCommands() ) {
-                    $cronTaskJob->setCommands( $job->getCommands() );
+                if ($job->getCommands() != $cronTaskJob->getCommands()) {
+                    $cronTaskJob->setCommands($job->getCommands());
                     $updateNeed = true;
                 }
 
                 if ($updateNeed) {
                     $now = new \DateTime();
-                    $cronTaskJob->setModifiedAt( $now );
+                    $cronTaskJob->setModifiedAt($now);
                     $em->persist($cronTaskJob);
-                    $em->flush();
+
                 }
 
             }
 
         }
+
+        $em->flush();
 
     }
 

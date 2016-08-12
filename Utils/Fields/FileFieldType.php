@@ -1,8 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
-
 /**
  * Field of type File will be identified by the type <b>file</b> and will be used to upload files(s).
  *
@@ -11,12 +9,13 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 class FileFieldType extends AbstractFieldType
 {
 
-    public function getTestValue ( $dataType, $field ) {
+    public function getTestValue($dataType, $field)
+    {
 
         if (isset($field["attributes"]["id"])) {
-            return "file-".$field["attributes"]["id"];
-        }else {
-            return "file-".time();
+            return "file-" . $field["attributes"]["id"];
+        } else {
+            return "file-" . time();
         }
 
     }
@@ -27,11 +26,12 @@ class FileFieldType extends AbstractFieldType
      * @param Object $tag Tag object
      * @return string Html Content formatted
      */
-    public function renderToHtml ( $tag )
+    public function renderToHtml($tag)
     {
         $id = $tag["attributes"]["id"];
         $name = $tag["attributes"]["name"];
-        return '<input type="file" name="lffield['.$name.']" id="lffield['.$id.']" '.$this->getAttributes( $tag ).'/>';
+
+        return '<input type="file" name="lffield[' . $name . ']" id="lffield[' . $id . ']" ' . $this->getAttributes($tag) . '/>';
     }
 
 }

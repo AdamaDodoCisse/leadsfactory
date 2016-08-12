@@ -1,23 +1,25 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Tracking
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\TrackingRepository")
  */
-class Tracking {
+class Tracking
+{
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**

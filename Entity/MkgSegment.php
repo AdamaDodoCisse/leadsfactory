@@ -7,6 +7,7 @@
  */
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -127,13 +128,12 @@ class MkgSegment
 
     public function __construct()
     {
-        $this->created= new \DateTime("now");
-        $this->updated= new \DateTime("now");
+        $this->created = new \DateTime("now");
+        $this->updated = new \DateTime("now");
     }
 
     /**
      * Gets triggered only on insert
-
      * @ORM\PrePersist
      */
     public function onPrePersist()
@@ -143,7 +143,6 @@ class MkgSegment
 
     /**
      * Gets triggered every time on update
-
      * @ORM\PreUpdate
      */
     public function onPreUpdate()

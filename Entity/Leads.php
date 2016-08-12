@@ -1,6 +1,7 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
 
@@ -12,13 +13,13 @@ use Symfony\Component\Validator\Constraints\DateTime;
  */
 class Leads
 {
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -82,10 +83,10 @@ class Leads
      */
     private $createdAt;
 
-	/**
-	 * @ORM\Column(type="string", nullable=true)
-	 */
-	private $email = true;
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $email = true;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -195,7 +196,6 @@ class Leads
     }
 
 
-
     /**
      * @return mixed
      */
@@ -229,7 +229,6 @@ class Leads
     }
 
 
-
     /**
      * @param mixed $formType
      */
@@ -245,6 +244,7 @@ class Leads
     {
         return $this->formType;
     }
+
     /**
      * @deprecated
      * @see setData
@@ -441,7 +441,7 @@ class Leads
     /**
      * Get formId
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form
      */
     public function getFormId()
     {
@@ -464,35 +464,35 @@ class Leads
     /**
      * Get form
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form
      */
     public function getForm()
     {
         return $this->form;
     }
 
-	/**
-	 * Set email
-	 *
-	 * @param string $email
-	 * @return Leads
-	 */
-	public function setEmail($email)
-	{
-		$this->email = $email;
+    /**
+     * Set email
+     *
+     * @param string $email
+     * @return Leads
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get email
-	 *
-	 * @return string
-	 */
-	public function getEmail()
-	{
-		return $this->email;
-	}
+    /**
+     * Get email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
 
     /**
      * @return mixed
@@ -531,22 +531,24 @@ class Leads
      * @param $em   entity manager
      * @return $this
      */
-    public function populateFromSearch ( $source, $em ) {
+    public function populateFromSearch($source, $em)
+    {
 
-        $this->setId( $source->id );
-        $this->setFirstname ( $source->firstname );
-        $this->setLastname ( $source->lastname );
-        $this->setData( json_encode($source->content) );
-        $this->setStatus ( $source->status );
-        $this->setExportdate( $source->exportdate );
-        $this->setLog ( $source->log );
-        $this->setUtmcampaign( $source->utmcampaign );
-        $this->setTelephone( $source->telephone );
-        $this->setCreatedAt( $source->createdAt );
-        if ($source->form_id) $this->setForm( $em->getRepository('TellawLeadsFactoryBundle:Form')->find( $source->form_id ) );
-        $this->setEmail( $source->email );
-        if ($source->entreprise_id) $this->setEntreprise( $em->getRepository('TellawLeadsFactoryBundle:Entreprise')->find( $source->entreprise_id ) );
-        if ($source->client_id) $this->setEntreprise( $em->getRepository('TellawLeadsFactoryBundle:Client')->find( $source->client_id ) );
+        $this->setId($source->id);
+        $this->setFirstname($source->firstname);
+        $this->setLastname($source->lastname);
+        $this->setData(json_encode($source->content));
+        $this->setStatus($source->status);
+        $this->setExportdate($source->exportdate);
+        $this->setLog($source->log);
+        $this->setUtmcampaign($source->utmcampaign);
+        $this->setTelephone($source->telephone);
+        $this->setCreatedAt($source->createdAt);
+        if ($source->form_id) $this->setForm($em->getRepository('TellawLeadsFactoryBundle:Form')->find($source->form_id));
+        $this->setEmail($source->email);
+        if ($source->entreprise_id) $this->setEntreprise($em->getRepository('TellawLeadsFactoryBundle:Entreprise')->find($source->entreprise_id));
+        if ($source->client_id) $this->setEntreprise($em->getRepository('TellawLeadsFactoryBundle:Client')->find($source->client_id));
+
         return $this;
     }
 

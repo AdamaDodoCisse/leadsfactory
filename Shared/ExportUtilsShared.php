@@ -8,17 +8,17 @@
 
 namespace Tellaw\LeadsFactoryBundle\Shared;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Tellaw\LeadsFactoryBundle\Entity\Export;
-use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 use Cron\CronExpression;
 use Symfony\Component\Config\Definition\Exception\Exception;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
-use Tellaw\LeadsFactoryBundle\Entity\ClientEmailRepository;
+use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
-class ExportUtilsShared implements ContainerAwareInterface {
+class ExportUtilsShared implements ContainerAwareInterface
+{
 
     /**
      * @var ContainerInterface
@@ -29,7 +29,8 @@ class ExportUtilsShared implements ContainerAwareInterface {
      * @param ContainerInterface $container
      *
      */
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
 
         $this->container = $container;
 
@@ -45,34 +46,35 @@ class ExportUtilsShared implements ContainerAwareInterface {
         $logger = $this->getContainer()->get('export.logger');
 
         $config = $lead->getForm()->getConfig();
-        foreach($config['export'] as $method=>$methodConfig){
+
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        foreach ($config['export'] as $method => $methodConfig) {
 
             $job = new Export();
 
-            if(!$this->isValidExportMethod($method)){
+            if (!$this->isValidExportMethod($method)) {
                 $job->setLog('Méthode d\'export invalide');
-                $logger->info('Méthode d\'export invalide (formulaire ID '.$lead->getForm()->getId().')');
+                $logger->info('Méthode d\'export invalide (formulaire ID ' . $lead->getForm()->getId() . ')');
             }
 
             $job->setMethod($method);
             $job->setLead($lead);
             $job->setForm($lead->getForm());
-            $status = $this->getInitialExportStatus($lead, array( 'method' => $method, 'method_config' => $methodConfig));
+            $status = $this->getInitialExportStatus($lead, array('method' => $method, 'method_config' => $methodConfig));
             $job->setStatus($status);
             $job->setCreatedAt(new \DateTime());
             $job->setScheduledAt($this->getScheduledDate($methodConfig));
 
-            try{
-                $em = $this->getContainer()->get('doctrine')->getManager();
+            try {
                 $em->persist($job);
-                $em->flush();
-                $logger->info('Job export (ID '.$job->getId().') créé avec succès');
+                $logger->info('Job export (ID ' . $job->getId() . ') créé avec succès');
 
-            }catch (Exception $e) {
+            } catch (Exception $e) {
                 $logger->error($e->getMessage());
                 //Error
             }
         }
+        $em->flush();
     }
 
     /**
@@ -109,6 +111,7 @@ class ExportUtilsShared implements ContainerAwareInterface {
     {
         $cronExp = (isset($methodConfig['cron'])) ? $methodConfig['cron'] : $this->_defaultCronExp;
         $cron = CronExpression::factory($cronExp);
+
         return $cron->getNextRunDate($this->getMinDate($methodConfig));
     }
 
@@ -120,11 +123,12 @@ class ExportUtilsShared implements ContainerAwareInterface {
      */
     protected function getMinDate($methodConfig)
     {
-        if(!isset($methodConfig['gap']) || trim($methodConfig['gap']) == '')
+        if (!isset($methodConfig['gap']) || trim($methodConfig['gap']) == '')
             return 'now';
 
         $minDate = new \DateTime();
-        return $minDate->add(new \DateInterval('PT'.trim($methodConfig['gap']).'M'));
+
+        return $minDate->add(new \DateInterval('PT' . trim($methodConfig['gap']) . 'M'));
     }
 
     /**
@@ -138,18 +142,18 @@ class ExportUtilsShared implements ContainerAwareInterface {
 
         $config = $form->getConfig();
 
-        if(!isset($config['export']))
+        if (!isset($config['export']))
             return;
 
-        foreach($config['export'] as $method=>$methodConfig){
+        foreach ($config['export'] as $method => $methodConfig) {
 
-            if(!$this->isValidExportMethod($method)){
-                $logger->error('Méthode d\'export "'.$method.'" invalide');
+            if (!$this->isValidExportMethod($method)) {
+                $logger->error('Méthode d\'export "' . $method . '" invalide');
                 continue;
             }
             $jobs = $this->getExportableJobs($form, $method, $methodConfig);
 
-            if(count($jobs))
+            if (count($jobs))
                 $this->getMethod($method)->export($jobs, $form);
         }
     }
@@ -174,11 +178,12 @@ class ExportUtilsShared implements ContainerAwareInterface {
               AND j.status NOT IN (:status)'
         );
         $query->setParameters(array(
-            'form'      => $form,
-            'method'    => $method,
-            'now'       => new \DateTime(),
-            'status'    => array(ExportUtils::$_EXPORT_SUCCESS, ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED, ExportUtils::$_EXPORT_NOT_SCHEDULED)
+            'form' => $form,
+            'method' => $method,
+            'now' => new \DateTime(),
+            'status' => array(ExportUtils::$_EXPORT_SUCCESS, ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED, ExportUtils::$_EXPORT_NOT_SCHEDULED)
         ));
+
         return $query->getResult();
     }
 
@@ -187,17 +192,17 @@ class ExportUtilsShared implements ContainerAwareInterface {
      * @param $status
      * @param string $log
      */
-    public function updateJob($job, $status, $log='')
+    public function updateJob($job, $status, $log = '')
     {
         $job->setStatus($status);
         $job->setExecutedAt(new \DateTime());
         $job->setLog($log);
 
-        try{
+        try {
             $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($job);
             $em->flush();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->getContainer()->get('export.logger')->error($e->getMessage());
         }
     }
@@ -216,11 +221,11 @@ class ExportUtilsShared implements ContainerAwareInterface {
         $lead->setLog($log);
         $lead->setExportdate($exportDate);
 
-        try{
+        try {
             $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($lead);
             $em->flush();
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->getContainer()->get('export.logger')->error($e->getMessage());
         }
     }
@@ -231,10 +236,11 @@ class ExportUtilsShared implements ContainerAwareInterface {
      * @param \Tellaw\LeadsFactoryBundle\Entity\Export $job
      * @return int
      */
-    public function getErrorStatus($job){
-        if($job->getStatus() == ExportUtils::$_EXPORT_NOT_PROCESSED || is_null($job->getStatus())){
+    public function getErrorStatus($job)
+    {
+        if ($job->getStatus() == ExportUtils::$_EXPORT_NOT_PROCESSED || is_null($job->getStatus())) {
             return ExportUtils::$_EXPORT_ONE_TRY_ERROR;
-        }else{
+        } else {
             return ExportUtils::$_EXPORT_MULTIPLE_ERROR;
         }
     }

@@ -20,7 +20,7 @@ class EntrepriseRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         //Get User scope
@@ -30,11 +30,11 @@ class EntrepriseRepository extends EntityRepository
 
         $where = "";
 
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
 
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                $where .= " AND e.name LIKE '%".$keyword."%'";
+            foreach ($keywords as $key => $keyword) {
+                $where .= " AND e.name LIKE '%" . $keyword . "%'";
             }
 
         }
@@ -43,7 +43,7 @@ class EntrepriseRepository extends EntityRepository
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
+            ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
 
         return new Paginator($query);

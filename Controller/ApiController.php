@@ -2,20 +2,21 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Swift_Message;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Tellaw\LeadsFactoryBundle\Entity\ClientEmail;
 use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Tellaw\LeadsFactoryBundle\Entity\Leads;
 
 class ApiController extends CoreController
 {
@@ -23,30 +24,30 @@ class ApiController extends CoreController
     /**
      * @Route("/lead/{id}/{key}")
      */
-    public function getLeadAction($id, $apikey=null)
+    public function getLeadAction($id, $apikey = null)
     {
         $formUtils = $this->get("form_utils");
 
         $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($id);
 
-        if(!is_null($lead)){
+        if (!is_null($lead)) {
             $data = $lead->getData();
 
-	        $data = json_decode($data, true);
-	        $data['created_at'] = $lead->getCreatedAt();
-	        $data['lfFormId'] = $lead->getForm()->getId();
-	        $data['form'] = $lead->getForm()->getCode();
-	        $data = json_encode($data);
+            $data = json_decode($data, true);
+            $data['created_at'] = $lead->getCreatedAt();
+            $data['lfFormId'] = $lead->getForm()->getId();
+            $data['form'] = $lead->getForm()->getCode();
+            $data = json_encode($data);
 
             //check key
-            if(!$formUtils->checkApiKey($lead->getForm(), $apikey)){
+            if (!$formUtils->checkApiKey($lead->getForm(), $apikey)) {
                 //throw new AccessDeniedHttpException('Invalid form key');
             }
-        }else{
+        } else {
             $data = '{}';
         }
 
-        $response =  new Response($data);
+        $response = new Response($data);
         $response->headers->set('content-type', 'application/json');
 
         return $response;
@@ -59,7 +60,6 @@ class ApiController extends CoreController
      * @Route("/email/validate")
      * @Method("POST")
      *
-     * TODO : Securisation methode appel
      */
     public function validateEmailAction(Request $request)
     {
@@ -70,6 +70,7 @@ class ApiController extends CoreController
         if (empty($email)) {
             $response = new Response();
             $response->setStatusCode(400, 'email parameter is mandatory');
+
             return $response;
         }
         /** @var ClientEmail|null $client_email */
@@ -93,90 +94,88 @@ class ApiController extends CoreController
 
             $entity_manager->flush();
 
-            $response_status = 'Validated '.$email;
+            $response_status = 'Validated ' . $email;
         } else {
-            $response_status = $email.' already valid';
+            $response_status = $email . ' already valid';
         }
 
         return new JsonResponse(array('status' => $response_status));
     }
 
-	/**
-	 * Retrieve leads based on creation date
-	 * TODO : getLeadsAction sécurisation des données
+    /**
+     * Retrieve leads based on creation date
      * @deprecated au profit getLeadsServiceAction
-	 * @Route("/leads")
-	 */
-	public function getLeadsAction(Request $request)
-	{
-		$logger = $this->get('logger');
+     * @Route("/leads")
+     */
+    public function getLeadsAction(Request $request)
+    {
+        $logger = $this->get('logger');
 
-		$args = array(
-			'datemin'   => $request->query->get('datemin'),
-			'datemax'   => $request->query->get('datemax'),
-			'email'     => $request->query->get('email'),
-			'form'      => $request->query->get('form'),
-		);
+        $args = array(
+            'datemin' => $request->query->get('datemin'),
+            'datemax' => $request->query->get('datemax'),
+            'email' => $request->query->get('email'),
+            'form' => $request->query->get('form'),
+        );
 
-		$scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
-		if(!is_null($scope)){
-			$scope = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->findOneByCode($scope);
-			$args['scope'] = $scope->getId();
-		}
+        $scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
+        if (!is_null($scope)) {
+            $scope = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->findOneByCode($scope);
+            $args['scope'] = $scope->getId();
+        }
 
-		$form_code = $request->query->get('form_code');
-		if(!is_null($form_code)){
-			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
-			if(!empty($form))
-				$args['form'] = $form->getId();
-		}
+        $form_code = $request->query->get('form_code');
+        if (!is_null($form_code)) {
+            $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
+            if (!empty($form))
+                $args['form'] = $form->getId();
+        }
 
-		$leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getLeads($args);
 
-		if(!empty($leads)){
+        if (!empty($leads)) {
 
-			$result = array();
-			foreach($leads as $lead){
+            $result = array();
+            foreach ($leads as $lead) {
 
-				$data = json_decode($lead->getData());
-				$scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
-                
-				// libellé de la fonction
-				$functionListCode = ($scope == 'ti') ? 'ti_fonction' : 'fonction';
-				if(!empty($data->fonction)) {
-					$data->fonction = $this->getDoctrine()->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )->getNameUsingListCode( $functionListCode, $data->fonction );
-				}
+                $data = json_decode($lead->getData());
+                $scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
 
-				//libellé ville
-				if(!empty($data->ville_id)){
-					$data->ville = $this->getDoctrine()->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )->getNameUsingListCode( 'ville', $data->ville_id );
-				}
+                // libellé de la fonction
+                $functionListCode = ($scope == 'ti') ? 'ti_fonction' : 'fonction';
+                if (!empty($data->fonction)) {
+                    $data->fonction = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getNameUsingListCode($functionListCode, $data->fonction);
+                }
 
-				$result['leads'][] = array(
-					'id'        => $lead->getId(),
-					'data'      => $data,
-					'status'    => $lead->getStatus(),
-					'form'      => $lead->getForm()->getName(),
-					'form_id'   => $lead->getForm()->getId(),
-					'scope'     => $scope,
-					'key'       => $this->get("form_utils")->getApiKey($lead->getForm()),
-					'created_at'=> $lead->getCreatedAt()->format('Y-m-d')
-				);
-			}
-			$result = json_encode($result);
-		}else{
-			$result = '{}';
-		}
+                //libellé ville
+                if (!empty($data->ville_id)) {
+                    $data->ville = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->getNameUsingListCode('ville', $data->ville_id);
+                }
 
-		$response =  new Response($result);
-		$response->headers->set('content-type', 'application/json');
+                $result['leads'][] = array(
+                    'id' => $lead->getId(),
+                    'data' => $data,
+                    'status' => $lead->getStatus(),
+                    'form' => $lead->getForm()->getName(),
+                    'form_id' => $lead->getForm()->getId(),
+                    'scope' => $scope,
+                    'key' => $this->get("form_utils")->getApiKey($lead->getForm()),
+                    'created_at' => $lead->getCreatedAt()->format('Y-m-d')
+                );
+            }
+            $result = json_encode($result);
+        } else {
+            $result = '{}';
+        }
 
-		return $response;
-	}
+        $response = new Response($result);
+        $response->headers->set('content-type', 'application/json');
+
+        return $response;
+    }
 
     /**
      * Retrieve leads based on creation date
-     * TODO : getLeadsAction sécurisation des données
      * @deprecated au profit getLeadsServiceAction
      * @Route("/getLeads")
      */
@@ -184,24 +183,24 @@ class ApiController extends CoreController
     {
         $logger = $this->get('logger');
 
-        $utils = $this->get ("form_utils");
+        $utils = $this->get("form_utils");
 
         $args = array(
-            'datemin'   => $request->query->get('datemin'),
-            'datemax'   => $request->query->get('datemax'),
-            'email'     => $request->query->get('email'),
+            'datemin' => $request->query->get('datemin'),
+            'datemax' => $request->query->get('datemax'),
+            'email' => $request->query->get('email'),
         );
 
         $scope = !is_null($request->query->get('scope')) ? $request->query->get('scope') : null;
-        if(!is_null($scope)){
+        if (!is_null($scope)) {
             $scope = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->findOneByCode($scope);
             $args['scope'] = $scope->getId();
         }
 
         $form_code = $request->query->get('form_code');
-        if(!is_null($form_code)){
+        if (!is_null($form_code)) {
             $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($form_code);
-            if(!empty($form))
+            if (!empty($form))
                 $args['form'] = $form->getId();
         }
 
@@ -209,16 +208,16 @@ class ApiController extends CoreController
 
         $formsFieldsDescriptions = array();
 
-        if(!empty($leads)){
+        if (!empty($leads)) {
 
             $result = array();
-            foreach($leads as $lead){
+            foreach ($leads as $lead) {
 
                 $data = json_decode($lead->getData());
                 $scope = !is_null($lead->getForm()->getScope()) ? $lead->getForm()->getScope()->getCode() : null;
 
                 // Remplacement des id de listes par les valeurs
-                if (!isset( $formsFieldsDescriptions[$lead->getForm()->getId()] )) {
+                if (!isset($formsFieldsDescriptions[$lead->getForm()->getId()])) {
                     $fields = $utils->getReferenceListsFieldsByFormId($lead->getForm()->getId());
                     $formsFieldsDescriptions[$lead->getForm()->getId()] = $fields;
                 } else {
@@ -228,149 +227,283 @@ class ApiController extends CoreController
                 foreach ($fields as $id => $field) {
 
                     // Create a field [formid]_label = the label of reference list
-                    $fieldIdName = $id."_label";
+                    $fieldIdName = $id . "_label";
 
                     // Put value in the field [formid] = value
-                    $data->$fieldIdName =    $this   ->getDoctrine()
-                                            ->getRepository( 'TellawLeadsFactoryBundle:ReferenceListElement' )
-                                            ->getNameUsingListCode(
-                                                                    $field["attributes"]["data-list"],
-                                                                    $data->$id
-                                                                    );
+                    $data->$fieldIdName = $this->getDoctrine()
+                        ->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')
+                        ->getNameUsingListCode(
+                            $field["attributes"]["data-list"],
+                            $data->$id
+                        );
                 }
 
                 $result['leads'][] = array(
-                    'id'        => $lead->getId(),
-                    'data'      => $data,
-                    'status'    => $lead->getStatus(),
-                    'form'      => $lead->getForm()->getName(),
-                    'form_id'   => $lead->getForm()->getId(),
-                    'scope'     => $scope,
-                    'key'       => $this->get("form_utils")->getApiKey($lead->getForm()),
-                    'created_at'=> $lead->getCreatedAt()->format('Y-m-d')
+                    'id' => $lead->getId(),
+                    'data' => $data,
+                    'status' => $lead->getStatus(),
+                    'form' => $lead->getForm()->getName(),
+                    'form_id' => $lead->getForm()->getId(),
+                    'scope' => $scope,
+                    'key' => $this->get("form_utils")->getApiKey($lead->getForm()),
+                    'created_at' => $lead->getCreatedAt()->format('Y-m-d')
                 );
             }
             $result = json_encode($result);
-        }else{
+        } else {
             $result = '{}';
         }
 
-        $response =  new Response($result);
+        $response = new Response($result);
         $response->headers->set('content-type', 'application/json');
 
         return $response;
     }
 
 
-	/**
-	 * Enregistre une DI
-	 * TODO : postLeadAction Securisation des données
-	 * @Route("/lead/post")
-	 * @Method("POST")
-	 */
-	public function postLeadAction(Request $request)
-	{
-		$exportUtils = $this->get('export_utils');
-		$logger = $this->get('logger');
+    /**
+     * Enregistre une DI
+     * @Route("/lead/post")
+     * @Method("POST")
+     */
+    public function postLeadAction(Request $request)
+    {
+        $exportUtils = $this->get('export_utils');
+        $logger = $this->get('logger');
         $searchUtils = $this->get('search.utils');
 
-		$logger->info('API post lead');
+        $logger->info('API post lead');
 
-		$data = $request->getcontent();
-		$logger->info($data);
-		$data = json_decode($data, true);
+        $data = $request->getcontent();
+        $logger->info($data);
+        $data = json_decode($data, true);
 
-		try{
-			$form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($data['formCode']);
+        try {
+            $form = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->findOneByCode($data['formCode']);
 
-			// Get the Json configuration of the form
-			$config = $form->getConfig();
+            // Get the Json configuration of the form
+            $config = $form->getConfig();
 
-			$data = $this->get('form_utils')->preProcessData($form->getId(), $data);
-			$jsonContent = json_encode($data);
+            $data = $this->get('form_utils')->preProcessData($form->getId(), $data);
+            $jsonContent = json_encode($data);
 
-			$leads = new Leads();
-			$leads->setIpadress($this->get('request')->getClientIp());
-			$leads->setUserAgent($this->get('request')->server->get("HTTP_USER_AGENT"));
-			$leads->setFirstname(@$data['firstName']);
-			$leads->setLastname(@$data['lastName']);
-			$leads->setData($jsonContent);
-			$leads->setLog("leads importée le : ".date('Y-m-d h:s'));
-			$leads->setUtmcampaign(@$data["utmcampaign"]);
-			$leads->setForm($form);
-			$leads->setTelephone(@$data["phone"]);
-			$leads->setEmail(@$data['email']);
+            $leads = new Leads();
+            $leads->setIpadress($this->get('request')->getClientIp());
+            $leads->setUserAgent($this->get('request')->server->get("HTTP_USER_AGENT"));
+            $leads->setFirstname(@$data['firstName']);
+            $leads->setLastname(@$data['lastName']);
+            $leads->setData($jsonContent);
+            $leads->setLog("leads importée le : " . date('Y-m-d h:s'));
+            $leads->setUtmcampaign(@$data["utmcampaign"]);
+            $leads->setForm($form);
+            $leads->setTelephone(@$data["phone"]);
+            $leads->setEmail(@$data['email']);
 
-			// Assignation de la leads si la configuration est presente
-			if ( array_key_exists( 'configuration', $config ) ) {
+            // Assignation de la leads si la configuration est presente
+            if (array_key_exists('configuration', $config)) {
 
-				if (array_key_exists(  'assign' , $config["configuration"] )) {
+                if (array_key_exists('assign', $config["configuration"])) {
 
-					$assign = trim($config["configuration"]["assign"] );
-					$user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($assign);
+                    $assign = trim($config["configuration"]["assign"]);
+                    $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($assign);
 
-					if ($user != null) {
-						$leads->setUser( $user );
-					} else {
-						$logger->info("Frontcontroller : Assign tu a User that does not exists! ".$assign);
-					}
+                    if ($user != null) {
+                        $leads->setUser($user);
+                    } else {
+                        $logger->info("Frontcontroller : Assign tu a User that does not exists! " . $assign);
+                    }
 
-				}
+                }
 
-				if (array_key_exists(  'status' , $config["configuration"] )) {
-					$status = trim($config["configuration"]["status"] );
-					$leads->setWorkflowStatus( $status );
-				}
+                if (array_key_exists('status', $config["configuration"])) {
+                    $status = trim($config["configuration"]["status"]);
+                    $leads->setWorkflowStatus($status);
+                }
 
-				if (array_key_exists(  'type' , $config["configuration"] )) {
-					$type = trim($config["configuration"]["type"] );
-					$leads->setWorkflowType( $type );
-				}
+                if (array_key_exists('type', $config["configuration"])) {
+                    $type = trim($config["configuration"]["type"]);
+                    $leads->setWorkflowType($type);
+                }
 
-				if (array_key_exists(  'theme' , $config["configuration"] )) {
-					$theme = trim($config["configuration"]["theme"] );
-					$leads->setWorkflowTheme( $theme );
-				}
+                if (array_key_exists('theme', $config["configuration"])) {
+                    $theme = trim($config["configuration"]["theme"]);
+                    $leads->setWorkflowTheme($theme);
+                }
 
-			}
+            }
 
-			$status = $exportUtils->hasScheduledExport($form->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
-			$leads->setStatus($status);
+            $status = $exportUtils->hasScheduledExport($form->getConfig()) ? $exportUtils::$_EXPORT_NOT_PROCESSED : $exportUtils::$_EXPORT_NOT_SCHEDULED;
+            $leads->setStatus($status);
 
-			$leads->setCreatedAt( new \DateTime() );
+            $leads->setCreatedAt(new \DateTime());
 
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($leads);
-			$em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($leads);
+            $em->flush();
 
             // Index leads on search engine
             $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leads->getId());
             $searchUtils->indexLeadObject($leads_array, $leads->getForm()->getScope()->getCode());
 
-			// Create export job(s)
-			if($status == $exportUtils::$_EXPORT_NOT_PROCESSED){
-				$exportUtils->createJob($leads);
-			}
+            // Create export job(s)
+            if ($status == $exportUtils::$_EXPORT_NOT_PROCESSED) {
+                $exportUtils->createJob($leads);
+            }
 
-			if ( array_key_exists(  'enableApiNotificationEmail' , $config["configuration"] ) && $config["configuration"]["enableApiNotificationEmail"] == true) {
-				//Send notification
-				if(isset($config['notification'])){
-					$this->sendNotification($config['notification'], $leads);
-				}
-			}
+            if (array_key_exists('enableApiNotificationEmail', $config["configuration"]) && $config["configuration"]["enableApiNotificationEmail"] == true) {
+                //Send notification
+                if (isset($config['notification'])) {
+                    $this->sendNotification($config['notification'], $leads);
+                    $logger->info("API : Envoi de notifications");
+                } else {
+                    $logger->info("API : Le bloc de configuration de Notification n'existe pas en config");
+                }
+            } else {
+                $logger->info("API : Le formulaire refuse l'envoi de mail par notification");
+            }
 
-			if ( array_key_exists(  'enableApiConfirmationEmail' , $config["configuration"] )  && $config["configuration"]["enableApiConfirmationEmail"] == true ) {
-				//Send confirmation email
-				if(isset($config['confirmation_email'])){
-					$this->sendConfirmationEmail($config['confirmation_email'], $leads);
-				}
-			}
+            if (array_key_exists('enableApiConfirmationEmail', $config["configuration"]) && $config["configuration"]["enableApiConfirmationEmail"] == true) {
+                //Send confirmation email
+                if (isset($config['confirmation_email'])) {
+                    $this->sendConfirmationEmail($config['confirmation_email'], $leads);
+                }
+            }
 
-			return new Response(1);
+            return new Response(1);
 
-		}catch(Exception $e){
-			$logger->error($e->getMessage());
-			return new Response(0);
-		}
-	}
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+
+            return new Response(0);
+        }
+    }
+
+    /**
+     * @Route("/getList")
+     * @Method("GET")
+     */
+    public function getListAction(Request $request)
+    {
+
+        $code = $request->query->get('code');
+
+        $list = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode($code);
+
+        $formData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findOneByCode($code);
+        $referingLists = $this->get("lf.utils")->getListOfLists($list->getId());
+        $json = $formData->getJson($referingLists);
+
+        return new Response($json);
+
+    }
+
+    /**
+     * Send email notification
+     *
+     * @param array $params
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
+     */
+    protected function sendNotification($params, $leads)
+    {
+        $logger = $this->get('logger');
+        $exportUtils = $this->get('export_utils');
+
+        $data = json_decode($leads->getData(), true);
+
+        if (!isset($params['to'])) {
+            $logger->error('No recipient available, check JSON form config');
+
+            return;
+        }
+
+        $to = $params['to'];
+        $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
+        $subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName();
+        $template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody(
+                $this->renderView(
+                    'TellawLeadsFactoryBundle:' . $template,
+                    array(
+                        'fields' => $data,
+                        'intro' => 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName()
+                    )
+                ),
+                'text/html'
+            );
+
+        try {
+            $result = $this->get('mailer')->send($message);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Send confirmation email
+     *
+     * @param array $params
+     * @param $leads
+     */
+    protected function sendConfirmationEmail($params, $leads)
+    {
+        $logger = $this->get('logger');
+
+        $form = $leads->getForm();
+
+        if (empty($params['to']['email_input_id']) || empty($params['to']['firstname_input_id']) || empty($params['to']['lastname_input_id'])) {
+            $logger->error('bad confirmation email configuration (form ' . $form->getName() . ')');
+
+            return;
+        }
+
+        $data = json_decode($leads->getData(), true);
+
+        $toEmail = $data[$params['to']['email_input_id']];
+        $toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+
+        $to = array($toEmail => $toName);
+        $from = $params['from'];
+        $subject = $this->renderTemplate($params['subject'], $data);
+
+        $template = $form->getConfirmationEmailSource();
+
+        $body = $this->renderTemplate($template, $data);
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($body, 'text/html');
+
+        try {
+            $result = $this->get('mailer')->send($message);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+        }
+    }
+
+    /**
+     * Render template variables {{ var }}
+     *
+     * @param string $template
+     * @param array $data
+     * @return mixed
+     */
+    protected function renderTemplate($template, $data)
+    {
+        $data['template'] = $template;
+
+        $string = $this->renderView(
+            'TellawLeadsFactoryBundle::template_from_string.raw.twig',
+            $data
+        );
+
+        return $string;
+    }
+
 }

@@ -9,7 +9,7 @@ var DocCommentHighlightRules = function() {
     this.$rules = {
         "start" : [ {
             token : "comment.doc.tag",
-            regex : "@[\\w\\d_]+" // TODO: fix email addresses
+            regex : "@[\\w\\d_]+"
         }, {
             token : "comment.doc.tag",
             regex : "\\bTODO\\b"
@@ -144,7 +144,7 @@ var Mode = function() {
 oop.inherits(Mode, TextMode);
 
 (function() {       
-    this.lineCommentStart = ["--", "#"]; // todo space
+    this.lineCommentStart = ["--", "#"];
     this.blockComment = {start: "/*", end: "*/"};
 
     this.$id = "ace/mode/mysql";

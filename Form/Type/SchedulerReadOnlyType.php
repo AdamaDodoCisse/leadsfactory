@@ -17,18 +17,15 @@ class SchedulerReadOnlyType extends AbstractType
     {
         $builder
             ->add('enabled')
-            ->add('id', null, array ("read_only" => true ))
-            ->add('name', null, array ("read_only" => true ))
-            ->add('commandsAsString', null, array ("read_only" => true ))
-            ->add('serviceName', null, array ("read_only" => true ))
+            ->add('id', null, array("read_only" => true))
+            ->add('name', null, array("read_only" => true))
+            ->add('commandsAsString', null, array("read_only" => true))
+            ->add('serviceName', null, array("read_only" => true))
             ->add('cronexpression')
-
-            ->add('log', null, array ("read_only" => true ))
-
-            ->add('save', 'submit')
-        ;
+            ->add('log', null, array("read_only" => true))
+            ->add('save', 'submit');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

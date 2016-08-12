@@ -15,10 +15,11 @@ class StatusHistoryRepository extends EntityRepository
 {
 
 
-    public function findByStatusDateAndForm ( $statusDate, $form ) {
+    public function findByStatusDateAndForm($statusDate, $form)
+    {
 
         $dql = "SELECT hs FROM TellawLeadsFactoryBundle:StatusHistory hs WHERE hs.statusDate = :status_date AND hs.form=:form_id";
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('form_id', $form->getId() )->setParameter('status_date', $statusDate->format('Y-m-d') )->getResult();
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('form_id', $form->getId())->setParameter('status_date', $statusDate->format('Y-m-d'))->getResult();
 
         return $result;
     }

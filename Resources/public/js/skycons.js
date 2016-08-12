@@ -136,8 +136,6 @@
   */
 
   /* Define skycon things. */
-  /* FIXME: I'm *really really* sorry that this code is so gross. Really, I am.
-   * I'll try to clean it up eventually! Promise! */
   var KEYFRAME = 500,
       STROKE = 0.08,
       TWO_PI = 2.0 * Math.PI,

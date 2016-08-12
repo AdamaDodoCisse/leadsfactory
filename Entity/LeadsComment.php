@@ -7,7 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\LeadsCommentRepository")
  */
-class LeadsComment {
+class LeadsComment
+{
 
     /**
      * @ORM\Id
@@ -58,7 +59,6 @@ class LeadsComment {
     {
         $this->lead_id = $lead_id;
     }
-
 
 
     /**

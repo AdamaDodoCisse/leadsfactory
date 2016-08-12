@@ -4,7 +4,6 @@ namespace Tellaw\LeadsFactoryBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Tellaw\LeadsFactoryBundle\Entity\Users;
 
 class FieldType extends AbstractType
 {
@@ -16,15 +15,18 @@ class FieldType extends AbstractType
         $this->entity = 'field';
     }
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(

@@ -23,43 +23,42 @@ class FormRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         //Get User scope
         $user = $params["user"];
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Form f';
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('f');
+        $qb->from('TellawLeadsFactoryBundle:Form', 'f');
 
         if ($user->getScope() != null) {
-            $where = ' WHERE f.scope = '.$user->getScope()->getId();
-        }else {
-            $where = " WHERE 1=1";
+            $qb->where('f.scope = :scope');
+            $qb->setParameter('scope', $user->getScope());
         }
 
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
 
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                $where .= " AND f.name LIKE '%".$keyword."%'";
+            foreach ($keywords as $key => $keyword) {
+                $qb->where('f.name LIKE :keyword');
+                $qb->setParameter('keyword', '%' . $keyword . '%');
             }
-
         }
 
-        $dql .= $where;
+        $qb->setFirstResult(($page - 1) * $limit);
+        $qb->setMaxResults($limit);
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
-            ->setMaxResults($limit);
+        return new Paginator($qb);
 
-        return new Paginator($query);
     }
 
-    public function getBookmarkedFormsForUser ( $user_id ) {
+    public function getBookmarkedFormsForUser($user_id)
+    {
 
         $dql = "SELECT b FROM TellawLeadsFactoryBundle:Bookmark b WHERE b.user = :user_id AND b.entity_name='Form'";
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('user_id', $user_id )->getResult();
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('user_id', $user_id)->getResult();
 
         return $result;
 
@@ -71,16 +70,17 @@ class FormRepository extends EntityRepository
      * @param $utils
      * @return array|\Doctrine\ORM\Query
      */
-    public function getStatisticsForForms($forms, $utils ) {
+    public function getStatisticsForForms($forms, $utils)
+    {
         $userPreferences = $utils->getUserPreferences();
 
-        $minDate = date_format($userPreferences->getDataPeriodMinDate(), 'Y-m-d') ;
+        $minDate = date_format($userPreferences->getDataPeriodMinDate(), 'Y-m-d');
         $maxDate = date_format($userPreferences->getDataPeriodMaxDate(), 'Y-m-d');
 
         // Get type of forms in the user's scope
         $forms_id = array();
-        foreach($forms as $f) $forms_id[] = $f->getId();
-        $ids = join(',',$forms_id);
+        foreach ($forms as $f) $forms_id[] = $f->getId();
+        $ids = join(',', $forms_id);
 
         // Get the number of leads
         $sub_qb_l = $this->_em->createQueryBuilder();
@@ -102,19 +102,20 @@ class FormRepository extends EntityRepository
         // Create query with all subqueries
         $qb = $this->_em->createQueryBuilder();
         $qb->select("f.id, f.name");
-        $qb->addSelect("(".$sub_qb_l->getDQL().") AS NB_LEADS");
-        $qb->addSelect("(".$sub_qb_t->getDQL().") AS PAGES_VIEWS");
+        $qb->addSelect("(" . $sub_qb_l->getDQL() . ") AS NB_LEADS");
+        $qb->addSelect("(" . $sub_qb_t->getDQL() . ") AS PAGES_VIEWS");
         $qb->from("TellawLeadsFactoryBundle:Form", "f", "f.id");
         if ($ids) $qb->where("f.id IN ($ids)");
 
         $result = $qb->getQuery()->getResult();
+
         return $result;
     }
 
     public function setStatisticsForId($form_id, $utils)
     {
         // Get forms in this type
-        $form = $this->find( $form_id );
+        $form = $this->find($form_id);
 
         /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
         $userPreferences = $utils->getUserPreferences();
@@ -129,10 +130,9 @@ class FormRepository extends EntityRepository
             ->where('t.form = :formId')
             ->andWhere('t.created_at >= :minDate')
             ->andWhere('t.created_at <= :maxDate')
-            ->setParameter('formId', $form_id )
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-        ;
+            ->setParameter('formId', $form_id)
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate);
         $nbviews = $qb->getQuery()->getSingleScalarResult();
 
         // Load the number of submited forms
@@ -142,16 +142,15 @@ class FormRepository extends EntityRepository
             ->where('l.form = :formId')
             ->andWhere('l.createdAt >= :minDate')
             ->andWhere('l.createdAt <= :maxDate')
-            ->setParameter('formId', $form_id )
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-        ;
+            ->setParameter('formId', $form_id)
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate);
         $qb = $this->excludeInternalLeads($qb);
         $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
         if ($nbviews > 0) {
-            $transformRate = round (($nbleads/$nbviews)*100);
+            $transformRate = round(($nbleads / $nbviews) * 100);
         } else {
             $transformRate = 0;
         }
@@ -164,10 +163,11 @@ class FormRepository extends EntityRepository
 
     }
 
-    public function getUtmLinkedToForm ( $form_id ) {
+    public function getUtmLinkedToForm($form_id)
+    {
 
         $dql = 'SELECT DISTINCT (t.utm_campaign) as utm FROM TellawLeadsFactoryBundle:Tracking t, TellawLeadsFactoryBundle:Form f  WHERE t.form = f.id AND f.id = :formId';
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id )->getResult();
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formId', $form_id)->getResult();
 
         return $result;
     }
@@ -178,7 +178,8 @@ class FormRepository extends EntityRepository
      * @param $utils
      * @return array
      */
-    public function getStatisticsForUtmForms($forms, $utils){
+    public function getStatisticsForUtmForms($forms, $utils)
+    {
         $utm = array();
         $userPreferences = $utils->getUserPreferences();
 
@@ -188,14 +189,13 @@ class FormRepository extends EntityRepository
 
         // La requette doit extraire le top des UTM
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb ->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
+        $qb->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
             ->from('TellawLeadsFactoryBundle:Tracking', 't')
             ->where('t.created_at >= :minDate')
             ->andWhere('t.created_at <= :maxDate')
             ->groupBy('t.utm_campaign')
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-        ;
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate);
 
         $query = $qb->getQuery();
         $results = $query->getResult();
@@ -228,7 +228,8 @@ class FormRepository extends EntityRepository
 
     }
 
-    public function getStatisticsForUtmBookmarks($forms, $bookmarks, $utils){
+    public function getStatisticsForUtmBookmarks($forms, $bookmarks, $utils)
+    {
         $utm = array();
         $userPreferences = $utils->getUserPreferences();
 
@@ -236,21 +237,20 @@ class FormRepository extends EntityRepository
         $maxDate = $userPreferences->getDataPeriodMaxDate();
 
         $bookmarkIds = array();
-        foreach( $bookmarks as $bookmark ) {
+        foreach ($bookmarks as $bookmark) {
             $bookmarkIds[] = $bookmark->getForm()->getId();
         }
 
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb ->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
+        $qb->select('count(t.utm_campaign) AS value, t.utm_campaign AS label')
             ->from('TellawLeadsFactoryBundle:Tracking', 't')
             ->where('t.created_at >= :minDate')
             ->andWhere('t.created_at <= :maxDate')
             ->andWhere('t.form IN (:ids)')
             ->groupBy('t.utm_campaign')
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-            ->setParameter('ids', $bookmarkIds )
-        ;
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate)
+            ->setParameter('ids', $bookmarkIds);
 
         $query = $qb->getQuery();
         $results = $query->getResult();
@@ -291,7 +291,8 @@ class FormRepository extends EntityRepository
         return $results;
     }
 
-    public function getStatisticsForUtmInForm ( $utm, $form_id, $utils ) {
+    public function getStatisticsForUtmInForm($utm, $form_id, $utils)
+    {
 
         $item = array();
 
@@ -312,10 +313,10 @@ class FormRepository extends EntityRepository
 
         $result = $this->getEntityManager()
             ->createQuery($dql)
-            ->setParameter('formId', $form_id )
-            ->setParameter('utm', $utm )
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
+            ->setParameter('formId', $form_id)
+            ->setParameter('utm', $utm)
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate)
             ->getResult();
 
         $nbviews = $result[0]["nbviews"];
@@ -324,20 +325,19 @@ class FormRepository extends EntityRepository
         $qb->select('count(l)')
             ->from('TellawLeadsFactoryBundle:Leads', 'l')
             ->where('l.form = :formId')
-            ->setParameter('formId', $form_id )
+            ->setParameter('formId', $form_id)
             ->andWhere('l.utmcampaign = :utm')
             ->andWhere('l.createdAt >= :minDate')
             ->andWhere('l.createdAt <= :maxDate')
             ->setParameter('utm', $utm)
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-        ;
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate);
         $qb = $this->excludeInternalLeads($qb);
         $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
         if ($nbviews > 0) {
-            $transformRate = round (($nbleads/$nbviews)*100);
+            $transformRate = round(($nbleads / $nbviews) * 100);
         } else {
             $transformRate = 0;
         }
@@ -407,14 +407,16 @@ class FormRepository extends EntityRepository
     {
         $i = 0;
         foreach ($this->internal_email_patterns as $pattern) {
-            $qb->andWhere("l.email NOT LIKE '".$pattern."'");
+            $qb->andWhere("l.email NOT LIKE '" . $pattern . "'");
             ++$i;
         }
+
         return $qb;
     }
 
 
-    public function getForms ( $scope = null ) {
+    public function getForms($scope = null)
+    {
 
         $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
         $result = $this->getEntityManager()->createQuery($dql)->getResult();

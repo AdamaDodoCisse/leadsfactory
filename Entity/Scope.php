@@ -7,7 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\ScopeRepository")
  */
-class Scope {
+class Scope
+{
 
     /**
      * @var integer $id
@@ -33,7 +34,7 @@ class Scope {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -56,7 +57,7 @@ class Scope {
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -79,7 +80,7 @@ class Scope {
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {

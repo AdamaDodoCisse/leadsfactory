@@ -14,23 +14,25 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class BookmarkRepository extends EntityRepository
 {
 
-    public function getTypesForUser ( $user_id ) {
+    public function getTypesForUser($user_id)
+    {
 
         /*$dql = "SELECT b FROM TellawLeadsFactoryBundle:Bookmark b WHERE b.user = :user_id AND b.entity_name='Form'";
         $result = $this->getEntityManager()->createQuery($dql)->setParameter('user_id', $user_id )->getResult();
 */
         $result = $this->findBy(
-            array ('user' => $user_id, 'entity_name' => 'FormType')
+            array('user' => $user_id, 'entity_name' => 'FormType')
         );
 
         return $result;
 
     }
 
-    public function getFormsForUser ( $user_id ) {
+    public function getFormsForUser($user_id)
+    {
 
         $result = $this->findBy(
-            array ('user' => $user_id, 'entity_name' => 'Form')
+            array('user' => $user_id, 'entity_name' => 'Form')
         );
 
         return $result;

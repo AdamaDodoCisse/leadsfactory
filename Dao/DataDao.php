@@ -7,16 +7,14 @@
  */
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
-use Tellaw\LeadsFactoryBundle\Entity\Form;
+class DataDao
+{
 
-class DataDao {
-
-    private function getDayValueForType ( $offset = 0 ) {
-
+    private function getDayValueForType($offset = 0)
+    {
 
 
     }
-
 
 
 }

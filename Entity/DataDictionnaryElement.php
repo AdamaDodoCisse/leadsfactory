@@ -1,6 +1,7 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -8,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryElementRepository")
  */
-class DataDictionnaryElement {
+class DataDictionnaryElement
+{
 
     public static $_STATUS_ENABLED = 1;
     public static $_STATUS_DISABLED = 0;
@@ -18,13 +20,13 @@ class DataDictionnaryElement {
         $this->children = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -160,7 +162,7 @@ class DataDictionnaryElement {
     /**
      * Get parent
      *
-     * @return string 
+     * @return string
      */
     public function getParent()
     {
@@ -200,7 +202,6 @@ class DataDictionnaryElement {
     }
 
 
-
     /**
      * Add children
      *
@@ -227,7 +228,7 @@ class DataDictionnaryElement {
     /**
      * Get children
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getChildren()
     {

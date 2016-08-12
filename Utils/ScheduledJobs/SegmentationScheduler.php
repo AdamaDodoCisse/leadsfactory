@@ -19,7 +19,7 @@ class SegmentationScheduler implements IScheduledJob
 
     public function getCommands()
     {
-        return array ('leadsfactory:export:segmentation');
+        return array('leadsfactory:export:segmentation');
     }
 
     public function getEnabled()

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
@@ -8,22 +8,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ExportCommand extends ContainerAwareCommand {
-	
-    private static $_PID_FILE = "export_command_is_running.lock";
-	
-	protected function configure() {
-		$this->setName('leadsfactory:export:leads')
-		    ->setDescription('Export leads')
-		    ->addArgument('form', InputArgument::OPTIONAL, 'form code')
-		;
-	}
+class ExportCommand extends ContainerAwareCommand
+{
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
+    private static $_PID_FILE = "export_command_is_running.lock";
+
+    protected function configure()
+    {
+        $this->setName('leadsfactory:export:leads')
+            ->setDescription('Export leads')
+            ->addArgument('form', InputArgument::OPTIONAL, 'form code');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
 
         $logger = $this->getContainer()->get('export.logger');
 
-        if ( !$this->isExportRunning() ) {
+        if (!$this->isExportRunning()) {
 
             $this->createExportPid();
             $output->writeln('Info : Created LOCK file : ' . ExportCommand::$_PID_FILE);
@@ -54,41 +56,42 @@ class ExportCommand extends ContainerAwareCommand {
             $output->writeln('Info : Removed LOCK file : ' . ExportCommand::$_PID_FILE);
 
         } else {
-            $output->writeln('Un export est déjà en traitement. Si c\'est anormal, merci de détruire le fichier LOCK :'.ExportCommand::$_PID_FILE );
-            $logger->error('Un export est déjà en traitement. Si c\'est anormal, merci dyouplase détruire le fichier LOCK :'.ExportCommand::$_PID_FILE);
+            $output->writeln('Un export est déjà en traitement. Si c\'est anormal, merci de détruire le fichier LOCK :' . ExportCommand::$_PID_FILE);
+            $logger->error('Un export est déjà en traitement. Si c\'est anormal, merci dyouplase détruire le fichier LOCK :' . ExportCommand::$_PID_FILE);
         }
-	}
+    }
 
-    private function createExportPid () {
+    private function createExportPid()
+    {
 
         $somecontent = date("c");
 
         if (!$handle = fopen(ExportCommand::$_PID_FILE, 'a')) {
-            throw new \Exception ("Impossible d'ouvrir le fichier (".ExportCommand::$_PID_FILE.")");
-            exit;
+            throw new \Exception ("Impossible d'ouvrir le fichier (" . ExportCommand::$_PID_FILE . ")");
         }
 
         if (fwrite($handle, $somecontent) === FALSE) {
-            throw new \Exception ("Impossible d'écrire dans le fichier (".ExportCommand::$_PID_FILE.")");
-            exit;
+            throw new \Exception ("Impossible d'écrire dans le fichier (" . ExportCommand::$_PID_FILE . ")");
         }
 
         fclose($handle);
 
     }
 
-    private function isExportRunning () {
-        if (file_exists( ExportCommand::$_PID_FILE )) {
+    private function isExportRunning()
+    {
+        if (file_exists(ExportCommand::$_PID_FILE)) {
             return true;
         } else {
             return false;
         }
     }
 
-    private function removePidFile () {
-        unlink (ExportCommand::$_PID_FILE);
-        if (file_exists( ExportCommand::$_PID_FILE )) {
-            throw new \Exception ("Impossible de retirer le fichier LOCK (".ExportCommand::$_PID_FILE.")");
+    private function removePidFile()
+    {
+        unlink(ExportCommand::$_PID_FILE);
+        if (file_exists(ExportCommand::$_PID_FILE)) {
+            throw new \Exception ("Impossible de retirer le fichier LOCK (" . ExportCommand::$_PID_FILE . ")");
         }
     }
 

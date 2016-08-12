@@ -4,8 +4,8 @@ namespace spec\Tellaw\LeadsFactoryBundle\Utils;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository;
 use Tellaw\LeadsFactoryBundle\Utils\Fields\FieldFactory;
 
 class FormUtilsSpec extends ObjectBehavior

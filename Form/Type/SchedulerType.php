@@ -16,18 +16,15 @@ class SchedulerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('enabled',null,array('required' => false))
-            ->add('id', null, array ("read_only" => true ))
+            ->add('enabled', null, array('required' => false))
+            ->add('id', null, array("read_only" => true))
             ->add('name')
             ->add('commandsAsString')
             ->add('cronexpression')
-
-            ->add('log', null, array ("read_only" => true ))
-
-            ->add('save', 'submit')
-        ;
+            ->add('log', null, array("read_only" => true))
+            ->add('save', 'submit');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */

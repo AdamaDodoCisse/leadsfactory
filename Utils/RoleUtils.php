@@ -9,7 +9,8 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
  *
  * @package Tellaw\LeadsFactoryBundle\Utils
  */
-class RoleUtils {
+class RoleUtils
+{
 
     private $roleHierarchy;
 
@@ -30,11 +31,12 @@ class RoleUtils {
      * @param $user
      * @return bool
      */
-    public function isGranted($role, $user) {
+    public function isGranted($role, $user)
+    {
 
         $role = new Role($role);
 
-        foreach($user->getRoles() as $userRole) {
+        foreach ($user->getRoles() as $userRole) {
             if (in_array($role, $this->roleHierarchy->getReachableRoles(array(new Role($userRole)))))
                 return true;
         }

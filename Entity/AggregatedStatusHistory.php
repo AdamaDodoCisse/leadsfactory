@@ -1,6 +1,7 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -8,7 +9,8 @@ use Doctrine\ORM\Mapping as ORM;
  * Tellaw\LeadsFactoryBundle\Entity\AggregatedStatusHistory
  *
  */
-class AggregatedStatusHistory {
+class AggregatedStatusHistory
+{
 
     private $statusHistoryElements = array();
 
@@ -28,7 +30,8 @@ class AggregatedStatusHistory {
         $this->statusHistoryElements = $statusHistoryElements;
     }
 
-    public function addStatusHistoryElement ( StatusHistory $statusHistory ) {
+    public function addStatusHistoryElement(StatusHistory $statusHistory)
+    {
 
         $this->statusHistoryElements[] = $statusHistory;
 

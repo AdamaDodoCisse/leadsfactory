@@ -4,22 +4,24 @@ namespace Tellaw\LeadsFactoryBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Tellaw\LeadsFactoryBundle\Entity\Users;
 
 class UsersLimitedType extends AbstractType
 {
 
     private $entity = "users";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(

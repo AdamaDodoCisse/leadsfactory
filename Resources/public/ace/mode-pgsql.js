@@ -9,7 +9,7 @@ var DocCommentHighlightRules = function() {
     this.$rules = {
         "start" : [ {
             token : "comment.doc.tag",
-            regex : "@[\\w\\d_]+" // TODO: fix email addresses
+            regex : "@[\\w\\d_]+"
         }, {
             token : "comment.doc.tag",
             regex : "\\bTODO\\b"
@@ -1138,7 +1138,7 @@ var PgsqlHighlightRules = function() {
             regex : "[+-]?\\d+(?:(?:\\.\\d*)?(?:[eE][+-]?\\d+)?)?\\b"
         }, {
             token : keywordMapper,
-            regex : "[a-zA-Z_][a-zA-Z0-9_$]*\\b" // TODO - Unicode in identifiers
+            regex : "[a-zA-Z_][a-zA-Z0-9_$]*\\b"
         }, {
             token : "keyword.operator",
             regex : "!|!!|!~|!~\\*|!~~|!~~\\*|#|##|#<|#<=|#<>|#=|#>|#>=|%|\\&|\\&\\&|\\&<|\\&<\\||\\&>|\\*|\\+|" +

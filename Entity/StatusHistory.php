@@ -1,27 +1,29 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\StatusHistory
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\StatusHistoryRepository")
  *
  * StatusHistory is an object to store history data about monitors.
  * Every days each monitor should save its status to this table wich means 365 entries by monitor
  *
  */
-class StatusHistory {
+class StatusHistory
+{
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -167,7 +169,6 @@ class StatusHistory {
     {
         $this->updatedAt = $updatedAt;
     }
-
 
 
 }

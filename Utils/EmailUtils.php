@@ -1,13 +1,11 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Tellaw\LeadsFactoryBundle\Entity\Leads;
-use Tellaw\LeadsFactoryBundle\Entity\LeadsHistory;
+use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Users;
 
 /**
@@ -17,7 +15,8 @@ use Tellaw\LeadsFactoryBundle\Entity\Users;
  *
  * @author Eric Wallet
  */
-class EmailUtils implements ContainerAwareInterface {
+class EmailUtils implements ContainerAwareInterface
+{
 
     /**
      * @var ContainerInterface
@@ -39,7 +38,8 @@ class EmailUtils implements ContainerAwareInterface {
     /**
      * @param ContainerInterface $container
      */
-    public function setContainer(ContainerInterface $container = null) {
+    public function setContainer(ContainerInterface $container = null)
+    {
 
         $this->container = $container;
         $this->logger = $this->container->get("logger");
@@ -47,14 +47,15 @@ class EmailUtils implements ContainerAwareInterface {
 
     /**
      * @param Users $destUser
-     * @param $action   "Very short message to describe the action, could be a Verb"
+     * @param $action "Very short message to describe the action, could be a Verb"
      * @param $detailAction "Sentence to explain the action"
-     * @param $message  "Detailed message related to the action"
-     * @param $urlLead  "Url of the leads object the action is about"
-     * @param $urlApplication   "Url of the Lead's factory Application"
+     * @param $message "Detailed message related to the action"
+     * @param $urlLead "Url of the leads object the action is about"
+     * @param $urlApplication "Url of the Lead's factory Application"
      * @return mixed
      */
-    public function sendUserNotification ( Users $destUser, $action, $detailAction, $message, $urlLead, $urlApplication ) {
+    public function sendUserNotification(Users $destUser, $action, $detailAction, $message, $urlLead, $urlApplication)
+    {
 
         $toEmail = $destUser->getEmail();
         $toName = ucfirst($destUser->getFirstname()) . ' ' . ucfirst($destUser->getLastname());
@@ -64,7 +65,7 @@ class EmailUtils implements ContainerAwareInterface {
         $prefUtils = $this->get('preferences_utils');
         $from = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_EMAIL_SENDER', $scopeId);
 
-        $subject = "Lead's Factory : ".$action;
+        $subject = "Lead's Factory : " . $action;
 
         $template = $this->renderView(
             'TellawLeadsFactoryBundle::emails/lead_notification.html.twig',

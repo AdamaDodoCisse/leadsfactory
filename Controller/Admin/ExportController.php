@@ -2,21 +2,19 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
-use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
+use Tellaw\LeadsFactoryBundle\Entity;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
-use Tellaw\LeadsFactoryBundle\Entity;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
@@ -24,7 +22,8 @@ use JMS\SecurityExtraBundle\Annotation\Secure;
 class ExportController extends CoreController
 {
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -36,7 +35,7 @@ class ExportController extends CoreController
      */
     public function exportAction(Request $request)
     {
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
@@ -45,20 +44,21 @@ class ExportController extends CoreController
 
         $logger = $this->get('export.logger');
 
-        if(is_null($formId)){
+        if (is_null($formId)) {
             $forms = $this->get('leadsfactory.form_repository')->findAll();
-        }else{
+        } else {
             $forms = $this->get('leadsfactory.form_repository')->find($formId);
             $forms = array($forms);
         }
 
-        foreach($forms as $form){
-            try{
+        foreach ($forms as $form) {
+            try {
                 $this->get('export_utils')->export($form);
-            }catch(\Exception $e){
+            } catch (\Exception $e) {
                 $logger->error($e->getMessage());
             }
         }
+
         return $this->redirect($this->generateUrl($redirectUrl));
     }
 
@@ -69,15 +69,15 @@ class ExportController extends CoreController
      * @route("/export/history/{page}/{limit}/{keyword}", name="_export_history")
      * @Secure(roles="ROLE_USER")
      */
-    public function showHistoryAction($page=1, $limit=25, $keyword='')
+    public function showHistoryAction($page = 1, $limit = 25, $keyword = '')
     {
-        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser(), 'statuses' => array()));
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array('user' => $this->getUser(), 'statuses' => array()));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );
@@ -89,16 +89,16 @@ class ExportController extends CoreController
      * @route("/export/history-error/{page}/{limit}/{keyword}", name="_export_history_error")
      * @Secure(roles="ROLE_USER")
      */
-    public function showHistoryErrorAction($page=1, $limit=25, $keyword='')
+    public function showHistoryErrorAction($page = 1, $limit = 25, $keyword = '')
     {
 
-        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser(), 'statuses' => array( ExportUtils::$_EXPORT_ONE_TRY_ERROR, ExportUtils::$_EXPORT_MULTIPLE_ERROR)));
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array('user' => $this->getUser(), 'statuses' => array(ExportUtils::$_EXPORT_ONE_TRY_ERROR, ExportUtils::$_EXPORT_MULTIPLE_ERROR)));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );
@@ -110,16 +110,16 @@ class ExportController extends CoreController
      * @route("/export/history-emailnotvalidated/{page}/{limit}/{keyword}", name="_export_history_emailnotvalidated")
      * @Secure(roles="ROLE_USER")
      */
-    public function showHistoryNotValidatedEmailAction($page=1, $limit=25, $keyword='')
+    public function showHistoryNotValidatedEmailAction($page = 1, $limit = 25, $keyword = '')
     {
 
-        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array ('user'=>$this->getUser(), 'statuses' => array( ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED )));
+        $list = $this->getList('TellawLeadsFactoryBundle:Export', $page, $limit, $keyword, array('user' => $this->getUser(), 'statuses' => array(ExportUtils::EXPORT_EMAIL_NOT_CONFIRMED)));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Export:list.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );

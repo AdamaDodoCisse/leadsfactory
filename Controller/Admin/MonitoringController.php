@@ -2,53 +2,29 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tellaw\LeadsFactoryBundle\Entity\Bookmark;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Tellaw\LeadsFactoryBundle\Utils\AlertUtils;
 use Tellaw\LeadsFactoryBundle\Utils\Chart;
-use \Tellaw\LeadsFactoryBundle\Utils\AlertUtils;
 
 /**
  * @Route("/")
  */
-class MonitoringController extends CoreController {
+class MonitoringController extends CoreController
+{
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
 
     }
 
-    /**
-     * @route("/dashboard", name="_monitoring_dashboard")
-     * @Secure(roles="ROLE_USER")
-     *//*
-    public function dashboardAction(Request $request)
-    {
-
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
-            return $this->redirect($this->generateUrl('_security_licence_error'));
-        }
-
-        // Logged User
-        $user_id = $this->get('security.context')->getToken()->getUser()->getId();
-
-        // Get All Types in the scope
-        $types = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsType();
-
-        // Load bookmarked types for user
-        $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getTypesForUser( $user_id );
-
-        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard.html.twig", array(
-            'types' => $types,
-            'bookmarks' => $bookmarks
-        ));
-    }
-*/
     /**
      * @route("/index", name="_monitoring_dashboard_forms")
      * @Secure(roles="ROLE_USER")
@@ -57,7 +33,7 @@ class MonitoringController extends CoreController {
     {
         $data = array();
 
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+        if (!$this->get("core_manager")->isMonitoringAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
@@ -65,11 +41,11 @@ class MonitoringController extends CoreController {
         $formBuilder->setMethod('POST')
             ->add('period', 'choice', array(
                     'choices' => array(
-                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_YEAR => 'Année',
                         Chart::PERIOD_MONTH => 'Mois'
                     ),
                     'label' => 'Période du graphique',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
             );
 
@@ -88,14 +64,14 @@ class MonitoringController extends CoreController {
 
         // Filter forms regarding scopes
         if ($user_scope) { // If there is a scope
-            foreach($forms as $n => $f) {
+            foreach ($forms as $n => $f) {
                 if ($user_scope && $f->getScope() != $user_scope)
                     unset($forms[$n]);
             }
         }
 
         // Load bookmarked forms for user
-        $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getFormsForUser( $user_id );
+        $bookmarks = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Bookmark")->getFormsForUser($user_id);
         $utils = $this->container->get('lf.utils');
         $utmForms = $this->get('leadsfactory.form_repository')->getStatisticsForUtmForms($forms, $utils);
         $utmBookmarks = $this->get('leadsfactory.form_repository')->getStatisticsForUtmBookmarks($forms, $bookmarks, $utils);
@@ -107,14 +83,14 @@ class MonitoringController extends CoreController {
         $nbLeads = $results;
         $forms = $this->sortFormsByBookmark($forms, $bookmarks);
 
-        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
-            'form_view'     =>  $form->createView(),
-            'bookmarks'     =>  $bookmarks,
-            'forms'         =>  $forms,
-            'utmForms'      =>  $utmForms,
-            'utmBookmarks'  =>  $utmBookmarks,
-            'nbviews'       =>  $views,
-            'nbLeads'       =>  $nbLeads
+        return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_forms.html.twig", array(
+            'form_view' => $form->createView(),
+            'bookmarks' => $bookmarks,
+            'forms' => $forms,
+            'utmForms' => $utmForms,
+            'utmBookmarks' => $utmBookmarks,
+            'nbviews' => $views,
+            'nbLeads' => $nbLeads
         ));
     }
 
@@ -125,7 +101,8 @@ class MonitoringController extends CoreController {
      * @param $bookmarks
      * @return array
      */
-    private function sortFormsByBookmark($forms, $bookmarks) {
+    private function sortFormsByBookmark($forms, $bookmarks)
+    {
         $bookmark_list = array();
         $sorted_forms = array();
         foreach ($bookmarks as $b) {
@@ -138,6 +115,7 @@ class MonitoringController extends CoreController {
                 array_push($sorted_forms, $form);
             }
         }
+
         return $sorted_forms;
     }
 
@@ -146,13 +124,13 @@ class MonitoringController extends CoreController {
      * @route("/dashboard_type_page/{type_id}", name="_monitoring_dashboard_type_page")
      * @Secure(roles="ROLE_USER")
      */
-    public function dashboardTypePageAction( Request $request, $type_id )
+    public function dashboardTypePageAction(Request $request, $type_id)
     {
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+        if (!$this->get("core_manager")->isMonitoringAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $entity = $this->get('leadsfactory.form_type_repository')->find( $type_id );
+        $entity = $this->get('leadsfactory.form_type_repository')->find($type_id);
 
         $data = array();
 
@@ -160,11 +138,11 @@ class MonitoringController extends CoreController {
         $formBuilder->setMethod('POST')
             ->add('period', 'choice', array(
                     'choices' => array(
-                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_YEAR => 'Année',
                         Chart::PERIOD_MONTH => 'Mois'
                     ),
                     'label' => 'Période du graphique',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
             );
 
@@ -175,8 +153,8 @@ class MonitoringController extends CoreController {
         // Get All Types in the scope
         $types = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:FormType")->getFormsType();
 
-        return $this->render ("TellawLeadsFactoryBundle:monitoring:dashboard_type_page.html.twig", array(
-            'form'  => $form->createView(),
+        return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_type_page.html.twig", array(
+            'form' => $form->createView(),
             'entity' => $entity,
             'types' => $types
         ));
@@ -187,14 +165,14 @@ class MonitoringController extends CoreController {
      * @route("/dashboard_forms_page/{form_id}", name="_monitoring_dashboard_form_page")
      * @Secure(roles="ROLE_USER")
      */
-    public function dashboardFormPageAction( Request $request, $form_id )
+    public function dashboardFormPageAction(Request $request, $form_id)
     {
 
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+        if (!$this->get("core_manager")->isMonitoringAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $entity = $this->get('leadsfactory.form_repository')->find( $form_id );
+        $entity = $this->get('leadsfactory.form_repository')->find($form_id);
 
         $data = array();
 
@@ -202,11 +180,11 @@ class MonitoringController extends CoreController {
         $formBuilder->setMethod('POST')
             ->add('period', 'choice', array(
                     'choices' => array(
-                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_YEAR => 'Année',
                         Chart::PERIOD_MONTH => 'Mois'
                     ),
                     'label' => 'Période du graphique',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
             );
 
@@ -218,8 +196,8 @@ class MonitoringController extends CoreController {
         $forms = $this->getDoctrine()->getRepository("TellawLeadsFactoryBundle:Form")->getForms();
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_form_page.html.twig", array(
-            'form'  => $form->createView(),
-            'entity'   => $entity,
+            'form' => $form->createView(),
+            'entity' => $entity,
             'alerteutil' => $this->get("alertes_utils"),
             'forms' => $forms
         ));
@@ -229,10 +207,10 @@ class MonitoringController extends CoreController {
      * @route("/dashboard_utm_page/{utm}", name="_monitoring_dashboard_utm_page")
      * @Secure(roles="ROLE_USER")
      */
-    public function dashboardUtmPageAction( Request $request, $utm )
+    public function dashboardUtmPageAction(Request $request, $utm)
     {
 
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+        if (!$this->get("core_manager")->isMonitoringAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
@@ -242,11 +220,11 @@ class MonitoringController extends CoreController {
         $formBuilder->setMethod('POST')
             ->add('period', 'choice', array(
                     'choices' => array(
-                        Chart::PERIOD_YEAR  => 'Année',
+                        Chart::PERIOD_YEAR => 'Année',
                         Chart::PERIOD_MONTH => 'Mois'
                     ),
                     'label' => 'Période du graphique',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
             );
 
@@ -255,7 +233,7 @@ class MonitoringController extends CoreController {
         $form->handleRequest($request);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:dashboard_utm_page.html.twig", array(
-            'form'  => $form->createView(),
+            'form' => $form->createView(),
             'alerteutil' => $this->get("alertes_utils"),
         ));
 
@@ -264,9 +242,10 @@ class MonitoringController extends CoreController {
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getUtmLinkedToFormAction ( $form_id ) {
+    public function getUtmLinkedToFormAction($form_id)
+    {
 
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+        if (!$this->get("core_manager")->isMonitoringAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
@@ -275,20 +254,20 @@ class MonitoringController extends CoreController {
 
         $form_repository = $this->get('leadsfactory.form_repository');
 
-        $entity = $form_repository->find( $form_id );
-        $utms = $form_repository->getUtmLinkedToForm( $form_id );
+        $entity = $form_repository->find($form_id);
+        $utms = $form_repository->getUtmLinkedToForm($form_id);
 
         $utmsObjects = array();
 
-        foreach ( $utms as $item ) {
-            $result = $form_repository->getStatisticsForUtmInForm( $item["utm"], $form_id, $utils );
+        foreach ($utms as $item) {
+            $result = $form_repository->getStatisticsForUtmInForm($item["utm"], $form_id, $utils);
             $utmsObjects[$result["transformRate"]] = $result;
         }
 
-        krsort( $utmsObjects );
+        krsort($utmsObjects);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:utmsLinkedToFormWidget.html.twig", array(
-            'entity'   => $entity,
+            'entity' => $entity,
             'utmsObjects' => $utmsObjects,
             'alerteutil' => $this->get("alertes_utils"),
         ));
@@ -296,66 +275,65 @@ class MonitoringController extends CoreController {
     }
 
 
-
     /**
      * Check this function again !
      * @Secure(roles="ROLE_USER")
      */
-    public function getStatsForFomPageAction ( $form_id ) {
+    public function getStatsForFomPageAction($form_id)
+    {
 
-        if (!$this->get("core_manager")->isMonitoringAccepted ()) {
+        if (!$this->get("core_manager")->isMonitoringAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
         /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
         $utils = $this->container->get('lf.utils');
         $form_repository = $this->get('leadsfactory.form_repository');
-        $utms = $form_repository->getUtmLinkedToForm( $form_id );
+        $utms = $form_repository->getUtmLinkedToForm($form_id);
 
         $utmsObjects = array();
-        foreach ( $utms as $item ) {
-            $result = $form_repository->getStatisticsForUtmInForm( $item["utm"], $form_id, $utils );
+        foreach ($utms as $item) {
+            $result = $form_repository->getStatisticsForUtmInForm($item["utm"], $form_id, $utils);
             $utmsObjects[$result["transformRate"]] = $result;
         }
 
-        foreach ($utmsObjects as $cpt => $utmObjects){
-            $data_views[$cpt]['label'] =  $utmObjects['utm'];
+        foreach ($utmsObjects as $cpt => $utmObjects) {
+            $data_views[$cpt]['label'] = $utmObjects['utm'];
             $data_views[$cpt]['value'] = $utmObjects['nbViews'];
 
-            $data_leads[$cpt]['label'] =  $utmObjects['utm'];
+            $data_leads[$cpt]['label'] = $utmObjects['utm'];
             $data_leads[$cpt]['value'] = $utmObjects['nbLeads'];
         }
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:pieChartInFormPage.html.twig", array(
-            'data_nb_views' =>  $data_views,
-            'data_nb_leads' =>  $data_leads
+            'data_nb_views' => $data_views,
+            'data_nb_leads' => $data_leads
         ));
     }
-
-
 
 
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getFormsInTypeWidgetAction ( $type_id ) {
+    public function getFormsInTypeWidgetAction($type_id)
+    {
 
         /** @var Tellaw\LeadsFactoryBundle\Utils\LFUtils $utils */
         $utils = $this->container->get('lf.utils');
 
-        $entities = $this->get('leadsfactory.form_type_repository')->getFormsInFormType( $type_id );
+        $entities = $this->get('leadsfactory.form_type_repository')->getFormsInFormType($type_id);
 
         $forms = array();
 
-        foreach ( $entities as $form ) {
+        foreach ($entities as $form) {
             $form = $this->get('leadsfactory.form_repository')->setStatisticsForId($form->getId(), $utils);
             $forms[$form->transformRate] = $form;
         }
 
-        krsort( $forms );
+        krsort($forms);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:formsInTypeWidget.html.twig", array(
-            'forms'   => $forms,
+            'forms' => $forms,
             'alerteutil' => $this->get("alertes_utils"),
         ));
     }
@@ -371,7 +349,7 @@ class MonitoringController extends CoreController {
      *
      * @Secure(roles="ROLE_USER")
      */
-    public function chartDashboardAction($period=Chart::PERIOD_YEAR, $mode='FormType', $objects = null)
+    public function chartDashboardAction($period = Chart::PERIOD_YEAR, $mode = 'FormType', $objects = null)
     {
         $user = $this->getUser();
 
@@ -381,30 +359,34 @@ class MonitoringController extends CoreController {
         $chart = $this->get('chart');
         $chart->setPeriod($period);
 
-        if( $mode == 'FormType' && $objects == null ){ // Get Bookmarks of object's type FormType
+        if ($mode == 'FormType' && $objects == null) { // Get Bookmarks of object's type FormType
             $query = $em->createQuery('SELECT f
                                       FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b
-                                      WHERE b.formType = f.id AND b.user ='.$user->getId());
+                                      WHERE b.formType = f.id AND b.user = :userId');
+
+            $query->setParameter('userId', $user->getId());
             $formTypes = $query->getResult();
             $chart->setFormType($formTypes);
 
-        } else if ( $mode == 'Form' && $objects == null ) { // Get Bookmarks of object's type Form
+        } else if ($mode == 'Form' && $objects == null) { // Get Bookmarks of object's type Form
             $query = $em->createQuery('SELECT f
                                       FROM TellawLeadsFactoryBundle:Form f
                                         JOIN TellawLeadsFactoryBundle:Scope s WITH s.id = f.scope,
                                       TellawLeadsFactoryBundle:Bookmark b
-                                      WHERE b.form = f.id AND b.user ='.$user->getId());
+                                      WHERE b.form = f.id AND b.user = :userId');
+
+            $query->setParameter('userId', $user->getId());
             $forms = $query->getResult();
             $chart->setForm($forms);
 
-        } else if ($mode == 'FormType' && $objects != null ) { // Get Array of objects of object's type FormType
-            $chart->setFormType ( $objects );
+        } else if ($mode == 'FormType' && $objects != null) { // Get Array of objects of object's type FormType
+            $chart->setFormType($objects);
 
-        } else if ( $mode == 'Form' && $objects != null ) { // Get Array of objects of object's type Form$
-            $chart->setForm ( $objects );
+        } else if ($mode == 'Form' && $objects != null) { // Get Array of objects of object's type Form$
+            $chart->setForm($objects);
 
         } else { // Throw exception for wrong state
-            throw new \Exception ("Mode for graph is incorrect : ".$mode."/". implode ( '/', $objects ));
+            throw new \Exception ("Mode for graph is incorrect : " . $mode . "/" . implode('/', $objects));
         }
 
 
@@ -414,10 +396,10 @@ class MonitoringController extends CoreController {
         $chartData = $chart->loadChartData();
 
         $data = array(
-            'chart_data'        => $chartData,
-            'time_range'        => $chart->getTimeRange(),
-            'chart_title'       => $chart->getChartTitle(),
-            'normal_graphs'    => $chart->getNormalGraph($chartData), //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
+            'chart_data' => $chartData,
+            'time_range' => $chart->getTimeRange(),
+            'chart_title' => $chart->getChartTitle(),
+            'normal_graphs' => $chart->getNormalGraph($chartData), //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
             'user_preferences' => $utils->getUserPreferences()
         );
 
@@ -432,26 +414,34 @@ class MonitoringController extends CoreController {
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:'.$mode.' f, TellawLeadsFactoryBundle:Bookmark b WHERE b.'.lcfirst($mode).' = f.id AND b.user ='.$user->getId());
+        if ($mode == 'FormType') {
+            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:FormType f, TellawLeadsFactoryBundle:Bookmark b WHERE b.FormType = f.id AND b.user = :userId');
+        } else {
+            $query = $em->createQuery('SELECT f FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:Bookmark b WHERE b.Form = f.id AND b.user = :userId');
+        }
+
+        $query->setParameter('userId', $user->getId());
+
         $entities = $query->getResult();
 
-        if($mode == 'FormType'){
+        if ($mode == 'FormType') {
             $title = 'Mes types favoris';
-        }else{
+        } else {
             $title = 'Mes formulaires favoris';
         }
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measure.html.twig", array(
-            'entities'  => $entities,
+            'entities' => $entities,
             'alerteutil' => $this->get("alertes_utils"),
-            'title'  => $title
+            'title' => $title
         ));
     }
 
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getAlertWidgetForTypeAction ( $type_id ) {
+    public function getAlertWidgetForTypeAction($type_id)
+    {
 
         $formTypeEntity = $this->get('leadsfactory.form_type_repository')->find($type_id);
 
@@ -464,7 +454,7 @@ class MonitoringController extends CoreController {
         $alertes_utils->setValuesForAlerts($formTypeEntity);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormTypeItem.html.twig", array(
-            'item'  => $formTypeEntity,
+            'item' => $formTypeEntity,
         ));
 
     }
@@ -483,7 +473,7 @@ class MonitoringController extends CoreController {
         $alertes_utils->setValuesForAlerts($formEntity);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measureFormItem.html.twig", array(
-            'item'  => $formEntity,
+            'item' => $formEntity,
         ));
     }
 
@@ -499,14 +489,16 @@ class MonitoringController extends CoreController {
         /** @var AlertUtils $alertes_utils */
         $alertes_utils = $this->get("alertes_utils");
         $alertes_utils->setValuesForAlerts($formEntity);
-        return new Response( $formEntity->yesterdayStatus );
+
+        return new Response($formEntity->yesterdayStatus);
 
     }
 
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getFormStatusTextAction($form_id) {
+    public function getFormStatusTextAction($form_id)
+    {
         $formEntity = $this->get('leadsfactory.form_repository')->find($form_id);
 
         if ($formEntity == null) throw new \Exception ("Form cannot be null");
@@ -514,13 +506,15 @@ class MonitoringController extends CoreController {
         /** @var AlertUtils $alertes_utils */
         $alertes_utils = $this->get("alertes_utils");
         $alertes_utils->setValuesForAlerts($formEntity);
-        return new Response( $formEntity->yesterdayStatusText );
+
+        return new Response($formEntity->yesterdayStatusText);
     }
 
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function getFormStatusColorAction($form_id) {
+    public function getFormStatusColorAction($form_id)
+    {
         $formEntity = $this->get('leadsfactory.form_repository')->find($form_id);
 
         if ($formEntity == null) throw new \Exception ("Form cannot be null");
@@ -528,7 +522,8 @@ class MonitoringController extends CoreController {
         /** @var AlertUtils $alertes_utils */
         $alertes_utils = $this->get("alertes_utils");
         $alertes_utils->setValuesForAlerts($formEntity);
-        return new Response( $formEntity->yesterdayStatusColor );
+
+        return new Response($formEntity->yesterdayStatusColor);
     }
 
     /**
@@ -565,7 +560,6 @@ class MonitoringController extends CoreController {
 
     /**
      * @Secure(roles="ROLE_USER")
-     * TODO DEPRECATED : THIS FUNCTION IS NOW USELESS
      */
     public function getFormStatisticsValuesAction($form_id)
     {
@@ -586,26 +580,26 @@ class MonitoringController extends CoreController {
     /**
      * @Secure(roles="ROLE_USER")
      */
-    public function measureAction($formType=null, $form=null)
+    public function measureAction($formType = null, $form = null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if(!empty($form)){
+        if (!empty($form)) {
             $form = $this->get('leadsfactory.form_repository')->find($form);
             $entities = array($form);
-            $title = 'Formulaire '.$form->getName();
-        }elseif(!empty($formType)){
+            $title = 'Formulaire ' . $form->getName();
+        } elseif (!empty($formType)) {
             $entities = $this->get('leadsfactory.form_repository')->findByFormType($formType);
             $title = "Tous les formulaires du type sélectionné";
-        }else{
+        } else {
             $entities = $this->get('leadsfactory.form_type_repository')->findAll();
             $title = "Tous les types de formulaires";
         }
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:measure.html.twig", array(
-            'entities'  => $entities,
+            'entities' => $entities,
             'alerteutil' => $this->get("alertes_utils"),
-            'title'  => $title
+            'title' => $title
         ));
     }
 
@@ -620,39 +614,38 @@ class MonitoringController extends CoreController {
         $formBuilder = $this->createFormBuilder($data);
 
         $formBuilder->setMethod('POST')
-            ->add('period', 'choice',array(
+            ->add('period', 'choice', array(
                     'choices' => array(
-                        'year'  => 'Année',
+                        'year' => 'Année',
                         'month' => 'Mois'
                     ),
                     'label' => 'Période',
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
             )
             ->add('form_type', 'choice',
                 array(
-                    'choices'   => $this->getFormTypesOptions(),
-                    'label'     => 'Type',
-                    'required'  => false,
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'choices' => $this->getFormTypesOptions(),
+                    'label' => 'Type',
+                    'required' => false,
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
             )
             ->add('form', 'choice',
                 array(
-                    'choices'   => $this->getFormOptions($request),
-                    'label'     => 'Formulaire',
-                    'required'  => false,
-                    'attr' => array('onchange'  => 'javascript:this.form.submit()')
+                    'choices' => $this->getFormOptions($request),
+                    'label' => 'Formulaire',
+                    'required' => false,
+                    'attr' => array('onchange' => 'javascript:this.form.submit()')
                 )
-            )
-        ;
+            );
 
         $form = $formBuilder->getForm();
 
         $form->handleRequest($request);
 
         return $this->render("TellawLeadsFactoryBundle:monitoring:index.html.twig", array(
-            'form'       => $form->createView()
+            'form' => $form->createView()
         ));
     }
 
@@ -665,9 +658,9 @@ class MonitoringController extends CoreController {
      * @var mixed form
      * @return Response
      */
-    public function chartAction($period='year', $formType=null, $form=null)
+    public function chartAction($period = 'year', $formType = null, $form = null)
     {
-        if(!empty($form))
+        if (!empty($form))
             $form = array($form);
 
         $chart = $this->get('chart');
@@ -681,10 +674,10 @@ class MonitoringController extends CoreController {
         $template = "TellawLeadsFactoryBundle:monitoring:chart_bar.html.twig";
 
         $data = array(
-            'chart_data'        => $chartData,
-            'time_range'        => $chart->getTimeRange(),
-            'chart_title'       => $chart->getChartTitle(),
-            'special_graphs'    => $chart->getSpecialGraphIndexes($chartData) //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
+            'chart_data' => $chartData,
+            'time_range' => $chart->getTimeRange(),
+            'chart_title' => $chart->getChartTitle(),
+            'special_graphs' => $chart->getSpecialGraphIndexes($chartData) //indexes des graphes à afficher en mode 'ligne' (pour le combo chart)
         );
 
         return $this->render($template, $data);
@@ -698,7 +691,7 @@ class MonitoringController extends CoreController {
     {
         $formTypes = $this->get('leadsfactory.form_type_repository')->findAll();
         $array = array('' => 'Tous');
-        foreach($formTypes as $formType){
+        foreach ($formTypes as $formType) {
             $array[$formType->getId()] = $formType->getName();
         }
 
@@ -714,15 +707,16 @@ class MonitoringController extends CoreController {
         $form = $request->request->get('form');
         $form_type = $form['form_type'];
 
-        if(empty($form_type))
+        if (empty($form_type))
             return array('' => 'Choisissez d\'abord un type');
 
         $forms = $this->get('leadsfactory.form_repository')->findByFormType($form_type);
 
         $options = array('' => 'Sélectionnez');
-        foreach($forms as $form){
+        foreach ($forms as $form) {
             $options[$form->getId()] = $form->getName();
         }
+
         return $options;
     }
 
@@ -740,9 +734,9 @@ class MonitoringController extends CoreController {
     {
         $bookmarked = $request->request->get('status');
 
-        if($bookmarked == 'true'){
+        if ($bookmarked == 'true') {
             $this->createBookmark($request);
-        }else{
+        } else {
             $this->deleteBookmark($request);
         }
 
@@ -756,13 +750,13 @@ class MonitoringController extends CoreController {
     {
         $user = $this->getUser();
         $entity_type = $request->request->get('entity');
-        $id = (int) $request->request->get('id');
+        $id = (int)$request->request->get('id');
 
         $em = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('TellawLeadsFactoryBundle:'.$entity_type)->find($id);
+        $entity = $em->getRepository('TellawLeadsFactoryBundle:' . $entity_type)->find($id);
 
-        $entitySetter = 'set'.$entity_type;
+        $entitySetter = 'set' . $entity_type;
 
         $bookmark = new Bookmark();
         $bookmark->setUser($user);
@@ -784,9 +778,9 @@ class MonitoringController extends CoreController {
         $em = $this->getDoctrine()->getManager();
 
         $bookmark = $em->getRepository('TellawLeadsFactoryBundle:Bookmark')->findOneBy(array(
-            'user'       => $user,
-            'entity_name'   => $entity,
-            'entity_id'     => $id
+            'user' => $user,
+            'entity_name' => $entity,
+            'entity_id' => $id
         ));
 
         $em->remove($bookmark);
