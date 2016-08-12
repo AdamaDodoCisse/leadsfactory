@@ -70,7 +70,7 @@ class EntityLeadsController extends CoreController
         $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
 
         if ($user == null) {
-            throw new Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : " . $dispatchUserEmail);
+            throw new \Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : " . $dispatchUserEmail);
         }
 
         $filterForm = $this->getLeadsFilterForm();

@@ -20,7 +20,7 @@ snippet wh\n\
 # dowh - does the same as do...while in other languages\n\
 snippet dowh\n\
 	while True:\n\
-		${1:# TODO: write code...}\n\
+		${1:# TO DO: write code...}\n\
 		if ${2:condition}:\n\
 			break\n\
 snippet with\n\
