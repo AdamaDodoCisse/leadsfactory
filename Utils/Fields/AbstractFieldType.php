@@ -1,7 +1,8 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-abstract class AbstractFieldType {
+abstract class AbstractFieldType
+{
 
     public static $_DATATYPE_PHONENUMBER = "PHONE_NUMBER";
     public static $_DATATYPE_EMAIL = "EMAIL";
@@ -10,7 +11,8 @@ abstract class AbstractFieldType {
     public static $_DATATYPE_COUNTRY_NAME = "COUNTRY_NAME";
     public static $_DATATYPE_FILE = "FILE";
 
-    public function getTestValue ( $dataType, $field ) {
+    public function getTestValue($dataType, $field)
+    {
         if (isset($field["attributes"]["id"])) {
             return "test-value-" . $field["attributes"]["id"];
         } else {
@@ -22,7 +24,7 @@ abstract class AbstractFieldType {
      * Generic list of attributes to ignore for tags
      * @var array $attributesToIgnore Defines attributes which should not be copied to html output for the field
      */
-    private $attributesToIgnore = array ("type", "id", "validator", "display");
+    private $attributesToIgnore = array("type", "id", "validator", "display");
 
     /**
      * List of attributes to ignore specifics to the current tag
@@ -33,22 +35,24 @@ abstract class AbstractFieldType {
     /**
      * @var array $validatorList List of default validators that the system can use
      */
-    private $validatorList = array ();
+    private $validatorList = array();
 
     /**
      * @var array $customValidatorList Specific validators for the current field
      */
-    private $customValidatorList = array ();
+    private $customValidatorList = array();
 
     /**
      * Method used to render to html a field
      * @param Object $tag Tag object
      * @return string Html Content formatted
      */
-    public function renderToHtml ( $tag ) {
+    public function renderToHtml($tag)
+    {
 
         $id = $tag["attributes"]["id"];
-        return "<input type='text' name='lffield[".$id."]' id='lffield[".$id."]' value='' ".$this->getAttributes( $tag )." />";
+
+        return "<input type='text' name='lffield[" . $id . "]' id='lffield[" . $id . "]' value='' " . $this->getAttributes($tag) . " />";
 
     }
 
@@ -56,16 +60,18 @@ abstract class AbstractFieldType {
      * Return the list of tags required to be ignored
      * @return array merged lists of attributes to ignore
      */
-    protected function getAttributesToIgnore () {
-        return array_merge( $this->attributesToIgnore, $this->customAttributesToIgnore );
+    protected function getAttributesToIgnore()
+    {
+        return array_merge($this->attributesToIgnore, $this->customAttributesToIgnore);
     }
 
     /**
      * Return the list of validators available
      * @return array merged list of available validators
      */
-    protected function getValidatorsList () {
-        return array_merge( $this->validatorList, $this->customValidatorList );
+    protected function getValidatorsList()
+    {
+        return array_merge($this->validatorList, $this->customValidatorList);
     }
 
 
@@ -74,9 +80,10 @@ abstract class AbstractFieldType {
      * @param string $tag Tag string
      * @return bool true if the tag must be ignored, and false if it should be copied to output
      */
-    protected function isAttributeToIgnore ( $tag ) {
+    protected function isAttributeToIgnore($tag)
+    {
 
-        if ( !in_array (strtolower( $tag ), $this->getAttributesToIgnore() ) ) {
+        if (!in_array(strtolower($tag), $this->getAttributesToIgnore())) {
             return false;
         } else {
             return true;
@@ -89,14 +96,15 @@ abstract class AbstractFieldType {
      * @param array $tag content tag
      * @return string string of attributes to include in the tag
      */
-    protected function getAttributes ( $tag ) {
+    protected function getAttributes($tag)
+    {
 
         $htmlAttributes = "";
 
-        foreach ( $tag["attributes"] as $key=>$attribute ) {
+        foreach ($tag["attributes"] as $key => $attribute) {
 
-            if ( !$this->isAttributeToIgnore( $key ) ) {
-                $htmlAttributes .= $key."='".$attribute."' ";
+            if (!$this->isAttributeToIgnore($key)) {
+                $htmlAttributes .= $key . "='" . $attribute . "' ";
             }
 
         }
@@ -112,17 +120,19 @@ abstract class AbstractFieldType {
      * @return bool true if not empty.
      *
      */
-    protected function isValidFor_not_empty ( $value ) {
+    protected function isValidFor_not_empty($value)
+    {
 
-        if (trim($value)!="")
+        if (trim($value) != "")
             return true;
         else
             return false;
 
     }
 
-    public function getDemoValue ( $id ){
-        return "field-".$id."-autofill";
+    public function getDemoValue($id)
+    {
+        return "field-" . $id . "-autofill";
     }
 
 }

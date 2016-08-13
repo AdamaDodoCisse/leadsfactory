@@ -9,6 +9,7 @@
 namespace Tellaw\LeadsFactoryBundle\Shared;
 
 
-class SearchShared {
+class SearchShared
+{
 
 }

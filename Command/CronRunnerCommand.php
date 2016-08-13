@@ -2,17 +2,17 @@
 
 namespace Tellaw\LeadsFactoryBundle\Command;
 
+use Cron\CronExpression;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Cron\CronExpression;
-use Tellaw\LeadsFactoryBundle\Entity\CronTask;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class CronRunnerCommand extends ContainerAwareCommand {
+class CronRunnerCommand extends ContainerAwareCommand
+{
 
     private $output;
 
@@ -20,8 +20,7 @@ class CronRunnerCommand extends ContainerAwareCommand {
     {
         $this
             ->setName('leadsfactory:crontasks:run')
-            ->setDescription('Runs Cron Tasks if needed')
-        ;
+            ->setDescription('Runs Cron Tasks if needed');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,7 +46,7 @@ class CronRunnerCommand extends ContainerAwareCommand {
                 //$run = @(time() >= $nextrun);
 
 
-                if ( $crontask->getNextrun() <= $now ) {
+                if ($crontask->getNextrun() <= $now) {
 
                     $this->output = new BufferedOutput();
                     $output->writeln(sprintf('Running Cron Task <info>%s</info>', $crontask->getName()));
@@ -66,36 +65,37 @@ class CronRunnerCommand extends ContainerAwareCommand {
                         }
 
                         $output->writeln('<info>SUCCESS</info>');
-                        $crontask->setLog( $this->output->fetch() );
-                        $crontask->setStatus (1);
+                        $crontask->setLog($this->output->fetch());
+                        $crontask->setStatus(1);
 
                     } catch (\Exception $e) {
 
                         $output->writeln('<error>ERROR</error>');
-                        $output->writeln('<error>'.$e->getMessage().'</error>');
-                        $output->writeln('<error>'.$e->getTraceAsString().'</error>');
-                        $crontask->setStatus (2);
-                        $crontask->setLog( $this->output->fetch()."\r\n-----------------\r\n".$e->getMessage()."\r\n-----------------\r\n".$e->getTraceAsString() );
+                        $output->writeln('<error>' . $e->getMessage() . '</error>');
+                        $output->writeln('<error>' . $e->getTraceAsString() . '</error>');
+                        $crontask->setStatus(2);
+                        $crontask->setLog($this->output->fetch() . "\r\n-----------------\r\n" . $e->getMessage() . "\r\n-----------------\r\n" . $e->getTraceAsString());
 
                     }
 
                     // Persist crontask
                     $em->persist($crontask);
-                    $em->flush();
+
                 } else {
                     $output->writeln(sprintf('Skipping Cron Task <info>%s</info>', $crontask->getName()));
                 }
+
+
 
             }
 
             // Get the last run time of this task, and calculate when it should run next
             $lastrun = $crontask->getLastRun() ? $crontask->getLastRun() : 0;
             $cron = CronExpression::factory($crontask->getCronexpression());
-            $nextrun = $cron->getNextRunDate( $lastrun );
-            if (!$crontask->getNextrun() || $crontask->getNextrun() <= $now ) {
-                $crontask->setNextrun( $nextrun );
+            $nextrun = $cron->getNextRunDate($lastrun);
+            if (!$crontask->getNextrun() || $crontask->getNextrun() <= $now) {
+                $crontask->setNextrun($nextrun);
                 $em->persist($crontask);
-                $em->flush();
             }
 
         }
@@ -122,7 +122,8 @@ class CronRunnerCommand extends ContainerAwareCommand {
         return $returnCode != 0;
     }
 
-    function getExceptionTraceAsString($exception) {
+    function getExceptionTraceAsString($exception)
+    {
         $rtn = "";
         $count = 0;
         foreach ($exception->getTrace() as $frame) {
@@ -148,17 +149,17 @@ class CronRunnerCommand extends ContainerAwareCommand {
                 }
                 $args = join(", ", $args);
             }
-            $rtn .= sprintf( "#%s %s(%s): %s(%s)\n",
+            $rtn .= sprintf("#%s %s(%s): %s(%s)\n",
                 $count,
                 $frame['file'],
                 $frame['line'],
                 $frame['function'],
-                $args );
+                $args);
             $count++;
         }
+
         return $rtn;
     }
-
 
 
 }

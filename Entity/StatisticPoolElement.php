@@ -8,7 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="statElement")
  */
-class StatisticPoolElement {
+class StatisticPoolElement
+{
 
 
     /**
@@ -139,7 +140,8 @@ class StatisticPoolElement {
         $this->created_at = $created_at;
     }
 
-    public function asArray() {
+    public function asArray()
+    {
 
         $content = array();
         $content["id"] = $this->getId();

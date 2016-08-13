@@ -15,5 +15,4 @@ class EntrepriseAdressRepository extends EntityRepository
 {
 
 
-
 }

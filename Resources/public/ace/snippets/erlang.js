@@ -50,7 +50,7 @@ snippet try\n\
 snippet rec\n\
 	-record(${1:record}, {\n\
 	    ${2:field}=${3:value}}).${4}\n\
-# todo comment\n\
+# to do comment\n\
 snippet todo\n\
 	%% TODO: ${1}\n\
 ## Snippets below (starting with '%') are in EDoc format.\n\

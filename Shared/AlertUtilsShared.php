@@ -11,7 +11,8 @@ namespace Tellaw\LeadsFactoryBundle\Shared;
 
 use Tellaw\LeadsFactoryBundle\Utils\AlertUtils;
 
-class AlertUtilsShared {
+class AlertUtilsShared
+{
 
     /**
      * @param integer $valueNow actual value
@@ -19,37 +20,38 @@ class AlertUtilsShared {
      * @param Array $rules of alerts (use getRules from Form and FormType)
      * @return int status of the values
      */
-    public function checkWarningStatus ( $valueNow, $valueOld, $rules ) {
+    public function checkWarningStatus($valueNow, $valueOld, $rules)
+    {
 
-        $warningRules = $this->getWarningRules( $rules['rules'] );
-        $alertRules = $this->getAlertRules( $rules['rules'] );;
+        $warningRules = $this->getWarningRules($rules['rules']);
+        $alertRules = $this->getAlertRules($rules['rules']);;
 
-        if ( count ($alertRules) > 0 ) {
+        if (count($alertRules) > 0) {
 
             // Alert Detection
-            if ($alertRules["min"] != null && $valueNow <= $alertRules["min"] )
+            if ($alertRules["min"] != null && $valueNow <= $alertRules["min"])
                 return AlertUtils::$_STATUS_ERROR;
 
-            if ($alertRules["max"] != null && $valueNow >= $alertRules["max"] )
+            if ($alertRules["max"] != null && $valueNow >= $alertRules["max"])
                 return AlertUtils::$_STATUS_ERROR;
 
-            if ($alertRules["delta"] != null && $this->getDeltaPourcentValue ( $valueOld, $valueNow, $alertRules["delta"] ) )
+            if ($alertRules["delta"] != null && $this->getDeltaPourcentValue($valueOld, $valueNow, $alertRules["delta"]))
                 return AlertUtils::$_STATUS_ERROR;
 
         } else {
             return AlertUtils::$_STATUS_UNKNOWN;
         }
 
-        if ( count ($warningRules) > 0 ) {
+        if (count($warningRules) > 0) {
 
             // Warning detection
-            if ($warningRules["min"] != null && $valueNow <= $warningRules["min"] )
+            if ($warningRules["min"] != null && $valueNow <= $warningRules["min"])
                 return AlertUtils::$_STATUS_WARNING;
 
-            if ($warningRules["max"] != null && $valueNow >= $warningRules["max"] )
+            if ($warningRules["max"] != null && $valueNow >= $warningRules["max"])
                 return AlertUtils::$_STATUS_WARNING;
 
-            if ($warningRules["delta"] != null && $this->getDeltaPourcentValue( $valueOld, $valueNow, $warningRules["delta"] ) )
+            if ($warningRules["delta"] != null && $this->getDeltaPourcentValue($valueOld, $valueNow, $warningRules["delta"]))
                 return AlertUtils::$_STATUS_WARNING;
 
         } else {
@@ -62,23 +64,24 @@ class AlertUtilsShared {
 
     /**
      * This method will return an Array containing formated rules of Warning
-     * @param Array $rules.
+     * @param Array $rules .
      * @return Array formatted
      */
-    public function getWarningRules ( $rules ) {
+    public function getWarningRules($rules)
+    {
 
         $warningRules = isset($rules['warning']) ? $rules['warning'] : false;
 
-        if ( is_array($warningRules) ) {
+        if (is_array($warningRules)) {
 
-            if ( !array_key_exists( "min", $warningRules ) )
-                $warningRules["min"]=null;
+            if (!array_key_exists("min", $warningRules))
+                $warningRules["min"] = null;
 
-            if ( !array_key_exists( "max", $warningRules ) )
-                $warningRules["min"]=null;
+            if (!array_key_exists("max", $warningRules))
+                $warningRules["min"] = null;
 
-            if ( !array_key_exists( "delta", $warningRules ) )
-                $warningRules["min"]=null;
+            if (!array_key_exists("delta", $warningRules))
+                $warningRules["min"] = null;
 
             return $warningRules;
 
@@ -90,23 +93,24 @@ class AlertUtilsShared {
 
     /**
      * This method will return an Array containing formated rules of Alerts
-     * @param Array $rules.
+     * @param Array $rules .
      * @return Array formatted
      */
-    public function getAlertRules ( $rules ) {
+    public function getAlertRules($rules)
+    {
 
         $alertRules = isset($rules['error']) ? $rules['error'] : false;
 
-        if ( is_array($alertRules) ) {
+        if (is_array($alertRules)) {
 
-            if ( !array_key_exists( "min", $alertRules ) )
-                $alertRules["min"]=null;
+            if (!array_key_exists("min", $alertRules))
+                $alertRules["min"] = null;
 
-            if ( !array_key_exists( "max", $alertRules ) )
-                $alertRules["max"]=null;
+            if (!array_key_exists("max", $alertRules))
+                $alertRules["max"] = null;
 
-            if ( !array_key_exists( "delta", $alertRules ) )
-                $alertRules["delta"]=null;
+            if (!array_key_exists("delta", $alertRules))
+                $alertRules["delta"] = null;
 
             return $alertRules;
 
@@ -123,9 +127,10 @@ class AlertUtilsShared {
      * @param $deltaValue
      * @return float|string
      */
-    public function getDeltaPourcentValue ( $oldValue, $currentValue, $deltaValue ) {
+    public function getDeltaPourcentValue($oldValue, $currentValue, $deltaValue)
+    {
 
-        if ( $deltaValue == 0 ) return "&laquo;NAN&raquo;";
+        if ($deltaValue == 0) return "&laquo;NAN&raquo;";
 
         // calculate variation of first value
         // FirstValue * DeltaPourcentValue / 100 = Delta
@@ -134,11 +139,11 @@ class AlertUtilsShared {
         //throw new \Exception ("Error : ".($oldValue - $value)." - ".$currentValue. " - ".($oldValue + $value));
 
         // Current value is smaller then last value including maximum variation decreasing
-        if ( ($oldValue - $value) > $currentValue )
+        if (($oldValue - $value) > $currentValue)
             return true;
 
         // Current value is higher then last value including maximum variation increasing
-        if ( ($oldValue + $value) < $currentValue )
+        if (($oldValue + $value) < $currentValue)
             return true;
 
         // Match delta changes criterias
@@ -152,11 +157,12 @@ class AlertUtilsShared {
      * @param $currentValue
      * @return float|string
      */
-    public function getDeltaPourcent ( $oldValue, $currentValue ) {
+    public function getDeltaPourcent($oldValue, $currentValue)
+    {
 
         if ($oldValue == 0) return "&laquo; Données indisponibles &raquo;";
         if ($currentValue == 0) return "&laquo; calcul impossible &raquo;";
-        $result = ( $currentValue * 100 ) / $oldValue;
+        $result = ($currentValue * 100) / $oldValue;
 
         return $result;
 
@@ -183,42 +189,42 @@ class AlertUtilsShared {
 
         // Calculate todays number of leads
         $minDate = new \DateTime();
-        $item->todayValue = $this->getLeadsCountForForms( $forms, $minDate );
+        $item->todayValue = $this->getLeadsCountForForms($forms, $minDate);
 
         // Create yesterday's date object
         $minDate = new \DateTime();
         $minDate = $minDate->sub(new \DateInterval("P01D"));
-        $item->yesterdayValue = $this->getLeadsCountForForms( $forms, $minDate );
-        $item->textualYesterdayDay = $this->day[$minDate->format('N')]." ". $minDate->format("d")." ". $this->month[$minDate->format('n')];
+        $item->yesterdayValue = $this->getLeadsCountForForms($forms, $minDate);
+        $item->textualYesterdayDay = $this->day[$minDate->format('N')] . " " . $minDate->format("d") . " " . $this->month[$minDate->format('n')];
 
         // Get the value for week before
         $minDate = new \DateTime();
         $minDate = $minDate->sub(new \DateInterval("P08D"));
-        $item->weekBeforeValue = $this->getLeadsCountForForms( $forms, $minDate );;
-        $item->textualWeekBeforeDay = $this->day[$minDate->format('N')]." ". $minDate->format("d")." ". $this->month[$minDate->format('n')];
+        $item->weekBeforeValue = $this->getLeadsCountForForms($forms, $minDate);;
+        $item->textualWeekBeforeDay = $this->day[$minDate->format('N')] . " " . $minDate->format("d") . " " . $this->month[$minDate->format('n')];
 
         // Calculte the variation for both lead's counts
-        $item->yesterdayVariation = $this->getDeltaPourcent( $item->weekBeforeValue, $item->yesterdayValue );
+        $item->yesterdayVariation = $this->getDeltaPourcent($item->weekBeforeValue, $item->yesterdayValue);
 
         // Evaluate the error status of the form / Type.
         $rules = $item->getRules();
 
-        if(empty($rules)){
+        if (empty($rules)) {
             $status = AlertUtils::$_STATUS_UNKNOWN;
-        }else{
-            $status = $this->checkWarningStatus( $item->yesterdayValue, $item->weekBeforeValue,$item->getRules($rules) );
+        } else {
+            $status = $this->checkWarningStatus($item->yesterdayValue, $item->weekBeforeValue, $item->getRules($rules));
         }
 
         // Set status value in object
         $item->yesterdayStatus = $status;
 
-        if ( $status == AlertUtils::$_STATUS_ERROR ) {
+        if ($status == AlertUtils::$_STATUS_ERROR) {
             $item->yesterdayStatusColor = "pink";
             $item->yesterdayStatusText = "Erreur";
-        } else if ( $status == AlertUtils::$_STATUS_WARNING ) {
+        } else if ($status == AlertUtils::$_STATUS_WARNING) {
             $item->yesterdayStatusColor = "yellow";
             $item->yesterdayStatusText = "Attention!";
-        } else if ( $status == AlertUtils::$_STATUS_UNKNOWN ) {
+        } else if ($status == AlertUtils::$_STATUS_UNKNOWN) {
             $item->yesterdayStatusColor = "black";
             $item->yesterdayStatusText = "Aucune donnée";
         } else {

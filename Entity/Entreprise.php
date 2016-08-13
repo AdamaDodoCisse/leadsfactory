@@ -1,9 +1,10 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  *
@@ -21,13 +22,13 @@ class Entreprise
         $this->scopes = new ArrayCollection();
     }
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -217,7 +218,6 @@ class Entreprise
     {
         $this->phone = $phone;
     }
-
 
 
 }

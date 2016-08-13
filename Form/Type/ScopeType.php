@@ -25,10 +25,9 @@ class ScopeType extends AbstractType
         $builder
             ->add('code')
             ->add('name')
-            ->add('save', 'submit')
-        ;
+            ->add('save', 'submit');
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
@@ -41,7 +40,7 @@ class ScopeType extends AbstractType
 
     public function getPostRoute()
     {
-        return "_".$this->getEntity()."_post";
+        return "_" . $this->getEntity() . "_post";
     }
 
     /**

@@ -4,7 +4,7 @@
  * @author olombard
  * Date: 02/03/15
  */
- 
+
 
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 

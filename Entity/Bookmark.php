@@ -1,6 +1,7 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -8,15 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\BookmarkRepository")
  * @ORM\Table(name="bookmark")
  */
-class Bookmark {
+class Bookmark
+{
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -53,7 +55,7 @@ class Bookmark {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -76,7 +78,7 @@ class Bookmark {
     /**
      * Get entity_name
      *
-     * @return string 
+     * @return string
      */
     public function getEntityName()
     {
@@ -145,7 +147,7 @@ class Bookmark {
     /**
      * Get form
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\Form 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\Form
      */
     public function getForm()
     {
@@ -168,7 +170,7 @@ class Bookmark {
     /**
      * Get formType
      *
-     * @return \Tellaw\LeadsFactoryBundle\Entity\FormType 
+     * @return \Tellaw\LeadsFactoryBundle\Entity\FormType
      */
     public function getFormType()
     {

@@ -21,25 +21,25 @@ class FieldRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Field f';
 
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
             $where = ' WHERE';
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                if($key>0)
+            foreach ($keywords as $key => $keyword) {
+                if ($key > 0)
                     $where .= ' AND';
-                $where .= " f.code LIKE '%".$keyword."%' OR  f.description LIKE '%".$keyword."%'";
+                $where .= " f.code LIKE '%" . $keyword . "%' OR  f.description LIKE '%" . $keyword . "%'";
             }
             $dql .= $where;
         }
 
         $query = $this->getEntityManager()
             ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
+            ->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
 
         return new Paginator($query);
@@ -57,14 +57,11 @@ class FieldRepository extends EntityRepository
     }
 
 
-    public function getListByScopeName($scope_name) {
+    public function getListByScopeName($scope_name)
+    {
         $dql = 'SELECT f FROM TellawLeadsFactoryBundle:Field f';
         $result = $this->getEntityManager()->createQuery($dql)->getResult();
-        foreach ($result as $key=>$field) {
-            if ($value = $field->getTestValue()) {
-                print_r($value);
-            }
-        }
+
         return ($result);
     }
 

@@ -86,5 +86,23 @@
 
 {% endblock %}
 {% block javascript %}
+    <script type="text/javascript">
 
+        $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
+
+        $('#st_search').keypress(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+                var route = '{{ path(pagination.route) }}';
+                var keyword = $(this).val() != '' ? '/'+$(this).val() : ''
+                window.location.href = route + '/1/' + {{ pagination.limit }} + keyword;
+            }
+        });
+
+        $('#st_per_page').change(function(){
+            var route = '{{ path(pagination.route) }}';
+            var keyword = $('#st_search').val() != '' ? '/'+$('#st_search').val() : '';
+            window.location.href = route + '/1/' + $(this).val() + keyword;
+        });
+    </script>
 {% endblock %}

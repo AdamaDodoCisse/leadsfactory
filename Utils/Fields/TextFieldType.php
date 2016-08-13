@@ -1,8 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
-
 /**
  * Field of type Text will be identified by the type <b>text</b> and will be used to input a content of simple text.
  *
@@ -15,23 +13,24 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 class TextFieldType extends AbstractFieldType
 {
 
-    public function getTestValue ( $dataType, $field ) {
+    public function getTestValue($dataType, $field)
+    {
 
-        if ( $dataType == AbstractFieldType::$_DATATYPE_EMAIL ) {
+        if ($dataType == AbstractFieldType::$_DATATYPE_EMAIL) {
             return "test-fonctionnel@leadsfactory.com";
-        } else if ( $dataType == AbstractFieldType::$_DATATYPE_ZIP ) {
+        } else if ($dataType == AbstractFieldType::$_DATATYPE_ZIP) {
             return "77330";
-        } else if ( $dataType == AbstractFieldType::$_DATATYPE_PHONENUMBER ) {
+        } else if ($dataType == AbstractFieldType::$_DATATYPE_PHONENUMBER) {
             return "0123456789";
-        } else if ( $dataType == AbstractFieldType::$_DATATYPE_COUNTRY_CODE ) {
+        } else if ($dataType == AbstractFieldType::$_DATATYPE_COUNTRY_CODE) {
             return "FR";
-        } else if ( $dataType == AbstractFieldType::$_DATATYPE_COUNTRY_NAME ) {
+        } else if ($dataType == AbstractFieldType::$_DATATYPE_COUNTRY_NAME) {
             return "France";
         } else {
             if (isset($field["attributes"]["id"])) {
-                return "text-".$field["attributes"]["id"];
-            }else {
-                return "text-".time();
+                return "text-" . $field["attributes"]["id"];
+            } else {
+                return "text-" . time();
             }
         }
 

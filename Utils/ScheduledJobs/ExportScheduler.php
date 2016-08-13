@@ -19,7 +19,7 @@ class ExportScheduler implements IScheduledJob
 
     public function getCommands()
     {
-        return array ('leadsfactory:export:leads');
+        return array('leadsfactory:export:leads');
     }
 
     public function getEnabled()

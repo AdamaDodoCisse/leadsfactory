@@ -10,15 +10,18 @@ class FormTypeType extends AbstractType
 
     private $entity = "formType";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
@@ -27,11 +30,12 @@ class FormTypeType extends AbstractType
         );
 
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name');
         $builder->add('description');
-        $builder->add ('scope');
+        $builder->add('scope');
 
         $builder->add('alertRules', new RulesType(), array('label' => 'Alertes', 'required' => false));
 

@@ -10,15 +10,18 @@ class LeadsType extends AbstractType
 
     private $entity = "leads";
 
-    public function getEntity() {
+    public function getEntity()
+    {
         return $this->entity;
     }
 
-    public function getPostRoute() {
-        return "_".$this->getEntity()."_post";
+    public function getPostRoute()
+    {
+        return "_" . $this->getEntity() . "_post";
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver) {
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
 
         $resolver->setDefaults(
             array(
@@ -27,17 +30,18 @@ class LeadsType extends AbstractType
         );
 
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('firstname');
         $builder->add('lastname');
 
 
-        $builder->add('exportdate','date', array( 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'));
+        $builder->add('exportdate', 'date', array('widget' => 'single_text', 'format' => 'dd-MM-yyyy'));
         $builder->add('log');
         $builder->add('utmcampaign');
         $builder->add('telephone');
-        $builder->add('createdAt','date', array( 'widget' => 'single_text', 'format' => 'dd-MM-yyyy'));
+        $builder->add('createdAt', 'date', array('widget' => 'single_text', 'format' => 'dd-MM-yyyy'));
 
         $builder->add('data', new JsonType(), array('label' => 'Données brutes'));
 

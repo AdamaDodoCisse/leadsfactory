@@ -14,44 +14,42 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class MkgSegmentationRepository extends EntityRepository
 {
 
-	/**
-	 * @param $keyword
-	 * @param int $page
-	 * @param int $limit
-	 * @return Paginator
-	 */
-	public function getList($page=1, $limit=10, $keyword='', $params=array())
-	{
+    /**
+     * @param $keyword
+     * @param int $page
+     * @param int $limit
+     * @return Paginator
+     */
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
+    {
 
-		//Get User scope
-		$user = $params["user"];
+        //Get User scope
+        $user = $params["user"];
 
-		$dql = 'SELECT f FROM TellawLeadsFactoryBundle:MkgSegmentation f';
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('f');
+        $qb->from('TellawLeadsFactoryBundle:MkgSegmentation', 'f');
 
-		if ($user->getScope() != null) {
-			$where = ' WHERE f.scope = '.$user->getScope()->getId();
-		}else {
-			$where = " WHERE 1=1";
-		}
+        if ($user->getScope() != null) {
+            $qb->where('f.scope = :scope');
+            $qb->setParameter('scope', $user->getScope());
+        }
 
-		if(!empty($keyword)){
+        if (!empty($keyword)) {
 
-			$keywords = explode(' ', $keyword);
-			foreach($keywords as $key => $keyword){
-				$where .= " AND f.name LIKE '%".$keyword."%'";
-			}
+            $keywords = explode(' ', $keyword);
+            foreach ($keywords as $key => $keyword) {
+                $qb->where('f.name LIKE :keyword');
+                $qb->setParameter('keyword', '%' . $keyword . '%');
+            }
+        }
 
-		}
+        $qb->setFirstResult(($page - 1) * $limit);
+        $qb->setMaxResults($limit);
 
-		$dql .= $where;
+        return new Paginator($qb);
 
-		$query = $this->getEntityManager()
-			->createQuery($dql)
-			->setFirstResult(($page-1) * $limit)
-			->setMaxResults($limit);
-
-		return new Paginator($query);
-	}
+    }
 
 }
 

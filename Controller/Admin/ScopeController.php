@@ -2,18 +2,17 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Tellaw\LeadsFactoryBundle\Entity\Scope;
 use Tellaw\LeadsFactoryBundle\Form\Type\ScopeType;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 
 
@@ -25,7 +24,8 @@ use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 class ScopeController extends CoreController
 {
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -36,25 +36,26 @@ class ScopeController extends CoreController
      *
      * @Secure(roles="ROLE_USER")
      */
-    public function indexAction($page=1, $limit=10, $keyword='')
+    public function indexAction($page = 1, $limit = 10, $keyword = '')
     {
 
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Scope', $page, $limit, $keyword, array ('user_id'=>$this->getUser()->getId()));
+        $list = $this->getList('TellawLeadsFactoryBundle:Scope', $page, $limit, $keyword, array('user_id' => $this->getUser()->getId()));
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Scope:index.html.twig',
             array(
-                'elements'      => $list['collection'],
-                'pagination'    => $list['pagination'],
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options']
             )
         );
 
     }
+
     /**
      * Creates a new Scope entity.
      *
@@ -73,7 +74,7 @@ class ScopeController extends CoreController
 
         if ($form->isValid()) {
 
-            if (!$this->get("core_manager")->isNewScopeAccepted ()) {
+            if (!$this->get("core_manager")->isNewScopeAccepted()) {
                 return $this->redirect($this->generateUrl('_security_licence_error'));
             }
 
@@ -84,9 +85,9 @@ class ScopeController extends CoreController
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        return $this->render( "TellawLeadsFactoryBundle:entity:Scope/edit.html.twig", array(
+        return $this->render("TellawLeadsFactoryBundle:entity:Scope/edit.html.twig", array(
             'title' => 'Ajouter un scope',
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -94,7 +95,7 @@ class ScopeController extends CoreController
      * @Route("/scope/edit/{id}", name="_scope_edit")
      * @Secure(roles="ROLE_USER")
      */
-    public function editAction( Request $request, $id )
+    public function editAction(Request $request, $id)
     {
         /**
          * This is the new / editing action
@@ -103,7 +104,7 @@ class ScopeController extends CoreController
         // crée une tâche et lui donne quelques données par défaut pour cet exemple
         $scopeData = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Scope')->find($id);
 
-        $form = $this->createForm(  new ScopeType(),
+        $form = $this->createForm(new ScopeType(),
             $scopeData,
             array(
                 'method' => 'POST'
@@ -122,8 +123,8 @@ class ScopeController extends CoreController
             return $this->redirect($this->generateUrl('_scope_list'));
         }
 
-        return $this->render("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig", array(  'form' => $form->createView(),
-                       'title' => "Edition d'un scope"
+        return $this->render("TellawLeadsFactoryBundle:entity/Scope:edit.html.twig", array('form' => $form->createView(),
+            'title' => "Edition d'un scope"
         ));
 
     }
@@ -133,7 +134,7 @@ class ScopeController extends CoreController
      * @Route("/scope/delete/{id}", name="_scope_delete")
      * @Secure(roles="ROLE_USER")
      */
-    public function deleteAction ( $id )
+    public function deleteAction($id)
     {
         /**
          * This is the deletion action

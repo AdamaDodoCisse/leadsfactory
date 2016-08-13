@@ -2,11 +2,11 @@
 
 namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 
-use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
 
 
-abstract class AbstractMethod {
+abstract class AbstractMethod
+{
 
     protected $exportDir = 'Export';
 
@@ -18,7 +18,8 @@ abstract class AbstractMethod {
     /*
      *
      */
-    public function setContainer (\Symfony\Component\DependencyInjection\ContainerInterface $container) {
+    public function setContainer(\Symfony\Component\DependencyInjection\ContainerInterface $container)
+    {
         $this->container = $container;
     }
 
@@ -43,26 +44,27 @@ abstract class AbstractMethod {
         $basePath = $this->getContainer()->get('kernel')->getRootDir();
         $path = $basePath . DIRECTORY_SEPARATOR . $this->exportDir;
 
-        if(!file_exists($path)){
-            if(!mkdir($path, '0755')){
+        if (!file_exists($path)) {
+            if (!mkdir($path, '0755')) {
                 throw new \Exception('Error : can\'t create the export directory');
             }
         }
+
         return $path;
     }
 
-	/**
-	 * Teste la validité de l'email
-	 *
-	 * @param $lead
-	 * @param $email
-	 *
-	 * @return mixed
-	 */
-	public function isEmailValidated($lead, $email)
-	{
-		return $this->getContainer()->get('leadsfactory.client_email_repository')->isEmailValidated($email);
-	}
+    /**
+     * Teste la validité de l'email
+     *
+     * @param $lead
+     * @param $email
+     *
+     * @return mixed
+     */
+    public function isEmailValidated($lead, $email)
+    {
+        return $this->getContainer()->get('leadsfactory.client_email_repository')->isEmailValidated($email);
+    }
 
     /**
      * @param $reason
@@ -71,9 +73,10 @@ abstract class AbstractMethod {
      * @param $currentStatus
      * @param $newStatus
      */
-    protected function notifyOfExportIssue ( $reason, $form, $job, $newStatus, $forceNotification = false ) {
+    protected function notifyOfExportIssue($reason, $form, $job, $newStatus, $forceNotification = false)
+    {
 
-        if ( $job->getStatus() == ExportUtils::$_EXPORT_ONE_TRY_ERROR || $forceNotification ) {
+        if ($job->getStatus() == ExportUtils::$_EXPORT_ONE_TRY_ERROR || $forceNotification) {
 
             $logger = $this->getContainer()->get('export.logger');
 
@@ -83,12 +86,11 @@ abstract class AbstractMethod {
             $message = \Swift_Message::newInstance()
                 ->setSubject('Lead\'s : Incident d\'export')
                 ->setFrom($this->container->getParameter("export_notification_from"))
-                ->setTo( $dest )
-                ->setBody($templatingService->render('TellawLeadsFactoryBundle:emails:export_notification.txt.twig', array('reason' => $reason,'form'=>$form,'job'=>$job,'status'=>$newStatus)))
-            ;
+                ->setTo($dest)
+                ->setBody($templatingService->render('TellawLeadsFactoryBundle:emails:export_notification.txt.twig', array('reason' => $reason, 'form' => $form, 'job' => $job, 'status' => $newStatus)));
             $this->container->get('mailer')->send($message);
 
-            $logger->info("Notification mail sent to  : ". $dest);
+            $logger->info("Notification mail sent to  : " . $dest);
 
         }
 

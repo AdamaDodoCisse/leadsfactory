@@ -7,7 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\LeadsHistoryRepository")
  */
-class LeadsHistory {
+class LeadsHistory
+{
 
     /**
      * @ORM\Id
@@ -74,7 +75,6 @@ class LeadsHistory {
     {
         $this->log = $log;
     }
-
 
 
     /**

@@ -1,23 +1,25 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Field
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\FieldRepository")
  */
-class Field {
+class Field
+{
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -41,7 +43,7 @@ class Field {
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -64,7 +66,7 @@ class Field {
     /**
      * Get code
      *
-     * @return string 
+     * @return string
      */
     public function getCode()
     {
@@ -87,7 +89,7 @@ class Field {
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -110,7 +112,7 @@ class Field {
     /**
      * Get testValue
      *
-     * @return string 
+     * @return string
      */
     public function getTestValue()
     {
@@ -121,7 +123,8 @@ class Field {
      * Get test Values by scope
      * @return mixed
      */
-    public function getValues() {
+    public function getValues()
+    {
         return json_decode(trim($this->getTestValue()), true);
     }
 }

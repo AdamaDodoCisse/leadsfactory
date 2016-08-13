@@ -2,18 +2,19 @@
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\ReferenceList
  *
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryRepository")
  */
-class DataDictionnary {
+class DataDictionnary
+{
 
     /**
      * @ORM\OneToMany(targetEntity="Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryElement", mappedBy="dataDictionnary", cascade={"persist"})
@@ -26,13 +27,13 @@ class DataDictionnary {
         $this->elements = new ArrayCollection();
     }
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -74,7 +75,6 @@ class DataDictionnary {
     {
         $this->scope = $scope;
     }
-
 
 
     /**
@@ -181,29 +181,30 @@ class DataDictionnary {
     }
 
 
-    public function getChilds ( $elements ) {
+    public function getChilds($elements)
+    {
 
         $dataChilds = array();
 
         foreach ($elements as $element) {
 
 
-            if ( $element->getChildren()->count() ) {
+            if ($element->getChildren()->count()) {
 
-                $dataChilds[] = array (
-                    "id"=>$element->getId(),
-                    "name"=>$element->getName(),
-                    "value"=>$element->getValue(),
-                    "childrens" => $this->getChilds( $element->getChildren() )
+                $dataChilds[] = array(
+                    "id" => $element->getId(),
+                    "name" => $element->getName(),
+                    "value" => $element->getValue(),
+                    "childrens" => $this->getChilds($element->getChildren())
 
                 );
 
             } else {
 
-                $dataChilds[] = array (
-                    "id"=>$element->getId(),
-                    "name"=>$element->getName(),
-                    "value"=>$element->getValue()
+                $dataChilds[] = array(
+                    "id" => $element->getId(),
+                    "name" => $element->getName(),
+                    "value" => $element->getValue()
 
                 );
 
@@ -211,7 +212,6 @@ class DataDictionnary {
             }
             //var_dump ($element->getChildren());
             //if ( count($element->getChildren()) ) {
-
 
 
             //}

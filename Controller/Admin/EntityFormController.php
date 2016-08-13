@@ -2,6 +2,13 @@
 
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
+use JMS\SecurityExtraBundle\Annotation\Secure;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,22 +16,15 @@ use Tellaw\LeadsFactoryBundle\Entity\Form;
 use Tellaw\LeadsFactoryBundle\Form\Type\FormType;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\FunctionnalTestingUtils;
-use Tellaw\LeadsFactoryBundle\Utils\LFUtils;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use JMS\SecurityExtraBundle\Annotation\Secure;
 
 /**
  * @Route("/entity")
  */
-class EntityFormController extends CoreController {
+class EntityFormController extends CoreController
+{
 
-    public function __construct () {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -34,28 +34,28 @@ class EntityFormController extends CoreController {
      * @Secure(roles="ROLE_USER")
      *
      */
-    public function indexAction($page=1, $limit=10, $keyword='')
+    public function indexAction($page = 1, $limit = 10, $keyword = '')
     {
 
-        if ($this->get("core_manager")->isDomainAccepted ()) {
+        if ($this->get("core_manager")->isDomainAccepted()) {
             return $this->redirect($this->generateUrl('_security_licence_error'));
         }
 
-        $list = $this->getList ('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array ('user'=>$this->getUser()));
-        $bookmarks = $this->get('leadsfactory.form_repository')->getBookmarkedFormsForUser( $this->getUser()->getId() );
+        $list = $this->getList('TellawLeadsFactoryBundle:Form', $page, $limit, $keyword, array('user' => $this->getUser()));
+        $bookmarks = $this->get('leadsfactory.form_repository')->getBookmarkedFormsForUser($this->getUser()->getId());
 
         $formatedBookmarks = array();
         foreach ($bookmarks as $bookmark) {
-            $formatedBookmarks[ $bookmark->getForm()->getId() ] = true;
+            $formatedBookmarks[$bookmark->getForm()->getId()] = true;
         }
 
         return $this->render(
-	        'TellawLeadsFactoryBundle:entity/Form:entity_list.html.twig',
+            'TellawLeadsFactoryBundle:entity/Form:entity_list.html.twig',
             array(
-                    'elements'      => $list['collection'],
-                    'pagination'    => $list['pagination'],
-                    'limit_options' => $list['limit_options'],
-                    'bookmarks'     => $formatedBookmarks
+                'elements' => $list['collection'],
+                'pagination' => $list['pagination'],
+                'limit_options' => $list['limit_options'],
+                'bookmarks' => $formatedBookmarks
             )
         );
 
@@ -66,7 +66,7 @@ class EntityFormController extends CoreController {
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function newAction( Request $request )
+    public function newAction(Request $request)
     {
         $form = $this->createForm(
             new FormType(),
@@ -85,6 +85,7 @@ class EntityFormController extends CoreController {
 
             return $this->redirect($this->generateUrl('_form_list'));
         }
+
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Form:entity_edit.html.twig',
             array(
@@ -102,7 +103,7 @@ class EntityFormController extends CoreController {
      * @Route("/preview/twig/{code}", name="_client_twig_preview")
      * @ParamConverter("form")
      */
-    public function getTwigFormPreview(Form $form)
+    public function getTwigFormPreviewAction(Form $form)
     {
         return $this->render(
             'TellawLeadsFactoryBundle:Front:display_twig_form.html.twig',
@@ -115,10 +116,10 @@ class EntityFormController extends CoreController {
      * @Secure(roles="ROLE_USER")
      * @Template()
      */
-    public function editAction( Request $request, $id )
+    public function editAction(Request $request, $id)
     {
         $testUtils = $this->get("functionnal_testing.utils");
-        $testUtils->setIsWebMode (true);
+        $testUtils->setIsWebMode(true);
 
         $formEntity = $this->get('leadsfactory.form_repository')->find($id);
 
@@ -131,9 +132,9 @@ class EntityFormController extends CoreController {
         $form->handleRequest($request);
         if ($form->isValid()) {
 
-            $cacheFileName = "../app/cache/templates/".$id.".js";
-            if (file_exists( $cacheFileName )) {
-                unlink ($cacheFileName);
+            $cacheFileName = "../app/cache/templates/" . $id . ".js";
+            if (file_exists($cacheFileName)) {
+                unlink($cacheFileName);
             }
 
             $em = $this->getDoctrine()->getManager();
@@ -142,13 +143,14 @@ class EntityFormController extends CoreController {
         }
 
         // Get screenshots
-        $screenofForm = $testUtils->getScreenPathOfForm( $formEntity, true );
-        $screenofResult = $testUtils->getScreenPathOfResult( $formEntity, true );
+        $screenofForm = $testUtils->getScreenPathOfForm($formEntity, true);
+        $screenofResult = $testUtils->getScreenPathOfResult($formEntity, true);
+
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Form:entity_edit.html.twig',
             array(
                 'id' => $id,
-                'funtionnalTestEnabled' => $testUtils->isFormTestable( $formEntity ),
+                'funtionnalTestEnabled' => $testUtils->isFormTestable($formEntity),
                 'code' => $formEntity->getCode(),
                 'formObj' => $formEntity,
                 'form' => $form->createView(),
@@ -165,16 +167,17 @@ class EntityFormController extends CoreController {
      * @Method("GET")
      * @Template()
      */
-    public function deleteAction ( $id ) {
+    public function deleteAction($id)
+    {
 
         /**
          * This is the deletion action
          */
         $object = $this->get('leadsfactory.form_repository')->find($id);
 
-        $cacheFileName = "../app/cache/templates/".$id.".js";
-        if (file_exists( $cacheFileName )) {
-            unlink ($cacheFileName);
+        $cacheFileName = "../app/cache/templates/" . $id . ".js";
+        if (file_exists($cacheFileName)) {
+            unlink($cacheFileName);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -191,7 +194,7 @@ class EntityFormController extends CoreController {
      * @Method("GET")
      * @Template()
      */
-    public function duplicateAction ($id)
+    public function duplicateAction($id)
     {
         $old = $this->get('leadsfactory.form_repository')->find($id);
 
@@ -212,69 +215,72 @@ class EntityFormController extends CoreController {
      * @Method("GET")
      * @Template()
      */
-    public function runtestAction ($id, $step = 1)
+    public function runtestAction($id, $step = 1)
     {
 
         $testUtils = $this->get("functionnal_testing.utils");
 
         $form = $this->get('leadsfactory.form_repository')->find($id);
         $logger = $this->get('logger');
-        $testUtils->setLogger ( $logger );
-        $testUtils->setIsWebMode ( true );
+        $testUtils->setLogger($logger);
+        $testUtils->setIsWebMode(true);
 
         $formId = $form->getConfig();
-        if (isset( $formId ["configuration"]["functionnalTestingEnabled"] ) && $formId ["configuration"]["functionnalTestingEnabled"] == true) {
+        if (isset($formId ["configuration"]["functionnalTestingEnabled"]) && $formId ["configuration"]["functionnalTestingEnabled"] == true) {
 
             switch ($step) {
                 case FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT:
-                    echo ("<h2>Etape 1/4 : Création de script de test</h2>");
+                    echo("<h2>Etape 1/4 : Création de script de test</h2>");
                     \flush();
-                    $status = $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT, $form );
-                    if (!$status){
+                    $status = $testUtils->runByStep(FunctionnalTestingUtils::$_STEP_1_CREATE_CASPER_SCRIPT, $form);
+                    if (!$status) {
                         throw new \Exception ("Unable to create Casper Script");
                     }
-                    echo ("Script créé avec succès");
-                    return $this->redirectToRoute('_form_runtest', array ( "id"=>$id, "step"=> FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT ));
+                    echo("Script créé avec succès");
+
+                    return $this->redirectToRoute('_form_runtest', array("id" => $id, "step" => FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT));
                     break;
 
                 case FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT:
-                    echo ("<h2>Etape 2/4 : debut du test fonctionnel</h2>");
+                    echo("<h2>Etape 2/4 : debut du test fonctionnel</h2>");
                     \flush();
-                    list ( $status, $log ) = $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT, $form );
-                    $this->get("session")->set ("functionnalTestingStatus", $status);
-                    $this->get("session")->set ("functionnalTestingLog", $log);
-                    echo ("Test terminé");
-                    return $this->redirectToRoute('_form_runtest', array ( "id"=>$id, "step"=> FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS ));
+                    list ($status, $log) = $testUtils->runByStep(FunctionnalTestingUtils::$_STEP_2_EXECUTE_CASPER_SCRIPT, $form);
+                    $this->get("session")->set("functionnalTestingStatus", $status);
+                    $this->get("session")->set("functionnalTestingLog", $log);
+                    echo("Test terminé");
+
+                    return $this->redirectToRoute('_form_runtest', array("id" => $id, "step" => FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS));
                     break;
 
                 case FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS:
-                    echo ("<h2>Etape 3/4 : Validation des données en base</h2>");
+                    echo("<h2>Etape 3/4 : Validation des données en base</h2>");
                     \flush();
                     $status = $this->get("session")->get("functionnalTestingStatus");
                     $log = $this->get("session")->get("functionnalTestingLog");
-                    $statusOfTest = $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS, $form, $status, $log );
-                    $this->get("session")->set ("functionnalTestingStatusOfTest", $statusOfTest);
-                    echo ("Fin de validation");
-                    return $this->redirectToRoute('_form_runtest', array ( "id"=>$id, "step"=> FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS ));
+                    $statusOfTest = $testUtils->runByStep(FunctionnalTestingUtils::$_STEP_3_EVALUATE_LEADS, $form, $status, $log);
+                    $this->get("session")->set("functionnalTestingStatusOfTest", $statusOfTest);
+                    echo("Fin de validation");
+
+                    return $this->redirectToRoute('_form_runtest', array("id" => $id, "step" => FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS));
                     break;
 
                 case FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS:
-                    echo ("<h2>Etape 4/4 : Enregistrement des résultats</h2>");
+                    echo("<h2>Etape 4/4 : Enregistrement des résultats</h2>");
                     \flush();
                     $status = $this->get("session")->get("functionnalTestingStatus");
                     $log = $this->get("session")->get("functionnalTestingLog");
                     $statusOfTest = $this->get("session")->get("functionnalTestingStatusOfTest");
 
-                    $testUtils->runByStep( FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS, $form, $status, $log, $statusOfTest );
+                    $testUtils->runByStep(FunctionnalTestingUtils::$_STEP_4_PERSIST_RESULTS, $form, $status, $log, $statusOfTest);
                     break;
 
             }
 
-            $logger->info ("Traitement de la page de test : ".$form->getUrl());
-            $testUtils->run ( $form );
+            $logger->info("Traitement de la page de test : " . $form->getUrl());
+            $testUtils->run($form);
 
         } else {
-            $logger->info ("Le formulaire n'est pas configuré pour réaliser les tests fonctionnels");
+            $logger->info("Le formulaire n'est pas configuré pour réaliser les tests fonctionnels");
         }
 
         return $this->render(

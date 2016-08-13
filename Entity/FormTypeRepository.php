@@ -21,42 +21,39 @@ class FormTypeRepository extends EntityRepository
      * @param int $limit
      * @return Paginator
      */
-    public function getList($page=1, $limit=10, $keyword='', $params=array())
+    public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
     {
 
         //Get User scope
         $user = $params["user"];
 
-        $dql = 'SELECT f FROM TellawLeadsFactoryBundle:FormType f';
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('f');
+        $qb->from('TellawLeadsFactoryBundle:FormType', 'f');
 
         if ($user->getScope() != null) {
-            $where = ' WHERE f.scope = '.$user->getScope()->getId();
-        }else {
-            $where = "";
+            $qb->where('f.scope = :scope');
+            $qb->setParameter('scope', $user->getScope());
         }
 
-        if(!empty($keyword)){
-            $where = ' WHERE';
+        if (!empty($keyword)) {
+
             $keywords = explode(' ', $keyword);
-            foreach($keywords as $key => $keyword){
-                if($key>0)
-                    $where .= ' AND';
-                $where .= " f.name LIKE '%".$keyword."%'";
+            foreach ($keywords as $key => $keyword) {
+                $qb->where('f.name LIKE :keyword');
+                $qb->setParameter('keyword', '%' . $keyword . '%');
             }
-
         }
 
-        $dql .= $where;
+        $qb->setFirstResult(($page - 1) * $limit);
+        $qb->setMaxResults($limit);
 
-        $query = $this->getEntityManager()
-            ->createQuery($dql)
-            ->setFirstResult(($page-1) * $limit)
-            ->setMaxResults($limit);
+        return new Paginator($qb);
 
-        return new Paginator($query);
     }
 
-    public function getFormsType ( $scope = null ) {
+    public function getFormsType($scope = null)
+    {
 
         $dql = "SELECT t FROM TellawLeadsFactoryBundle:FormType t";
         $result = $this->getEntityManager()->createQuery($dql)->getResult();
@@ -65,32 +62,35 @@ class FormTypeRepository extends EntityRepository
 
     }
 
-    public function getBookmarkedFormsForUser ( $user_id ) {
+    public function getBookmarkedFormsForUser($user_id)
+    {
 
         $dql = "SELECT b FROM TellawLeadsFactoryBundle:Bookmark b WHERE b.user = :user_id AND b.entity_name='FormType'";
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('user_id', $user_id )->getResult();
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('user_id', $user_id)->getResult();
 
         return $result;
 
     }
 
-    public function getFormsInFormType ( $formType_id ) {
+    public function getFormsInFormType($formType_id)
+    {
 
         $dql = "SELECT f
                 FROM TellawLeadsFactoryBundle:Form f, TellawLeadsFactoryBundle:FormType ft
                 WHERE f.formType = ft.id
                 AND ft.id=:formType_id";
 
-        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formType_id', $formType_id )->getResult();
+        $result = $this->getEntityManager()->createQuery($dql)->setParameter('formType_id', $formType_id)->getResult();
 
         return $result;
 
     }
 
-    public function setStatisticsForId ( $formType_id, $utils ) {
+    public function setStatisticsForId($formType_id, $utils)
+    {
 
         // Get forms in this type
-        $formType = $this->find( $formType_id );
+        $formType = $this->find($formType_id);
 
         /** @var Tellaw\LeadsFactoryBundle\Entity\UserPreferences $userPreferences */
         $userPreferences = $utils->getUserPreferences();
@@ -109,31 +109,30 @@ class FormTypeRepository extends EntityRepository
 
 
         $result = $this->getEntityManager()
-                    ->createQuery($dql)
-                    ->setParameter('formTypeId', $formType_id )
-                    ->setParameter('minDate', $minDate )
-                    ->setParameter('maxDate', $maxDate )
-                    ->getResult();
+            ->createQuery($dql)
+            ->setParameter('formTypeId', $formType_id)
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate)
+            ->getResult();
 
         $nbviews = $result[0]["nbviews"];
 
         // Load the number of leads
-	    $qb = $this->_em->createQueryBuilder();
-	    $qb->select('count(l)')
-	        ->from('TellawLeadsFactoryBundle:Leads', 'l')
-	        ->where('l.formType = :formTypeId')
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('count(l)')
+            ->from('TellawLeadsFactoryBundle:Leads', 'l')
+            ->where('l.formType = :formTypeId')
             ->andWhere('l.createdAt >= :minDate')
             ->andWhere('l.createdAt <= :maxDate')
-		    ->setParameter('formTypeId', $formType_id)
-            ->setParameter('minDate', $minDate )
-            ->setParameter('maxDate', $maxDate )
-	    ;
-	    $qb = $this->excludeInternalLeads($qb);
-	    $nbleads = $qb->getQuery()->getSingleScalarResult();
+            ->setParameter('formTypeId', $formType_id)
+            ->setParameter('minDate', $minDate)
+            ->setParameter('maxDate', $maxDate);
+        $qb = $this->excludeInternalLeads($qb);
+        $nbleads = $qb->getQuery()->getSingleScalarResult();
 
         // Calculate the transformation rate
         if ($nbviews > 0) {
-            $transformRate = round (($nbleads/$nbviews)*100);
+            $transformRate = round(($nbleads / $nbviews) * 100);
         } else {
             $transformRate = 0;
         }
@@ -146,26 +145,26 @@ class FormTypeRepository extends EntityRepository
 
     }
 
-	public function setInternalEmailPatterns($patterns)
-	{
-		$this->internal_email_patterns = $patterns;
-	}
+    public function setInternalEmailPatterns($patterns)
+    {
+        $this->internal_email_patterns = $patterns;
+    }
 
-	/**
-	 * @param QueryBuilder $qb
-	 *
-	 * @return QueryBuilder
-	 *
-	 */
-	private function excludeInternalLeads(QueryBuilder $qb)
-	{
-		$i = 0;
-		foreach ($this->internal_email_patterns as $pattern) {
-			$qb->andWhere('l.email not like :pattern_'.$i)
-			   ->setParameter('pattern_'.$i, $pattern)
-			;
-			++$i;
-		}
-		return $qb;
-	}
+    /**
+     * @param QueryBuilder $qb
+     *
+     * @return QueryBuilder
+     *
+     */
+    private function excludeInternalLeads(QueryBuilder $qb)
+    {
+        $i = 0;
+        foreach ($this->internal_email_patterns as $pattern) {
+            $qb->andWhere('l.email not like :pattern_' . $i)
+                ->setParameter('pattern_' . $i, $pattern);
+            ++$i;
+        }
+
+        return $qb;
+    }
 }

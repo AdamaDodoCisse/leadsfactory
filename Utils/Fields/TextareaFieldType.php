@@ -1,8 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
-
 class TextareaFieldType extends AbstractFieldType
 {
     /**
@@ -11,9 +9,10 @@ class TextareaFieldType extends AbstractFieldType
      * @param Object $tag Tag object
      * @return string Html Content formatted
      */
-    public function renderToHtml ( $tag )
+    public function renderToHtml($tag)
     {
         $id = $tag["attributes"]["id"];
-        return '<textarea name="lffield['.$id.']" id="lffield['.$id.']" '.$this->getAttributes( $tag ).'></textarea>';
+
+        return '<textarea name="lffield[' . $id . ']" id="lffield[' . $id . ']" ' . $this->getAttributes($tag) . '></textarea>';
     }
 }

@@ -1,9 +1,8 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Tellaw\LeadsFactoryBundle\Entity\CronTask;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Tellaw\LeadsFactoryBundle\Shared\SchedulerUtilsShared;
 
 
@@ -33,7 +32,8 @@ class SchedulerUtils extends SchedulerUtilsShared
         return $this->container;
     }
 
-    public function addScheduledJob ( $id ) {
+    public function addScheduledJob($id)
+    {
         $this->scheduledJobs[] = $id;
     }
 

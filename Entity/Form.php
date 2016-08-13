@@ -1,25 +1,27 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\Form
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\FormRepository")
  */
-class Form {
+class Form
+{
 
     public $type = "form";
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -50,13 +52,13 @@ class Form {
      * @var longtext $source
      * @ORM\Column(type="text", nullable=true, name="source")
      */
-	protected $source;
+    protected $source;
 
-	/**
-	 * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
-	 * @ORM\JoinColumn(name="scope", referencedColumnName="id")
-	 */
-	protected $scope;
+    /**
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     */
+    protected $scope;
 
     /**
      * @var longtext $script
@@ -88,11 +90,11 @@ class Form {
      */
     protected $confirmationEmailSource;
 
-	/**
-	 * @var string $secureKey
-	 * @ORM\Column(type="string", nullable=true, name="secure_key")
-	 */
-	protected $secureKey;
+    /**
+     * @var string $secureKey
+     * @ORM\Column(type="string", nullable=true, name="secure_key")
+     */
+    protected $secureKey;
 
     /**
      * @ORM\Column(type="string", nullable=true, name="url")
@@ -144,7 +146,8 @@ class Form {
         $this->testLog = $testLog;
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
@@ -246,9 +249,6 @@ class Form {
 
     /**
      * Set exportConfig
-     *
-     * @todo sanitize input data
-     *
      * @param string $exportConfig
      * @return Form
      */
@@ -262,7 +262,7 @@ class Form {
     /**
      * Get exportConfig
      *
-     * @return string 
+     * @return string
      */
     public function getExportConfig()
     {
@@ -279,8 +279,10 @@ class Form {
         return json_decode(trim($this->getExportConfig()), true);
     }
 
-    public function getRules () {
+    public function getRules()
+    {
         $alertRules = json_decode(trim($this->getAlertRules()), true);
+
         return $alertRules;
     }
 
@@ -349,7 +351,6 @@ class Form {
     }
 
 
-
     /**
      * Set confirmationEmailSource
      *
@@ -366,7 +367,7 @@ class Form {
     /**
      * Get confirmationEmailSource
      *
-     * @return string 
+     * @return string
      */
     public function getConfirmationEmailSource()
     {
@@ -406,43 +407,46 @@ class Form {
     /**
      * Get secureKey
      *
-     * @return string 
+     * @return string
      */
     public function getSecureKey()
     {
         return $this->secureKey;
     }
 
-	/**
-	 * @return mixed
-	 */
-	public function getScope() {
-		return $this->scope;
-	}
+    /**
+     * @return mixed
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
 
-	/**
-	 * @param mixed $scope
-	 */
-	public function setScope( $scope ) {
-		$this->scope = $scope;
-	}
+    /**
+     * @param mixed $scope
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
+    }
 
     /**
      * @param $source   source object from the search
      * @param $em   entity manager
      * @return $this
      */
-    public function populateFromSearch ( $source, $em ) {
+    public function populateFromSearch($source, $em)
+    {
 
-        $this->setId ( $source->id );
-        if ($source->type_id) $this->setFormType( $em->getRepository('TellawLeadsFactoryBundle:FormType')->find( $source->type_id ) );
-        $this->setName( $source->name );
-        $this->setDescription( $source->description );
-        $this->setCode( $source->code );
-        $this->setUtmcampaign( $source->utmcampaign );
-        $this->setScope( $source->scope );
-        $this->setScript( $source->script );
-        $this->setSecureKey( $source->secure_key );
+        $this->setId($source->id);
+        if ($source->type_id) $this->setFormType($em->getRepository('TellawLeadsFactoryBundle:FormType')->find($source->type_id));
+        $this->setName($source->name);
+        $this->setDescription($source->description);
+        $this->setCode($source->code);
+        $this->setUtmcampaign($source->utmcampaign);
+        $this->setScope($source->scope);
+        $this->setScript($source->script);
+        $this->setSecureKey($source->secure_key);
 
         return $this;
 

@@ -3,7 +3,8 @@ namespace Tellaw\LeadsFactoryBundle\Utils\Export;
 
 use Symfony\Component\Validator\Constraints\DateTime;
 
-class CSV extends AbstractMethod{
+class CSV extends AbstractMethod
+{
 
     /**
      * Process export to CSV file
@@ -13,33 +14,32 @@ class CSV extends AbstractMethod{
      */
     public function export($jobs, $form)
     {
-        $fileName = 'export_'.$form->getCode().'_'.time().'.csv';
+        $fileName = 'export_' . $form->getCode() . '_' . time() . '.csv';
         $path = $this->getExportPath();
 
         $logger = $this->getContainer()->get('export.logger');
 
-        $handle = fopen($path.DIRECTORY_SEPARATOR.$fileName, 'w+');
-        if($handle === false){
-            $logger->error("Export CSV : impossible d'ouvrir ou créer le fichier ".$fileName);
+        $handle = fopen($path . DIRECTORY_SEPARATOR . $fileName, 'w+');
+        if ($handle === false) {
+            $logger->error("Export CSV : impossible d'ouvrir ou créer le fichier " . $fileName);
         }
 
         $exportUtils = $this->getContainer()->get('export_utils');
+        $em = $this->getContainer()->get('doctrine')->getManager();
 
-        foreach($jobs as $job){
+        foreach ($jobs as $job) {
             $lead = $job->getLead();
             $data = json_decode($lead->getData(), true);
             $status = fputcsv($handle, $data) ? $exportUtils::$_EXPORT_SUCCESS : $exportUtils->getErrorStatus($job);
             $lead->setStatus($status);
-            $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Job export (ID ".$job->getId().") : erreur lors de l'édition du fichier CSV" : "Job export (ID ".$job->getId().") : exporté avec succès";
+            $log = ($status != $exportUtils::$_EXPORT_SUCCESS) ? "Job export (ID " . $job->getId() . ") : erreur lors de l'édition du fichier CSV" : "Job export (ID " . $job->getId() . ") : exporté avec succès";
 
             $logger->info($log);
-
-            $em = $this->getContainer()->get('doctrine')->getManager();
             $em->persist($lead);
-            $em->flush();
 
             $exportUtils->updateJob($job, $status, $log);
         }
+        $em->flush();
         fclose($handle);
     }
 } 

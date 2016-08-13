@@ -5,9 +5,10 @@ namespace Tellaw\LeadsFactoryBundle\Entity;
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\SearchResult
- * 
+ *
  */
-class SearchResult {
+class SearchResult
+{
 
     protected $took = null;
     protected $total = null;
@@ -79,12 +80,14 @@ class SearchResult {
         $this->results = $results;
     }
 
-    public function addResult ($result) {
+    public function addResult($result)
+    {
         $this->results[] = $result;
     }
 
-    public function countResults () {
-        return count ($this->getResults());
+    public function countResults()
+    {
+        return count($this->getResults());
     }
 
 

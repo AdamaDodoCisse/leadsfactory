@@ -268,7 +268,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @private
 	   */
 	  JSONEditor.prototype._onError = function(err) {
-	    // TODO: onError is deprecated since version 2.2.0. cleanup some day
 	    if (typeof this.onError === 'function') {
 	      util.log('WARNING: JSONEditor.onError is deprecated. ' +
 	          'Use options.error instead.');
@@ -436,7 +435,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  treemode.set = function (json, name) {
 	    // adjust field name for root node
 	    if (name) {
-	      // TODO: deprecated since version 2.2.0. Cleanup some day.
 	      util.log('Warning: second parameter "name" is deprecated. ' +
 	          'Use setName(name) instead.');
 	      this.options.name = name;
@@ -464,7 +462,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.content.appendChild(this.table);  // Put the table online again
 	    }
 
-	    // TODO: maintain history, store last state and previous document
 	    if (this.history) {
 	      this.history.clear();
 	    }
@@ -698,7 +695,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    if ('scrollTop' in selection && this.content) {
-	      // TODO: animated scroll
 	      this.content.scrollTop = selection.scrollTop;
 	    }
 	    if (selection.range) {
@@ -1169,8 +1165,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (this.mode == 'code') {
 	      this.editorDom = document.createElement('div');
-	      this.editorDom.style.height = '100%'; // TODO: move to css
-	      this.editorDom.style.width = '100%'; // TODO: move to css
+	      this.editorDom.style.height = '100%';
+	      this.editorDom.style.width = '100%';
 	      this.content.appendChild(this.editorDom);
 
 	      var editor = ace.edit(this.editorDom);
@@ -1189,7 +1185,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      poweredBy.target = '_blank';
 	      poweredBy.className = 'poweredBy';
 	      poweredBy.onclick = function () {
-	        // TODO: this anchor falls below the margin of the content,
 	        // therefore the normal a.href does not work. We use a click event
 	        // for now, but this should be fixed.
 	        window.open(poweredBy.href, poweredBy.target);
@@ -1245,7 +1240,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @private
 	   */
 	  textmode._onError = function(err) {
-	    // TODO: onError is deprecated since version 2.2.0. cleanup some day
 	    if (typeof this.onError === 'function') {
 	      util.log('WARNING: JSONEditor.onError is deprecated. ' +
 	          'Use options.error instead.');
@@ -1613,7 +1607,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      // remove the style
 	      if (child.style) {
-	        // TODO: test if child.attributes does contain style
 	        child.removeAttribute('style');
 	      }
 
@@ -1738,7 +1731,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selection = window.getSelection();
 	      if(selection) {
 	        var range = document.createRange();
-	        // TODO: do not suppose that the first child of the container is a textnode,
 	        //       but recursively find the textnodes
 	        range.setStart(params.container.firstChild, params.startOffset);
 	        range.setEnd(params.container.firstChild, params.endOffset);
@@ -2113,9 +2105,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          node.showChilds();
 	        }
 	      }
-
-	      // TODO: restore the original caret position and selection with each undo
-	      // TODO: implement history for actions "expand", "collapse", "scroll", "setDocument"
 	    };
 	  }
 
@@ -2316,7 +2305,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      search.select();
 	    };
 
-	    // TODO: ESC in FF restores the last input, is a FF bug, https://bugzilla.mozilla.org/show_bug.cgi?id=598819
 	    td = document.createElement('td');
 	    td.appendChild(search);
 	    tr.appendChild(td);
@@ -2415,7 +2403,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.activeResult = this.results[this.resultIndex];
 	    node.updateDom();
 
-	    // TODO: not so nice that the focus is only set after the animation is finished
 	    node.scrollTo(function () {
 	      if (focus) {
 	        node.focus(elem);
@@ -2664,8 +2651,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 
-	    // TODO: remove the DOM of this Node
-
 	    this.type = this._getType(value);
 
 	    // check if type corresponds with the provided type
@@ -2717,16 +2702,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // value
 	      this.childs = undefined;
 	      this.value = value;
-	      /* TODO
-	       if (typeof(value) == 'string') {
-	       var escValue = JSON.stringify(value);
-	       this.value = escValue.substring(1, escValue.length - 1);
-	       util.log('check', value, this.value);
-	       }
-	       else {
-	       this.value = value;
-	       }
-	       */
 	    }
 	  };
 
@@ -3290,11 +3265,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Node.prototype._duplicate = function(node) {
 	    var clone = node.clone();
 
-	    /* TODO: adjust the field name (to prevent equal field names)
-	     if (this.type == 'object') {
-	     }
-	     */
-
 	    this.insertAfter(clone, node);
 
 	    return clone;
@@ -3313,7 +3283,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var childs = this.childs;
 	    if (childs) {
-	      // TODO: use the js5 Array.some() here?
 	      for (var i = 0, iMax = childs.length; i < iMax; i++) {
 	        if (childs[i].containsNode(node)) {
 	          return true;
@@ -3360,10 +3329,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.appendChild(clone);
 	    }
 
-	    /* TODO: adjust the field name (to prevent equal field names)
-	     if (this.type == 'object') {
-	     }
-	     */
 	  };
 
 	  /**
@@ -3543,7 +3508,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      catch (err) {
 	        this.value = undefined;
-	        // TODO: sent an action with the new, invalid value?
 	        if (silent != true) {
 	          throw err;
 	        }
@@ -3562,12 +3526,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var domValue = this.dom.value;
 	    if (domValue) {
 	      // set text color depending on value type
-	      // TODO: put colors in css
 	      var v = this.value;
 	      var t = (this.type == 'auto') ? util.type(v) : this.type;
 	      var isUrl = (t == 'string' && util.isUrl(v));
 	      var color = '';
-	      if (isUrl && !this.editable.value) { // TODO: when to apply this?
+	      if (isUrl && !this.editable.value) {
 	        color = '';
 	      }
 	      else if (t == 'string') {
@@ -3708,7 +3671,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      catch (err) {
 	        this.field = undefined;
-	        // TODO: sent an action here, with the new, invalid value?
 	        if (silent != true) {
 	          throw err;
 	        }
@@ -3720,10 +3682,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Clear the dom of the node
 	   */
 	  Node.prototype.clearDom = function() {
-	    // TODO: hide the node first?
-	    //this.hide();
-	    // TODO: recursively clear dom?
-
 	    this.dom = {};
 	  };
 
@@ -3819,7 +3777,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @private
 	   */
 	  Node.prototype._onDrag = function (event) {
-	    // TODO: this method has grown too large. Split it in a number of methods
 	    var mouseY = event.pageY;
 	    var mouseX = event.pageX;
 
@@ -3827,8 +3784,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var nodePrev, nodeNext;
 	    var topThis, topPrev, topFirst, heightThis, bottomNext, heightNext;
 	    var moved = false;
-
-	    // TODO: add an ESC option, which resets to the original position
 
 	    // move up/down
 	    trThis = this.dom.tr;
@@ -3890,7 +3845,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	              // We are about to remove the last child of this parent,
 	              // which will make the parents appendNode visible.
 	              topThis += 24 - 1;
-	              // TODO: dangerous to suppose the height of the appendNode a constant of 24-1 px.
 	            }
 	          }
 
@@ -4250,7 +4204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var dom = this.dom;
 	    var domTree = document.createElement('table');
 	    var tbody = document.createElement('tbody');
-	    domTree.style.borderCollapse = 'collapse'; // TODO: put in css
+	    domTree.style.borderCollapse = 'collapse';
 	    domTree.className = 'values';
 	    domTree.appendChild(tbody);
 	    var tr = document.createElement('tr');
@@ -4491,7 +4445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var prevNode, nextNode, nextDom, nextDom2;
 	    var editable = this.editor.options.mode === 'tree';
 
-	    // util.log(ctrlKey, keynum, event.charCode); // TODO: cleanup
+	    // util.log(ctrlKey, keynum, event.charCode);
 	    if (keynum == 13) { // Enter
 	      if (target == this.dom.value) {
 	        if (!this.editable.value || event.ctrlKey) {
@@ -4520,7 +4474,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    else if (keynum == 69) { // E
 	      if (ctrlKey) {       // Ctrl+E and Ctrl+Shift+E
 	        this._onExpand(shiftKey);  // recurse = shiftKey
-	        target.focus(); // TODO: should restore focus in case of recursing expand (which takes DOM offline)
+	        target.focus();
 	        handled = true;
 	      }
 	    }
@@ -4686,7 +4640,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Node.prototype._onExpand = function (recurse) {
 	    if (recurse) {
 	      // Take the table offline
-	      var table = this.dom.tr.parentNode; // TODO: not nice to access the main table like this
+	      var table = this.dom.tr.parentNode;
 	      var frame = table.parentNode;
 	      var scrollTop = frame.scrollTop;
 	      frame.removeChild(table);
@@ -5431,7 +5385,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @private
 	   */
 	  Node.prototype._escapeJSON = function (text) {
-	    // TODO: replace with some smart regex (only when a new solution is faster!)
 	    var escaped = '';
 	    var i = 0, iMax = text.length;
 	    while (i < iMax) {
@@ -5461,7 +5414,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return escaped;
 	  };
 
-	  // TODO: find a nicer solution to resolve this circular dependency between Node and AppendNode
 	  var AppendNode = appendNodeFactory(Node);
 
 	  return Node;
@@ -5481,7 +5433,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @returns {HTMLElement} box
 	   */
 	  function createModeSwitcher(editor, modes, current) {
-	    // TODO: decouple mode switcher from editor
 
 	    /**
 	     * Switch the mode of the editor
@@ -5585,7 +5536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  /**
 	   * A context menu
 	   * @param {Object[]} items    Array containing the menu structure
-	   *                            TODO: describe structure
+	   *                            TO DO: describe structure
 	   * @param {Object} [options]  Object with options. Available options:
 	   *                            {function} close    Callback called when the
 	   *                                                context menu is being closed.
@@ -5716,8 +5667,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	    createMenuItems(list, this.dom.items, items);
 
-	    // TODO: when the editor is small, show the submenu on the right instead of inline?
-
 	    // calculate the max height of the menu with one submenu expanded
 	    this.maxHeight = 0; // height in pixels
 	    items.forEach(function (item) {
@@ -5745,7 +5694,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (subItem.buttonExpand) {
 	            buttons.push(subItem.buttonExpand);
 	          }
-	          // TODO: change to fully recursive method
 	        });
 	      }
 	    });
@@ -5996,7 +5944,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      handled = true;
 	    }
-	    // TODO: arrow left and right
 
 	    if (handled) {
 	      event.stopPropagation();
@@ -6057,7 +6004,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @return {Element} dom   TR element
 	     */
 	    AppendNode.prototype.getDom = function () {
-	      // TODO: implement a new solution for the append node
 	      var dom = this.dom;
 
 	      if (dom.tr) {
@@ -6070,8 +6016,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var trAppend = document.createElement('tr');
 	      trAppend.node = this;
 	      dom.tr = trAppend;
-
-	      // TODO: consistent naming
 
 	      if (this.editable.field) {
 	        // a cell for the dragarea column
@@ -6109,7 +6053,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var tdAppend = dom.td;
 	      if (tdAppend) {
 	        tdAppend.style.paddingLeft = (this.getLevel() * 24 + 26) + 'px';
-	        // TODO: not so nice hard coded offset
 	      }
 
 	      var domText = dom.text;

@@ -19,7 +19,7 @@ class SearchWatchdogScheduler implements IScheduledJob
 
     public function getCommands()
     {
-        return array ('leadsfactory:search:watchdog');
+        return array('leadsfactory:search:watchdog');
     }
 
     public function getEnabled()

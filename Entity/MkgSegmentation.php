@@ -1,23 +1,25 @@
 <?php
 
 namespace Tellaw\LeadsFactoryBundle\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  *
  * Tellaw\LeadsFactoryBundle\Entity\MkgSegmentation
- * 
+ *
  * @ORM\Entity(repositoryClass="Tellaw\LeadsFactoryBundle\Entity\MkgSegmentationRepository")
  */
-class MkgSegmentation {
+class MkgSegmentation
+{
 
-	/**
-	 * @var integer $id
-	 *
-	 * @ORM\Column(type="integer", name="id")
-	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="AUTO")
-	 */
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(type="integer", name="id")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /**
@@ -42,10 +44,10 @@ class MkgSegmentation {
     protected $query_code;
 
     /**
-	 * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
-	 * @ORM\JoinColumn(name="scope", referencedColumnName="id")
-	 */
-	protected $scope;
+     * @ORM\ManyToOne(targetEntity="Tellaw\LeadsFactoryBundle\Entity\Scope")
+     * @ORM\JoinColumn(name="scope", referencedColumnName="id")
+     */
+    protected $scope;
 
 
     /**
@@ -143,7 +145,6 @@ class MkgSegmentation {
     {
         $this->description = $description;
     }
-
 
 
 }

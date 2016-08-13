@@ -27,6 +27,7 @@ class ClientEmailRepository extends EntityRepository
         if (is_null($entity)) {
             return false;
         }
+
         return !is_null($entity->getValidation());
     }
 }

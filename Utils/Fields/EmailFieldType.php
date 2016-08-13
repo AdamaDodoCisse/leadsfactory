@@ -1,8 +1,6 @@
 <?php
 namespace Tellaw\LeadsFactoryBundle\Utils\Fields;
 
-use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
-
 /**
  * Field of type Email will be identified by the type <b>email</b> and will be used to input a content of type email.
  *
@@ -13,9 +11,10 @@ use Tellaw\LeadsFactoryBundle\Utils\Fields\AbstractFieldType;
 class EmailFieldType extends AbstractFieldType
 {
 
-    public function getTestValue ( $dataType, $field ) {
+    public function getTestValue($dataType, $field)
+    {
 
-        if ( $dataType == AbstractFieldType::$_DATATYPE_EMAIL ) {
+        if ($dataType == AbstractFieldType::$_DATATYPE_EMAIL) {
             return "test-fonctionnel@leadsfactory.com";
         }
 

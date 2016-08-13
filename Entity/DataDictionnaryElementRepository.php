@@ -8,12 +8,14 @@ use Psr\Log\LoggerInterface;
  * ReferenceListElementRepository
  *
  */
-class DataDictionnaryElementRepository extends EntityRepository {
+class DataDictionnaryElementRepository extends EntityRepository
+{
 
     /** @var LoggerInterface */
     private $logger;
 
-    public function setLogger(LoggerInterface $logger) {
+    public function setLogger(LoggerInterface $logger)
+    {
         $this->logger = $logger;
     }
 
@@ -24,10 +26,11 @@ class DataDictionnaryElementRepository extends EntityRepository {
      * @param $id
      * @param $rank
      */
-    public function updateSortRank ( $id, $rank ){
+    public function updateSortRank($id, $rank)
+    {
 
         $element = $this->find($id);
-        $element->setRank ($rank);
+        $element->setRank($rank);
         $element->flush();
 
     }
@@ -52,27 +55,27 @@ class DataDictionnaryElementRepository extends EntityRepository {
             ->where('l.code = :code')
             ->andWhere('e.value = :value')
             ->setParameter('code', $list_code)
-            ->setParameter('value', $element_value)
-        ;
+            ->setParameter('value', $element_value);
         $query = $qb->getQuery();
 
         try {
             if (!$return_type) {
                 $result = $query->getResult();
-	            if(count($result)>=1){
-		            $result = array_shift($result);
-		            $result = $result['name'];
-	            }else{
-		            $result = '';
-	            }
+                if (count($result) >= 1) {
+                    $result = array_shift($result);
+                    $result = $result['name'];
+                } else {
+                    $result = '';
+                }
 
-            } else{
+            } else {
                 $result = $query->getResult();
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             //$this->logger->warning($e->getMessage());
             $result = '';
         }
+
         return $result;
     }
 
@@ -83,32 +86,34 @@ class DataDictionnaryElementRepository extends EntityRepository {
      * @param $element_value
      * @return string
      */
-    public function getNameUsingListCodeAndValue($list_code, $element_value) {
+    public function getNameUsingListCodeAndValue($list_code, $element_value)
+    {
         return $this->getNameUsingListCode($list_code, $element_value, 1);
     }
-    
-    public function getValueUsingListCodeAndName($list_code, $element_value) {
+
+    public function getValueUsingListCodeAndName($list_code, $element_value)
+    {
         if (empty($element_value)) {
             return '';
         }
 
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('e.value')
-                ->from('TellawLeadsFactoryBundle:DataDictionnaryElement', 'e')
-                ->join('e.referenceList', 'l')
-                ->andWhere('e.referencelist_id = l.id')
-                ->where('l.code = :code')
-                ->andWhere('e.name = :name')
-                ->setParameter('code', $list_code)
-                ->setParameter('name', $element_value)
-        ;
-        
+            ->from('TellawLeadsFactoryBundle:DataDictionnaryElement', 'e')
+            ->join('e.referenceList', 'l')
+            ->andWhere('e.referencelist_id = l.id')
+            ->where('l.code = :code')
+            ->andWhere('e.name = :name')
+            ->setParameter('code', $list_code)
+            ->setParameter('name', $element_value);
+
         $query = $qb->getQuery();
         try {
             $result = $query->getResult();
         } catch (\Exception $e) {
             $result = '';
-        }        
+        }
+
         return $result;
     }
 }
