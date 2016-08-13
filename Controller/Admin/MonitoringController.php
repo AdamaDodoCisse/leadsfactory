@@ -24,6 +24,98 @@ class MonitoringController extends CoreController {
     }
 
     /**
+     *
+     * This method handle the main dashboard controller. It registers a pageId which is related to a JSON configuration file in your project.
+     * TODO : Warning, default dashboard may embed its configuration file in core project
+     *
+     * @Secure(roles="ROLE_USER")
+     * @Route("/dashboard/manager/{pageId}", name="_project_dashboard_manager")
+     */
+    public function managerDashboardAction ( $pageId ) {
+
+        // Loading informations of departement
+        $filePath = $this->get('kernel')->getRootDir()."/config/dashboard-".$pageId.".json";
+
+        if (file_exists( $filePath )) {
+            $jsonArray = json_decode(file_get_contents( $filePath ), true);
+        } else {
+            throw new \Exception ("File for dashboard is not available : ". $filePath);
+        }
+
+        return $this->render('TellawLeadsFactoryBundle:Default:dashboard-manager.html.twig', array( "configuration" => $jsonArray, "mypage" => "0" ));
+
+    }
+
+    /**
+     *
+     * This is the user dashboard. It add a parameter
+     *
+     * @Secure(roles="ROLE_USER")
+     * @Route("/dashboard/mypage", name="_project_my_dashboard")
+     */
+    public function myDashboardAction () {
+
+        // Loading informations of departement
+        $filePath = $this->get('kernel')->getRootDir()."/config/dashboard-user.json";
+        if (file_exists( $filePath )) {
+            $jsonArray = json_decode(file_get_contents( $filePath ), true);
+        } else {
+            throw new \Exception ("File for dashboard is not available : ".$filePath);
+        }
+
+        return $this->render('TellawLeadsFactoryBundle:Default:dashboard-manager.html.twig', array( "configuration" => $jsonArray, "mypage" => "1" ));
+
+    }
+
+
+    /**
+     * @Secure(roles="ROLE_USER")
+     * @Route("/dashboard/widget", name="_project_dashboard_widget")
+     */
+    public function graphWidgetAction (Request $request) {
+
+        // Get parameters
+        $id = $request->request->get("id");
+        $mypage = $request->request->get("mypage");
+
+        $filePath = $this->get('kernel')->getRootDir()."/config/dashboard-widgets.json";
+        if (file_exists( $filePath )) {
+            $jsonArray = json_decode(file_get_contents( $filePath ), true);
+        } else {
+            throw new \Exception ("Widget configuration file doesn't exists : ".$filePath);
+        }
+
+        if (!array_key_exists($id,$jsonArray )) {
+            return new Response("");
+        }
+
+        $dataProviderClass = $jsonArray[$id]["dataProvider"];
+        //$dataProviderClass = "Weka\LeadsExportBundle\Utils\DataProviders\DemoDataProviders";
+        $renderProviderView = $jsonArray[$id]["renderProvider"];
+
+        // Load a widget
+        $dataProvider = new $dataProviderClass();
+        $dataProvider->setSearchUtils ( $this->get("search.utils") );
+        $dataProvider->setContainer ( $this->container );
+
+        $renderArgument = $jsonArray[$id]["renderArgument"];
+        $renderArgument["currentuser"] = $this->getUser()->getEmail();
+
+        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_DISPATCH') || $mypage == "1") {
+            // If user hasn't got dispatch ROLE, we force him to see his datas!
+            $renderArgument["code"] = $this->getUser()->getEmail();
+        }
+
+        // Output
+        return $this->render('WekaLeadsExportBundle:'.$renderProviderView.'.html.twig', array(
+            "id" => $id,
+            "widget"=>$jsonArray[$id],
+            "data" => $dataProvider->getDatas($renderArgument),
+            "renderArgument" => $renderArgument
+        ));
+    }
+
+    /**
      * @route("/dashboard", name="_monitoring_dashboard")
      * @Secure(roles="ROLE_USER")
      *//*
