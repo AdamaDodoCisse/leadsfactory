@@ -484,7 +484,7 @@ class EntityLeadsController extends CoreController
         }
 
         $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-
+        $jsonArray = null;
         $json = null;
         // Checking if user is related to a team
         if ($this->getUser()->getScope() != null) {
