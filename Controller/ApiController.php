@@ -17,6 +17,8 @@ use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\ExportUtils;
+use Tellaw\LeadsFactoryBundle\Entity\LeadsSandbox;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class ApiController extends CoreController
 {
@@ -260,6 +262,79 @@ class ApiController extends CoreController
         return $response;
     }
 
+    /**
+     * Update une DI
+     * @Route("/lead-sandbox/add")
+     * @Method("POST")
+     * @ParamConverter ("uniqId")
+     */
+    public function addToSandbox(Request $request)
+    {
+        $uniqId = $request->request->get("uniqId");
+        $data = $request->request->get("data");
+        $delay = $request->request->get("delay");
+        $formCode = $request->request->get("formCode");
+
+        if ($uniqId == null || trim($uniqId)=="") {
+            return new Response("UniqId is not set");
+        }
+
+        $leadsSandbox = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:LeadsSandbox')->findByUniqId( $uniqId );
+        if ($leadsSandbox != null) {
+            return new Response("UniqId is not uniq");
+        }
+
+        $leadsSandbox = new LeadsSandbox();
+        $leadsSandbox->setUniqid( $uniqId );
+        $leadsSandbox->setData( $data );
+        $leadsSandbox->setDelay( $delay );
+        $leadsSandbox->setFormCode( $formCode );
+
+        if ( trim($formCode) == "" || trim($delay) == "" || trim( $uniqId ) == "" ) {
+            return new Response ("Invalid data");
+        } else {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($leadsSandbox);
+            $em->flush();
+        }
+
+        return new Response(1);
+
+    }
+
+    /**
+     * Update une DI
+     * @Route("/lead-sandbox/update")
+     * @Method("POST")
+     */
+    public function updateInSandbox(Request $request)
+    {
+
+        $uniqId = $request->request->get("uniqId");
+        $data = $request->request->get("data");
+        $delay = $request->request->get("delay");
+        $formCode = $request->request->get("formCode");
+
+        $leadsSandbox = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:LeadsSandbox')->findOneByUniqId( $uniqId );
+        if ($leadsSandbox == null) {
+            return new Response("leads not found in sandbox");
+        }
+
+        if ($leadsSandbox->getStatus() == 1) {
+            return new Response("Leads is not anymore in sandbox");
+        }
+
+        $leadsSandbox->setData( $data );
+        $leadsSandbox->setDelay( $delay );
+        $leadsSandbox->setFormCode( $formCode );
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($leadsSandbox);
+        $em->flush();
+
+        return new Response(1);
+
+    }
 
     /**
      * Enregistre une DI
