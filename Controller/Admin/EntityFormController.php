@@ -91,7 +91,9 @@ class EntityFormController extends CoreController
             array(
                 'form' => $form->createView(),
                 'formObj' => $formEntity,
-                'title' => "Création d'un formulaire"
+                'title' => "Création d'un formulaire",
+                'screenofResult' => null,
+                'screenofForm' => null
             )
         );
     }
