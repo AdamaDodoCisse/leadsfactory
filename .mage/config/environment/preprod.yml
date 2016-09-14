@@ -30,7 +30,8 @@ tasks:
     - chmod
     - chmodshared
     - hack-vendor
-  post-release:
-  post-deploy:
     - symfony2/cache-clear: {env: dev}
     - symfony2/cache-clear: {env: prod}
+  post-release:
+  post-deploy:
+
