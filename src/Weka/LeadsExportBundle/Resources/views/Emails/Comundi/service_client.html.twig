@@ -3,7 +3,9 @@
     <body>
     Nom : {{ user_data.lastName|upper  }}<br>
     Pr&eacute;nom : {{ user_data.firstName|capitalize  }}<br>
+    {% if user_data.etablissement is defined %}
     Soci&eacute;t&eacute; : {{ user_data.etablissement }}<br>
+    {% endif %}
     Code postal : {{ user_data.zip }}<br>
     T&eacute;l&eacute;phone : {{ user_data.phone }}<br>
     Email : {{ user_data.email }}<br>
