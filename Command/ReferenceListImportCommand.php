@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: seth
- * Date: 27/10/15
- * Time: 16:55
- */
-
 namespace Tellaw\LeadsFactoryBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
