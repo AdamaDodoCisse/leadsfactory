@@ -1,0 +1,10 @@
+{% if elements %}
+    <select class="form-control" id="themeLeadsSelect" onChange="setThemeLead();" >
+        <option></option>
+    {% for element in elements %}
+        <option value="{{ element.value }}">{{ element.name }}</option>
+    {% endfor %}
+</select>
+{% else %}
+    Aucun thème actif
+{% endif %}

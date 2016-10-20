@@ -1,0 +1,4 @@
+suites:
+    leadsfactory:
+        namespace: Tellaw\LeadsFactoryBundle
+        psr4_prefix: Tellaw\LeadsFactoryBundle

@@ -1,0 +1,60 @@
+<!-- measure.html.twig -->
+<div class="col-md-12"></div>
+<div class="col-md-12">
+    <div class="heading-sec" id="intro6">
+        <h1>{{ title }}</h1>
+    </div>
+</div>
+
+<div class="col-md-12">
+<!--
+http://cssdeck.com/labs/ten-animated-weather-glyphs-skycons
+http://darkskyapp.github.io/skycons/
+-->
+    <script>
+        var skycons = new Skycons({"color": "white"});
+    </script>
+
+    {% for item in entities %}
+
+    {{ alerteutil.setValuesForAlerts(item) }}
+
+        <div class="col-md-3">
+
+            <div class="weather-box widget-body  {{ item.yesterdayStatusColor }}">
+                <div style="margin:15px 0px 0px 15px">
+                    <div class="heading-sec" id="intro6">
+                        <p style="color:#FFF;">{{ item.name }}</p>
+                    </div>
+                </div>
+                <div class="weather-day">
+                    <span>{{ item.yesterdayValue }}</span>
+                    <p>LEADS</p>
+                </div>
+
+                <div class="weather-icon">
+                    <canvas id="icon{{ item.id }}" width="64" height="64"></canvas>
+                    <p>{{ item.yesterdayStatusText }}</p>
+                </div>
+                <div style="clear:both;text-align:center;color:#FFF;">
+                    <p><em>Variation {{ item.yesterdayVariation|raw }} %<br/>Valeur précédente : {{ item.weekBeforeValue }} lead(s)</em></p>
+                </div>
+            </div>
+        </div>
+        <script>
+                {% if item.yesterdayStatusColor == "pink" %}
+                skycons.add("icon{{ item.id }}", Skycons.RAIN);
+                {% elseif item.yesterdayStatusColor == "yellow" %}
+                skycons.add("icon{{ item.id }}", Skycons.PARTLY_CLOUDY_DAY);
+                {% else %}
+                skycons.add("icon{{ item.id }}", Skycons.CLEAR_DAY);
+                {% endif %}
+
+        </script>
+    {% endfor %}
+
+    <script>
+        skycons.play();
+    </script>
+
+</div>

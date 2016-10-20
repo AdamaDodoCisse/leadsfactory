@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion</title>
+
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:700,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/font-awesome-4.0.3/css/font-awesome.css') }}" type="text/css" /><!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/style.css') }}" type="text/css" /><!-- Style -->
+    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/responsive.css') }}" type="text/css" /><!-- Responsive -->
+
+</head>
+<body class="sign-in-bg">
+<div class="sign-in">
+    <div class="sign-in-head black">
+        <div class="sign-in-details">
+            <h1>Connexion<i class="fa fa-lock"></i></h1>
+        </div>
+        <div class="log-in-thumb">
+            <img src="{{ asset('bundles/tellawleadsfactory/images/sign-in.jpg') }}" alt="" />
+        </div>
+        <p>Saisissez vos identifiants :</p>
+    </div>
+    <div class="sign-in-form" style="padding-top:20px;">
+        <!--<h5><a href="#" title="">Forgot your password?</a></h5>-->
+        <form method="post" action="{{ path('login_check') }}" id="form-login">
+            <i class="fa fa-user"></i><input type="text" name="_username" placeholder="IDENTIFIANT" class="sign-in-form-input" style="margin-bottom:10px;"/>
+
+            <i class="fa fa-lock"></i><input type="password" name="_password" placeholder="MOT DE PASSE" class="sign-in-form-input"/>
+			<div style="clear:both"></div>
+        	<input style="margin-top:20px;clear:both" type="submit" onClick="document.getElementById('form-login').submit();" title="" class="black loginsubmit" value="Se connecter"/>
+        
+        </form>
+
+    </div>
+
+</div>
+</body>
+</html>
+

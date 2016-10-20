@@ -1,0 +1,10 @@
+{% if elements %}
+<select class="form-control" id="statusLeadsSelect" onChange="setStatusLead();" >
+        <option></option>
+    {% for element in elements %}
+        <option value="{{ element.value }}">{{ element.name }}</option>
+    {% endfor %}
+</select>
+{% else %}
+    Aucun statut actif
+{% endif %}
