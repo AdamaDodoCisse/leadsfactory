@@ -71,7 +71,6 @@ class AthenaV2BaseMapping {
             "type_compte"               => "",  // Vide
             "date_prochaine_election_ce" => "", // Vide
             "nb_lits"                   => "",  // Vide
-            "tranche_lits"              => "",  // Vide
             "tranche_effectifs"         => "",  // Vide
             "tranche_population"        => "",  // Vide
             "presence_dup"              => "",  // Vide
@@ -83,6 +82,10 @@ class AthenaV2BaseMapping {
             "stop_fax"                  => "",
             "stop_phoning"              => "",
             "stop_global"               => "",
+            "raison_sociale1"            => "",
+            "raison_sociale2"            => "",
+//            "tranche_lits"              => "",  // Vide
+
         );
 
     }
@@ -116,12 +119,7 @@ class AthenaV2BaseMapping {
             "stop_phoning"              => "",
             "stop_global"               => "",
             "profil_ti"                 => "",  // Methode de récupération des données
-            "interets_ti"               => "",
-            "interets_tissot"           => "",  // Vide
             "profil_weka"               => "",
-            "interets_weka"             => "",
-            "type_compte_cctp"          => "",  // Vide
-            "responsable_prescription_cctp" => "",  // Vide
             "email_valide"              => "",   // Methode de récupération des données
             "tissot_panel_membre"       => "",
             "tissot_panel_inscription"   => "",
@@ -130,6 +128,17 @@ class AthenaV2BaseMapping {
             "tissot_panel_appels"       => "",
             "tissot_panel_groupe"       => "",
             "tissot_panel_date_sollicitation" => "",
+            "est_gestionnaire_formation"=> "",
+            "mandat_electif"            => "",
+            "mandat_salarial"            => "",
+            "missions_rh"            => "",
+            "missions_paie"            => "",
+            "missions_compta"            => "",
+//            "interets_ti"               => "",
+//            "interets_tissot"           => "",  // Vide
+//            "interets_weka"             => "",
+//            "type_compte_cctp"          => "",  // Vide
+//            "responsable_prescription_cctp" => "",  // Vide
 
         );
 
@@ -203,8 +212,7 @@ class AthenaV2BaseMapping {
             "pays_facturation"          => "pays",
             "sku_produit"               => "product_sku",
             "thematique_weka"           => "", // Information inconnue
-            "nom_compte"                => "etablissement"
-
+            "nom_compte"                => "etablissement",
         );
 
     }
@@ -704,7 +712,7 @@ class AthenaV2BaseMapping {
             "surveillante_gnrale" =>"surveillante_gnrale",
             "travailleur_social" =>"travailleur_social",
 
-            ////////////////////// TI            
+            ////////////////////// TI
             "animateur_sst_correspondant__scurit" => "animateur_sst_correspondant__scurit",
             "architecte_matre_duvre" => "architecte_matre_duvre",
             "assistant_qhse" =>"assistant_qhse",
