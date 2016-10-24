@@ -15,9 +15,10 @@ class ReferenceListRepository extends EntityRepository
 {
 
     /**
-     * @param $keyword
      * @param int $page
      * @param int $limit
+     * @param string $keyword
+     * @param array $params
      * @return Paginator
      */
     public function getList($page = 1, $limit = 10, $keyword = '', $params = array())
@@ -40,6 +41,7 @@ class ReferenceListRepository extends EntityRepository
             $keywords = explode(' ', $keyword);
             foreach ($keywords as $key => $keyword) {
                 $qb->where('f.name LIKE :keyword');
+                $qb->orderBy('f.rank');
                 $qb->setParameter('keyword', '%' . $keyword . '%');
             }
         }
@@ -64,6 +66,7 @@ class ReferenceListRepository extends EntityRepository
             ->join('TellawLeadsFactoryBundle:ReferenceList', 'l')
             ->where('l.code = :code')
             ->andWhere('e.value IN (:values)')
+            ->orderBy('e.rank')
             ->setParameter('code', $code)
             ->setParameter('values', $values);
         $names = $qb->getQuery()->getScalarResult();
@@ -85,9 +88,11 @@ class ReferenceListRepository extends EntityRepository
      *
      * Method used to extract list elements by a defined order
      *
-     * @param $listCode integer id of the list
-     * @param $sortKey must be name or value or rank
-     * @param $sortOrder must be ASC of DESC
+     * @param $listId
+     * @param $sortKey  //must be name or value or rank
+     * @param $sortOrder //must be ASC of DESC
+     * @param bool $ignoreStatus
+     * @return array|string
      */
     public function getElementsByOrder($listId, $sortKey, $sortOrder, $ignoreStatus = false)
     {

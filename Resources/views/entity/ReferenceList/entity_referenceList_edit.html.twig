@@ -22,6 +22,7 @@
         <div class="widget-body custom-form">
             {{ form(form) }}
         </div>
+        <div id="confirmation-message" class="col-md-12"></div>
 
         <div class="widget-body custom-form" id="elementsTableHtml">
             &nbsp;
@@ -49,7 +50,8 @@
                     <input type="hidden" id="listid" value="{{ referenceListId }}"/>
                     <div class="form-group" id="row-referenceList_code">
                         <label>Identifiant</label>
-                        <input id="elementId" type="text" value="" class="form-control" placeholder="Identifiant de l'option" readonly="readonly">
+                        <input id="elementId" type="text" value="" class="form-control"
+                               placeholder="Identifiant de l'option" readonly="readonly">
                     </div>
                     <div class="form-group" id="row-referenceList_code">
                         <label>Nom de l'option</label>
@@ -65,8 +67,8 @@
                     </div>
                     <div class="form-group" id="row-referenceList_code">
                         <center>
-                        <input type="button" value="Vider le formulaire" onclick="cancelForm();"> &nbsp;
-                        <input type="button" value="Valider le formulaire" onclick="submitForm();">
+                            <input type="button" value="Vider le formulaire" onclick="cancelForm();"> &nbsp;
+                            <input type="button" value="Valider le formulaire" onclick="submitForm();">
                         </center>
                     </div>
                 </form>
@@ -79,143 +81,147 @@
 
 {% endblock %}
 {% block javascript %}
-<script type="text/javascript" language="javascript">
+    <script type="text/javascript" language="javascript">
 
-    $('#jsonBuild').click(function() {
+        $('#jsonBuild').click(function () {
 
-        $.loader({
-            className:"blue-with-image-2",
-            content:''
+            $.loader({
+                className: "blue-with-image-2",
+                content: ''
+            });
+
+            $.ajax({
+                url: "{{ path ('_referenceList_build_file', {'id': referenceListId}) }}"
+            }).done(function () {
+                location.reload();
+            });
+
         });
 
-        $.ajax({
-            url: "{{ path ('_referenceList_build_file', {'id': referenceListId}) }}"
-        }).done(function() {
-            location.reload();
+        $('#jsonImport').click(function () {
+
+            $.loader({
+                className: "blue-with-image-2",
+                content: ''
+            });
+
+            $.ajax({
+                url: "{{ path ('_referenceList_import_file', {'id': referenceListId}) }}"
+            }).done(function () {
+                location.reload();
+            });
+
         });
 
-    });
+        $(document).ready(function () {
 
-    $('#jsonImport').click(function() {
+            loadElements();
+            activateDragAndDrop();
 
-        $.loader({
-            className:"blue-with-image-2",
-            content:''
         });
 
-        $.ajax({
-            url: "{{ path ('_referenceList_import_file', {'id': referenceListId}) }}"
-        }).done(function() {
-            location.reload();
-        });
+        function cancelForm() {
 
-    });
+            $("#elementId").val("");
+            $('#elementText').val("");
+            $('#elementValue').val("");
+            $('#elementEnabled').val("");
+            $('#titleForm').html("Création d'une nouvelle valeur");
 
-    $( document ).ready(function() {
-
-        loadElements();
-        activateDragAndDrop();
-
-    });
-
-    function cancelForm () {
-
-        $("#elementId").val("");
-        $('#elementText').val("");
-        $('#elementValue').val("");
-        $('#elementEnabled').val("");
-        $('#titleForm').html ("Création d'une nouvelle valeur");
-
-    }
-
-    function submitForm () {
-
-        var listid = $("#listid").val();
-        var id = $("#elementId").val();
-        var text = $('#elementText').val();
-        var value = $('#elementValue').val();
-        if ( $('#elementEnabled').prop('checked') ) {
-            var enabled = 1;
-        } else {
-            var enabled = 0;
         }
 
-        var data = "listid="+listid+"&id="+id+"&text="+text+"&value="+value+"&enabled="+enabled;
+        function submitForm() {
 
-        fragmentAjaxCall ( '{{ path('_referenceList_updateElement') }}', data, $("#elementsTableHtml"),
-            function ( result ) {
-                alert (result);
-                loadElements();
+            var listid = $("#listid").val();
+            var id = $("#elementId").val();
+            var text = $('#elementText').val();
+            var value = $('#elementValue').val();
+            if ($('#elementEnabled').prop('checked')) {
+                var enabled = 1;
+            } else {
+                var enabled = 0;
             }
-        );
 
-    }
+            var data = "listid=" + listid + "&id=" + id + "&text=" + text + "&value=" + value + "&enabled=" + enabled;
 
-    function editElement (id) {
-
-        var data = "id="+id;
-
-        jsonAjaxCall ( '{{ path('_referenceList_loadElement') }}', data,
-                function( object ) {
-                    $("#elementId").val(object.id);
-                    $('#elementText').val(object.name);
-                    $('#elementValue').val(object.objvalue);
-                    var checked = object.enabled;
-                    if (checked) {
-                        $('#elementEnabled').prop('checked', true);
-                    } else {
-                        $('#elementEnabled').prop('checked', false);
+            fragmentAjaxCall('{{ path('_referenceList_updateElement') }}', data, $("#elementsTableHtml"),
+                    function (result) {
+                        alert(result);
+                        loadElements();
                     }
-                    $('#titleForm').html ( "Edition d'une valeur" );
-                    scrollToAnchor ('elementValueForm');
+            );
+
+        }
+
+        function editElement(id) {
+
+            var data = "id=" + id;
+
+            jsonAjaxCall('{{ path('_referenceList_loadElement') }}', data,
+                    function (object) {
+                        $("#elementId").val(object.id);
+                        $('#elementText').val(object.name);
+                        $('#elementValue').val(object.objvalue);
+                        var checked = object.enabled;
+                        if (checked) {
+                            $('#elementEnabled').prop('checked', true);
+                        } else {
+                            $('#elementEnabled').prop('checked', false);
+                        }
+                        $('#titleForm').html("Edition d'une valeur");
+                        scrollToAnchor('elementValueForm');
+                    });
+
+        }
+
+        function loadElements() {
+
+            var listid = $("#listid").val();
+            var data = "listid=" + listid;
+
+            fragmentAjaxCall(
+                    '{{ path('_referenceList_loadElementsTable') }}',
+                    data,
+                    $("#elementsTableHtml"),
+                    function (result) {
+                        activateDragAndDrop();
+                    }
+            );
+
+        }
+
+        function activateDragAndDrop() {
+            var fixHelper = function (e, ui) {
+                ui.children().each(function () {
+                    $(this).width($(this).width());
                 });
-
-    }
-
-    function loadElements () {
-
-        var listid = $("#listid").val();
-        var data= "listid="+listid;
-
-        fragmentAjaxCall (
-
-            '{{ path('_referenceList_loadElementsTable') }}',
-            data,
-            $("#elementsTableHtml"),
-            function ( result ) {
-                activateDragAndDrop();
-            }
-
-        );
-
-    }
-
-    function activateDragAndDrop () {
-        var fixHelper = function(e, ui) {
-            ui.children().each(function() {
-                $(this).width($(this).width());
-            });
-            return ui;
-        };
-        $("#sort tbody").sortable({
-            helper: fixHelper,
-            update: function() {  // callback quand l'ordre de la liste est changé
-                if (confirm ("Souhaitez-vous enregistrer le changement d'ordre de la liste ?")) {
+                return ui;
+            };
+            $("#sort tbody").sortable({
+                helper: fixHelper,
+                update: function () {  // callback quand l'ordre de la liste est changé
                     var order = $("#sort tbody").sortable('serialize'); // récupération des données à envoyer
-                    $.ajax ({
+                    $.ajax({
                         data: order,
                         type: 'POST',
-                        url : '{{ path('_referenceList_sortElements') }}'
+                        url: '{{ path('_referenceList_sortElements') }}',
+                        success: function() {
+                            $("#confirmation-message").html(
+                                    '<div class="alert alert-success alert-dismissible fade in" role="alert">' +
+                                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                    '<span aria-hidden="true">&times;</span>' +
+                                    '</button> Modification de liste effectuée.</div>'
+                            );
+                        }
                     });
                 }
-            }
-        }).disableSelection();
-    }
+            }).disableSelection();
+        }
 
-    function scrollToAnchor(aid){
-        var aTag = $("a[name='"+ aid +"']");
-        $('html,body').animate({scrollTop: aTag.offset().top},'slow');
-    }
+        function scrollToAnchor(aid) {
+            var aTag = $("a[name='" + aid + "']");
+            $('html,body').animate({scrollTop: aTag.offset().top}, 'slow');
+        }
 
-</script>
+    </script>
 {% endblock %}
