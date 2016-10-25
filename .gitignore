@@ -2,9 +2,11 @@ bin/doctrine-dbal
 .idea
 .DS_Store
 /web/bundles/
+/web/screenshots/
 /app/bootstrap.php.cache
 /composer.phar
 bin/*
+reference_*.csv
 
 app/config/parameters.yml
 app/cache

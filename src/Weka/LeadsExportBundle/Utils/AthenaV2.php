@@ -561,10 +561,10 @@ class AthenaV2 extends AbstractMethod
             }
 
             // Faut il faire le traitement NR
-            if (!$this->defaultIsNR($key)) {
-                continue;
-            } else {
-                if ($data == null || empty($data) || $data == "") {
+            if ($this->defaultIsNR($key) == true) {
+                if ($requestData[$key] == null
+                    || empty($requestData[$key])
+                    || $requestData[$key] == "") {
                     $requestData[$key] = "NR";
                 }
             }
@@ -579,8 +579,9 @@ class AthenaV2 extends AbstractMethod
             $requestData = json_decode(json_encode($requestData), true);
         }
 
-        var_dump($requestData);
         $requestData = $this->fillEmptyFields($requestData);
+        var_dump("VISUALISATION DATA : ");
+        var_dump($requestData);
 
         // version dans request et passer en paramétres la variable dans le reste des fonctions
         $request = array(
