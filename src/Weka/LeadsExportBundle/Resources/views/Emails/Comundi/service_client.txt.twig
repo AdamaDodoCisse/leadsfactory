@@ -1,13 +1,24 @@
+{% if user_data.lastName is defined %}
 Nom : {{ user_data.lastName|upper }}
+{% endif %}
+{% if user_data.firstName is defined %}
 Prénom : {{ user_data.firstName|capitalize  }}
+{% endif %}
+{% if user_data.etablissement is defined %}
 Société : {{ user_data.etablissement }}
+{% endif %}
 {% if user_data.zip is defined %}
 Code postal : {{ user_data.zip }}
 {% endif %}
+{% if user_data.phone is defined %}
 Téléphone : {{ user_data.phone }}
+{% endif %}
+{% if user_data.email is defined %}
 Email : {{ user_data.email }}
+{% endif %}
+{% if user_data.sujet_label is defined %}
 Votre demande : {{ user_data.sujet_label }}
-
+{% endif %}
 {% if user_data.budget != '' %}
     Budget : {{ user_data.budget }}
 {% endif %}
