@@ -1,7 +1,9 @@
 Nom : {{ user_data.lastName|upper }}
 Prénom : {{ user_data.firstName|capitalize  }}
 Société : {{ user_data.etablissement }}
+{% if user_data.zip is defined %}
 Code postal : {{ user_data.zip }}
+{% endif %}
 Téléphone : {{ user_data.phone }}
 Email : {{ user_data.email }}
 Votre demande : {{ user_data.sujet_label }}

@@ -6,7 +6,9 @@
     {% if user_data.etablissement is defined %}
     Soci&eacute;t&eacute; : {{ user_data.etablissement }}<br>
     {% endif %}
+    {% if user_data.zip is defined %}
     Code postal : {{ user_data.zip }}<br>
+    {% endif %}
     T&eacute;l&eacute;phone : {{ user_data.phone }}<br>
     Email : {{ user_data.email }}<br>
     Votre demande : {{ user_data.sujet_label }}<br>
