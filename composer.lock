@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "49b3d1b75ab4aec16eb3eea62eb5781d",
-    "content-hash": "b0e85eceaed82101084fbd1b4dc634d0",
+    "hash": "7de53c058a029051241497a503bfcea7",
+    "content-hash": "c89b72b897017868cb2af936f893b50e",
     "packages": [
         {
             "name": "beberlei/DoctrineExtensions",
@@ -2450,17 +2450,17 @@
         },
         {
             "name": "tellaw/leadsfactory",
-            "version": "1.0.52",
+            "version": "1.0.53",
             "target-dir": "Tellaw/LeadsFactoryBundle",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tellaw/leadsfactory.git",
-                "reference": "dd7dbfe50b62790782a3395cc4df4a58f6d69553"
+                "reference": "54595d1e0c6d7973c7621a5b9c82fa7a7a2c370a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/dd7dbfe50b62790782a3395cc4df4a58f6d69553",
-                "reference": "dd7dbfe50b62790782a3395cc4df4a58f6d69553",
+                "url": "https://api.github.com/repos/tellaw/leadsfactory/zipball/54595d1e0c6d7973c7621a5b9c82fa7a7a2c370a",
+                "reference": "54595d1e0c6d7973c7621a5b9c82fa7a7a2c370a",
                 "shasum": ""
             },
             "require": {
@@ -2502,7 +2502,7 @@
             "keywords": [
                 "Leadsfactory"
             ],
-            "time": "2016-11-14 13:40:18"
+            "time": "2016-11-23 14:36:24"
         },
         {
             "name": "teodortalov/citrix",
