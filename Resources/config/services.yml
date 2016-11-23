@@ -245,6 +245,12 @@ services:
       factory_method: getRepository
       arguments: ['TellawLeadsFactoryBundle:Scope']
 
+  leadsfactory.sandbox_repository:
+      class: Tellaw\LeadsFactoryBundle\Entity\LeadsSandboxRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['TellawLeadsFactoryBundle:LeadsSandbox']
+
   leadsfactory.scheduled_status_history:
     class: Tellaw\LeadsFactoryBundle\Utils\ScheduledJobs\StatusHistoryScheduler
     tags:

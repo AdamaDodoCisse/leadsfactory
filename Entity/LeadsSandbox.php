@@ -50,6 +50,12 @@ class LeadsSandbox
      */
     private $createdAt;
 
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $modifiedAt;
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -207,6 +213,22 @@ class LeadsSandbox
     public function setDelay($delay)
     {
         $this->delay = $delay;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModifiedAt()
+    {
+        return $this->modifiedAt;
+    }
+
+    /**
+     * @param mixed $modifiedAt
+     */
+    public function setModifiedAt($modifiedAt)
+    {
+        $this->modifiedAt = $modifiedAt;
     }
 
 

@@ -14,5 +14,22 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class LeadsSandboxRepository extends EntityRepository
 {
 
+    public function findSandboxOutdated () {
+
+        // Must return sandbox items where now > update_time + delay (in hour)
+        $q = $this->getEntityManager()
+            ->createQueryBuilder();
+        $q->select("s")
+            ->from("TellawLeadsFactoryBundle:LeadsSandbox", "s")
+            ->where(" DATE_ADD (s.modifiedAt, s.delay, 'hour') < :currentdate ")
+            ->setParameter('currentdate', new \DateTime(), \Doctrine\DBAL\Types\Type::DATETIME);
+
+        return $q->getQuery()->getResult();
+
+
+    }
+
+
+
 }
 
