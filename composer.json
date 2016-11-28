@@ -9,7 +9,7 @@
   "minimum-stability": "stable",
   "require": {
 	"php": ">=5.6.0",
-	"tellaw/leadsfactory" : "1.0.51",
+	"tellaw/leadsfactory" : "1.0.53",
 	"twilio/sdk" : "4.11.0"
   },
   "scripts": {

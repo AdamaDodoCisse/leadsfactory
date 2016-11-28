@@ -37,7 +37,9 @@ class Comundimail extends AbstractMethod {
         "14" => "Demande d'information ou devis pour le MOOC",
         "15" => "Demande d'information pour Comundimix",
         "16" => "Demande d'information sur l'actualité",
-        "17" => "Demande d'information sur le coaching"
+        "17" => "Demande d'information sur le coaching",
+        "18" => "Candidature en tant que Formateur",
+        "19" => "Demande de rappel"
     );
 
     public function __construct()
