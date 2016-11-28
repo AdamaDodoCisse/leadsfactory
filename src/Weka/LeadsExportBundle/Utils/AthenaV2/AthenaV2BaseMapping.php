@@ -230,32 +230,57 @@ class AthenaV2BaseMapping
     {
         $telephone = "";
         if (array_key_exists("phone", $data) && $data["phone"]) {
-            $telephone = $data["phone"];
+            $telephone = $this->formatTelNum($data["phone"]);
             if (array_key_exists("pays", $data) && $data["pays"]) {
                 switch ($data['pays']) {
                     case 'FR':
-                        $telephone = '+33'.$data['phone'];
+                        $telephone = '+33'.$this->formatTelNum($telephone, true);
                         break;
                     case 'BE':
-                        $telephone = '+32'.$data['phone'];
+                        $telephone = '+32'.$this->formatTelNum($telephone, true);
                         break;
                     case 'MC':
-                        $telephone = '+377'.$data['phone'];
+                        $telephone = '+377'.$telephone;
                         break;
                     case 'LU':
-                        $telephone = '+352'.$data['phone'];
+                        $telephone = '+352'.$telephone;
                         break;
                     case 'CH':
-                        $telephone = '+41'.$data['phone'];
+                        $telephone = '+41'.$this->formatTelNum($telephone, true);
                         break;
                     default :
-                        $telephone = $data['phone'];
                         break;
                 }
             }
         }
 
         return $telephone;
+    }
+
+
+    /**
+     * Permet de retourner un numero de telepjone correctement formatté
+     * @param $numTel
+     * @param bool $removeZero
+     * @return string
+     */
+    private function formatTelNum($numTel, $removeZero = false)
+    {
+        $i = 0;
+        $formatted = "";
+        while ($i < strlen($numTel)) { //tant qu il y a des caracteres
+            if (preg_match('/^[0-9]$/', $numTel[$i])) { //si on a bien un chiffre on le garde
+                $formatted .= $numTel[$i];
+            }
+            $i++;
+        }
+
+        // On enlève le 0
+        if ($removeZero && $formatted && $formatted[0] == '0') {
+            $formatted = substr($formatted, 1);
+        }
+
+        return $formatted;
     }
 
     public function getVille_facturation($data)
