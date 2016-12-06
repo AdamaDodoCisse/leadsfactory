@@ -81,7 +81,42 @@ class Comundimail extends AbstractMethod {
                 continue;
             }
 
-            if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
+            if ( $this->_formConfig["neolane"] == "true" ) {
+
+                $newsletters = array (
+                    "news_2876"=>"8",
+                    "news_2868"=>"10",
+                    "news_2852"=>"20",
+                    "news_2884"=>"44",
+                    "news_2878"=>"22",
+                    "news_2854"=>"23",
+                    "news_2866"=>"27",
+                    "news_2867"=>"28",
+                    "news_2872"=>"10",
+                    "news_2869"=>"30",
+                    "news_2874"=>"35",
+                    "news_2883"=>"39",
+                    "news_2885"=>"56"
+                );
+
+                $idNewsletter = [];
+                foreach  ($data as $key => $value) {
+                    if (array_key_exists($newsletters , $key)) {
+                        // Post vers Neolane
+                        $idNewsletter[] = $newsletters[$key];
+                    }
+                }
+
+                $neolaneUrl = "http://neolane.comundi.fr/webApp/RBI_ABO_NL?email=".$data['email']."&prenom=".$data['firstName']."&nom=".$data['lastName']."&services=".implode(',',$idNewsletter);
+                if(file_get_contents($neolaneUrl,"r")) {
+                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                    $msg = 'Exporté avec succès';
+                } else {
+                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $msg = 'Erreur liaison NEOLANE';
+                }
+
+            } else if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
 
                 // Mode envoi d'email, VS mode CRM Affectation
 
