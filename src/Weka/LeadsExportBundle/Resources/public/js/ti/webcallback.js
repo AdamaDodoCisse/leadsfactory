@@ -99,7 +99,7 @@ var webcallback = {
             success: function(response){
                 //alert(response)
             }
-        })
+        });
         this.step = 'check';
     },
     newCall: function(){
