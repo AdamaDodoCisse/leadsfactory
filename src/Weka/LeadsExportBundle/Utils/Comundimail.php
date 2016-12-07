@@ -84,7 +84,7 @@ class Comundimail extends AbstractMethod {
                 continue;
             }
 
-            if ( $this->_formConfig["neolane"] == "true" ) {
+            if ( array_key_exists("neolane",$this->_formConfig)  ) {
 
                 $newsletters = array (
                     "news_2876"=>"8",
