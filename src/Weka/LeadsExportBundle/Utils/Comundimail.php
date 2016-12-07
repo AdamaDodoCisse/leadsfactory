@@ -71,7 +71,10 @@ class Comundimail extends AbstractMethod {
 
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
             $logger->info('[ComundiMail] - Traitement Lead : '.$job->getLead()->getId());
-            $form_subject = $data['sujet'];
+
+            if ( array_key_exists ( "sujet", $data ) )
+                $form_subject = $data['sujet'];
+
             $hasError = false;
 
             // Verifier si le job doit être traité
@@ -101,7 +104,7 @@ class Comundimail extends AbstractMethod {
 
                 $idNewsletter = [];
                 foreach  ($data as $key => $value) {
-                    if (array_key_exists($newsletters , $key)) {
+                    if (array_key_exists( $key, $newsletters)) {
                         // Post vers Neolane
                         $idNewsletter[] = $newsletters[$key];
                     }
