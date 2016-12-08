@@ -1,176 +1,108 @@
 <!DOCTYPE html>
-<html>
+<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<!-- BEGIN HEAD -->
+
 <head>
+    <meta charset="utf-8" />
+    <title>LeadsFactory</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="Preview page of Metronic Admin Theme #1 for statistics, charts, recent events and reports" name="description" />
+    <meta content="" name="author" />
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/simple-line-icons/simple-line-icons.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+    <!-- BEGIN PAGE LEVEL PLUGINS -->
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/morris/morris.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/fullcalendar/fullcalendar.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/plugins/jqvmap/jqvmap/jqvmap.css') }}" rel="stylesheet" type="text/css" />
+    <!-- END PAGE LEVEL PLUGINS -->
+    <!-- BEGIN THEME GLOBAL STYLES -->
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/css/components-md.min.css') }}" rel="stylesheet" id="style_components" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/global/css/plugins-md.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- END THEME GLOBAL STYLES -->
+    <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/layouts/layout/css/layout.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/layouts/layout/css/themes/darkblue.min.css') }}" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="{{ asset('bundles/tellawleadsfactory/assets/layouts/layout/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <!-- END THEME LAYOUT STYLES -->
+    <link rel="shortcut icon" href="favicon.ico" /> </head>
+<!-- END HEAD -->
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white page-md">
 
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=PT+Sans:700,400' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Pontano+Sans' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600' rel='stylesheet' type='text/css'>
+<div class="page-wrapper">
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/bootstrap.min.css') }}" type="text/css" /><!-- Bootstrap -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/font-awesome-4.0.3/css/font-awesome.css') }}" type="text/css" /><!-- Font Awesome -->
-
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/nv.d3.css') }}" type="text/css" /><!-- VISITOR CHART -->
-    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('bundles/tellawleadsfactory/css/daterangepicker-bs3.css') }}" /><!-- Date Range Picker -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/style.css') }}" type="text/css" /><!-- Style -->
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/responsive.css') }}" type="text/css" /><!-- Responsive -->
-
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/print.css') }}" type="text/css" media="print"/><!-- Print -->
-
-    <!-- Script -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/jquery-1.10.2.js') }}"></script><!-- Jquery -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/d3.v2.js') }}"></script><!-- VISITOR CHART -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/nv.d3.js') }}"></script><!-- VISITOR CHART -->
-
-    {#    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/doughnut.js') }}"></script><!-- GRAPHS -->#}
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/pie-chart.js') }}"></script><!--GRAPHS  -->
-    <script type="text/javascript"  src="{{ asset('http://d3js.org/d3.v3.js') }}"></script><!--GRAPHS  -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/c3.js') }}"></script>
-    <link href="{{ asset('bundles/tellawleadsfactory/css/c3.css') }}" rel="stylesheet" type="text/css">
-
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/live-updating-chart.js') }}"></script><!-- VISITOR CHART -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/bootstrap.min.js') }}"></script><!-- Bootstrap -->
-    <script type="text/javascript"  src="{{ asset('bundles/tellawleadsfactory/js/script.js') }}"></script><!-- Script -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/skycons.js') }}"></script> <!-- Skycons -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/enscroll-0.5.2.min.js') }}"></script> <!-- Custom Scroll bar -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/moment.js') }}"></script> <!-- Date Range Picker -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/daterangepicker.js') }}"></script><!-- Date Range Picker -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/carousal-plugins.js') }}"></script><!-- Carousal Widget -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/ticker.js') }}"></script><!-- Ticker -->
-
-    <script src="{{ asset('bundles/tellawleadsfactory/js/streaming-mustache.js') }}" type="text/javascript"></script><!-- Streaming Table -->
-    <script src="{{ asset('bundles/tellawleadsfactory/js/stream_table.js') }}" type="text/javascript"></script><!-- Streaming Table -->
-    {#    <script src="{{ asset('bundles/tellawleadsfactory/js/stream.js') }}" type="text/javascript"></script><!-- VISITOR CHART -->#}
-    <script src="{{ asset('bundles/tellawleadsfactory/js/tablesorter.jquery.min.js') }}" type="text/javascript"></script><!-- VISITOR CHART -->
-
-    <script src="{{ asset('bundles/tellawleadsfactory/js/jquery-ui.js') }}" type="text/javascript"></script>
-
-    <script src="{{ asset('bundles/tellawleadsfactory/js/jsoneditor.js') }}"></script>
-    <link rel="stylesheet" href="{{ asset('bundles/tellawleadsfactory/css/jsoneditor.css?v=1') }}">
-    <script type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/ace/ace.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/tellawleadsfactory/asset/jsonlint/jsonlint.js') }}"></script>
-
-    <script src="{{ asset('bundles/tellawleadsfactory/js/jquery.loader.js') }}"></script>
-    <link href="{{ asset('bundles/tellawleadsfactory/css/jquery.loader.css') }}" rel="stylesheet" />
-
-    <!-- featherlight LIGHTBOX -->
-    <link href="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.css" type="text/css" rel="stylesheet" />
-    <script src="//cdn.rawgit.com/noelboss/featherlight/1.3.5/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
-
-    <script src="{{ asset('bundles/tellawleadsfactory/js/leadsfactory.js') }}"></script>
-
-    <link href="{{ asset('bundles/tellawleadsfactory/ajax-indicator/css/ajax-indicator.css') }}" rel="stylesheet" />
-    <script src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/js/ajax-indicator.js') }}"></script>
-
-    <style type="text/css">
-
-        code {
-            background-color: #f5f5f5;
-        }
-
-        #jsoneditor-referenceList_json, .ace_content, #jsoneditor, #ruleseditor-form_alertRules,
-        #jsoneditor-form_exportConfig, #jsoneditor-leads_data, #jsoneditor-mkgSegmentation_config,
-        #jsoneditor-field_testvalue {
-            height: 250px;
-        }
-        .jsoneditor .menu {
-            display:none;
-        }
-
-        #mkgSegment_date_end .form-control,
-        #mkgSegment_date_start .form-control {
-            width: 30%;
-            display: inline-block;
-            margin-right: 3%;
-        }
-
-        .heading-sec h1 {
-            margin: 10px 0;
-        }
-    </style>
-
-</head>
-<body>
-<div class="responsive-menu">
-    <div class="responsive-menu-dropdown blue">
-        <a title="" class="blue">MENU <i class="fa fa-align-justify" ></i></a>
-    </div>
-
-    {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:navigation', { "parentRoute" : app.request.attributes.get('_route') } )) }}
+    <!-- content -->
 
 </div>
-<header>
-    <div class="logo">
-        <img src="{{ asset('bundles/tellawleadsfactory/images/logo.png') }}" alt="" />
-    </div>
 
-    {{ render(controller('TellawLeadsFactoryBundle:Admin/EntityUsers:changescope')) }}
-
-
-    <div aria-hidden="true" role="dialog" tabindex="-1" class="modal fade" id="add-post-title" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header blue">
-                    <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                    <h4 class="modal-title">Setting Section</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="text" placeholder="TITLE" />
-                    <textarea placeholder="DESCRIPTION" rows="5"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button data-dismiss="modal" class="btn btn-default black" type="button">Close</button>
-                    <button class="btn btn-primary blue" type="button">Save changes</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div>
-    </div>
-
-
-</header><!-- Header -->
-
-<div class="menu">
-    <div class="menu-profile" id="intro3">
-        <img src="{{ asset('bundles/tellawleadsfactory/images/avatar.jpg') }}" alt="" />
-        <span><i class="fa fa-plus"></i></span>
-        <div class="menu-profile-hover">
-            <h1><i>{{ app.user.firstname }}</i> {{ app.user.lastname }}</h1>
-            <p><em>{{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:version', { "parentRoute" : app.request.attributes.get('_route') } )) }}</em></p>
-            <a href="{{ path('_security_logout') }}" title=""><i class="fa fa-power-off"></i></a>
-            <div class="menu-profile-btns">
-
-                <h3>
-                    <i class="fa fa-user blue"></i>
-                    <a href="{{ path('_security_logout') }}" title="">Se deconnecter</a>
-                </h3>
-                <h3>
-                    <i class="fa fa-inbox pink"></i>
-                    <a href="{{ path('_users_edit', {'id': app.user.id}) }}" title="">Mon profile</a>
-                </h3>
-            </div>
-        </div>
-    </div>
-    {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:navigation', { "parentRoute" : app.request.attributes.get('_route') } )) }}
-
-</div><!-- Right Menu -->
-
-<div class="wrapper">
-    <div class="container">
-        {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:breadCrumb', { "parentRoute" : app.request.attributes.get('_route') } )) }}
-
-        {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:messages', { "parentRoute" : app.request.attributes.get('_route') } )) }}
-
-        {% block body %}{% endblock %}
-    </div><!-- Container -->
-</div><!-- Wrapper -->
-
-{% block javascript %}{% endblock %}
-<script src="http://www.google.com/jsapi"></script>
+<!--[if lt IE 9]>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/respond.min.js') }}"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/excanvas.min.js') }}"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/ie8.fix.min.js') }}"></script>
+<![endif]-->
+<!-- BEGIN CORE PLUGINS -->
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jquery.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/bootstrap/js/bootstrap.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/js.cookie.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jquery.blockui.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js') }}" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/moment.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/morris/morris.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/morris/raphael-min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/counterup/jquery.waypoints.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/counterup/jquery.counterup.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/amcharts.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/serial.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/pie.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/radar.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/themes/light.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/themes/patterns.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amcharts/themes/chalk.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/ammap/ammap.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/ammap/maps/js/worldLow.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/amcharts/amstockcharts/amstock.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/fullcalendar/fullcalendar.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/horizontal-timeline/horizontal-timeline.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/flot/jquery.flot.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/flot/jquery.flot.resize.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/flot/jquery.flot.categories.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jquery-easypiechart/jquery.easypiechart.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jquery.sparkline.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/jquery.vmap.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.russia.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.world.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.europe.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.germany.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/maps/jquery.vmap.usa.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/plugins/jqvmap/jqvmap/data/jquery.vmap.sampledata.js') }}" type="text/javascript"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<!-- BEGIN THEME GLOBAL SCRIPTS -->
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/global/scripts/app.min.js') }}" type="text/javascript"></script>
+<!-- END THEME GLOBAL SCRIPTS -->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/pages/scripts/dashboard.min.js') }}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME LAYOUT SCRIPTS -->
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/layouts/layout/scripts/layout.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/layouts/layout/scripts/demo.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/layouts/global/scripts/quick-sidebar.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('bundles/tellawleadsfactory/assets/assets/layouts/global/scripts/quick-nav.min.js') }}" type="text/javascript"></script>
+<!-- END THEME LAYOUT SCRIPTS -->
 </body>
+
 </html>
