@@ -68,6 +68,8 @@ class SandboxToLeadCommand extends ContainerAwareCommand
                     }
                 }
 
+                $url = str_replace ("https://", "http://", $url);
+
                 $output->writeln('Leads URL for Item : '.$url);
 
                 // Post Data
