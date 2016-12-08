@@ -115,14 +115,13 @@ class Comundimail extends AbstractMethod {
                     $status = $exportUtils::$_EXPORT_SUCCESS;
                     $msg = 'Exporté avec succès';
                 } else {
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = 'Erreur liaison NEOLANE';
                 }
 
             } else if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
 
                 // Mode envoi d'email, VS mode CRM Affectation
-
                 $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
                 $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
                 $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
@@ -237,7 +236,7 @@ class Comundimail extends AbstractMethod {
                 }
 
                 if($hasError) {
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = 'Erreur envoi de mail Comundi';
                 } else {
                     $status = $exportUtils::$_EXPORT_SUCCESS;
@@ -252,13 +251,13 @@ class Comundimail extends AbstractMethod {
 
                 if ( trim($user_email) == "" ) {
                     $hasError = true;
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = 'Probleme : Mode CRM, Email attribution vide';
                 }
 
                 if ( $user == null ) {
                     $hasError = true;
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = "Probleme : Mode CRM, Utilisateur non trouve pour l'email : ".$user_email;
                 }
 
@@ -290,7 +289,7 @@ class Comundimail extends AbstractMethod {
 
                 if ( !$result ) {
                     $hasError = true;
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = "Probleme : Mode CRM, L'email de notification n'a pas été envoyé : ".$user_email;
                 }
 
@@ -341,5 +340,5 @@ class Comundimail extends AbstractMethod {
         return $this->getContainer()->get('mailer')->send($message);
 
     }
-    
+
 }
