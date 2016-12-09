@@ -378,6 +378,11 @@ class ApiController extends CoreController
                 if (array_key_exists('firstname', $config["configuration"])) {
                     $data["firstName"] = ucfirst($data[$config["configuration"]["firstname"]]);
                 }
+
+                if (array_key_exists('email', $config["configuration"])) {
+                    $data["email"] = ucfirst($data[$config["configuration"]["email"]]);
+                }
+
             }
 
             $leads = new Leads();
