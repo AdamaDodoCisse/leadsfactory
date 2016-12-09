@@ -68,9 +68,12 @@ class SandboxToLeadCommand extends ContainerAwareCommand
                     }
                 }
 
-                $url = str_replace ("https://", "http://", $url);
+                $url = str_replace ("https", "http", $url);
 
                 $output->writeln('Leads URL for Item : '.$url);
+
+                $datas = json_decode ($item->getData(),true);
+                $datas["formCode"] = $form->getCode();
 
                 // Post Data
                 $ci = curl_init();
@@ -80,7 +83,7 @@ class SandboxToLeadCommand extends ContainerAwareCommand
                 curl_setopt($ci, CURLOPT_RETURNTRANSFER, 1);
                 curl_setopt($ci, CURLOPT_FORBID_REUSE, 0);
                 curl_setopt($ci, CURLOPT_CUSTOMREQUEST, 'POST');
-                curl_setopt($ci, CURLOPT_POSTFIELDS, $item->getData());
+                curl_setopt($ci, CURLOPT_POSTFIELDS, json_encode($datas));
 
                 curl_setopt($ci, CURLOPT_RETURNTRANSFER, true);
                 $result = curl_exec($ci);
