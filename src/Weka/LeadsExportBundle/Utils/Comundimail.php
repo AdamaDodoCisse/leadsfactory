@@ -110,7 +110,7 @@ class Comundimail extends AbstractMethod {
                     }
                 }
 
-                $neolaneUrl = "http://neolane.comundi.fr/webApp/RBI_ABO_NL?email=".$data['email']."&prenom=".$data['firstName']."&nom=".$data['lastName']."&services=".implode(',',$idNewsletter);
+                $neolaneUrl = "http://dm.neolane.comundi.fr/webApp/RBI_ABO_NL?email=".$data['email']."&prenom=".$data['firstName']."&nom=".$data['lastName']."&services=".implode(',',$idNewsletter);
                 if(file_get_contents($neolaneUrl,"r")) {
                     $status = $exportUtils::$_EXPORT_SUCCESS;
                     $msg = 'Exporté avec succès';
