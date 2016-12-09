@@ -372,11 +372,11 @@ class ApiController extends CoreController
             if (array_key_exists('configuration', $config)) {
 
                 if (array_key_exists('lastname', $config["configuration"])) {
-                    $data["lastname"] = ucfirst($data[$config["configuration"]["lastname"]]);
+                    $data["lastName"] = ucfirst($data[$config["configuration"]["lastname"]]);
                 }
 
                 if (array_key_exists('firstname', $config["configuration"])) {
-                    $data["firstname"] = ucfirst($data[$config["configuration"]["firstname"]]);
+                    $data["firstName"] = ucfirst($data[$config["configuration"]["firstname"]]);
                 }
             }
 
