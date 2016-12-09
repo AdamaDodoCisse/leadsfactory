@@ -1,45 +1,39 @@
 {
-  "name": "symfony/framework-standard-edition",
-  "license": "MIT",
-  "type": "project",
-  "description": "The \"Symfony Standard Edition\" distribution",
-  "autoload": {
-	"psr-0": { "": "src/" }
-  },
-  "minimum-stability": "stable",
-  "require": {
-	"php": ">=5.6.0",
-	"tellaw/leadsfactory" : "dev-master",
-	"twilio/sdk" : "4.11.0"
-  },
-  "scripts": {
-	"post-install-cmd": [
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
-	],
-	"post-update-cmd": [
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-	  "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
-	]
-  },
-  "config": {
-	"bin-dir": "bin"
-  },
-  "extra": {
-	"symfony-app-dir": "app",
-	"symfony-web-dir": "web",
-	"branch-alias": {
-	  "dev-master": "2.4-dev"
-	}
-  },
-	"repositories": [
-		{
-			"type": "vcs",
-			"url":  "https://github.com/tellaw/leadsfactory.git"
+	"name": "symfony/framework-standard-edition",
+	"license": "MIT",
+	"type": "project",
+	"description": "The \"Symfony Standard Edition\" distribution",
+	"autoload": {
+		"psr-0": { "": "src/" }
+	},
+	"minimum-stability": "stable",
+	"require": {
+		"php": ">=5.6.0",
+		"tellaw/leadsfactory" : "1.0.53",
+		"twilio/sdk" : "4.11.0"
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+		],
+		"post-update-cmd": [
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
+			"Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+		]
+	},
+	"config": {
+		"bin-dir": "bin"
+	},
+	"extra": {
+		"symfony-app-dir": "app",
+		"symfony-web-dir": "web",
+		"branch-alias": {
+			"dev-master": "2.4-dev"
 		}
-	]
+	}
 }
