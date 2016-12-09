@@ -369,6 +369,17 @@ class ApiController extends CoreController
             $data = $this->get('form_utils')->preProcessData($form->getId(), $data);
             $jsonContent = json_encode($data);
 
+            if (array_key_exists('configuration', $config)) {
+
+                if (array_key_exists('lastname', $config["configuration"])) {
+                    $data["lastname"] = ucfirst($data[$config["configuration"]["lastname"]]);
+                }
+
+                if (array_key_exists('firstname', $config["configuration"])) {
+                    $data["firstname"] = ucfirst($data[$config["configuration"]["firstname"]]);
+                }
+            }
+
             $leads = new Leads();
             $leads->setIpadress($this->get('request')->getClientIp());
             $leads->setUserAgent($this->get('request')->server->get("HTTP_USER_AGENT"));
