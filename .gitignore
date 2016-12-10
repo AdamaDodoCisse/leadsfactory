@@ -3,6 +3,7 @@
 .settings/*
 .project
 .buildpath
+
 app/config/parameters.yml
 app/cache
 app/logs
@@ -26,3 +27,6 @@ vendor/
 
 # Composer PHAR
 /composer.phar
+
+# node
+node_modules

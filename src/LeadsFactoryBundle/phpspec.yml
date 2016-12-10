@@ -1,0 +1,4 @@
+suites:
+    leadsfactory:
+        namespace: LeadsFactoryBundle
+        psr4_prefix: LeadsFactoryBundle

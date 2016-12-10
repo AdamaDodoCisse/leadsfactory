@@ -1,0 +1,306 @@
+parameters:
+    list.per_page_options: 10;25;50
+    leadsfactory.internal_email_patterns: 'test@test.fr'
+
+services:
+  leadsfactory.time_configurator:
+    class:        LeadsFactoryBundle\DependencyInjection\TimeConfigurator
+
+  messages.utils:
+    class:        LeadsFactoryBundle\Utils\Messages
+    arguments:    [ "@session" ]
+
+  lf.utils:
+    class:        LeadsFactoryBundle\Utils\LFUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  history.utils:
+    class:        LeadsFactoryBundle\Utils\HistoryUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  functionnal_testing.utils:
+    class:        LeadsFactoryBundle\Utils\FunctionnalTestingUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+    tags:
+                -  { name: "preference.key" }
+
+  scheduler.utils:
+    class:        LeadsFactoryBundle\Utils\SchedulerUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  chart:
+    class:        LeadsFactoryBundle\Utils\Chart
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  export.logger:
+    class:        Symfony\Bridge\Monolog\Logger
+    arguments:    [app]
+    calls:
+                  - ["pushHandler", ["@export.logger_handler"]]
+
+  export.logger_handler:
+    class:        Monolog\Handler\StreamHandler
+    arguments:    ["%kernel.logs_dir%/%kernel.environment%.export.log", "200"]
+
+  export_utils:
+    class:        LeadsFactoryBundle\Utils\ExportUtils
+    arguments:    ["@leadsfactory.client_email_repository"]
+    calls:
+                      - [ "setContainer", [ "@service_container" ] ]
+
+  preferences_utils:
+    class:        LeadsFactoryBundle\Utils\PreferencesUtils
+    calls:
+                      - [ "setContainer", [ "@service_container" ] ]
+
+  core_manager:
+    class:        LeadsFactoryBundle\Shared\CoreManager
+    calls:
+                      - [ "setContainer", [ "@service_container" ] ]
+
+  csv_method:
+    class:        LeadsFactoryBundle\Utils\Export\CSV
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+    tags:
+                  - { name: "export.method", alias: "csv" }
+
+  entity_form:
+    class:        LeadsFactoryBundle\Form\Type\FormType
+
+  emailFieldType:
+    class:        LeadsFactoryBundle\Utils\Fields\EmailFieldType
+
+  form_utils:
+    class:        LeadsFactoryBundle\Utils\FormUtils
+    arguments:    ["@leadsfactory.reference_list_repository", "@router", "@leadsfactory.field_factory"]
+    configurator: ["@leadsfactory.time_configurator", "configure"]
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  emails_utils:
+    class:        LeadsFactoryBundle\Utils\EmailUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  leadsfactory.field_factory:
+    class:        LeadsFactoryBundle\Utils\Fields\FieldFactory
+
+  js_utils:
+    class:        LeadsFactoryBundle\Utils\JsUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  alertes_utils:
+    class:        LeadsFactoryBundle\Utils\AlertUtils
+    arguments:    [ "@doctrine.orm.entity_manager" , "%leadsfactory.internal_email_patterns%", "@preferences_utils"]
+
+  search.utils:
+    class:        LeadsFactoryBundle\Utils\ElasticSearchUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+    tags:
+                -  { name: "preference.key" }
+
+  leadsfactory.twig_extension:
+    class: LeadsFactoryBundle\Twig\LeadsFactoryExtension
+    arguments: ["@form_utils", "@leadsfactory.reference_list_repository"]
+    tags:
+      - { name: "twig.extension" }
+
+  leadsfactory.twig_stringloader_extension:
+      class: Twig_Extension_StringLoader
+      tags:
+        - { name: "twig.extension" }
+
+  leadsfactory.twig_genericcrud_extension:
+      class: LeadsFactoryBundle\Twig\TellawGenericCrudExtension
+      tags:
+        - { name: "twig.extension" }
+
+  leadsfactory.person_repository:
+    class: LeadsFactoryBundle\Entity\PersonRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ["LeadsFactoryBundle:Person"]
+
+  leadsfactory.entreprise_repository:
+    class: LeadsFactoryBundle\Entity\EntrepriseRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:Entreprise']
+
+  leadsfactory.entreprise_repository:
+    class: LeadsFactoryBundle\Entity\EntrepriseRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:Entreprise']
+
+  leadsfactory.leads_repository:
+    class: LeadsFactoryBundle\Entity\LeadsRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:Leads']
+
+  leadsfactory.mkgsegmentation_repository:
+    class: LeadsFactoryBundle\Entity\MkgSegmentationRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:MkgSegmentation']
+
+  leadsfactory.mkgsegment_repository:
+    class: LeadsFactoryBundle\Entity\MkgSegmentRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:MkgSegment']
+
+  leadsfactory.form_repository:
+    class: LeadsFactoryBundle\Entity\FormRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:Form']
+    calls:
+      - ["setInternalEmailPatterns", ["%leadsfactory.internal_email_patterns%"]]
+
+  leadsfactory.form_type_repository:
+    class: LeadsFactoryBundle\Entity\FormTypeRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:FormType']
+    calls:
+      - ["setInternalEmailPatterns", ["%leadsfactory.internal_email_patterns%"]]
+
+  leadsfactory.preference_repository:
+    class: LeadsFactoryBundle\Entity\PreferenceRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:Preference']
+
+
+  leadsfactory.extract_field_command:
+    class: LeadsFactoryBundle\Command\ExtractFieldCommand
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+    - { name: "console.command" }
+
+  leadsfactory.datadictionnary_repository:
+    class: LeadsFactoryBundle\Entity\DataDictionnaryRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ["LeadsFactoryBundle:DataDictionnary"]
+
+  leadsfactory.datadictionnary_element_repository:
+      class: LeadsFactoryBundle\Entity\DataDictionnaryElementRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:DataDictionnaryElement']
+      calls:
+       - ["setLogger", ["@export.logger"]]
+
+  leadsfactory.leads_comments_repository:
+    class: LeadsFactoryBundle\Entity\LeadsCommentRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:LeadsComment']
+
+  leadsfactory.leads_history_repository:
+    class: LeadsFactoryBundle\Entity\LeadsHistoryRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:LeadsHistory']
+
+  leadsfactory.reference_list_repository:
+    class: LeadsFactoryBundle\Entity\ReferenceListRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['LeadsFactoryBundle:ReferenceList']
+
+  leadsfactory.reference_list_element_repository:
+      class: LeadsFactoryBundle\Entity\ReferenceListElementRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:ReferenceListElement']
+      calls:
+       - ["setLogger", ["@export.logger"]]
+
+  leadsfactory.client_email_repository:
+      class: LeadsFactoryBundle\Entity\ClientEmailRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:ClientEmail']
+
+  leadsfactory.export_repository:
+      class: LeadsFactoryBundle\Entity\ExportRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:Export']
+
+  leadsfactory.scope_repository:
+      class: LeadsFactoryBundle\Entity\ScopeRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:Scope']
+
+  leadsfactory.sandbox_repository:
+      class: LeadsFactoryBundle\Entity\LeadsSandboxRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:LeadsSandbox']
+
+  leadsfactory.scheduled_status_history:
+    class: LeadsFactoryBundle\Utils\ScheduledJobs\StatusHistoryScheduler
+    tags:
+    - { name: "scheduled.job" }
+
+  leadsfactory.scheduled_export_job:
+    class: LeadsFactoryBundle\Utils\ScheduledJobs\ExportScheduler
+    tags:
+    - { name: "scheduled.job" }
+
+  leadsfactory.scheduled_segmentation_job:
+    class: LeadsFactoryBundle\Utils\ScheduledJobs\SegmentationScheduler
+    tags:
+    - { name: "scheduled.job" }
+
+  leadsfactory.search_watchdog_job:
+    class: LeadsFactoryBundle\Utils\ScheduledJobs\SearchWatchdogScheduler
+    tags:
+    - { name: "scheduled.job" }
+
+  leadsfactory.reset_exports_job:
+    class: LeadsFactoryBundle\Utils\ScheduledJobs\ResetExportScheduler
+    tags:
+    - { name: "scheduled.job" }
+
+  leadsfactory.export_mock_success:
+    class: LeadsFactoryBundle\Utils\Export\MockExport
+    calls:
+      - ["setContainer", ["@service_container"]]
+    tags:
+      - {name: "export.method", alias: "mockExportSuccess"}
+    arguments: ['1']
+
+  leadsfactory.export_mock_error:
+    class: LeadsFactoryBundle\Utils\Export\MockExport
+    calls:
+      - ["setContainer", ["@service_container"]]
+    tags:
+      - {name: "export.method", alias: "mockExportError"}
+    arguments: ['-1']
+
+  leadsfactory.export_mock_exception:
+    class: LeadsFactoryBundle\Utils\Export\MockExport
+    calls:
+      - ["setContainer", ["@service_container"]]
+    tags:
+      - {name: "export.method", alias: "mockExportException"}
+    arguments: ['2']
+
+  leadsfactory.utils.role:
+      class: LeadsFactoryBundle\Utils\RoleService
+      arguments: ["@security.role_hierarchy"]
