@@ -1,25 +1,41 @@
-.DS_Store
-.idea/*
 .settings/*
 .project
 .buildpath
 
-app/config/parameters.yml
-app/cache
-app/logs
-app/sessions
-/bin/
-vendor/
-/Search/logs/
-/Search/data/*
-
 # Cache and logs
 /vendor/*
-/app/cache/*
-/app/logs/*
-/app/sessions/*
-!app/cache/.gitkeep
-!app/logs/.gitkeep
+
+# 
+/phpunit.xml
+/var/*
+!/var/cache
+/var/cache/*
+!var/cache/.gitkeep
+!/var/logs
+/var/logs/*
+!var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+var/SymfonyRequirements.php
+/vendor/
+/web/bundles/
+.idea/
+*~
+/web/store/
+/web/thumbnails/
+node_modules
+app/bootstrap.php.cache
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
 # Parameters
 /app/config/parameters.yml
