@@ -21,7 +21,7 @@ class LeadsSandboxRepository extends EntityRepository
             ->createQueryBuilder();
         $q->select("s")
             ->from("TellawLeadsFactoryBundle:LeadsSandbox", "s")
-            ->where(" DATE_ADD (s.modifiedAt, s.delay, 'hour') < :currentdate ")
+            ->where(" DATE_ADD (s.modifiedAt, s.delay, 'minute') < :currentdate ")
             ->setParameter('currentdate', new \DateTime(), \Doctrine\DBAL\Types\Type::DATETIME);
 
         return $q->getQuery()->getResult();
