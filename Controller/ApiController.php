@@ -290,6 +290,11 @@ class ApiController extends CoreController
         $leadsSandbox->setDelay( $delay );
         $leadsSandbox->setFormCode( $formCode );
 
+        $currentDate = new \DateTime();
+
+        $leadsSandbox->setCreatedAt($currentDate);
+        $leadsSandbox->setModifiedAt($currentDate);
+
         if ( trim($formCode) == "" || trim($delay) == "" || trim( $uniqId ) == "" ) {
             return new Response ("Invalid data");
         } else {
@@ -315,6 +320,7 @@ class ApiController extends CoreController
         $delay = $request->request->get("delay");
         $formCode = $request->request->get("formCode");
 
+
         $leadsSandbox = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:LeadsSandbox')->findOneByUniqId( $uniqId );
         if ($leadsSandbox == null) {
             return new Response("leads not found in sandbox");
@@ -327,6 +333,7 @@ class ApiController extends CoreController
         $leadsSandbox->setData( $data );
         $leadsSandbox->setDelay( $delay );
         $leadsSandbox->setFormCode( $formCode );
+        $leadsSandbox->setModifiedAt(new \DateTime());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($leadsSandbox);
@@ -361,6 +368,22 @@ class ApiController extends CoreController
 
             $data = $this->get('form_utils')->preProcessData($form->getId(), $data);
             $jsonContent = json_encode($data);
+
+            if (array_key_exists('configuration', $config)) {
+
+                if (array_key_exists('lastname', $config["configuration"])) {
+                    $data["lastName"] = ucfirst($data[$config["configuration"]["lastname"]]);
+                }
+
+                if (array_key_exists('firstname', $config["configuration"])) {
+                    $data["firstName"] = ucfirst($data[$config["configuration"]["firstname"]]);
+                }
+
+                if (array_key_exists('email', $config["configuration"])) {
+                    $data["email"] = ucfirst($data[$config["configuration"]["email"]]);
+                }
+
+            }
 
             $leads = new Leads();
             $leads->setIpadress($this->get('request')->getClientIp());
@@ -426,13 +449,21 @@ class ApiController extends CoreController
             }
 
             if (array_key_exists('enableApiNotificationEmail', $config["configuration"]) && $config["configuration"]["enableApiNotificationEmail"] == true) {
+
                 //Send notification
                 if (isset($config['notification'])) {
-                    $this->sendNotification($config['notification'], $leads);
+                    if (is_array( $config['notification'] )) {
+                        foreach ($config['notification'] as $notificationEmail) {
+                            //$this->sendNotification($notificationEmail, $leads);
+                        }
+                    } else {
+                        //$this->sendNotification($config['notification'], $leads);
+                    }
                     $logger->info("API : Envoi de notifications");
                 } else {
                     $logger->info("API : Le bloc de configuration de Notification n'existe pas en config");
                 }
+
             } else {
                 $logger->info("API : Le formulaire refuse l'envoi de mail par notification");
             }
@@ -440,7 +471,13 @@ class ApiController extends CoreController
             if (array_key_exists('enableApiConfirmationEmail', $config["configuration"]) && $config["configuration"]["enableApiConfirmationEmail"] == true) {
                 //Send confirmation email
                 if (isset($config['confirmation_email'])) {
-                    $this->sendConfirmationEmail($config['confirmation_email'], $leads);
+                    if (is_array($config['confirmation_email'])) {
+                        foreach ( $config['confirmation_email'] as $confirmationEmail ) {
+                            $this->sendConfirmationEmail($confirmationEmail, $leads);
+                        }
+                    } else {
+                        $this->sendConfirmationEmail($config['confirmation_email'], $leads);
+                    }
                 }
             }
 
@@ -472,51 +509,6 @@ class ApiController extends CoreController
 
     }
 
-    /**
-     * Send email notification
-     *
-     * @param array $params
-     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
-     */
-    protected function sendNotification($params, $leads)
-    {
-        $logger = $this->get('logger');
-        $exportUtils = $this->get('export_utils');
-
-        $data = json_decode($leads->getData(), true);
-
-        if (!isset($params['to'])) {
-            $logger->error('No recipient available, check JSON form config');
-
-            return;
-        }
-
-        $to = $params['to'];
-        $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
-        $subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName();
-        $template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
-
-        $message = Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom($from)
-            ->setTo($to)
-            ->setBody(
-                $this->renderView(
-                    'TellawLeadsFactoryBundle:' . $template,
-                    array(
-                        'fields' => $data,
-                        'intro' => 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName()
-                    )
-                ),
-                'text/html'
-            );
-
-        try {
-            $result = $this->get('mailer')->send($message);
-        } catch (Exception $e) {
-            $logger->error($e->getMessage());
-        }
-    }
 
     /**
      * Send confirmation email
@@ -538,8 +530,19 @@ class ApiController extends CoreController
 
         $data = json_decode($leads->getData(), true);
 
-        $toEmail = $data[$params['to']['email_input_id']];
-        $toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+        if (strstr ( $params['to']['email_input_id'], "@" )) {
+            $toEmail = $params['to']['email_input_id'];
+            $toName = $params['to']['firstname_input_id'] . ' ' . $params['to']['lastname_input_id'];
+
+        } else {
+
+            if ( !array_key_exists( $params['to']['email_input_id'], $data ) || !array_key_exists( $params['to']['firstname_input_id'], $data ) || !array_key_exists( $params['to']['lastname_input_id'], $data )  ) {
+                return;
+            }
+
+            $toEmail = $data[$params['to']['email_input_id']];
+            $toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+        }
 
         $to = array($toEmail => $toName);
         $from = $params['from'];
