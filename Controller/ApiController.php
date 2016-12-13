@@ -449,13 +449,21 @@ class ApiController extends CoreController
             }
 
             if (array_key_exists('enableApiNotificationEmail', $config["configuration"]) && $config["configuration"]["enableApiNotificationEmail"] == true) {
+
                 //Send notification
                 if (isset($config['notification'])) {
-                    $this->sendNotification($config['notification'], $leads);
+                    if (is_array( $config['notification'] )) {
+                        foreach ($config['notification'] as $notificationEmail) {
+                            $this->sendNotification($notificationEmail, $leads);
+                        }
+                    } else {
+                        $this->sendNotification($config['notification'], $leads);
+                    }
                     $logger->info("API : Envoi de notifications");
                 } else {
                     $logger->info("API : Le bloc de configuration de Notification n'existe pas en config");
                 }
+
             } else {
                 $logger->info("API : Le formulaire refuse l'envoi de mail par notification");
             }
@@ -463,7 +471,13 @@ class ApiController extends CoreController
             if (array_key_exists('enableApiConfirmationEmail', $config["configuration"]) && $config["configuration"]["enableApiConfirmationEmail"] == true) {
                 //Send confirmation email
                 if (isset($config['confirmation_email'])) {
-                    $this->sendConfirmationEmail($config['confirmation_email'], $leads);
+                    if (is_array($config['confirmation_email'])) {
+                        foreach ( $config['confirmation_email'] as $confirmationEmail ) {
+                            $this->sendConfirmationEmail($confirmationEmail, $leads);
+                        }
+                    } else {
+                        $this->sendConfirmationEmail($config['confirmation_email'], $leads);
+                    }
                 }
             }
 
