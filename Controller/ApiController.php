@@ -454,10 +454,10 @@ class ApiController extends CoreController
                 if (isset($config['notification'])) {
                     if (is_array( $config['notification'] )) {
                         foreach ($config['notification'] as $notificationEmail) {
-                            $this->sendNotification($notificationEmail, $leads);
+                            //$this->sendNotification($notificationEmail, $leads);
                         }
                     } else {
-                        $this->sendNotification($config['notification'], $leads);
+                        //$this->sendNotification($config['notification'], $leads);
                     }
                     $logger->info("API : Envoi de notifications");
                 } else {
@@ -530,8 +530,19 @@ class ApiController extends CoreController
 
         $data = json_decode($leads->getData(), true);
 
-        $toEmail = $data[$params['to']['email_input_id']];
-        $toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+        if (strstr ( $params['to']['email_input_id'], "@" )) {
+            $toEmail = $params['to']['email_input_id'];
+            $toName = $params['to']['firstname_input_id'] . ' ' . $params['to']['lastname_input_id'];
+
+        } else {
+
+            if ( !array_key_exists( $params['to']['email_input_id'], $data ) || !array_key_exists( $params['to']['firstname_input_id'], $data ) || !array_key_exists( $params['to']['lastname_input_id'], $data )  ) {
+                return;
+            }
+
+            $toEmail = $data[$params['to']['email_input_id']];
+            $toName = $data[$params['to']['firstname_input_id']] . ' ' . $data[$params['to']['lastname_input_id']];
+        }
 
         $to = array($toEmail => $toName);
         $from = $params['from'];
