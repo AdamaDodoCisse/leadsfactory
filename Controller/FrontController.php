@@ -316,7 +316,7 @@ class FrontController extends CoreController
                 if ($user != null) {
                     $leads->setUser($user);
                 } else {
-                    $logger->info("Frontcontroller : Assign tu a User that does not exists! " . $assign);
+                    $logger->info("Frontcontroller : Assign to a User that does not exists! " . $assign);
                 }
 
             }
@@ -396,7 +396,7 @@ class FrontController extends CoreController
                 return $this->redirect($redirectUrlSuccess);
             }
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $logger->error('postLeadsAction Error ');
 
             return $this->redirect($redirectUrlError);

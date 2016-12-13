@@ -142,6 +142,7 @@ class EntityFormController extends CoreController
             $em = $this->getDoctrine()->getManager();
             $em->persist($form->getData());
             $em->flush();
+            return $this->redirectToRoute("_form_edit", array("id"=>$id));
         }
 
         // Get screenshots
