@@ -2,20 +2,21 @@
 
 namespace Weka\LeadsExportBundle\Utils;
 
-use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
-use Tellaw\LeadsFactoryBundle\Entity\Form;
-use Tellaw\LeadsFactoryBundle\Entity\Export;
 use Citrix\Authentication\Direct;
+use Tellaw\LeadsFactoryBundle\Entity\Export;
+use Tellaw\LeadsFactoryBundle\Entity\Form;
+use Tellaw\LeadsFactoryBundle\Utils\Export\AbstractMethod;
 
 
-class Gotowebinar extends AbstractMethod{
+class Gotowebinar extends AbstractMethod
+{
 
-	/** @var  \Weka\LeadsExportBundle\Utils\Gotowebinar\BaseMapping */
+    /** @var  \Weka\LeadsExportBundle\Utils\Gotowebinar\BaseMapping */
     private $_mappingClass;
 
-	private $_credentials;
+    private $_credentials;
 
-	public function __construct($credentials)
+    public function __construct($credentials)
     {
         $this->_credentials = $credentials;
     }
@@ -34,92 +35,92 @@ class Gotowebinar extends AbstractMethod{
         $logger->info('GotoWebinar export start '.$form->getName());
 
         $this->_mappingClass = $this->_getMapping($form);
-	    $scope = $form->getScope()->getCode();
+        $scope = $form->getScope()->getCode();
 
-        if(is_null($this->_mappingClass)){
+        if (is_null($this->_mappingClass)) {
             $error = 'Mapping inexistant FORM '.$form->getCode();
             $logger->error($error);
         }
 
-	    //try {
-		    $client = new Direct( $this->_credentials[ $scope ]['consumer_key'] );
-		    $client->auth( $this->_credentials[ $scope ]['user'], $this->_credentials[ $scope ]['password'] );
-		    $goToWebinar = new \Citrix\GoToWebinar( $client );
-	    //}catch(\Exception $e){
-		//    $logger->error($e->getMessage());
-	    //}
+        //try {
+        $client = new Direct($this->_credentials[$scope]['consumer_key']);
+        $client->auth($this->_credentials[$scope]['user'], $this->_credentials[$scope]['password']);
+        $goToWebinar = new \Citrix\GoToWebinar($client);
+        //}catch(\Exception $e){
+        //    $logger->error($e->getMessage());
+        //}
 
-	    /** @var Export $job */
-	    foreach($jobs as $job){
+        /** @var Export $job */
+        foreach ($jobs as $job) {
 
-		    try{
-			    if(!empty($error)){
-				    $job->setLog($error);
-				    $job->setStatus($exportUtils->getErrorStatus($job));
+            try {
+                if (!empty($error)) {
+                    $job->setLog($error);
+                    $job->setStatus($exportUtils->getErrorStatus($job));
 
-				    $em = $this->getContainer()->get('doctrine')->getManager();
-				    $em->persist($job);
-				    $em->flush();
+                    $em = $this->getContainer()->get('doctrine')->getManager();
+                    $em->persist($job);
+                    $em->flush();
 
-				    continue;
-			    }
+                    continue;
+                }
 
-			    $logger->info('job ID : '.$job->getId());
+                $logger->info('job ID : '.$job->getId());
 
-			    $data = json_decode($job->getLead()->getData(), true);
-			    $webinarKey = $data['gotowebinar_key'];
+                $data = json_decode($job->getLead()->getData(), true);
+                $webinarKey = $data['gotowebinar_key'];
 
-			    $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
-			    var_dump($registrantData);
-			    $registration = $goToWebinar->register($webinarKey, $registrantData);
+                $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
+                $registration = $goToWebinar->register($webinarKey, $registrantData);
 
-			    if(!$registration->hasErrors()){
-				    $log = "Exporté avec succès";
-				    $status = $exportUtils::$_EXPORT_SUCCESS;
-			    }else{
-				    $gtw_errors = $registration->getErrors();
-				    $log = $gtw_errors[0];
-				    $status = $exportUtils->getErrorStatus($job);
-			    }
+                // Si il y a une erreur
+                if (!array_key_exists($registration, 'errorCode')) {
+                    $log = "Exporté avec succès";
+                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                } else {
+                    $log = $registration['description'];
+                    $status = $exportUtils->getErrorStatus($job);
+                }
 
-			    $exportUtils->updateJob($job, $status, $log);
-			    $exportUtils->updateLead($job->getLead(), $status, $log);
-			    $logger->info($log);
+                $exportUtils->updateJob($job, $status, $log);
+                $exportUtils->updateLead($job->getLead(), $status, $log);
+                $logger->info($log);
 
-		    }catch (\Exception $e) {
+            } catch (\Exception $e) {
 
-			    $status = $exportUtils->getErrorStatus($job);
-			    $log = $e->getMessage();
+                $status = $exportUtils->getErrorStatus($job);
+                $log = $e->getMessage();
 
-			    $this->notifyOfExportIssue ( $e->getMessage(), $form, $job, $status );
+                $this->notifyOfExportIssue($e->getMessage(), $form, $job, $status);
 
-			    $exportUtils->updateJob($job, $status, $log);
-			    $exportUtils->updateLead($job->getLead(), $status, $log);
-			    $logger->error($log);
+                $exportUtils->updateJob($job, $status, $log);
+                $exportUtils->updateLead($job->getLead(), $status, $log);
+                $logger->error($log);
 
-		    }
+            }
 
 
         }
     }
 
-	private function getMappedData($data, $mapping)
-	{
-		$entity = array();
-		foreach($mapping as $gtwKey => $formKey) {
+    private function getMappedData($data, $mapping)
+    {
+        $entity = array();
+        foreach ($mapping as $gtwKey => $formKey) {
 
-			$getter = 'get'.ucfirst(strtolower($gtwKey));
+            $getter = 'get'.ucfirst(strtolower($gtwKey));
 
-			if (method_exists($this->_mappingClass, $getter)){
-				$entity[$gtwKey] = $this->_mappingClass->$getter($data);
-			}elseif(!empty($formKey)){
-				$entity[$gtwKey] = isset($data[$formKey]) ? $data[$formKey] : null;
-			}else{
-				$entity[$gtwKey] = null;
-			}
-		}
-		return $entity;
-	}
+            if (method_exists($this->_mappingClass, $getter)) {
+                $entity[$gtwKey] = $this->_mappingClass->$getter($data);
+            } elseif (!empty($formKey)) {
+                $entity[$gtwKey] = isset($data[$formKey]) ? $data[$formKey] : null;
+            } else {
+                $entity[$gtwKey] = null;
+            }
+        }
+
+        return $entity;
+    }
 
     /**
      * @param $data
@@ -128,7 +129,7 @@ class Gotowebinar extends AbstractMethod{
      */
     private function _getCouponsWeb($data)
     {
-	    return $this->getMappedData($data, $this->_mappingClass->getCouponsWebMapping());
+        return $this->getMappedData($data, $this->_mappingClass->getCouponsWebMapping());
     }
 
     /**
@@ -139,18 +140,19 @@ class Gotowebinar extends AbstractMethod{
      */
     private function _getMapping($form)
     {
-	    $logger = $this->getContainer()->get('export.logger');
+        $logger = $this->getContainer()->get('export.logger');
 
-	    $config = $form->getConfig();
-	    $scope = !is_null($form->getScope()) ? $form->getScope()->getCode() : null;
-	    $scopePath = !is_null($scope) ? $scope."\\" : '';
+        $config = $form->getConfig();
+        $scope = !is_null($form->getScope()) ? $form->getScope()->getCode() : null;
+        $scopePath = !is_null($scope) ? $scope."\\" : '';
 
-	    if(isset($config['export']['gotowebinar']['mapping_class'])){
-		    $logger->info($config['export']['gotowebinar']['mapping_class']);
-		    $className = "\\Weka\\LeadsExportBundle\\Utils\\Gotowebinar\\" . $scopePath . $config['export']['gotowebinar']['mapping_class'];
-	    }
-		$em = $this->getContainer()->get('doctrine')->getManager();
+        if (isset($config['export']['gotowebinar']['mapping_class'])) {
+            $logger->info($config['export']['gotowebinar']['mapping_class']);
+            $className = "\\Weka\\LeadsExportBundle\\Utils\\Gotowebinar\\".$scopePath.$config['export']['gotowebinar']['mapping_class'];
+        }
+        $em = $this->getContainer()->get('doctrine')->getManager();
         $list_element_repository = $this->getContainer()->get('leadsfactory.reference_list_element_repository');
+
         return (class_exists($className)) ? new $className($em, $list_element_repository) : null;
     }
 }
