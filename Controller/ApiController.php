@@ -250,6 +250,7 @@ class ApiController extends CoreController
                     'key' => $this->get("form_utils")->getApiKey($lead->getForm()),
                     'created_at' => $lead->getCreatedAt()->format('Y-m-d')
                 );
+
             }
             $result = json_encode($result);
         } else {
@@ -454,10 +455,10 @@ class ApiController extends CoreController
                 if (isset($config['notification'])) {
                     if (is_array( $config['notification'] )) {
                         foreach ($config['notification'] as $notificationEmail) {
-                            //$this->sendNotification($notificationEmail, $leads);
+                            $this->sendNotification($notificationEmail, $leads);
                         }
                     } else {
-                        //$this->sendNotification($config['notification'], $leads);
+                        $this->sendNotification($config['notification'], $leads);
                     }
                     $logger->info("API : Envoi de notifications");
                 } else {
@@ -524,7 +525,6 @@ class ApiController extends CoreController
 
         if (empty($params['to']['email_input_id']) || empty($params['to']['firstname_input_id']) || empty($params['to']['lastname_input_id'])) {
             $logger->error('bad confirmation email configuration (form ' . $form->getName() . ')');
-
             return;
         }
 
@@ -564,6 +564,53 @@ class ApiController extends CoreController
             $logger->error($e->getMessage());
         }
     }
+
+    /**
+     * Send email notification
+     *
+     * @param array $params
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
+     */
+    protected function sendNotification($params, $leads)
+    {
+        $logger = $this->get('logger');
+        $exportUtils = $this->get('export_utils');
+
+        $data = json_decode($leads->getData(), true);
+
+        if (!isset($params['to'])) {
+            $logger->error('No recipient available, check JSON form config');
+
+            return;
+        }
+
+        $to = $params['to'];
+        $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
+        $subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName();
+        $template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody(
+                $this->renderView(
+                    'TellawLeadsFactoryBundle:' . $template,
+                    array(
+                        'fields' => $data,
+                        'intro' => 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName()
+                    )
+                ),
+                'text/html'
+            );
+
+        try {
+            $result = $this->get('mailer')->send($message);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+        }
+    }
+
 
     /**
      * Render template variables {{ var }}
