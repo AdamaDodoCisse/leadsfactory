@@ -525,11 +525,6 @@ class ApiController extends CoreController
 
         $form = $leads->getForm();
 
-        if (empty($params['to']['email_input_id']) || empty($params['to']['firstname_input_id']) || empty($params['to']['lastname_input_id'])) {
-            $logger->error('bad confirmation email configuration (form ' . $form->getName() . ')');
-            return;
-        }
-
         $data = json_decode($leads->getData(), true);
 
         if (strstr ( $params['to']['email_input_id'], "@" )) {
@@ -539,6 +534,7 @@ class ApiController extends CoreController
         } else {
 
             if ( !array_key_exists( $params['to']['email_input_id'], $data ) || !array_key_exists( $params['to']['firstname_input_id'], $data ) || !array_key_exists( $params['to']['lastname_input_id'], $data )  ) {
+                $logger->error('bad confirmation email configuration (form ' . $form->getName() . ')');
                 return;
             }
 
