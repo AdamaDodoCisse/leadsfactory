@@ -453,7 +453,7 @@ class ApiController extends CoreController
 
                 //Send notification
                 if (isset($config['notification'])) {
-                    if (is_array( $config['notification'] )) {
+                    if (!array_key_exists( "to", $config['notification'] )) {
                         foreach ($config['notification'] as $notificationEmail) {
                             $this->sendNotification($notificationEmail, $leads);
                         }
@@ -473,7 +473,7 @@ class ApiController extends CoreController
                 if (array_key_exists('enableApiConfirmationEmail', $config["configuration"]) && $config["configuration"]["enableApiConfirmationEmail"] == true) {
                     //Send confirmation email
                     if (isset($config['confirmation_email'])) {
-                        if (is_array($config['confirmation_email'])) {
+                        if (!array_key_exists( "to", $config['confirmation_email'])) {
                             foreach ( $config['confirmation_email'] as $confirmationEmail ) {
                                 $this->sendConfirmationEmail($confirmationEmail, $leads);
                             }
@@ -578,7 +578,6 @@ class ApiController extends CoreController
 
         if (!isset($params['to'])) {
             $logger->error('No recipient available, check JSON form config');
-var_dump($params);die();
             return;
         }
 
