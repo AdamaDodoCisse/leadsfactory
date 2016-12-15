@@ -578,7 +578,7 @@ class ApiController extends CoreController
 
         if (!isset($params['to'])) {
             $logger->error('No recipient available, check JSON form config');
-
+var_dump($params);die();
             return;
         }
 
