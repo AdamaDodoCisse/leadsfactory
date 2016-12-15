@@ -469,7 +469,7 @@ class ApiController extends CoreController
                 $logger->info("API : Le formulaire refuse l'envoi de mail par notification");
             }
 
-            if (array_key_exists ('step', $data ) && $data["step"] != "1") {
+            if (array_key_exists ('current_step', $data ) && $data["current_step"] != "1") {
                 if (array_key_exists('enableApiConfirmationEmail', $config["configuration"]) && $config["configuration"]["enableApiConfirmationEmail"] == true) {
                     //Send confirmation email
                     if (isset($config['confirmation_email'])) {
