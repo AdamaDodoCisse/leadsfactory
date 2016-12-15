@@ -587,20 +587,16 @@ var_dump($params);die();
         $subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName();
         $template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
 
+        $body = $this->renderTemplate('TellawLeadsFactoryBundle:' . $template, array(
+                                                                                        'fields' => $data,
+                                                                                        'intro' => 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName()
+                                                                                    ));
+
         $message = Swift_Message::newInstance()
             ->setSubject($subject)
             ->setFrom($from)
             ->setTo($to)
-            ->setBody(
-                $this->renderView(
-                    'TellawLeadsFactoryBundle:' . $template,
-                    array(
-                        'fields' => $data,
-                        'intro' => 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName()
-                    )
-                ),
-                'text/html'
-            );
+            ->setBody($body,'text/html');
 
         try {
             $result = $this->get('mailer')->send($message);
