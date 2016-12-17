@@ -34,12 +34,8 @@ class DefaultController extends CoreController
      */
     public function indexAction(Request $request)
     {
-        if ($this->get("core_manager")->isDomainAccepted()) {
-            return $this->redirect($this->generateUrl('_security_licence_error'));
-        }
 
-        return $this->redirect($this->generateUrl('_monitoring_dashboard_forms'));
-
+        return $this->render( 'react/index.html.twig', [] );
     }
 
 

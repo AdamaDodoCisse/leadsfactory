@@ -1,2 +1,0 @@
-magento_catalogue.tar.gz
-wekaleads-and-core.tar.gz

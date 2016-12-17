@@ -1,9 +1,61 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
 parameters:
-#    parameter_name: value
+
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+  messages.utils:
+    class:        LeadsFactoryBundle\Utils\Messages
+    arguments:    [ "@session" ]
+
+  lf.utils:
+    class:        LeadsFactoryBundle\Utils\LFUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  history.utils:
+    class:        LeadsFactoryBundle\Utils\HistoryUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  functionnal_testing.utils:
+    class:        LeadsFactoryBundle\Utils\FunctionnalTestingUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+    tags:
+                -  { name: "preference.key" }
+
+  scheduler.utils:
+    class:        LeadsFactoryBundle\Utils\SchedulerUtils
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  chart:
+    class:        LeadsFactoryBundle\Utils\Chart
+    calls:
+                  - [ "setContainer", [ "@service_container" ] ]
+
+  export.logger:
+    class:        Symfony\Bridge\Monolog\Logger
+    arguments:    [app]
+    calls:
+                  - ["pushHandler", ["@export.logger_handler"]]
+
+  export.logger_handler:
+    class:        Monolog\Handler\StreamHandler
+    arguments:    ["%kernel.logs_dir%/%kernel.environment%.export.log", "200"]
+
+  export_utils:
+    class:        LeadsFactoryBundle\Utils\ExportUtils
+    arguments:    ["@leadsfactory.client_email_repository"]
+    calls:
+                      - [ "setContainer", [ "@service_container" ] ]
+
+  preferences_utils:
+    class:        LeadsFactoryBundle\Utils\PreferencesUtils
+    calls:
+                      - [ "setContainer", [ "@service_container" ] ]
+
+  leadsfactory.client_email_repository:
+      class: LeadsFactoryBundle\Entity\ClientEmailRepository
+      factory_service: doctrine.orm.default_entity_manager
+      factory_method: getRepository
+      arguments: ['LeadsFactoryBundle:ClientEmail']

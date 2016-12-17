@@ -1,1 +1,0 @@
-var Reflux = require('reflux');
