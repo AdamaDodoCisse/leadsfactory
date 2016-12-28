@@ -192,6 +192,8 @@ class FrontController extends CoreController
         $fields = $request->get("lffield");
         $exportUtils = $this->get('export_utils');
         $searchUtils = $this->get('search.utils');
+        $referer = $this->getRequest()->headers->get('referer');
+
 
 //         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
 //            throw new \Exception ("Form Key is not allowed");
@@ -397,8 +399,8 @@ class FrontController extends CoreController
             }
 
         } catch (\Exception $e) {
+            $redirectUrlError = $referer;
             $logger->error('postLeadsAction Error ');
-
             return $this->redirect($redirectUrlError);
         }
 
