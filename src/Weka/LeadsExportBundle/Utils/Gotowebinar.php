@@ -74,7 +74,7 @@ class Gotowebinar extends AbstractMethod
                 $registration = $goToWebinar->register($webinarKey, $registrantData);
 
                 // Si il y a une erreur
-                if (!array_key_exists($registration, 'errorCode')) {
+                if (!isset($registration['errorCode'])) {
                     $log = "Exporté avec succès";
                     $status = $exportUtils::$_EXPORT_SUCCESS;
                 } else {
