@@ -72,8 +72,6 @@ class Gotowebinar extends AbstractMethod
 
                 $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
                 $registration = $goToWebinar->register($webinarKey, $registrantData);
-
-                var_dump($registration);
                 // Si il y a une erreur
                 if (!isset($registration['errorCode'])) {
                     $log = "Exporté avec succès";
@@ -112,9 +110,9 @@ class Gotowebinar extends AbstractMethod
             if (method_exists($this->_mappingClass, $getter)) {
                 $entity[$gtwKey] = $this->_mappingClass->$getter($data);
             } elseif (!empty($formKey)) {
-                $entity[$gtwKey] = isset($data[$formKey]) ? $data[$formKey] : null;
+                $entity[$gtwKey] = isset($data[$formKey]) ? $data[$formKey] : 'NA';
             } else {
-                $entity[$gtwKey] = null;
+                $entity[$gtwKey] = 'NA';
             }
         }
 
