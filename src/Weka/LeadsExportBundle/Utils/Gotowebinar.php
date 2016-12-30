@@ -53,50 +53,48 @@ class Gotowebinar extends AbstractMethod
         /** @var Export $job */
         foreach ($jobs as $job) {
 
+            // S'il y a des erreurs on met à jour le statut du job et on continue
+            if (!empty($error)) {
+                $job->setLog($error);
+                $job->setStatus($exportUtils->getErrorStatus($job));
+
+                $em = $this->getContainer()->get('doctrine')->getManager();
+                $em->persist($job);
+                $em->flush();
+
+                continue;
+            }
+
+            // Sinon on extrait les données de la leads
+            $logger->info('job ID : '.$job->getId());
+            $data = json_decode($job->getLead()->getData(), true);
+            $webinarKey = $data['gotowebinar_key'];
+
+            // On fait l'enregistrement
+            // En vérifiant qu'il n'y a pas d'erreur avec l'API ou le mapper
             try {
-                if (!empty($error)) {
-                    $job->setLog($error);
-                    $job->setStatus($exportUtils->getErrorStatus($job));
-
-                    $em = $this->getContainer()->get('doctrine')->getManager();
-                    $em->persist($job);
-                    $em->flush();
-
-                    continue;
-                }
-
-                $logger->info('job ID : '.$job->getId());
-
-                $data = json_decode($job->getLead()->getData(), true);
-                $webinarKey = $data['gotowebinar_key'];
-
                 $registrantData = $this->getMappedData($data, $this->_mappingClass->getMapping());
                 $registration = $goToWebinar->register($webinarKey, $registrantData);
-                // Si il y a une erreur
-                if (!isset($registration['errorCode'])) {
-                    $log = "Exporté avec succès";
-                    $status = $exportUtils::$_EXPORT_SUCCESS;
-                } else {
-                    $log = $registration['description'];
-                    $status = $exportUtils->getErrorStatus($job);
-                }
-
-                $exportUtils->updateJob($job, $status, $log);
-                $exportUtils->updateLead($job->getLead(), $status, $log);
-                $logger->info($log);
-
             } catch (\Exception $e) {
-
                 $status = $exportUtils->getErrorStatus($job);
                 $log = $e->getMessage();
-
                 $this->notifyOfExportIssue($e->getMessage(), $form, $job, $status);
-
-                $exportUtils->updateJob($job, $status, $log);
-                $exportUtils->updateLead($job->getLead(), $status, $log);
                 $logger->error($log);
-
             }
+
+            // Si l'erreur n'a pas affecté l'enregistrement on continue
+            if (!isset($registration['errorCode'])) {
+                $log = "Exporté avec succès";
+                $status = $exportUtils::$_EXPORT_SUCCESS;
+            } else {
+                $log = $registration['description'];
+                $status = $exportUtils->getErrorStatus($job);
+            }
+
+            // ON met à jour les status et on log
+            $exportUtils->updateJob($job, $status, $log);
+            $exportUtils->updateLead($job->getLead(), $status, $log);
+            $logger->info($log);
         }
     }
 
