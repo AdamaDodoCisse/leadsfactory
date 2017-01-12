@@ -7,7 +7,7 @@
 /*
 * Default template
 */
-#atpl .overlay { 
+#atpl .overlay {
     z-index: 1000; position:fixed; top:0; left:0;background-color: #9da0a4; opacity: 0.2;
     /* height:100%; width:100%; */ /*   uncomment to display overlay     */
 }
@@ -25,12 +25,12 @@
 
 
 /*
-* MASK 
+* MASK
 * If you are using a mask then add these styles
 */
 
 .aimask{z-index:100;position:absolute;top:0;left:0;-moz-opacity:.5;opacity:.50;filter:alpha(opacity=50);background-color:#CCC;width:100%;height:100%;zoom:1}
-.aimask-msg{display: none; font-size:14px;z-index:10001;position:absolute;background:#c71d72;color:#fff;padding:5px 5px;border-radius:5px;cursor:default}
+.aimask-msg{display: none; font-size:14px;z-index:10001;position:absolute;background:#c71d72z;color:#fff;padding:5px 5px;border-radius:5px;cursor:default}
 
 .aimasked{overflow:hidden !important}
 .aimasked-relative{position:relative !important}

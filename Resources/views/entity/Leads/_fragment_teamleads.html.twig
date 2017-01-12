@@ -1,5 +1,4 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
-
 <div class="col-md-12">
 
     <div id="results-list" class="clearfix"></div>
@@ -8,13 +7,13 @@
         <div class="streaming-tables">
             <div>
                 <span id="found" class="label label-info">{{ paginationTeam.total }} résultat(s)</span>
-                <select name="per_pageTeam" class="st_per_page" id="st_per_pageTeam">
+                <select name="per_pageTeam" class="st_per_page st_per_pageTeam" id="st_per_pageTeam-{{ objectId }}" data-objectId="{{ objectId }}">
                     {% for limit in limit_optionsTeam %}
-                        <option value="{{ limit }}">{{ limit }}</option>
+                        <option value="{{ limit }}" {{ paginationTeam.limit == limit ? "selected" }}>{{ limit }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <table id="stream_table" class='table table-striped table-bordered'>
+            <table class='table table-striped table-bordered' id="team-dataTable-{{ objectId }}">
                 <thead>
                 <tr>
                     <th>Nom</th>
@@ -23,7 +22,7 @@
                     <th>Téléphone</th>
                     <th>Assignée à</th>
                     <th>Status</th>
-                    <th>Date de création</th>
+                    <th>Date</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -104,5 +103,6 @@
 
 </div>
 <script language="text/javascript">
+    $("#team-dataTable-{{ objectId }}").dataTable({paging:false, searching:true});
     $("#st_per_pageTeam option[value='{{ paginationTeam.limit }}']").attr('selected', 'selected');
 </script>

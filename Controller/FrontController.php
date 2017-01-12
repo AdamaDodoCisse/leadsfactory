@@ -394,13 +394,13 @@ class FrontController extends CoreController
                     }
                     $redirectUrlSuccess = $redirectUrlSuccess . $paramsSep . 'lead_id=' . $leads->getId() . '&key=' . $formUtils->getApiKey($formObject);
                 }
-
+                $logger->info("REDIRECT TO : ".$redirectUrlSuccess);
                 return $this->redirect($redirectUrlSuccess);
             }
 
         } catch (\Exception $e) {
             $redirectUrlError = $referer;
-            $logger->error('postLeadsAction Error ');
+            $logger->error('postLeadsAction Error '.$e->getMessage());
             return $this->redirect($redirectUrlError);
         }
 

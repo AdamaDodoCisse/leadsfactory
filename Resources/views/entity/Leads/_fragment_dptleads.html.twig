@@ -6,13 +6,13 @@
         <div class="streaming-tables">
             <div>
                 <span id="found" class="label label-info">{{ paginationDpt.total }} résultat(s)</span>
-                <select name="per_pageDpt" class="st_per_page" id="st_per_pageDpt">
+                <select name="per_pageDpt" class="st_per_page st_per_pageDpt" id="st_per_pageDpt-{{ objectId }}" data-objectId="{{ objectId }}">
                     {% for limit in limit_optionsDpt %}
-                        <option value="{{ limit }}">{{ limit }}</option>
+                        <option value="{{ limit }}" {{ paginationDpt.limit == limit ? "selected" }}>{{ limit }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <table id="stream_table" class='table table-striped table-bordered'>
+            <table class='table table-striped table-bordered' id="dpt-dataTable">
                 <thead>
                 <tr>
                     <th>Nom</th>
@@ -21,7 +21,7 @@
                     <th>Téléphone</th>
                     <th>Assignée à</th>
                     <th>Status</th>
-                    <th>Date de création</th>
+                    <th>Date</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -102,5 +102,6 @@
 
 </div>
 <script language="text/javascript">
+    $("#dpt-dataTable").dataTable({paging:false, searching:true});
     $("#st_per_pageDpt option[value='{{ paginationDpt.limit }}']").attr('selected', 'selected');
 </script>

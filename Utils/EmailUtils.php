@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Tellaw\LeadsFactoryBundle\Entity\Scope;
 use Tellaw\LeadsFactoryBundle\Entity\Users;
 
 /**
@@ -52,9 +53,10 @@ class EmailUtils implements ContainerAwareInterface
      * @param $message "Detailed message related to the action"
      * @param $urlLead "Url of the leads object the action is about"
      * @param $urlApplication "Url of the Lead's factory Application"
+     * @param Scope $scope
      * @return mixed
      */
-    public function sendUserNotification(Users $destUser, $action, $detailAction, $message, $urlLead, $urlApplication)
+    public function sendUserNotification(Users $destUser, $action, $detailAction, $message, $urlLead, $urlApplication, Scope $scope)
     {
 
         $toEmail = $destUser->getEmail();
@@ -62,12 +64,12 @@ class EmailUtils implements ContainerAwareInterface
 
         $to = array($toEmail => $toName);
 
-        $prefUtils = $this->get('preferences_utils');
-        $from = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_EMAIL_SENDER', $scopeId);
+        $prefUtils = $this->container->get('preferences_utils');
+        $from = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_EMAIL_SENDER', $scope->getId());
 
         $subject = "Lead's Factory : " . $action;
 
-        $template = $this->renderView(
+        $template = $this->container->get('templating')->render(
             'TellawLeadsFactoryBundle::emails/lead_notification.html.twig',
             array(
                 "action" => $action,
@@ -85,7 +87,7 @@ class EmailUtils implements ContainerAwareInterface
             ->setTo($to)
             ->setBody($template, 'text/html');
 
-        return $this->get('mailer')->send($message);
+        return $this->container->get('mailer')->send($message);
 
     }
 

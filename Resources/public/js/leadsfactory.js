@@ -65,3 +65,11 @@ function setFragmentActions ( prefix, paginationRoute, paginationLimit, containe
     });
 
 }
+
+// Message d'alerte
+function notificationMessage(message, type) {
+    $.notify(
+        {message: message},
+        {type: type ,placement: {from: "top",align: "right"}, newest_on_top: true, offset: 80 }
+    );
+}

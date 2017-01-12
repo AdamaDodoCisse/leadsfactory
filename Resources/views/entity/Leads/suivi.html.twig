@@ -5,48 +5,68 @@
 
     <style>
         .ui-autocomplete {
-            background-color:#FFF;
+            background-color: #FFF;
             max-height: 100px;
             overflow-y: auto;
             /* prevent horizontal scrollbar */
             overflow-x: hidden;
-            width:308px;
-            border:1px solid #e0e0e0;
+            width: 308px;
+            border: 1px solid #e0e0e0;
             cursor: pointer;
             padding: 0px;
         }
+
         .ui-autocomplete li {
-            display:block;
+            display: block;
             padding: 5px 0px 5px 12px;
         }
+
         .ui-autocomplete li:hover {
-            background-color:#e0e0e0;
+            background-color: #e0e0e0;
         }
-        .filter_form form{margin-top: -4.5%}
+
+        .filter_form form {
+            margin-top: -4.5%
+        }
+
         .filter_form form #form div {
             display: inline-block;
             width: 45%;
             margin: 1%;
         }
+
         #row-form_form {
             width: 92.5% !important;
         }
+
         .filter_form form .form-actions {
-            display:block !important;
+            display: block !important;
         }
-        .filter_form form .form-actions .span3{
+
+        .filter_form form .form-actions .span3 {
             display: none !important;
         }
-            /* IE 6 doesn't support max-height
-             * we use height instead, but this forces the menu to always be this tall
-             */
+
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
         * html .ui-autocomplete {
             height: 100px;
         }
 
-        .toggle-filters-btn {text-align: right;top: -2%;}
-        .toggle-filters-btn strong {cursor: pointer;text-align: right}
-        .toggle-filters-btn strong:hover {text-decoration: underline}
+        .toggle-filters-btn {
+            text-align: right;
+            top: -2%;
+        }
+
+        .toggle-filters-btn strong {
+            cursor: pointer;
+            text-align: right
+        }
+
+        .toggle-filters-btn strong:hover {
+            text-decoration: underline
+        }
     </style>
     <input type="hidden" id="defaultUser" value="{{ user.firstName|capitalize }} {{ user.lastName|capitalize }}"/>
 
@@ -79,60 +99,65 @@
             <h2 style="margin-left:20px;">Filtrer la liste</h2>
             {{ form(filters_form) }}
         </div>
+        {% if not ( is_granted('ROLE_DISPATCH') or is_granted('ROLE_ADMIN') ) %}
+            <script>
+                $("#row-form_affectation").find("input").attr("disabled", true);
+            </script>
+        {% endif %}
     </div>
 
-        <div class="col-md-12">
-
-
-
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Suivi commercial</a></li>
-                {% if (isManagerOfATeam) %}
+    <div class="col-md-12">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#home" aria-controls="home" role="tab" data-toggle="tab">
+                    Suivi commercial
+                </a>
+            </li>
+            {% if (isManagerOfATeam) %}
                 {% for teamName, teamId in teams %}
-                    <li role="presentation"><a href="#{{ teamId }}" aria-controls="profile" role="tab" data-toggle="tab">{{ teamName }}</a></li>
+                    <li role="presentation">
+                        <a href="#{{ teamId }}" aria-controls="profile" role="tab" data-toggle="tab">
+                            {{ teamName }}
+                        </a>
+                    </li>
                 {% endfor %}
-                {% endif %}
-                {% if (isInADpt) %}
+            {% endif %}
+            {% if (isInADpt) %}
                 {% for dptName, dptId in departements %}
-                <li role="presentation"><a href="#{{ dptId }}" aria-controls="profile" role="tab" data-toggle="tab">Suivi du département "{{ dptName }}"</a></li>
+                    <li role="presentation"><a href="#{{ dptId }}" aria-controls="profile" role="tab" data-toggle="tab">Suivi
+                            du département "{{ dptName }}"</a></li>
                 {% endfor %}
-                {% endif %}
+            {% endif %}
 
-            </ul>
+        </ul>
 
-            <!-- Tab panes -->
-            <div class="tab-content" style="display:block">
-                <div role="tabpanel" class="tab-pane active in" id="home">
+        <!-- Tab panes -->
+        <div class="tab-content" style="display:block">
+            <div role="tabpanel" class="tab-pane active in" id="home">
+                <div class="col-md-12" style="min-height:400px">&nbsp</div>
+                <!-- Ajax loaded content -->
+            </div>
 
-                    <div class="col-md-12" style="min-height:400px">
-                        &nbsp;
+            {% if (isManagerOfATeam) %}
+
+                {% for teamName, teamId in teams %}
+
+                    <!-- Panel mon equipe -->
+                    <div role="tabpanel" class="tab-pane" id="{{ teamId }}">
+
+                        <!-- Ajax loaded content -->
+                        <div class="col-md-12" style="min-height:400px">
+                            &nbsp;
+                        </div>
+
                     </div>
 
-                    <!-- Ajax loaded content -->
-
-
-                </div>
-
-{% if (isManagerOfATeam) %}
-
-                {% for teamName, teamId in teams %}
-
-                <!-- Panel mon equipe -->
-                <div role="tabpanel" class="tab-pane" id="{{ teamId }}">
-
-                    <!-- Ajax loaded content -->
-                    <div class="col-md-12" style="min-height:400px">
-                        &nbsp;
-                    </div>
-
-                </div>
-
                 {% endfor %}
 
-{% endif %}
+            {% endif %}
 
-                {% for dptName, dptId in departements %}
+            {% for dptName, dptId in departements %}
 
                 <div role="tabpanel" class="tab-pane" id="{{ dptId }}">
 
@@ -141,21 +166,16 @@
                         &nbsp;
                     </div>
 
-                 </div>
+                </div>
 
-                {% endfor %}
-
-
-
-            </div>
+            {% endfor %}
 
         </div>
 
-
-
+    </div>
 
     <script type="text/javascript">
-        $( document ).ready(function() {
+        $(document).ready(function () {
             initViewFilter();
             setAutoComplete();
 
@@ -165,17 +185,17 @@
                 $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').click();
             }
 
-            $('#filterform').on('submit', function(e) {
+            $('#filterform').on('submit', function (e) {
                 e.preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire
-                    var $this = $(this);
-                    $.ajax({
-                        url: '{{ path ('_leads_fragment_filterparam') }}',
-                        type: $this.attr('method'),
-                        data: $this.serialize(),
-                        success: function(  ) {
-                            updateTabs();
-                        }
-                    });
+                var $this = $(this);
+                $.ajax({
+                    url: '{{ path ('_leads_fragment_filterparam') }}',
+                    type: $this.attr('method'),
+                    data: $this.serialize(),
+                    success: function () {
+                        updateTabs();
+                    }
+                });
 
             });
 
@@ -188,18 +208,19 @@
 
             var url = window.location.href;
             var matches = url.match(/[a-z\d]+=[a-z\d]+/gi);
-            var queryCount = matches? matches.length : 0;
+            var queryCount = matches ? matches.length : 0;
 
             // Scroll to results Or hide filters
             if (queryCount > 0) $('#results-list').scrollView();
             else toggleFilters();
 
             // init filter button action
-            $(".toggle-filters-btn").on('click', function(){toggleFilters()})
+            $(".toggle-filters-btn").on('click', function () {
+                toggleFilters()
+            });
 
             // If Page is MyList then change affectation
             {% if type == 'mylist' %}
-            console.log("looo");
             $("#row-form_affectation input")
                     .val('{{ firstName }} {{ lastName }}')
                     .attr('disabled', 'disabled');
@@ -207,7 +228,7 @@
             {% endif %}
         }
 
-        function updateTabs () {
+        function updateTabs() {
             loadMyLeadsTab();
             loadTeamLeadsTabs();
             loeadDptLeadsTabs();
@@ -217,106 +238,102 @@
         var tabs = [];
 
         // Load default tab content
-        function loadMyLeadsTab ( url ) {
+        function loadMyLeadsTab(url) {
             if (!url) {
                 var url = "{{ path ('_leads_fragment_myleads') }}";
             }
-            var data = { } ;
+            var data = {};
             var container = $("#home");
 
             $.ai.mask({
-                aiMask:'home',
-                aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
-            })
+                aiMask: 'home',
+                aiMaskmsg: '<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
+            });
 
-            fragmentAjaxCall ( url, data, container,
-                    function (result){
-                        $('#st_per_page').change(function(){
-                            var route = '{{ path ('_leads_fragment_myleads') }}';
-                            loadMyLeadsTab( route + '/1/' + $(this).val());
-                        });
-                    } );
+            fragmentAjaxCall(url, data, container, function (result) {
+                $('.st_per_page').change(function () {
+                    var route = '{{ path ('_leads_fragment_myleads') }}';
+                    loadMyLeadsTab(route + '/1/' + $(this).val());
+                });
+            });
         }
 
-        function loadTeamLeadsTabs (  ) {
+        function loadTeamLeadsTabs() {
 
             // Create Array of teams
             var teams = [];
             {% for teamName, teamId in teams %}
-            teams.push ("{{ teamId }}");
+            teams.push("{{ teamId }}");
             {% endfor %}
 
             for (var i = 0, len = teams.length; i < len; i++) {
-                loadTeamLeadsTab ( null, teams[i] );
+                loadTeamLeadsTab(null, teams[i]);
             }
 
         }
 
         // Load default tab content
-        function loadTeamLeadsTab ( url, id ) {
+        function loadTeamLeadsTab(url, id) {
 
             if (!url) {
                 var url = "{{ path ('_leads_fragment_teamleads') }}";
             }
-            var data = { "id" : id } ;
-            var container = $("#"+id);
+            var data = {"id": id};
+            var container = $("#" + id);
 
             $.ai.mask({
                 aiMask: id,
-                aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
-            })
+                aiMaskmsg: '<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
+            });
 
-            fragmentAjaxCall ( url, data, container,
-                    function (result){
+            fragmentAjaxCall(url, data, container, function (result) {
+                $('.st_per_pageTeam').change(function () {
+                    var route = '{{ path ('_leads_fragment_teamleads') }}';
+                    loadTeamLeadsTab(route + '/1/' + $(this).val(), id);
+                });
 
-                        $('#st_per_pageTeam').change(function(){
-                            var route = '{{ path ('_leads_fragment_teamleads') }}';
-                            loadTeamLeadsTab( route + '/1/' + $(this).val());
-                        });
-
-                    } );
+            });
         }
 
-        function loeadDptLeadsTabs (  ) {
+        function loeadDptLeadsTabs() {
 
             var departements = [];
             {% for dptName, dptId in departements %}
-            departements.push ("{{ dptId }}");
+            departements.push("{{ dptId }}");
             {% endfor %}
 
             for (var i = 0, len = departements.length; i < len; i++) {
-                loadDptLeadsTab ( null, departements[i] );
+                loadDptLeadsTab(null, departements[i]);
             }
 
         }
 
         // Load default tab content
-        function loadDptLeadsTab ( url, id ) {
+        function loadDptLeadsTab(url, id) {
 
             if (!url) {
                 var url = "{{ path ('_leads_fragment_dptleads') }}";
             }
-            var data = { "id" : id } ;
-            var container = $("#"+id);
+            var data = {"id": id};
+            var container = $("#" + id);
 
             $.ai.mask({
                 aiMask: id,
-                aiMaskmsg:'<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
-            })
+                aiMaskmsg: '<img src="{{ asset('bundles/tellawleadsfactory/ajax-indicator/img/ring-alt.gif') }}">'
+            });
 
-            fragmentAjaxCall ( url, data, container,
-                    function (result){
-
-                        $('#st_per_pageDpt').change(function(){
-                            var route = '{{ path ('_leads_fragment_dptleads') }}';
-                            loadDptLeadsTab( route + '/1/' + $(this).val());
-                        });
-                    } );
+            fragmentAjaxCall(url, data, container, function (result) {
+                $('.st_per_pageDpt').change(function () {
+                    console.log(id);
+                    var route = '{{ path ('_leads_fragment_dptleads') }}';
+                    loadDptLeadsTab(route + '/1/' + $(this).val(), id);
+                });
+            });
         }
 
-        $( "#filterform" ).submit(function( event ) {
-            if ( $("#form_affectation").val() == "") {
-                $("#form_affectation").val( $("#defaultUser").val() );
+        $("#filterform").submit(function (event) {
+            if ($("#form_affectation").val() == "") {
+                $("#form_affectation").val($("#defaultUser").val());
             }
         });
 
@@ -329,18 +346,18 @@
             });
         };
 
-        function setAutoComplete () {
-            $( "#form_affectation" ).autocomplete({
+        function setAutoComplete() {
+            $("#form_affectation").autocomplete({
                 source: "{{ path('_leads_users_search_ajax') }}",
                 minLength: 3,
-                click: function( event, ui ) {
+                click: function (event, ui) {
                     event.preventDefault();
-                    $( "#form_affectation").val(ui.item.label);
+                    $("#form_affectation").val(ui.item.label);
                     return false;
                 },
-                select: function( event, ui ) {
+                select: function (event, ui) {
                     event.preventDefault();
-                    $( "#form_affectation").val(ui.item.label);
+                    $("#form_affectation").val(ui.item.label);
                     return false;
                 }
             });
@@ -363,7 +380,7 @@
                     $(".toggle-filters-i").text('+');
         }
 
-        $(function(){
+        $(function () {
             var hash = window.location.hash;
             hash && $('ul.nav a[href="' + hash + '"]').tab('show');
 
