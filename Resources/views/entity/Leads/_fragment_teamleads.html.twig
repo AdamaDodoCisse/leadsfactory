@@ -30,25 +30,18 @@
                 {% for item in listTeam %}
                     <tr>
 
-                        {% if item.workflowStatus == 'a_attribuer' %}
-                            {% set statusLibelle = "A attribuer" %}
+                        {% if item.workflowStatus in ['a_attribuer', 'a_traiter'] %} {#Jaune#}
                             {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
-                        {% elseif item.workflowStatus == 'en_attente' %}
-                            {% set statusLibelle = "En attente" %}
-                            {% set color =  "style=background-color:#33CC33;color:#FFFFFF;" %}
-                        {% elseif item.workflowStatus == 'gagne' %}
-                            {% set statusLibelle = "Gagné" %}
-                            {% set color =  "style=background-color:#CCCC66;color:#99FF00;" %}
-                        {% elseif item.workflowStatus == 'perdu' %}
-                            {% set statusLibelle = "Perdu" %}
-                            {% set color =  "style=background-color:#FF3300;color:#FF6600;" %}
-                        {% elseif item.workflowStatus == 'inexploitable' %}
-                            {% set statusLibelle = "inéxploitable" %}
-                            {% set color =  "style=background-color:#FF3300;color:#DCDCDC;" %}
+                        {% elseif item.workflowStatus in ['perdu','gagne'] %} {#Normal#}
+                            {% set color =  "style=background-color:#FFFFFF;color:#FF6600;" %}
+                        {% elseif item.workflowStatus == 'en_attente' %} {#Bleu#}
+                            {% set color =  "style=background-color:#3498db;color:#000000;" %}
+                        {% elseif item.workflowStatus == 'inexploitable' %} {#rouge#}
+                            {% set color =  "style=background-color:#e74c3c;color:#DCDCDC;" %}
                         {% else %}
                             {% set statusLibelle = "-" %}
-                            {% set color =  "" %}
-                        {%  endif %}
+                            {% set color = "style=background-color:#3498db;color:#000000;" %}
+                        {% endif %}
 
                         <td {{ color }} >{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
                         <td {{ color }} >

@@ -1,69 +1,122 @@
 {# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
 
-<div class="col-md-12">
+<div class="col-md-12 row">
 
     {% if is_granted('ROLE_DISPATCH') %}
         <!-- LEADS EN DISPATCH SI DROITS -->
         <div id="results-list-dispatch" class="clearfix"></div>
         <h3 class="custom-heading" style="margin-bottom:0px;margin-top:20px;">Leads en attente de dispatch:</h3>
         <div class="col-md-12">
-            <div class="streaming-tables">
-                <table class='table table-striped table-bordered' id="dispatch-dataTable">
-                    <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Société</th>
-                        <th>Email</th>
-                        <th>Téléphone</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in dispatch %}
-                        <tr>
-                            {% if item.workflowStatus == 'a_attribuer' %}
-                                {% set statusLibelle = "A attribuer" %}
-                                {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
-                            {% elseif item.workflowStatus == 'en_attente' %}
-                                {% set statusLibelle = "En attente" %}
-                                {% set color =  "style=background-color:#33CC33;color:#FFFFFF;" %}
-                            {% elseif item.workflowStatus == 'gagne' %}
-                                {% set statusLibelle = "Gagné" %}
-                                {% set color =  "style=background-color:#CCCC66;color:#99FF00;" %}
-                            {% elseif item.workflowStatus == 'perdu' %}
-                                {% set statusLibelle = "Perdu" %}
-                                {% set color =  "style=background-color:#FF3300;color:#FF6600;" %}
-                            {% elseif item.workflowStatus == 'inexploitable' %}
-                                {% set statusLibelle = "inéxploitable" %}
-                                {% set color =  "style=background-color:#FF3300;color:#DCDCDC;" %}
+            <div class="streaming-tables pt20">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist" id="dispatch-tabs">
+                    <li role="presentation" class="active"><a href="#dispatch-autres" aria-controls="dispatch-autres" role="tab" data-toggle="tab">Autres</a></li>
+                    <li role="presentation" class=""><a href="#dispatch-inexploitables" aria-controls="dispatch-inexploitables" role="tab" data-toggle="tab">Inexploitables</a></li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content row" style="display: block">
+                    <div role="tabpanel" class="tab-pane active" id="dispatch-autres">
+                        <table class='table table-striped table-bordered' id="dispatch-dataTable-autres">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Société</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in dispatch if item.workflowStatus is not same as('inexploitable') %}
+                                <tr>
+                                    {% if item.workflowStatus in ['a_attribuer', 'a_traiter'] %} {#Jaune#}
+                                        {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
+                                    {% elseif item.workflowStatus in ['perdu','gagne'] %} {#Normal#}
+                                        {% set color =  "style=background-color:#FFFFFF;color:#FF6600;" %}
+                                    {% elseif item.workflowStatus == 'en_attente' %} {#Bleu#}
+                                        {% set color =  "style=background-color:#3498db;color:#000000;" %}
+                                    {% elseif item.workflowStatus == 'inexploitable' %} {#rouge#}
+                                        {% set color =  "style=background-color:#e74c3c;color:#DCDCDC;" %}
+                                    {% else %}
+                                        {% set statusLibelle = "-" %}
+                                        {% set color = "style=background-color:#3498db;color:#000000;" %}
+                                    {% endif %}
+
+                                    <td {{ color }} >{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
+                                    <td {{ color }} >
+                                        {{ getdata( item.content,"etablissement") }}</td>
+                                    <td {{ color }} >{{ item.email }}</td>
+                                    <td {{ color }} >{{ getdata( item.content,"phone") }}</td>
+                                    <td {{ color }} >{{ item.workflowStatus }}</td>
+                                    <td {{ color }} >{{ item.createdAt|date("d/m/Y h:i:s") }}</td>
+                                    <td {{ color }}  style="text-align:center">
+                                        <center>
+                                            <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_leads_suivi_edit', {'id': item.id}) }}'">Edit</button>
+                                        </center>
+                                    </td>
+                                </tr>
                             {% else %}
-                                {% set statusLibelle = "-" %}
-                                {% set color =  "" %}
-                            {%  endif %}
+                                <tr>
+                                    <td colspan="7">Aucun élément dans cette liste</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="dispatch-inexploitables">
+                        <table class='table table-striped table-bordered' id="dispatch-dataTable-inexploitables">
+                            <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Société</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for item in dispatch if item.workflowStatus == 'inexploitable'%}
+                                <tr>
 
-                            <td {{ color }} >{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
-                            <td {{ color }} >
-                                {{ getdata( item.content,"etablissement") }}</td>
-                            <td {{ color }} >{{ item.email }}</td>
-                            <td {{ color }} >{{ getdata( item.content,"phone") }}</td>
-                            <td {{ color }} >{{ item.workflowStatus }}</td>
-                            <td {{ color }} >{{ item.createdAt|date("d/m/Y h:i:s") }}</td>
-                            <td {{ color }}  style="text-align:center">
-                                <center>
-                                    <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_leads_suivi_edit', {'id': item.id}) }}'">Edit</button>
-                                </center>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="7">Aucun élément dans cette liste</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                    {% if item.workflowStatus in ['a_attribuer', 'a_traiter'] %} {#Jaune#}
+                                        {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
+                                    {% elseif item.workflowStatus in ['perdu','gagne'] %} {#Normal#}
+                                        {% set color =  "style=background-color:#FFFFFF;color:#FF6600;" %}
+                                    {% elseif item.workflowStatus == 'en_attente' %} {#Bleu#}
+                                        {% set color =  "style=background-color:#3498db;color:#000000;" %}
+                                    {% elseif item.workflowStatus == 'inexploitable' %} {#rouge#}
+                                        {% set color =  "style=background-color:#e74c3c;color:#DCDCDC;" %}
+                                    {% else %}
+                                        {% set statusLibelle = "-" %}
+                                        {% set color = "style=background-color:#3498db;color:#000000;" %}
+                                    {% endif %}
 
+                                    <td {{ color }} >{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
+                                    <td {{ color }} >
+                                        {{ getdata( item.content,"etablissement") }}</td>
+                                    <td {{ color }} >{{ item.email }}</td>
+                                    <td {{ color }} >{{ getdata( item.content,"phone") }}</td>
+                                    <td {{ color }} >{{ item.workflowStatus }}</td>
+                                    <td {{ color }} >{{ item.createdAt|date("d/m/Y h:i:s") }}</td>
+                                    <td {{ color }}  style="text-align:center">
+                                        <center>
+                                            <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_leads_suivi_edit', {'id': item.id}) }}'">Edit</button>
+                                        </center>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7">Aucun élément dans cette liste</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     {% endif %}
@@ -73,7 +126,7 @@
     <h3 class="custom-heading"  style="margin-bottom:10px;margin-top:30px;">Leads de l'utilisateur : {{ affectation }}</h3>
     <div class="col-md-12">
         <div class="streaming-tables">
-            <div>
+            <div class="">
                 <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
                 <select name="per_page" class="st_per_page" id="st_per_page">
                     {% for limit in limit_options %}
@@ -81,7 +134,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <table class='table table-striped table-bordered' id="mylead-dataTable">
+            <table class='table table-striped table-bordered mt20' id="mylead-dataTable">
                 <thead>
                 <tr>
                     <th>Nom</th>
@@ -97,26 +150,18 @@
                 <tbody>
                 {% for item in elements %}
 
-                    {% if item.workflowStatus == 'a_attribuer' %}
-                        {% set statusLibelle = "A attribuer" %}
+                    {% if item.workflowStatus in ['a_attribuer', 'a_traiter'] %} {#Jaune#}
                         {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
-                    {% elseif item.workflowStatus == 'en_attente' %}
-                        {% set statusLibelle = "En attente" %}
-                        {% set color =  "style=background-color:#33CC33;color:#FFFFFF;" %}
-                    {% elseif item.workflowStatus == 'gagne' %}
-                        {% set statusLibelle = "Gagné" %}
-                        {% set color =  "style=background-color:#CCCC66;color:#99FF00;" %}
-                    {% elseif item.workflowStatus == 'perdu' %}
-                        {% set statusLibelle = "Perdu" %}
-                        {% set color =  "style=background-color:#FF3300;color:#FF6600;" %}
-                    {% elseif item.workflowStatus == 'inexploitable' %}
-                        {% set statusLibelle = "inéxploitable" %}
-                        {% set color =  "style=background-color:#FF3300;color:#DCDCDC;" %}
+                    {% elseif item.workflowStatus in ['perdu','gagne'] %} {#Normal#}
+                        {% set color =  "style=background-color:#FFFFFF;color:#FF6600;" %}
+                    {% elseif item.workflowStatus == 'en_attente' %} {#Bleu#}
+                        {% set color =  "style=background-color:#3498db;color:#000000;" %}
+                    {% elseif item.workflowStatus == 'inexploitable' %} {#rouge#}
+                        {% set color =  "style=background-color:#e74c3c;color:#DCDCDC;" %}
                     {% else %}
                         {% set statusLibelle = "-" %}
-                        {% set color =  "" %}
-                    {%  endif %}
-
+                        {% set color = "style=background-color:#3498db;color:#000000;" %}
+                    {% endif %}
 
                     <tr>
                         <td {{ color }} >{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
@@ -175,6 +220,7 @@
 </div>
 <script language="text/javascript">
     $("#mylead-dataTable").dataTable({paging:false, searching:true});
-    $("#dispatch-dataTable").dataTable({paging:false, searching:true});
+    $("#dispatch-dataTable-inexploitables").dataTable({paging:false, searching:true});
+    $("#dispatch-dataTable-autres").dataTable({paging:false, searching:true});
     $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
 </script>
