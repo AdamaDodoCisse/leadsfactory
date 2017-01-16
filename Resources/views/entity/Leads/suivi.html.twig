@@ -99,7 +99,7 @@
             <h2 style="margin-left:20px;">Filtrer la liste</h2>
             {{ form(filters_form) }}
         </div>
-        {% if not ( is_granted('ROLE_DISPATCH') or is_granted('ROLE_ADMIN') ) %}
+        {% if not ( is_granted('ROLE_DISPATCH') or is_granted('ROLE_ADMIN') or isManagerOfATeam ) %}
             <script>
                 $("#row-form_affectation").find("input").attr("disabled", true);
             </script>
