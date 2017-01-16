@@ -837,8 +837,17 @@ class EntityLeadsController extends CoreController
         $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
         $this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
-        return new Response('ok');
+        $listCode = "leads-status";
+        $scopeId = $lead->getForm()->getScope()->getId();
+        $elements = $this->getDictionnaryByCodeAndScope($listCode, $scopeId);
 
+        foreach ($elements as $element) {
+            if ($lead->getWorkflowStatus() == $element->getValue()) {
+                return new Response($element->getValue());
+            }
+        }
+
+        return new Response("ok");
     }
 
     /**
@@ -918,14 +927,12 @@ class EntityLeadsController extends CoreController
     }
 
     /**
-     * @Route("/leads/type/list/ajax", name="_leads_list_type_ajax")
-     * @Secure(roles="ROLE_USER")
+     * Recupère un dictionnaire par son code et son scope
+     * @param $listCode
+     * @param $scopeId
+     * @return array|string
      */
-    public function statusTypeLoadAjaxAction(Request $request)
-    {
-
-        $listCode = "leads-type";
-        $scopeId = $request->request->get("scopeId");
+    private function getDictionnaryByCodeAndScope($listCode, $scopeId) {
 
         /** @var DataDictionnaryRepository $dataDictionnary */
         $dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
@@ -935,6 +942,18 @@ class EntityLeadsController extends CoreController
         );
 
         $elements = $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
+        return $elements;
+    }
+
+    /**
+     * @Route("/leads/type/list/ajax", name="_leads_list_type_ajax")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function statusTypeLoadAjaxAction(Request $request)
+    {
+        $listCode = "leads-type";
+        $scopeId = $request->request->get("scopeId");
+        $elements = $this->getDictionnaryByCodeAndScope($listCode, $scopeId);
 
         return $this->render(
             'TellawLeadsFactoryBundle:entity/Leads:edit-type-list-ajax.html.twig',

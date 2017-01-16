@@ -435,8 +435,8 @@
                 console.log(url);
                 ajaxCall(url, data, function (result) {
                     refreshComments();
-                    loadHistoryList();
                     loadStatusList();
+                    loadHistoryList();
                     notificationMessage("Affectation mise à jour", "success");
                     $("#comment").val("");
                 });
@@ -445,13 +445,15 @@
 
         }
 
-        function loadStatusList() {
-
+        function loadStatusList(status) {
+            if (typeof (status) == "undefined") {
+                status = "{{ lead.workflowStatus }}";
+            }
             var url = "{{ path ('_leads_list_status_ajax') }}";
             var data = {scopeId: $('#scopeId').val()};
-            var container = $("#statusListDiv")
+            var container = $("#statusListDiv");
             fragmentAjaxCall(url, data, container, function (result) {
-                $("#statusLeadsSelect").val("{{ lead.workflowStatus }}")
+                $("#statusLeadsSelect").val(status);
             });
         }
 
@@ -465,6 +467,7 @@
                 var data = {id: id, leadId: leadId, listValue: listValue}
                 ajaxCall(url, data, function (result) {
                     notificationMessage("Statut mis à jour", "success");
+                    loadStatusList(result);
                     loadHistoryList();
                 });
             }
