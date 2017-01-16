@@ -1193,16 +1193,19 @@ class EntityLeadsController extends CoreController
             $leadId
         );
 
-        // TODO corriger cette fonction
-        $emailUtils->sendUserNotification(
-            $user,
-            $action,
-            $detailedAction,
-            $message,
-            $leadsUrl,
-            $leadsAppUrl,
-            $scope
-        );
+        try {
+            $emailUtils->sendUserNotification(
+                $user,
+                $action,
+                $detailedAction,
+                $message,
+                $leadsUrl,
+                $leadsAppUrl,
+                $scope
+            );
+        } catch (\Exception $exception) {
+            echo 'Erreur d\'assignation de leads ('.$leadId.') : '.$exception->getMessage();
+        }
 
         // Index leads on search engine
         $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
