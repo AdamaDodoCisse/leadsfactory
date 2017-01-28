@@ -45,4 +45,5 @@ Thumbs.db
 /composer.phar
 
 # node
-node_modules
+/node_modules/*
+/angular-app/node_modules/*
