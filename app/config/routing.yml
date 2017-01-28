@@ -3,6 +3,9 @@
 #    type:     annotation
 #    prefix:   /admin
 
+api_login_check:
+    path: /api/login_check
+
 tellaw_leads_factory_homepage:
     resource: "@LeadsFactoryBundle/Controller/Admin/"
     type:     annotation
@@ -22,9 +25,6 @@ tellaw_leads_factory_homepage:
 #    resource: "@LeadsFactoryBundle/Controller/TwilioController.php"
 #    type:     annotation
 #    prefix:   /twilio
-
-#login_check:
-#    pattern:   /login_check
 
 #_security_logout:
 #    pattern:  /logout
