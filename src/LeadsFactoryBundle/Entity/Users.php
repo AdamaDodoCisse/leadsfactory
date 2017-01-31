@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  *
  * @ORM\Entity(repositoryClass="LeadsFactoryBundle\Entity\UsersRepository")
+ * @ORM\Table(name="Users")
  */
 class Users implements UserInterface
 {

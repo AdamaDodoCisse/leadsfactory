@@ -1,11 +1,13 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/security.html
 security:
+    encoders:
+        LeadsFactoryBundle\Entity\Users: plaintext
 
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        in_memory:
-            memory: ~
+        main:
+          entity: { class: LeadsFactoryBundle\Entity\Users, property: login }
 
     firewalls:
 
