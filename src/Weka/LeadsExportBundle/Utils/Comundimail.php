@@ -187,6 +187,7 @@ class Comundimail extends AbstractMethod {
                     ->setSubject($sujetAdv)
                     ->setFrom($from)
                     ->setTo($mail_service_client)
+                    ->setReplyTo($data['email'])
                     // HTML version
                     ->setBody(
                         $templatingService->render(
