@@ -30,7 +30,8 @@
         "vresh/twilio-bundle": "~0.4",
         "teodortalov/citrix": "~1.1",
         "beberlei/DoctrineExtensions": "~1.0",
-        "lexik/jwt-authentication-bundle": "^2.0"
+        "lexik/jwt-authentication-bundle": "^2.0",
+        "nelmio/cors-bundle":"^1.5.1"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
