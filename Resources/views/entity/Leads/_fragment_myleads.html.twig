@@ -232,8 +232,8 @@
     </div>
 </div>
 <script language="text/javascript">
-    $("#mylead-dataTable").dataTable({paging: false, searching: true});
-    $("#dispatch-dataTable-inexploitables").dataTable({paging: false, searching: true});
-    $("#dispatch-dataTable-autres").dataTable({paging: false, searching: true});
+    $("#mylead-dataTable").dataTable({paging: false, searching: true, bSort: false});
+    $("#dispatch-dataTable-inexploitables").dataTable({paging: false, searching: true, bSort: false});
+    $("#dispatch-dataTable-autres").dataTable({paging: false, searching: true, bSort: false});
     $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
 </script>

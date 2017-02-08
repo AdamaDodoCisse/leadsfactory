@@ -106,6 +106,6 @@
 
 </div>
 <script language="text/javascript">
-    $("#team-dataTable-{{ objectId }}").dataTable({paging: false, searching: true});
+    $("#team-dataTable-{{ objectId }}").dataTable({paging: false, searching: true, bSort: false});
     $("#st_per_pageTeam option[value='{{ paginationTeam.limit }}']").attr('selected', 'selected');
 </script>
