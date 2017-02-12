@@ -3,6 +3,7 @@ import { ConfigService } from '../../services/config.service';
 
 import { Headers, Http, Response, URLSearchParams, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -12,7 +13,7 @@ export class AuthService {
   configService = null;
   public token: string;
 
-  constructor(private http: Http, configService : ConfigService) {
+  constructor(private http: Http, configService : ConfigService, private router: Router) {
       // set token if saved in local storage
       var currentUser = JSON.parse(localStorage.getItem('currentUser'));
       this.token = currentUser && currentUser.token;
@@ -31,8 +32,17 @@ export class AuthService {
     this.http.post(  this.configService.config.backendUrl +  '/api/login_check',
                               "_username="+username + "&_password="+password, options)
         .map(response =>response)
-        .subscribe (response => this.setToken(response, username));
+        .subscribe (response => {
+          if (this.setToken(response, username)) {
+            this.router.navigate(['/admin/form-list']);
+          }
+        });
 
+  }
+
+  redirectToLogin () {
+    this.logout();
+    this.router.navigate(['/login']);
   }
 
   private setToken (response, username) {

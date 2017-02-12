@@ -10,11 +10,16 @@ import { MainContentComponent } from './components/main-content/main-content.com
 import { Test1Component } from './test1/test1.component';
 import { FormulaireListComponent } from './components/formulaires/formulaire-list/formulaire-list.component';
 import { LoginComponent } from './components/login/login.component';
+import { AuthGuard } from './_guards/auth.gard';
+import { AuthService } from './services/auth/auth.service';
+import { ConfigService } from './services/config.service';
+import { HttpService } from './services/http.service';
 
 const appRoutes: Routes = [
   { path: 'admin', component: MainContentComponent,
     children: [
-      { path: 'test', component: Test1Component }
+      { path: 'test', component: Test1Component },
+      { path: 'form-list', component: FormulaireListComponent, canActivate: [AuthGuard] }
     ]
   },
   { path: 'login', component: LoginComponent},
@@ -35,7 +40,12 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [
+    AuthGuard,
+    AuthService,
+    ConfigService,
+    HttpService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

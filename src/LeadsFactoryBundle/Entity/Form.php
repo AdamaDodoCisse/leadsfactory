@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * LeadsFactoryBundle\Entity\Form
  *
  * @ORM\Entity(repositoryClass="LeadsFactoryBundle\Entity\FormRepository")
+ * @ORM\Table(name="Form")
  */
 class Form
 {

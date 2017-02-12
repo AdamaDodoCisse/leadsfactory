@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="LeadsFactoryBundle\Entity\ScopeRepository")
+ * @ORM\Table(name="Scope")
  */
 class Scope
 {
