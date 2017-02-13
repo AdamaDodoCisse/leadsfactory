@@ -1,0 +1,11 @@
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-centered">
+    <div class="dataTables_paginate paging_bootstrap_number" id="sample_3_paginate">
+      <ul class="pagination" style="visibility: visible;">
+        <li class="prev" [ngClass]="isFirstPage()?'disabled':''" ><a href="#" title="Prev"><i class="fa fa-angle-left"></i></a></li>
+        <li *ngFor="let item of pagination;" class="{{item[1]}}"><a (click)="onPageChange(item[0])" >{{item[0]}}</a></li>
+        <li class="next" [ngClass]="isLastPage()?'disabled':''"><a href="#" title="Next"><i class="fa fa-angle-right"></i></a></li>
+      </ul>
+    </div>
+  </div>
+</div>

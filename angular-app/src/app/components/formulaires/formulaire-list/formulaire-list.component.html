@@ -11,24 +11,7 @@
   </div>
   <div class="portlet-body">
       <div id="sample_3_wrapper" class="dataTables_wrapper no-footer">
-        <div class="row">
-          <div class="col-md-9 col-sm-9">
-            <div class="dataTables_length" id="sample_3_length">
-              <label>Afficher : 
-                <select [(ngModel)]="pageSize" name="sample_3_length" class="form-control input-sm input-xsmall input-inline">
-                  <option [selected]="size === pageSize" *ngFor="let size of availablePageSizes;" value="{{size}}">{{size}}</option>
-                </select>
-              </label>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-3">
-            <div id="sample_3_filter" class="dataTables_filter">
-              <label>Recherche :
-                <input type="search" class="form-control input-sm input-small input-inline" placeholder="" value="{{searchKeyword}}" >
-              </label>
-            </div>
-          </div>
-        </div>
+        <app-table-header (pageSizeChange)="onPageSizeChange($event)" (searchKeywordChange)="searchKeywordChange($event)" ></app-table-header>
         <div class="table-scrollable">
           <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer" id="sample_3" role="grid" aria-describedby="sample_3_info">
           <thead>
@@ -55,29 +38,7 @@
               </tr></tbody>
       </table>
     </div>
-    <div class="row">
-      <div class="col-md-12 col-sm-12 col-centered">
-        <div class="dataTables_paginate paging_bootstrap_number" id="sample_3_paginate">
-          <ul class="pagination" style="visibility: visible;">
-            <li class="prev" [ngClass]="isFirstPage()?'disabled':''" ><a href="#" title="Prev"><i class="fa fa-angle-left"></i></a></li>
-            <li *ngFor="let item of pagination;" class="{{item[1]}}"><a (click)="onClick(item[0])" >{{item[0]}}</a></li>
-            <li class="next" [ngClass]="isLastPage()?'disabled':''"><a href="#" title="Next"><i class="fa fa-angle-right"></i></a></li>
-<!--
-
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li class="disabled"><a href="#">...</a></li>
-            <li class="active"><a href="#">15</a></li>
-            <li><a href="#">16</a></li>
-            <li class="disabled"><a href="#">...</a></li>
-            <li><a href="#">53</a></li>
-            <li><a href="#">54</a></li>
-
-          -->
-          </ul>
-        </div>
-      </div>
-    </div>
+    <app-table-footer (pageChange)="onPageChange($event)" [numberOfPages]="numberOfPages" ></app-table-footer>
   </div>
 
 </div>

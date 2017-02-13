@@ -32,19 +32,21 @@ class FormRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('f');
         $qb->from('LeadsFactoryBundle:Form', 'f');
+        $qb->where ('1=1');
 
         if ($user->getScope() != null) {
-            $qb->where('f.scope = :scope');
+            $qb->andWhere('f.scope = :scope');
             $qb->setParameter('scope', $user->getScope());
         }
 
         if (!empty($keyword)) {
 
-            $keywords = explode(' ', $keyword);
+            $keywords = explode(' ', trim($keyword));
             foreach ($keywords as $key => $keyword) {
-                $qb->where('f.name LIKE :keyword');
+                $qb->andWhere('f.name LIKE :keyword');
                 $qb->setParameter('keyword', '%' . $keyword . '%');
             }
+
         }
 
         $qb->setFirstResult(($page - 1) * $limit);

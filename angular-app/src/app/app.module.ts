@@ -14,6 +14,8 @@ import { AuthGuard } from './_guards/auth.gard';
 import { AuthService } from './services/auth/auth.service';
 import { ConfigService } from './services/config.service';
 import { HttpService } from './services/http.service';
+import { TableHeaderComponent } from './components/table-header/table-header.component';
+import { TableFooterComponent } from './components/table-footer/table-footer.component';
 
 const appRoutes: Routes = [
   { path: 'admin', component: MainContentComponent,
@@ -32,7 +34,9 @@ const appRoutes: Routes = [
     MainContentComponent,
     Test1Component,
     FormulaireListComponent,
-    LoginComponent
+    LoginComponent,
+    TableHeaderComponent,
+    TableFooterComponent
   ],
   imports: [
     BrowserModule,
