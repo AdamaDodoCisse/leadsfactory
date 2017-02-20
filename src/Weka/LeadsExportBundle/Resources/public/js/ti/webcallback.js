@@ -99,7 +99,7 @@ var webcallback = {
             success: function(response){
                 //alert(response)
             }
-        })
+        });
         this.step = 'check';
     },
     newCall: function(){
@@ -117,7 +117,6 @@ var webcallback = {
                 if(webcallback.validationCodeIsCorrect){
                     webcallback.interceptSubmit = false;
                     webcallback.step = 'post';
-                    webcallback.post();
                 }else{
                     jQuery('#lffield\\[twilio_validation\\]').validationEngine('showPrompt', "Ce code n'est pas valide");
                 }

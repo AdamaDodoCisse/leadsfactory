@@ -37,7 +37,9 @@ class Comundimail extends AbstractMethod {
         "14" => "Demande d'information ou devis pour le MOOC",
         "15" => "Demande d'information pour Comundimix",
         "16" => "Demande d'information sur l'actualité",
-        "17" => "Demande d'information sur le coaching"
+        "17" => "Demande d'information sur le coaching",
+        "18" => "Candidature en tant que Formateur",
+        "19" => "Demande de rappel"
     );
 
     public function __construct()
@@ -69,7 +71,10 @@ class Comundimail extends AbstractMethod {
 
             $data = json_decode($job->getLead()->getData(), true); // Infos clients
             $logger->info('[ComundiMail] - Traitement Lead : '.$job->getLead()->getId());
-            $form_subject = $data['sujet'];
+
+            if ( array_key_exists ( "sujet", $data ) )
+                $form_subject = $data['sujet'];
+
             $hasError = false;
 
             // Verifier si le job doit être traité
@@ -79,10 +84,44 @@ class Comundimail extends AbstractMethod {
                 continue;
             }
 
-            if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
+            if ( array_key_exists("neolane",$this->_formConfig)  ) {
+
+                $newsletters = array (
+                    "news_2876"=>"8",
+                    "news_2868"=>"10",
+                    "news_2852"=>"20",
+                    "news_2884"=>"44",
+                    "news_2878"=>"22",
+                    "news_2854"=>"23",
+                    "news_2866"=>"27",
+                    "news_2867"=>"28",
+                    "news_2872"=>"10",
+                    "news_2869"=>"30",
+                    "news_2874"=>"35",
+                    "news_2883"=>"39",
+                    "news_2885"=>"56"
+                );
+
+                $idNewsletter = [];
+                foreach  ($data as $key => $value) {
+                    if (array_key_exists( $key, $newsletters)) {
+                        // Post vers Neolane
+                        $idNewsletter[] = $newsletters[$key];
+                    }
+                }
+
+                $neolaneUrl = "http://dm.neolane.comundi.fr/webApp/RBI_ABO_NL?email=".$data['email']."&prenom=".$data['firstName']."&nom=".$data['lastName']."&services=".implode(',',$idNewsletter);
+                if(file_get_contents($neolaneUrl,"r")) {
+                    $status = $exportUtils::$_EXPORT_SUCCESS;
+                    $msg = 'Exporté avec succès';
+                } else {
+                    $status = $exportUtils->getErrorStatus($job);
+                    $msg = 'Erreur liaison NEOLANE';
+                }
+
+            } else if ( $this->_formConfig["mails"][$form_subject]["mode"] == "mail" ) {
 
                 // Mode envoi d'email, VS mode CRM Affectation
-
                 $contenu = $this->_formConfig['mails'][$form_subject]['texte'];
                 $from = $this->_formConfig['mails'][$form_subject]['contact_mail'];
                 $mail_contact = $this->_formConfig['mails'][$form_subject]['contact_mail'];
@@ -148,6 +187,7 @@ class Comundimail extends AbstractMethod {
                     ->setSubject($sujetAdv)
                     ->setFrom($from)
                     ->setTo($mail_service_client)
+                    ->setReplyTo($data['email'])
                     // HTML version
                     ->setBody(
                         $templatingService->render(
@@ -197,7 +237,7 @@ class Comundimail extends AbstractMethod {
                 }
 
                 if($hasError) {
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = 'Erreur envoi de mail Comundi';
                 } else {
                     $status = $exportUtils::$_EXPORT_SUCCESS;
@@ -212,13 +252,13 @@ class Comundimail extends AbstractMethod {
 
                 if ( trim($user_email) == "" ) {
                     $hasError = true;
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = 'Probleme : Mode CRM, Email attribution vide';
                 }
 
                 if ( $user == null ) {
                     $hasError = true;
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = "Probleme : Mode CRM, Utilisateur non trouve pour l'email : ".$user_email;
                 }
 
@@ -250,7 +290,7 @@ class Comundimail extends AbstractMethod {
 
                 if ( !$result ) {
                     $hasError = true;
-                    $status = $this->_exportUtils->getErrorStatus($job);
+                    $status = $exportUtils->getErrorStatus($job);
                     $msg = "Probleme : Mode CRM, L'email de notification n'a pas été envoyé : ".$user_email;
                 }
 
@@ -301,5 +341,5 @@ class Comundimail extends AbstractMethod {
         return $this->getContainer()->get('mailer')->send($message);
 
     }
-    
+
 }

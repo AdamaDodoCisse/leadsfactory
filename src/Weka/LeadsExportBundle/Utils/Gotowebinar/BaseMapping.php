@@ -48,8 +48,4 @@ class BaseMapping
 		return 'Europe/Paris';
 	}
 
-	/*public function getStatus($data)
-	{
-		return 'APPROVED';
-	}*/
 }
