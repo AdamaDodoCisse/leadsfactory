@@ -438,6 +438,31 @@ class FrontController extends CoreController
     }
 
     /**
+     * @Route("/form/ajax/json_list_options", name="_ajax_child_json_list_options")
+     */
+    public function getChildListOptionsAsJsonAction(Request $request)
+    {
+        $parentCode = $request->query->get('parent_code');
+        $parentValue = $request->query->get('parent_value');
+        $default = $request->query->get('default');
+
+        $response = new JsonResponse();
+
+        if (!empty($parentValue))  {
+            $parentList = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findByCode($parentCode);
+            $parentItem = $this->getdoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->findOneBy(array(
+                'value' => $parentValue,
+                'referenceList' => $parentList
+            ));
+
+            $children = (!empty($parentItem)) ? $parentItem->getChildren()->getValues() : array();
+            $response->setData($children);
+        }
+
+        return $response;
+    }
+
+    /**
      * Send email notification
      *
      * @param array $params
