@@ -21,6 +21,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Tellaw\LeadsFactoryBundle\Response\TransparentPixelResponse;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  *
