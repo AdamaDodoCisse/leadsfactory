@@ -456,7 +456,11 @@ class FrontController extends CoreController
             ));
 
             $children = (!empty($parentItem)) ? $parentItem->getChildren()->getValues() : array();
-            $response->setData($children);
+            $results = array();
+            foreach ($children as $child) {
+                $results[] = array("value"=>$child->getValue(), "name"=>$child->getName());
+            }
+            $response->setData($results);
         }
 
         return $response;
