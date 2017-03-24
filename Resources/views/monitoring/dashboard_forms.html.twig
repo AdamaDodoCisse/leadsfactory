@@ -1,0 +1,288 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form_view 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+	<div class="col-md-12">
+		<div class="heading-sec" id="intro6">
+			<h1>Dashboard de formulaires : <i>  de &laquo; {{ app.user.firstname }} {{ app.user.lastname }} &raquo;</i></h1>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
+			<div id="demo-chart" class="widget-body blue" style="height:500px;">
+				<!-- This div will hold the chart generated in the footer -->
+			</div>
+
+			{#            Second table here#}
+			<span id="found" class="label label-info">{{ forms|length }} formulaire(s)</span> et
+			<span id="found" class="label label-info">{{ bookmarks|length }} formulaire(s) favoris</span>
+			<div style="float: right;">
+				<input type="text" id="search" placeholder="Rechercher ...">
+			</div>
+			<br/><br/>
+			{#                search for item here  #}
+
+			<table id="statistics_table" class='table table-bordered'>
+				<thead>
+				<tr class="country-table-head">
+					<th>Nom</th>
+					<th>Nombre de pages</th>
+					<th>Nombre de  leads</th>
+					<th>Taux de transformation</th>
+					<th>Status</th>
+					<th>Action </th>
+				</tr>
+				</thead>
+				<tbody>
+
+				{% for form in forms %}
+					<tr class="status-highlight" data-fid="{{ form.id }}" data-color="{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormStatusColor', {"form_id" : form.id})) }}">
+						<td>
+							<a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">
+							{% for bookmark in bookmarks %}
+								{% if form.id == bookmark.form.id %}
+									<i class="fa fa-star"></i>
+								{% endif %}
+							{% endfor %}
+							[{{ form.id }}] {{ form.name }}
+							</a>
+						</td>
+						<td>{{ nbviews[form.id]["PAGES_VIEWS"] }}</td>
+						<td>{{ nbviews[form.id]["NB_LEADS"] }}</td>
+						<td>
+							{% if nbviews[form.id]["PAGES_VIEWS"] != 0  %}
+								{{ (nbviews[form.id]["NB_LEADS"] / nbviews[form.id]["PAGES_VIEWS"] * 100) |round}} %
+							{% else %}
+								0 %
+							{% endif %}
+						</td>
+						<td class="text-center">
+							<canvas id="meteo-icon-{{ form.id }}" width="40" height="40"></canvas>
+						</td>
+						<td>
+						<a href="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}"  alt="Voir les statistiques">
+							<img title="Voir les statistiques" style="height:40px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/statistiques.png') }}"/>
+						</a>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		<script>
+			var skycons = new Skycons({"color": "black"});
+			$(".status-highlight").each(function() {
+				var fid = $(this).attr("data-fid");
+				var meteo_id = "meteo-icon-"+fid;
+				if (($(this).attr("data-color") == "green")) {
+					skycons.add(meteo_id, Skycons.CLEAR_DAY);
+				} else if (($(this).attr("data-color") == "pink")) {
+					skycons.add(meteo_id, Skycons.RAIN);
+				} else if (($(this).attr("data-color") == "yellow")) {
+					skycons.add(meteo_id, Skycons.PARTLY_CLOUDY_DAY);
+				}
+			});
+			skycons.play();
+		</script>
+		{#
+    <div class="col-md-4" style="margin-top:10px;">
+        <div class="widget-body custom-form" style="padding-top:10px;">
+            <div style="margin-left:10px;margin-bottom:5px;">Vos formulaires favoris :</div>
+            <ul>
+                {% for bookmark in bookmarks %}
+                    <li><a href="#type-{{ bookmark.form.id }}">{{ bookmark.form.name }}</a></li>
+                    {% endfor %}
+            </ul>
+        </div>
+    </div>#}
+		{#    </div>#}
+
+		<div class="col-md-4" style="float: right;">
+			<div class="widget-body custom-form">
+				{{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
+			</div>
+
+			<div class="widget-body">
+				<h3 style="text-align: center">Nombre de vues par formulaire</h3>
+				<div id="pieChartViews" class="c3"></div>
+			</div>
+
+			<div class="widget-body">
+				<h3 style="text-align: center">Nombre de leads par formulaire</h3>
+				<div id="pieChartLeads" class="c3"></div>
+			</div>
+
+			<div class="widget-body">
+				<h3 style="text-align: center">Taux de transformation</h3>
+				<div id="pieChartTransformation" class="c3"></div>
+			</div>
+
+		</div>
+	</div>
+
+	{#
+<div class="col-md-4" style="margin-top:10px;">
+    <div class="widget-body custom-form" style="padding-top:10px;">
+        <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser un formulaire :</b></div>
+
+        <select onChange="window.location.href=this.value" class="form-control">
+            <option>Séléctionnez un formuliare</option>
+            {% for form in forms %}
+                <option value="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">{{ form.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>#}
+
+
+
+
+	<!-- Chart -->
+	{% if(app.request.get('form')) %}
+		{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard',
+			{
+				"period" : app.request.get('form')['period'],
+				"mode" : "Form",
+				"objects": forms
+			}
+		)) }}
+	{% else %}
+		{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard',
+			{
+				"mode" : "Form",
+				"objects": forms
+			}
+		)) }}
+	{% endif %}
+
+
+	<!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
+
+    <!-- ==== DASHBOARD === -->
+	<!--
+        <div class="with-padding">
+                render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measureDashboard')) }}
+        </div>
+    -->
+
+	<script>
+		var skycons = new Skycons({"color": "white"});
+	</script>
+	{#
+        {% for bookmark in bookmarks %}
+            <div style="">
+            <div class="col-md-12" style="padding:20px 0px 20px 0px;margin-bottom:20px;border:1px dashed #a0a0a0">
+                <a id="type-{{ bookmark.form.id }}"/>
+                <div class="col-md-4">
+                <!-- Render the Alert Widget -->
+                </div>
+            </div>
+            </div>
+
+        {% endfor %}
+    #}
+	<script>
+		skycons.play();
+	</script>
+
+
+{% endblock %}
+{% block javascript %}
+	<script>
+		$("a[href^=#]").click(function(e) {
+			e.preventDefault();
+			var dest = $(this).attr('href');
+			$('html,body').animate({
+				scrollTop: $(dest).offset().top - 60
+			}, 'slow');
+		});
+
+		// Data formatting
+		var data_nb_views = {{ nbviews | json_encode | raw }};
+		var tab_nb_views = [];
+		var tab_nb_leads = [];
+		var tab_nb_transformation = [];
+
+		$.each(data_nb_views, function(k){
+			var nb_v = parseFloat(data_nb_views[k]['PAGES_VIEWS']);
+			var nb_l = parseFloat(data_nb_views[k]['NB_LEADS']);
+			var tx_transformation = 0;
+			if (nb_v > 0)
+				tx_transformation = nb_l / nb_v;
+			tab_nb_views.push([data_nb_views[k]['name'], nb_v]);
+			tab_nb_leads.push([data_nb_views[k]['name'], nb_l]);
+			tab_nb_transformation.push([data_nb_views[k]['name'], tx_transformation]);
+		});
+
+		//console.log(JSON.stringify(tab_nb_transformation));
+		var chart_height = 700;
+		c3.generate({
+			bindto: '#pieChartViews',
+			data: {
+				columns: tab_nb_views,
+				type: 'pie'
+			},
+			tooltip: {
+				format: {
+					title: function (d) { return d; },
+					value: function (value, ratio, id) {
+						var format = d3.format(',');
+						return format(value);
+					}
+				}
+			},
+			size: {height: chart_height}
+		});
+		c3.generate({
+			bindto: '#pieChartLeads',
+			data: {
+				columns: tab_nb_leads,
+				type: 'pie'
+			},
+			tooltip: {
+				format: {
+					title: function (d) { return d; },
+					value: function (value, ratio, id) {
+						var format = d3.format(',');
+						return format(value);
+					}
+				}
+			},
+			size: {height: chart_height}
+		});
+		c3.generate({
+			bindto: '#pieChartTransformation',
+			data: {
+				columns: tab_nb_transformation,
+				type: 'pie'
+			},
+			tooltip: {
+				format: {
+					title: function (d) { return d; },
+					value: function (value, ratio, id) {
+						var format = d3.format(',');
+						return format(Math.round(value * 100)) + " %";
+					}
+				}
+			},
+			size: {height: chart_height}
+		});
+
+		$("#search").keyup(function() {
+			var value = this.value.toUpperCase();
+			//console.log(value);
+			$("#statistics_table").find("tr").each(function(index) {
+				if (index === 0) return;
+				var id = $(this).find("td").first().text().toUpperCase();
+				$(this).toggle(id.indexOf(value) !== -1);
+			});
+		});
+
+		$("#statistics_table").tablesorter({sortList: [[1,1]]});
+
+
+	</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        Le groupe de formulaire permet d'effectuer un regroupement fonctionnel des statistiques de plusieurs formulaires.
+    </div>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+<div class="col-md-12">
+
+    <div id="results-list" class="clearfix"></div>
+    <h3 class="custom-heading" style="margin-bottom:0px;margin-top:20px;">Leads du département : {{ dptName }}</h3>
+    <div class="col-md-12" style="margin-top:10px;">
+        <div class="streaming-tables">
+            <div>
+                <span id="found" class="label label-info">{{ paginationDpt.total }} résultat(s)</span>
+                <select name="per_pageDpt" class="st_per_page st_per_pageDpt" id="st_per_pageDpt-{{ objectId }}"
+                        data-objectId="{{ objectId }}">
+                    {% for limit in limit_optionsDpt %}
+                        <option value="{{ limit }}" {{ paginationDpt.limit == limit ? "selected" }}>{{ limit }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <table class='table table-striped table-bordered' id="dpt-dataTable">
+                <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Société</th>
+                    <th>Email</th>
+                    <th>Téléphone</th>
+                    <th>Assignée à</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in dptTeam %}
+                    <tr>
+
+                        {% if item.workflowStatus in ['a_attribuer', 'a_traiter'] %} {#Jaune#}
+                            {% set color =  "style=background-color:#FFFFCC;color:#000000;" %}
+                        {% elseif item.workflowStatus in ['perdu','gagne'] %} {#Normal#}
+                            {% set color =  "style=background-color:#FFFFFF;color:#FF6600;" %}
+                        {% elseif item.workflowStatus == 'en_attente' %} {#Bleu#}
+                            {% set color =  "style=background-color:#3498db;color:#000000;" %}
+                        {% elseif item.workflowStatus == 'inexploitable' %} {#rouge#}
+                            {% set color =  "style=background-color:#e74c3c;color:#DCDCDC;" %}
+                        {% else %}
+                            {% set statusLibelle = "-" %}
+                            {% set color = "style=background-color:#3498db;color:#000000;" %}
+                        {% endif %}
+
+                        <td {{ color }} >{{ item.firstname | capitalize }} {{ item.lastname | capitalize }}</td>
+                        <td {{ color }} >
+                            {{ getdata( item.content,"etablissement") }}</td>
+                        <td {{ color }} >{{ item.email }}</td>
+                        <td {{ color }} >{{ getdata( item.content,"phone") }}</td>
+                        <td {{ color }} >
+                            {% if (item.user) %}
+                                {{ item.user.firstName | capitalize }} {{ item.user.lastName | capitalize }}
+                            {% else %}
+                                Non assignée
+                            {% endif %}
+                        </td>
+                        <td {{ color }} >{{ item.workflowStatus }}</td>
+                        <td {{ color }} >{{ item.createdAt|date("d/m/Y h:i:s") }}</td>
+                        <td {{ color }} style="text-align:center">
+                            <div class="text-center">
+                                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px"
+                                        onClick="window.location.href='{{ path('_leads_suivi_edit', {'id': item.id}) }}'">
+                                    Edit
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {% if paginationDpt.pages_count > 1 %}
+                <div class="st_pagination">
+                    <ul class="pagination">
+                        {% if paginationDpt.page > 1 %}
+                            <li>
+                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': 1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');"
+                                   class="first">Début</a></li>
+                            <li>
+                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.page-1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');">&larr;
+                                    Précédent</a></li>
+                        {% endif %}
+                        {% for i in paginationDpt.pagination_min..paginationDpt.pagination_max %}
+                            <li {% if paginationDpt.page == i %}class="active" {% endif %}>
+                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': i, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');"
+                                   {% if paginationDpt.page == i %}class="active" {% endif %}>{{ i }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if paginationDpt.page < paginationDpt.pages_count %}
+                            <li>
+                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.page+1, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');">Suivant &rarr;</a>
+                            </li>
+                            <li>
+                                <a href="javascript:loadDptLeadsTab('{{ path(paginationDpt.route, {'page': paginationDpt.pages_count, 'limit': paginationDpt.limit}) }}?{{ app.request.query.all|url_encode }}','{{ objectId }}');">Fin</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+<script language="text/javascript">
+    $("#dpt-dataTable").dataTable({paging: false, searching: true, bSort: false});
+    $("#st_per_pageDpt option[value='{{ paginationDpt.limit }}']").attr('selected', 'selected');
+</script>

@@ -1,0 +1,153 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <div class="heading-sec" id="intro6">
+                <h1>Administration <i>des {{ title }}</i></h1>
+                <div style="clear:both"></div>
+                <div class="titleDescription"><em>{{ description }}</em></div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="btn-group btn-group-justified">
+                <a class="btn blue" href="{{ path ('_users_new') }}">Nouveau</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+        <h3 class="custom-heading">Utilisateurs:</h3>
+        <div class="">
+            <div class="streaming-tables">
+                <div>
+                    <span id="found" class="label label-info">{{ pagination.total }} résultat(s)</span>
+                    <input name="search" type="text" id="st_search" value="{{ pagination.keyword}}" class="st_search" placeholder="Filtrez...">
+                    <select name="per_page" class="st_per_page" id="st_per_page">
+                        {% for limit in limit_options %}
+                            <option value="{{ limit }}">{{ limit }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Email</th>
+                        <th>Scope</th>
+                        <th>Rôle</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in elements %}
+                        <tr>
+                            <td>{{ item.id }}</td>
+                            <td>{{ item.lastname }}</td>
+                            <td>{{ item.firstname }}</td>
+                            <td>{{ item.email }}</td>
+                            <td>
+                                {% if item.scope %}
+                                {{ item.scope.name }}
+                                {% else %}
+                                    <em>Aucun</em>
+                                {% endif %}
+                            </td>
+                            <td>
+                            {% if item.role == "ROLE_ADMINISTRATEUR" %}
+                            Administrateur
+                            {% elseif item.role == "ROLE_DEV" %}
+                                Développeur
+                            {% elseif item.role == "ROLE_REPORTING" %}
+                                Reporting et statistiques
+                            {% else %}
+                                <em>Aucun</em>
+                            {% endif %}
+                            </td>
+                            <td style="text-align:center">
+                                <button type="button" class="btns  blue  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_edit', {'id': item.id}) }}'">Editer</button>
+                                <button type="button" class="btns  green  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="window.location.href='{{ path('_users_generate_password', {'id': item.id}) }}'">Générer un mot de passe</button>
+                                <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onClick="if (confirm ('Confirmez vous la suppression ?')) window.location.href='{{ path('_users_delete', {'id': item.id}) }}'">Supprimer</button>
+                            </td>
+                        </tr>
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="5">Aucun élément dans cette liste</td>
+
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% if pagination.pages_count > 1 %}
+                    <div class="st_pagination">
+                        <ul class="pagination">
+                            {% if pagination.page > 1 %}
+                                <li><a href="{{ path(pagination.route, {'page': 1, 'limit': pagination.limit, 'keyword': pagination.keyword|raw}) }}" class="first">Début</a></li>
+                                <li><a href="{{ path(pagination.route, {'page': pagination.page-1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">&larr; Précédent</a></li>
+                            {% endif %}
+                            {% for i in pagination.pagination_min..pagination.pagination_max %}
+                                <li {% if pagination.page == i %}class="active" {% endif %}>
+                                    <a href="{{ path(pagination.route, {'page': i, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}" {% if pagination.page == i %}class="active" {% endif %}>{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            {% if pagination.page < pagination.pages_count %}
+                                <li><a href="{{ path(pagination.route, {'page': pagination.page+1, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Suivant &rarr;</a></li>
+                                <li><a href="{{ path(pagination.route, {'page': pagination.pages_count, 'limit': pagination.limit, 'keyword': pagination.keyword}) }}">Fin</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascript %}
+    <script type="text/javascript">
+
+        $("#st_per_page option[value='{{ pagination.limit }}']").attr('selected', 'selected');
+
+        $('#st_search').keypress(function(event){
+            if(event.which == 13){
+                event.preventDefault();
+                var route = '{{ path(pagination.route) }}';
+                var keyword = $(this).val() != '' ? '/'+$(this).val() : ''
+                window.location.href = route + '/1/' + {{ pagination.limit }} + keyword;
+            }
+        });
+
+        $('#st_per_page').change(function(){
+            var route = '{{ path(pagination.route) }}';
+            var keyword = $('#st_search').val() != '' ? '/'+$('#st_search').val() : '';
+            window.location.href = route + '/1/' + $(this).val() + keyword;
+        });
+    </script>
+    <script>
+
+        $(document).ready(function(){
+
+            //Bookmark
+            $('.bookmark-link').click(function(){
+                var el = this;
+                var form_id = $(this).attr('data-form-id');
+                var url = "{{ path('_monitoring_bookmark') }}";
+
+                var status = $(this).hasClass('starred') ? false : true;
+
+                $.post(url, {'entity':'Form', 'id': form_id, 'status':status}, function(){
+                    if($(el).hasClass('starred')){
+                        $(el).removeClass('starred').addClass('unstarred');
+                    }else{
+                        $(el).removeClass('unstarred').addClass('starred');
+                    }
+                })
+            });
+        });
+    </script>
+{% endblock %}

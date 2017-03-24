@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 bin/doctrine-dbal
 .idea
 .DS_Store
@@ -8,11 +9,25 @@ bin/doctrine-dbal
 bin/*
 reference_*.csv
 
+=======
+.DS_Store
+.idea/*
+.settings/*
+.project
+.buildpath
+>>>>>>> f54dfb51c2da0a1d940d078ab11e24c157be64ee
 app/config/parameters.yml
 app/cache
 app/logs
 app/sessions
+<<<<<<< HEAD
 vendor/
+=======
+/bin/
+vendor/
+/Search/logs/
+/Search/data/*
+>>>>>>> f54dfb51c2da0a1d940d078ab11e24c157be64ee
 
 # Cache and logs
 /vendor/*
@@ -28,6 +43,9 @@ vendor/
 
 # Composer PHAR
 /composer.phar
+<<<<<<< HEAD
 
 /datas/
 /licence/*
+=======
+>>>>>>> f54dfb51c2da0a1d940d078ab11e24c157be64ee

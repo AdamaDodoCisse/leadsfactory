@@ -1,0 +1,27 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {% if id is defined %}
+            <h3 class="custom-heading">Actions:</h3>
+
+            <div style="clear:both"></div>
+        {% endif %}
+    </div>
+
+{% endblock %}
