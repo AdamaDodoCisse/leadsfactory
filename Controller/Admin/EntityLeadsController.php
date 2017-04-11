@@ -15,6 +15,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Users;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\EmailUtils;
 use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/entity")
@@ -1377,12 +1378,10 @@ class EntityLeadsController extends CoreController
      */
     protected function getReportForm($filterParams)
     {
-        $export_formats = array('raw_csv' => 'CSV brut');
-
-        //Le format "CSV amélioré" est dispo uniquement si un formulaire est sélectionné
-        if (!empty($filterParams['form'])) {
-            $export_formats['nice_csv'] = 'CSV amélioré';
-        }
+        $export_formats = array(
+            'raw_csv' => 'CSV brut',
+            'nice_csv' => 'CSV amélioré'
+        );
 
         $form = $this->createFormBuilder(array())
             ->setMethod('GET')
@@ -1428,37 +1427,36 @@ class EntityLeadsController extends CoreController
      */
     protected function generateRaw_csv($filterParams)
     {
-        $em = $this->getDoctrine()->getEntityManager();
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
-        $handle = fopen('php://memory', 'w');
+        $response = new StreamedResponse();
+        $response->setCallback(function() use($leads){
 
-        fputcsv($handle, array('id', 'Form', 'Date', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
+            $handle = fopen('php://output', 'w');
 
-        while (false !== ($row = $leads->next())) {
-            fputcsv(
-                $handle,
-                array(
-                    $row[0]->getId(),
-                    $row[0]->getForm()->getName(),
-                    $row[0]->getCreatedAt()->format('Y-m-d H:i:s'),
-                    $row[0]->getFirstname(),
-                    $row[0]->getLastname(),
-                    $row[0]->getEmail(),
-                    $row[0]->getTelephone(),
-                    $row[0]->getData(),
-                ),
-                ';'
-            );
+            fputcsv($handle, array('id', 'Form', 'Date', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
 
-            $em->detach($row[0]);
-        }
+            while (false !== ($row = $leads->next())) {
+                fputcsv(
+                    $handle,
+                    array(
+                        $row[0]->getId(),
+                        $row[0]->getForm()->getName(),
+                        $row[0]->getCreatedAt()->format('Y-m-d H:i:s'),
+                        $row[0]->getFirstname(),
+                        $row[0]->getLastname(),
+                        $row[0]->getEmail(),
+                        $row[0]->getTelephone(),
+                        $row[0]->getData(),
+                    ),
+                    ';'
+                );
+            }
 
-        rewind($handle);
-        $content = stream_get_contents($handle);
-        fclose($handle);
+            fclose($handle);
+        });
 
-        $response = new Response($content);
+        $response->setStatusCode(200);
         $response->headers->set('content-type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
 
@@ -1474,38 +1472,54 @@ class EntityLeadsController extends CoreController
      */
     protected function generateNice_csv($filterParams)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $formUtils = $this->get('form_utils');
+        $logger = $this->get('logger');
+        $fields = array();
+        $columns = array('id', 'Form', 'Date');
 
-        $fields = $formUtils->getFieldsAsArrayByFormId($filterParams['form']);
-        $columns = array_merge(array('id', 'Form', 'Date'), array_keys($fields));
+        $filterParams["scope"] = $this->getUser()->getScope()->getId();
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
+
+        while (false !== ($record = $leads->next())) {
+            $data = json_decode($record[0]->getData(), true);
+            $keys = array_keys ($data);
+            $fields = array_merge( $fields, $keys);
+        }
+
+        $columns = array_merge( $columns, $fields);
 
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
-        $handle = fopen('php://memory', 'w');
-        fputcsv($handle, $columns, ';');
-        while (false !== ($record = $leads->next())) {
-            $row = array(
-                $record[0]->getId(),
-                $record[0]->getForm()->getName(),
-                $record[0]->getCreatedAt()->format('Y-m-d H:i:s'),
-            );
+        $response = new StreamedResponse();
+        $response->setCallback(function() use($leads, $columns, $fields, $logger){
 
-            $data = json_decode($record[0]->getData(), true);
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, $columns, ';');
 
-            foreach (array_keys($fields) as $field) {
-                $row[] = $formUtils->getFieldFrontendValue($fields[$field], $data[$field]);
+            while (false !== ($record = $leads->next())) {
+                $row = array(
+                    $record[0]->getId(),
+                    $record[0]->getForm()->getName(),
+                    $record[0]->getCreatedAt()->format('Y-m-d H:i:s'),
+                );
+
+                $data = json_decode($record[0]->getData(), true);
+
+                if ( $data != null ) {
+                    foreach ( $fields as $field) {
+                        if ( array_key_exists( $field, $data )) {
+                            $row[] = $data[$field];
+                        } else {
+                            $row[] = "";
+                        }
+                    }
+                    fputcsv($handle, $row, ';');
+                }
             }
 
-            fputcsv($handle, $row, ';');
-            $em->detach($record[0]);
-        }
+            fclose($handle);
+        });
 
-        rewind($handle);
-        $content = stream_get_contents($handle);
-        fclose($handle);
-
-        $response = new Response($content);
+        $response->setStatusCode(200);
         $response->headers->set('content-type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
 

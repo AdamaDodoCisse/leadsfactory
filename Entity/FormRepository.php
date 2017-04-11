@@ -419,8 +419,14 @@ class FormRepository extends EntityRepository
     public function getForms($scope = null)
     {
 
-        $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
-        $result = $this->getEntityManager()->createQuery($dql)->getResult();
+        if ($scope == null) {
+            $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
+            $result = $this->getEntityManager()->createQuery($dql)->getResult();
+        } else {
+            var_dump("Scope :".$scope->getId());
+            $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f WHERE f.scope=:scope";
+            $result = $this->getEntityManager()->createQuery($dql)->setParameter('scope', $scope->getId() )->getResult();
+        }
 
         return $result;
 
