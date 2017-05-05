@@ -271,41 +271,87 @@ class ApiController extends CoreController
      */
     public function addToSandbox(Request $request)
     {
+        $logger = $this->get('logger');
         $uniqId = $request->request->get("uniqId");
         $data = $request->request->get("data");
         $delay = $request->request->get("delay");
         $formCode = $request->request->get("formCode");
 
         if ($uniqId == null || trim($uniqId)=="") {
+            $logger->error("CREATE - Erreur UniqID is not SET : ".$data);
+            $this->sendErrorEmail( "CREATE - Erreur UniqID is not SET", $uniqId, $data, $delay, $formCode);
             return new Response("UniqId is not set");
+        }
+
+        // Service needs to validate that JSON is valid
+        $testJsonData = json_decode( $data, true );
+        if (!$testJsonData) {
+            $logger->error("CREATE - Erreur de-serialisation JSON : ".$data);
+            $this->sendErrorEmail( "CREATE - Erreur de-serialisation JSON", $uniqId, $data, $delay, $formCode);
+            return new Response("Leads is not able to decode JSON");
         }
 
         $leadsSandbox = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:LeadsSandbox')->findByUniqId( $uniqId );
         if ($leadsSandbox != null) {
+            $logger->error("CREATE - Erreur UniqID is not UNIQ : ".$data);
+            $this->sendErrorEmail( "CREATE - Erreur UniqID is not UNIQ", $uniqId, $data, $delay, $formCode);
             return new Response("UniqId is not uniq");
         }
 
-        $leadsSandbox = new LeadsSandbox();
-        $leadsSandbox->setUniqid( $uniqId );
-        $leadsSandbox->setData( $data );
-        $leadsSandbox->setDelay( $delay );
-        $leadsSandbox->setFormCode( $formCode );
-
-        $currentDate = new \DateTime();
-
-        $leadsSandbox->setCreatedAt($currentDate);
-        $leadsSandbox->setModifiedAt($currentDate);
-
         if ( trim($formCode) == "" || trim($delay) == "" || trim( $uniqId ) == "" ) {
+
+            $logger->error("CREATE - FormCode or Delay or UniqId is empty : ".$data);
+            $this->sendErrorEmail( "CREATE - FormCode or Delay or UniqId is empty", $uniqId, $data, $delay, $formCode);
+
             return new Response ("Invalid data");
+
         } else {
+
+            $leadsSandbox = new LeadsSandbox();
+            $leadsSandbox->setUniqid( $uniqId );
+            $leadsSandbox->setData( $data );
+            $leadsSandbox->setDelay( $delay );
+            $leadsSandbox->setFormCode( $formCode );
+
+            $currentDate = new \DateTime();
+
+            $leadsSandbox->setCreatedAt($currentDate);
+            $leadsSandbox->setModifiedAt($currentDate);
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($leadsSandbox);
             $em->flush();
+
+            return new Response(1);
+
         }
 
-        return new Response(1);
 
+
+    }
+
+    private function sendErrorEmail ( $message, $uniqId, $data, $delay, $formCode ) {
+
+        $logger = $this->get('logger');
+
+        $to = "ewallet@weka.fr";
+        $from = "ewallet@weka.fr";
+        $subject = "LEADS - SANDBOX - INCIDENT";
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody(
+                $message."<br/>".$data."<br/>uniqId : ".$uniqId."<br/>delay : ".$delay."<br/>formCode : ".$formCode,
+                'text/html'
+            );
+
+        try {
+            $result = $this->get('mailer')->send($message);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+        }
     }
 
     /**
@@ -315,32 +361,58 @@ class ApiController extends CoreController
      */
     public function updateInSandbox(Request $request)
     {
-
+        $logger = $this->get('logger');
         $uniqId = $request->request->get("uniqId");
         $data = $request->request->get("data");
         $delay = $request->request->get("delay");
         $formCode = $request->request->get("formCode");
 
+        // Service needs to validate that JSON is valid
+        $testJsonData = json_decode( $data, true );
+        if (!$testJsonData) {
+            $logger->error("UPDATE - Erreur de-serialisation JSON : ".$data);
+            $this->sendErrorEmail( "UPDATE - Erreur de-serialisation JSON", $uniqId, $data, $delay, $formCode);
+            return new Response("Leads is not able to decode JSON");
+        }
 
         $leadsSandbox = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:LeadsSandbox')->findOneByUniqId( $uniqId );
         if ($leadsSandbox == null) {
+            $logger->error("UPDATE - Leads NOT FOUND in sandbox : ".$data);
+            $this->sendErrorEmail( "UPDATE - Leads NOT FOUND in sandbox", $uniqId, $data, $delay, $formCode);
             return new Response("leads not found in sandbox");
         }
 
         if ($leadsSandbox->getStatus() == 1) {
+            $logger->error("UPDATE - leads is not anymore in sandbox : ".$data);
+            $this->sendErrorEmail( "UPDATE - leads is not anymore in sandbox", $uniqId, $data, $delay, $formCode);
             return new Response("Leads is not anymore in sandbox");
         }
 
-        $leadsSandbox->setData( $data );
-        $leadsSandbox->setDelay( $delay );
-        $leadsSandbox->setFormCode( $formCode );
-        $leadsSandbox->setModifiedAt(new \DateTime());
+        if ( trim($formCode) == "" || trim($delay) == "" || trim( $uniqId ) == "" ) {
 
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($leadsSandbox);
-        $em->flush();
+            $logger->error("UPDATE - FormCode or Delay or UniqId is empty : ".$data);
+            $this->sendErrorEmail( "UPDATE - FormCode or Delay or UniqId is empty", $uniqId, $data, $delay, $formCode);
 
-        return new Response(1);
+            return new Response ("Invalid data");
+
+        } else {
+
+            $leadsSandbox->setData( $data );
+            $leadsSandbox->setDelay( $delay );
+            $leadsSandbox->setFormCode( $formCode );
+
+            $currentDate = new \DateTime();
+            $leadsSandbox->setModifiedAt($currentDate);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($leadsSandbox);
+            $em->flush();
+
+            return new Response(1);
+
+        }
+
+
 
     }
 
