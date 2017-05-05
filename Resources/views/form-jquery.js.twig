@@ -1,4 +1,5 @@
 {#<script>#}
+
 var leadsfactory = {
     html: '{{ include(template_from_string(form.source))|e('js') }}',
     init: function (form_id, data, options) {
@@ -12,15 +13,23 @@ var leadsfactory = {
             if (typeof field.data('list') !== "undefined" && typeof field.data('parent') !== "undefined") {
                 var id = '#lffield\\[' + field.data('parent') + '\\]';
 
+                field.attr('data-try', 0);
                 $(id).change(function () {
                     setTimeout(function () {
-                        field.val(value);
-                        console.log(field.val());
-                        if (field.val() == null) {
-                            $(id).change();
+                        // On comptabilise le nombre de fois que l'opération de remplissage a été tenté
+                        var tryCount = parseInt(field.attr('data-try'));
+                        // On arrête au bout de 5 fois
+                        if (tryCount >= 5) {
+                            return false;
                         }
                         field.val(value);
-                    }, 1000);
+                        if (field.val() == null) {
+                            // On met à jour le nombre de tentatives infructueuses
+                            field.attr('data-try', tryCount + 1);
+                            // Et on recommence
+                            $(id).change();
+                        }
+                    }, 300);
                 });
 
                 $(id).change();
@@ -44,7 +53,6 @@ var leadsfactory = {
             width: 1
         });
         form.after(trackingImage);
-        //form.insertAfter ("<img src='{{ trackingAction }}/"+form_id+"/"+this.codeAction+"'/> height='1' width='1'");
         {{ form.script|raw }}
     },
     codeAction: "{{ utm_campaign }}",

@@ -1,8 +1,7 @@
 
-/*jQuery(document).ready(function($){
-
+jQuery(document).ready(function($){
     $('select.child-list').lfList();
-});*/
+});
 
 (function ($) {
     /**
@@ -12,7 +11,7 @@
      */
     $.fn.lfList = function(options){
 
-        var settings = $.extend({ajax_url: 'ajax/list_options'}, options);
+        var settings = $.extend({ajax_url: '/leads-factory/web/client/form/ajax/list_options'}, options);
 
         this.each(function(i){
             var parent = $(this).data('parent');
