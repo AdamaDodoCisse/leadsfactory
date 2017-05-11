@@ -32,9 +32,10 @@ class FormRepository extends EntityRepository
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('f');
         $qb->from('TellawLeadsFactoryBundle:Form', 'f');
+        $qb->where('1=1');
 
         if ($user->getScope() != null) {
-            $qb->where('f.scope = :scope');
+            $qb->andWhere('f.scope = :scope');
             $qb->setParameter('scope', $user->getScope());
         }
 
@@ -42,7 +43,7 @@ class FormRepository extends EntityRepository
 
             $keywords = explode(' ', $keyword);
             foreach ($keywords as $key => $keyword) {
-                $qb->where('f.name LIKE :keyword');
+                $qb->andWhere('f.name LIKE :keyword');
                 $qb->setParameter('keyword', '%' . $keyword . '%');
             }
         }
@@ -217,7 +218,7 @@ class FormRepository extends EntityRepository
                 ;
                 $query = $qb->getQuery();
                 $results = $query->getSingleScalarResult();
-                
+
                 $utm[$cpt]['label'] = $utm_campaign;
                 $utm[$cpt]['value'] = $results;
             }
@@ -418,8 +419,14 @@ class FormRepository extends EntityRepository
     public function getForms($scope = null)
     {
 
-        $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
-        $result = $this->getEntityManager()->createQuery($dql)->getResult();
+        if ($scope == null) {
+            $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f";
+            $result = $this->getEntityManager()->createQuery($dql)->getResult();
+        } else {
+            var_dump("Scope :".$scope->getId());
+            $dql = "SELECT f FROM TellawLeadsFactoryBundle:Form f WHERE f.scope=:scope";
+            $result = $this->getEntityManager()->createQuery($dql)->setParameter('scope', $scope->getId() )->getResult();
+        }
 
         return $result;
 

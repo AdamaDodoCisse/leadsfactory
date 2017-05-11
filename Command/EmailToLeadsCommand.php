@@ -152,7 +152,7 @@ class EmailToLeadsCommand extends ContainerAwareCommand
                     if ($user != null) {
                         $leads->setUser($user);
                     } else {
-                        $logger->info("Frontcontroller : Assign to a User that does not exists! ".$assign);
+                        $logger->info("Frontcontroller : Assign tu a User that does not exists! ".$assign);
                     }
 
                 }

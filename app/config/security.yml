@@ -1,0 +1,36 @@
+security:
+    encoders:
+        Tellaw\LeadsFactoryBundle\Entity\Users: plaintext
+
+    role_hierarchy:
+        ROLE_COMMERCIAL: ROLE_USER
+        ROLE_MARKETING: [ROLE_USER, ROLE_COMMERCIAL]
+        ROLE_DISPATCH:  [ROLE_USER, ROLE_MARKETING]
+        ROLE_DEV: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH]
+        ROLE_DEV_SCOPE: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV]
+        ROLE_ADMIN: [ROLE_USER, ROLE_MARKETING, ROLE_DISPATCH, ROLE_DEV, ROLE_DEV_SCOPE]
+
+    providers:
+        main:
+          entity: { class: Tellaw\LeadsFactoryBundle\Entity\Users, property: login }
+
+    firewalls:
+        secured_area:
+            pattern:    ^/admin
+            anonymous: ~
+            form_login:
+                check_path: /admin/login_check
+                login_path: /admin/login
+                default_target_path: /admin/index
+            logout:
+                path:   /admin/logout
+
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    access_control:
+        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_USER }
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        #- { path: ^/_internal, roles: IS_AUTHENTICATED_ANONYMOUSLY, ip: 127.0.0.1 }

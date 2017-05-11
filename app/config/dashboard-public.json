@@ -1,0 +1,45 @@
+{
+  "id" : "public",
+  "name" : "Dashboard équipe PUBLIC",
+  "description" : "",
+
+  "content" : [
+    {
+      "title" : "Données globales PUBLIC",
+      "widgets" : [
+        {
+          "id" : "coIntraStatusForTeamPublic",
+          "size" : "2"
+        },
+        {
+          "id" : "coIntraLeadsHistoryForPublic",
+          "size" : "10"
+        }
+      ]
+    },
+    {
+      "title" : "Données par Personne",
+      "widgets" : [
+        {"id" : "statusForUserMRodier", "size" : "2"},
+        {"id" : "statusForUserNComiant", "size" : "2"},
+        {"id" : "statusForUserCGorsse", "size" : "2"}
+      ]
+    },
+    {
+      "title" : "Leads par personnes",
+      "widgets" : [
+        {"id" : "leadsByStatusPerUsersForTeamPublic", "size" : "12"}
+      ]
+    },
+    {
+      "title" : "Taux de transformation par personnes",
+      "widgets" : [
+        {"id" : "txPerTeamPublic", "size" : "4"},
+        {"id" : "txPerUserMRodier", "size" : "4"},
+        {"id" : "txPerUserNComiant", "size" : "4"},
+        {"id" : "txPerUserCGorsse", "size" : "4"}
+      ]
+    }
+  ]
+
+}

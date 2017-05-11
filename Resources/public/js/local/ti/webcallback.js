@@ -40,7 +40,7 @@ var webcallback = {
             url: appBaseUrl+'/web/twilio/call',
             data: {phone: jQuery('#lffield\\[phone\\]').val()},
             success: function(response){alert(response)}
-        })
+        });
         this.step = 'check';
     },
     newCall: function(){
@@ -52,16 +52,14 @@ var webcallback = {
             data: {code: jQuery('#lffield\\[twilio_validation\\]')},
             success: function(response){
                 webcallback.validationCodeIsCorrect = response.valid;
-                webcallback.post();
+                webcallback.step = 'send';
             },
             dataType: 'json'
         });
     },
     post: function(){
-
+        jQuery('#callback-form').submit();
     }
-
-
 };
 
 jQuery(document).ready(function($){

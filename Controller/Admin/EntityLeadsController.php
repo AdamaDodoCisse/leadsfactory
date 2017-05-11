@@ -3,18 +3,11 @@
 namespace Tellaw\LeadsFactoryBundle\Controller\Admin;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Swift_Message;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Tellaw\LeadsFactoryBundle\Entity\DataDictionnaryRepository;
 use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\LeadsComment;
@@ -22,6 +15,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Users;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
 use Tellaw\LeadsFactoryBundle\Utils\EmailUtils;
 use Tellaw\LeadsFactoryBundle\Utils\PreferencesUtils;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @Route("/entity")
@@ -32,12 +26,14 @@ class EntityLeadsController extends CoreController
     public function __construct()
     {
 
-        PreferencesUtils::registerKey("CORE_LEADSFACTORY_EMAIL_SENDER",
+        PreferencesUtils::registerKey(
+            "CORE_LEADSFACTORY_EMAIL_SENDER",
             "Email used by the lead's factory as sender in emails",
             PreferencesUtils::$_PRIORITY_OPTIONNAL
         );
 
-        PreferencesUtils::registerKey("CORE_LEADSFACTORY_DISPATCH_EMAIL",
+        PreferencesUtils::registerKey(
+            "CORE_LEADSFACTORY_DISPATCH_EMAIL",
             "Email of the dispatch user",
             PreferencesUtils::$_PRIORITY_REQUIRED
         );
@@ -61,16 +57,24 @@ class EntityLeadsController extends CoreController
         $prefUtils = $this->get('preferences_utils');
 
         // First load from preferences the dispatch email for the current scope
-        if ($this->getUser()->getScope() != null)
-            $dispatchUserEmail = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_DISPATCH_EMAIL', $this->getUser()->getScope()->getId());
-        else
+        if ($this->getUser()->getScope() != null) {
+            $dispatchUserEmail = $prefUtils->getUserPreferenceByKey(
+                'CORE_LEADSFACTORY_DISPATCH_EMAIL',
+                $this->getUser()->getScope()->getId()
+            );
+        } else {
             $dispatchUserEmail = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_DISPATCH_EMAIL');
+        }
 
         // Then load the user
-        $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
+        $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail(
+            $dispatchUserEmail
+        );
 
         if ($user == null) {
-            throw new \Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : " . $dispatchUserEmail);
+            throw new \Exception (
+                "Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : ".$dispatchUserEmail
+            );
         }
 
         $filterForm = $this->getLeadsFilterForm();
@@ -86,7 +90,7 @@ class EntityLeadsController extends CoreController
                 'elements' => $list['collection'],
                 'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options'],
-                'export_form' => $this->getReportForm($filterParams)->createView()
+                'export_form' => $this->getReportForm($filterParams)->createView(),
             )
         );
     }
@@ -127,7 +131,7 @@ class EntityLeadsController extends CoreController
                 'pagination' => $list['pagination'],
                 'limit_options' => $list['limit_options'],
                 'filters_form' => $filterForm->createView(),
-                'export_form' => $this->getReportForm($filterParams)->createView()
+                'export_form' => $this->getReportForm($filterParams)->createView(),
             )
         );
     }
@@ -156,8 +160,9 @@ class EntityLeadsController extends CoreController
             $filterParams = $filterForm->getData();
             $filterParams["user"] = $this->getUser();
 
-            if ($name = explode(" ", $filterParams["affectation"]))
+            if ($name = explode(" ", $filterParams["affectation"])) {
                 $filterParams["user"] = $this->getUser();
+            }
             $affectationUser = $usersRepository->findOneBy(array("firstname" => $name, "lastname" => $name));
             $filterParams["affectation"] = $affectationUser;
             $list = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
@@ -203,16 +208,24 @@ class EntityLeadsController extends CoreController
         $prefUtils = $this->get('preferences_utils');
 
         // First load from preferences the dispatch email for the current scope
-        if ($this->getUser()->getScope() != null)
-            $dispatchUserEmail = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_DISPATCH_EMAIL', $this->getUser()->getScope()->getId());
-        else
+        if ($this->getUser()->getScope() != null) {
+            $dispatchUserEmail = $prefUtils->getUserPreferenceByKey(
+                'CORE_LEADSFACTORY_DISPATCH_EMAIL',
+                $this->getUser()->getScope()->getId()
+            );
+        } else {
             $dispatchUserEmail = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_DISPATCH_EMAIL');
+        }
 
         // Then load the user
-        $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
+        $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail(
+            $dispatchUserEmail
+        );
 
         if ($user == null) {
-            throw new \Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : " . $dispatchUserEmail);
+            throw new \Exception (
+                "Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : ".$dispatchUserEmail
+            );
         }
 
 
@@ -238,7 +251,7 @@ class EntityLeadsController extends CoreController
             array(
                 'type' => 'list',
                 'user' => $this->getUser(),
-                'affectation' => ucfirst($this->getuser()->getFirstName()) . " " . ucfirst($this->getuser()->getLastName()),
+                'affectation' => ucfirst($this->getuser()->getFirstName())." ".ucfirst($this->getuser()->getLastName()),
                 'dispatch' => $listDispatch['collection'],
                 'elements' => $list['collection'],
                 'pagination' => $list['pagination'],
@@ -274,7 +287,8 @@ class EntityLeadsController extends CoreController
         // Checking if user is related to a team
         $json = null;
         if ($this->getUser()->getScope() != null) {
-            $filePath = $this->get('kernel')->getRootDir() . "/config/" . $this->getUser()->getScope()->getCode() . "-team-description.json";
+            $filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode(
+                )."-team-description.json";
             if (file_exists($filePath)) {
                 $jsonArray = json_decode(file_get_contents($filePath), true);
             }
@@ -292,9 +306,16 @@ class EntityLeadsController extends CoreController
                         $teamName = $teamDetail["name"];
                         $teamId = $teamDetail["id"];
                         $members = $teamDetail["members"];
+                        $filterParams["affectation"] = $usersRepository->findBy(array("email" => $members));
+                        $listTeam = $this->getList(
+                            'TellawLeadsFactoryBundle:Leads',
+                            $page,
+                            $limit,
+                            $keyword,
+                            $filterParams
+                        );
+
                         if ($id == $teamId) {
-                            $filterParams["affectation"] = $usersRepository->findBy(array("email" => $members));
-                            $listTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
                             break;
                         }
                     }
@@ -365,7 +386,8 @@ class EntityLeadsController extends CoreController
         // Loading informations of departement
         $json = null;
         if ($this->getUser()->getScope() != null) {
-            $filePath = $this->get('kernel')->getRootDir() . "/config/" . $this->getUser()->getScope()->getCode() . "-dpt-description.json";
+            $filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode(
+                )."-dpt-description.json";
             if (file_exists($filePath)) {
                 $jsonArray = json_decode(file_get_contents($filePath), true);
             }
@@ -384,11 +406,16 @@ class EntityLeadsController extends CoreController
                         $dptName = $dpt["name"];
                         $dptId = $dpt["id"];
                         $isInADpt = true;
+                        $filterParams["affectation"] = $usersRepository->findBy(array("email" => $members));
+                        $dptTeam = $this->getList(
+                            'TellawLeadsFactoryBundle:Leads',
+                            $page,
+                            $limit,
+                            $keyword,
+                            $filterParams
+                        );
 
                         if ($dptId == $id) {
-                            $filterParams["affectation"] = $usersRepository->findBy(array("email" => $members));
-                            $dptTeam = $this->getList('TellawLeadsFactoryBundle:Leads', $page, $limit, $keyword, $filterParams);
-
                             break;
                         }
                     }
@@ -407,7 +434,6 @@ class EntityLeadsController extends CoreController
                 'dptTeam' => $dptTeam['collection'],
                 'paginationDpt' => $dptTeam['pagination'],
                 'limit_optionsDpt' => $dptTeam['limit_options'],
-
                 'user' => $this->getUser(),
             )
         );
@@ -435,16 +461,24 @@ class EntityLeadsController extends CoreController
         $prefUtils = $this->get('preferences_utils');
 
         // First load from preferences the dispatch email for the current scope
-        if ($this->getUser()->getScope() != null)
-            $dispatchUserEmail = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_DISPATCH_EMAIL', $this->getUser()->getScope()->getId());
-        else
+        if ($this->getUser()->getScope() != null) {
+            $dispatchUserEmail = $prefUtils->getUserPreferenceByKey(
+                'CORE_LEADSFACTORY_DISPATCH_EMAIL',
+                $this->getUser()->getScope()->getId()
+            );
+        } else {
             $dispatchUserEmail = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_DISPATCH_EMAIL');
+        }
 
         // Then load the user
-        $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail($dispatchUserEmail);
+        $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->findOneByEmail(
+            $dispatchUserEmail
+        );
 
         if ($user == null) {
-            throw new \Exception ("Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : " . $dispatchUserEmail);
+            throw new \Exception (
+                "Dispatch user not found related to KEY CORE_LEADSFACTORY_DISPATCH_EMAIL and EMAIL : ".$dispatchUserEmail
+            );
         }
 
         $filterForm = $this->getLeadsFilterForm("_leads_suivi");
@@ -478,7 +512,9 @@ class EntityLeadsController extends CoreController
 
             // Nous remplissons egallement le champs pour le formulaire.
             if (!$filterForm->isSubmitted()) {
-                $filterForm->get("affectation")->setData(ucfirst($this->getUser()->getFirstName()) . " " . ucfirst($this->getUser()->getlastName()));
+                $filterForm->get("affectation")->setData(
+                    ucfirst($this->getUser()->getFirstName())." ".ucfirst($this->getUser()->getlastName())
+                );
             }
 
         }
@@ -488,7 +524,8 @@ class EntityLeadsController extends CoreController
         $json = null;
         // Checking if user is related to a team
         if ($this->getUser()->getScope() != null) {
-            $filePath = $this->get('kernel')->getRootDir() . "/config/" . $this->getUser()->getScope()->getCode() . "-team-description.json";
+            $filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode(
+                )."-team-description.json";
             if (file_exists($filePath)) {
                 $jsonArray = json_decode(file_get_contents($filePath), true);
             }
@@ -517,7 +554,8 @@ class EntityLeadsController extends CoreController
         // Loading informations of departement
         $json = null;
         if ($this->getUser()->getScope() != null) {
-            $filePath = $this->get('kernel')->getRootDir() . "/config/" . $this->getUser()->getScope()->getCode() . "-dpt-description.json";
+            $filePath = $this->get('kernel')->getRootDir()."/config/".$this->getUser()->getScope()->getCode(
+                )."-dpt-description.json";
             if (file_exists($filePath)) {
                 $jsonArray = json_decode(file_get_contents($filePath), true);
             }
@@ -584,10 +622,11 @@ class EntityLeadsController extends CoreController
 
         $printMode = $request->query->get("printMode");
 
-        if (is_null($printMode))
+        if (is_null($printMode)) {
             $printMode = false;
-        else
+        } else {
             $printMode = true;
+        }
 
 
         $leadDetail = json_decode($lead->getData(), true);
@@ -598,7 +637,7 @@ class EntityLeadsController extends CoreController
         unset($leadDetail["email"]);
 
         if ($lead->getUser() != null) {
-            $assignUser = ucfirst($lead->getUser()->getFirstName()) . " " . ucfirst($lead->getUser()->getLastName());
+            $assignUser = ucfirst($lead->getUser()->getFirstName())." ".ucfirst($lead->getUser()->getLastName());
         } else {
             $assignUser = "";
         }
@@ -607,9 +646,10 @@ class EntityLeadsController extends CoreController
         $file = "";
         if (array_key_exists("user_file", $leadDetail)) {
             $ext = substr(strrchr($leadDetail["user_file"], '.'), 1);
-            $filePath = $this->get('kernel')->getRootDir() . "/../datas/" . $lead->getForm()->getid() . "/" . $id . "_user_file." . $ext;
+            $filePath = $this->get('kernel')->getRootDir()."/../datas/".$lead->getForm()->getid(
+                )."/".$id."_user_file.".$ext;
             if (file_exists($filePath)) {
-                $file = $lead->getForm()->getId() . "/" . $id . "_user_file." . $ext;
+                $file = $lead->getForm()->getId()."/".$id."_user_file.".$ext;
             }
         }
 
@@ -619,12 +659,17 @@ class EntityLeadsController extends CoreController
             $page = "suivi-edit-print";
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:' . $page . '.html.twig', array('lead' => $lead,
-            'origin' => $origin,
-            'leadDetail' => $leadDetail,
-            'assignUser' => $assignUser,
-            "file" => $file,
-            'title' => "Edition d'un leads"));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:'.$page.'.html.twig',
+            array(
+                'lead' => $lead,
+                'origin' => $origin,
+                'leadDetail' => $leadDetail,
+                'assignUser' => $assignUser,
+                "file" => $file,
+                'title' => "Edition d'un leads",
+            )
+        );
     }
 
     /**
@@ -645,7 +690,7 @@ class EntityLeadsController extends CoreController
         unset($leadDetail["email"]);
 
         if ($lead->getUser() != null) {
-            $assignUser = ucfirst($lead->getUser()->getFirstName()) . " " . ucfirst($lead->getUser()->getLastName());
+            $assignUser = ucfirst($lead->getUser()->getFirstName())." ".ucfirst($lead->getUser()->getLastName());
         } else {
             $assignUser = "";
         }
@@ -653,19 +698,25 @@ class EntityLeadsController extends CoreController
         $file = "";
         if (array_key_exists("user_file", $leadDetail)) {
             $ext = substr(strrchr($leadDetail["user_file"], '.'), 1);
-            $filePath = $this->get('kernel')->getRootDir() . "/../datas/" . $lead->getForm()->getid() . "/" . $id . "_user_file." . $ext;
+            $filePath = $this->get('kernel')->getRootDir()."/../datas/".$lead->getForm()->getid(
+                )."/".$id."_user_file.".$ext;
             if (file_exists($filePath)) {
-                $file = $lead->getForm()->getId() . "/" . $id . "_user_file." . $ext;
+                $file = $lead->getForm()->getId()."/".$id."_user_file.".$ext;
             }
         }
 
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit.html.twig', array("lead" => $lead,
-            "origin" => $origin,
-            "leadDetail" => $leadDetail,
-            "assignUser" => $assignUser,
-            "file" => $file,
-            "title" => "Edition d'un leads"));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:edit.html.twig',
+            array(
+                "lead" => $lead,
+                "origin" => $origin,
+                "leadDetail" => $leadDetail,
+                "assignUser" => $assignUser,
+                "file" => $file,
+                "title" => "Edition d'un leads",
+            )
+        );
     }
 
     /**
@@ -711,20 +762,32 @@ class EntityLeadsController extends CoreController
      */
     public function statusListLoadAjaxAction(Request $request)
     {
-
-        //$listCode = $request->request->get("listCode");
-        $listCode = "leads-status";
         $scopeId = $request->request->get("scopeId");
+        $elements = $this->getLeadStatusByScopeId($scopeId);
+
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:edit-status-list-ajax.html.twig',
+            array('elements' => $elements)
+        );
+
+    }
+
+    /**
+     * @param $scopeId
+     * @return array|string
+     */
+    private function getLeadStatusByScopeId($scopeId)
+    {
+        $listCode = "leads-status";
 
         /** @var DataDictionnaryRepository $dataDictionnary */
         $dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
-        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope($listCode, $scopeId);
+        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope(
+            $listCode,
+            $scopeId
+        );
 
-        $elements = $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
-
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit-status-list-ajax.html.twig',
-            array('elements' => $elements));
-
+        return $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
     }
 
     /**
@@ -747,19 +810,25 @@ class EntityLeadsController extends CoreController
         $em->flush();
 
         // Adding an entry to history
-        $this->get("history.utils")->push("Changement de status pour : " . $listValue, $this->getUser(), $lead);
+        $this->get("history.utils")->push("Changement de status pour : ".$listValue, $this->getUser(), $lead);
 
         $prefUtils = $this->get('preferences_utils');
-        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey(
+            'CORE_LEADSFACTORY_URL',
+            $lead->getForm()->getScope()->getId()
+        );
 
         /**
          * Send notification to a user
          * Mail is sent to the user owner of the lead
          */
-        $result = $this->sendNotificationEmail("Changement de status pour une LEAD",
+        $result = $this->sendNotificationEmail(
+            "Changement de status pour une LEAD",
             "Un utilisateur vient de modifier le status associé à une lead.",
             $this->getUser(),
-            "Le " . date("d/m/Y à h:i") . " " . ucfirst($this->getUser()->getFirstName()) . " " . ucfirst($this->getUser()->getLastName()) . " vient de modifier le status de la lead : " . $leadId . " pour le passer à '" . $listValue . "'",
+            "Le ".date("d/m/Y à h:i")." ".ucfirst($this->getUser()->getFirstName())." ".ucfirst(
+                $this->getUser()->getLastName()
+            )." vient de modifier le status de la lead : ".$leadId." pour le passer à '".$listValue."'",
             $leadsUrl,
             $leadsUrl,
             $lead->getForm()->getScope()->getId()
@@ -769,8 +838,17 @@ class EntityLeadsController extends CoreController
         $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
         $this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
-        return new Response('ok');
+        $listCode = "leads-status";
+        $scopeId = $lead->getForm()->getScope()->getId();
+        $elements = $this->getDictionnaryByCodeAndScope($listCode, $scopeId);
 
+        foreach ($elements as $element) {
+            if ($lead->getWorkflowStatus() == $element->getValue()) {
+                return new Response($element->getValue());
+            }
+        }
+
+        return new Response("ok");
     }
 
     /**
@@ -787,9 +865,17 @@ class EntityLeadsController extends CoreController
         $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
 
         $leadDetail = json_decode($lead->getData(), true);
-        $leadDetail[$leadField] = $leadFieldValue;
 
-        $lead->setData(json_encode($leadDetail));
+        if (array_key_exists($leadField, $leadDetail)) {
+
+            $leadDetail[$leadField] = $leadFieldValue;
+            $lead->setData(json_encode($leadDetail));
+
+            $method = 'set'.ucfirst($leadField);
+            if (method_exists($lead, $method)) {
+                $lead->$method($leadDetail[$leadField]);
+            }
+        }
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($lead);
@@ -815,8 +901,10 @@ class EntityLeadsController extends CoreController
         /** @var DataDictionnaryRepository $dataDictionnary */
         $historyElements = $this->get("leadsfactory.leads_history_repository")->getHistoryForLead($leadsId);
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit-history-list-ajax.html.twig',
-            array('elements' => $historyElements));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:edit-history-list-ajax.html.twig',
+            array('elements' => $historyElements)
+        );
 
     }
 
@@ -832,9 +920,30 @@ class EntityLeadsController extends CoreController
         /** @var DataDictionnaryRepository $dataDictionnary */
         $elements = $this->get("leadsfactory.export_repository")->getForLeadID($leadsId);
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit-export-list-ajax.html.twig',
-            array('elements' => $elements));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:edit-export-list-ajax.html.twig',
+            array('elements' => $elements)
+        );
 
+    }
+
+    /**
+     * Recupère un dictionnaire par son code et son scope
+     * @param $listCode
+     * @param $scopeId
+     * @return array|string
+     */
+    private function getDictionnaryByCodeAndScope($listCode, $scopeId) {
+
+        /** @var DataDictionnaryRepository $dataDictionnary */
+        $dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
+        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope(
+            $listCode,
+            $scopeId
+        );
+
+        $elements = $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
+        return $elements;
     }
 
     /**
@@ -843,18 +952,14 @@ class EntityLeadsController extends CoreController
      */
     public function statusTypeLoadAjaxAction(Request $request)
     {
-
         $listCode = "leads-type";
         $scopeId = $request->request->get("scopeId");
+        $elements = $this->getDictionnaryByCodeAndScope($listCode, $scopeId);
 
-        /** @var DataDictionnaryRepository $dataDictionnary */
-        $dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
-        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope($listCode, $scopeId);
-
-        $elements = $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
-
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit-type-list-ajax.html.twig',
-            array('elements' => $elements));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:edit-type-list-ajax.html.twig',
+            array('elements' => $elements)
+        );
 
     }
 
@@ -878,10 +983,13 @@ class EntityLeadsController extends CoreController
         $em->flush();
 
         // Adding an entry to history
-        $this->get("history.utils")->push("Changement de type pour : " . $listValue, $this->getUser(), $lead);
+        $this->get("history.utils")->push("Changement de type pour : ".$listValue, $this->getUser(), $lead);
 
         $prefUtils = $this->get('preferences_utils');
-        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey(
+            'CORE_LEADSFACTORY_URL',
+            $lead->getForm()->getScope()->getId()
+        );
 
         /**
          * Send notification to a user
@@ -892,10 +1000,15 @@ class EntityLeadsController extends CoreController
 
         $action = sprintf(EmailUtils::$_ACTION_TYPE_LEADS, $leadId);
         $detailedAction = EmailUtils::$_DETAILED_ACTION_TYPE_LEADS;
-        $message = sprintf(EmailUtils::$_MESSAGE_TYPE_LEADS, array(date("d/m/Y à h:i"),
-            ucfirst($this->getUser()->getFirstName()),
-            ucfirst($this->getUser()->getLastName()),
-            $leadId));
+        $message = sprintf(
+            EmailUtils::$_MESSAGE_TYPE_LEADS,
+            array(
+                date("d/m/Y à h:i"),
+                ucfirst($this->getUser()->getFirstName()),
+                ucfirst($this->getUser()->getLastName()),
+                $leadId,
+            )
+        );
 
         $result = $emailUtils->sendUserNotification(
             $this->getUser(),
@@ -927,12 +1040,17 @@ class EntityLeadsController extends CoreController
 
         /** @var DataDictionnaryRepository $dataDictionnary */
         $dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
-        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope($listCode, $scopeId);
+        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope(
+            $listCode,
+            $scopeId
+        );
 
         $elements = $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:edit-theme-list-ajax.html.twig',
-            array('elements' => $elements));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:edit-theme-list-ajax.html.twig',
+            array('elements' => $elements)
+        );
 
     }
 
@@ -956,10 +1074,13 @@ class EntityLeadsController extends CoreController
         $em->flush();
 
         // Adding an entry to history
-        $this->get("history.utils")->push("Changement de thème pour : " . $listValue, $this->getUser(), $lead);
+        $this->get("history.utils")->push("Changement de thème pour : ".$listValue, $this->getUser(), $lead);
 
         $prefUtils = $this->get('preferences_utils');
-        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey(
+            'CORE_LEADSFACTORY_URL',
+            $lead->getForm()->getScope()->getId()
+        );
 
         /**
          * Send notification to a user
@@ -971,10 +1092,15 @@ class EntityLeadsController extends CoreController
 
         $action = sprintf(EmailUtils::$_ACTION_THEME_LEADS, $leadId);
         $detailedAction = EmailUtils::$_DETAILED_ACTION_THEME_LEADS;
-        $message = sprintf(EmailUtils::$_MESSAGE_THEME_LEADS, array(date("d/m/Y à h:i"),
-            ucfirst($this->getUser()->getFirstName()),
-            ucfirst($this->getUser()->getLastName()),
-            $leadId));
+        $message = sprintf(
+            EmailUtils::$_MESSAGE_THEME_LEADS,
+            array(
+                date("d/m/Y à h:i"),
+                ucfirst($this->getUser()->getFirstName()),
+                ucfirst($this->getUser()->getLastName()),
+                $leadId,
+            )
+        );
 
         $result = $emailUtils->sendUserNotification(
             $this->getUser(),
@@ -989,10 +1115,11 @@ class EntityLeadsController extends CoreController
         $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
         $this->get('search.utils')->indexLeadObject($leads_array, $lead->getForm()->getScope()->getCode());
 
-        if ($result)
+        if ($result) {
             return new Response('ok');
-        else
+        } else {
             throw new \Exception("Problem sending mail");
+        }
 
     }
 
@@ -1006,13 +1133,22 @@ class EntityLeadsController extends CoreController
         $term = $request->query->get("term");
         $users = array();
 
-        if ($scope = $this->getUser()->getScope())
-            $users = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->getList(1, 10, $term, array('scope' => $scope->getId()));
+        if ($scope = $this->getUser()->getScope()) {
+            $users = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->getList(
+                1,
+                10,
+                $term,
+                array('scope' => $scope->getId())
+            );
+        }
 
         $responseUsers = array();
 
         foreach ($users as $user) {
-            $responseUsers[] = array("label" => ucfirst($user->getFirstName()) . " " . ucfirst($user->getLastName()), "value" => $user->getId());
+            $responseUsers[] = array(
+                "label" => ucfirst($user->getFirstName())." ".ucfirst($user->getLastName()),
+                "value" => $user->getId(),
+            );
         }
 
         return new Response(json_encode($responseUsers));
@@ -1025,23 +1161,39 @@ class EntityLeadsController extends CoreController
      */
     public function affectLeadToUserAction(Request $request)
     {
-
-        $id = $request->request->get("id");
-        $leadId = $request->request->get("leadId");
+        $id = $request->get("id");
+        $leadId = $request->get("leadId");
         $user = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Users')->find($id);
 
         $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
+        $scope = $lead->getForm()->getScope();
+        $oldUser = $lead->getUser();
+        $oldStatus = $lead->getWorkflowStatus();
         $lead->setUser($user);
 
+        // Mise à jour du statut auto pour comundi
+        // SI l'utilisateur est Dispatch et que l'ancien statut est A attribuer
+        if ($scope->getCode() == "comundi"
+            && $oldUser && $oldUser->getLogin() == "cdispatch"
+            && $oldStatus == "a_attribuer"
+        ) {
+            $lead->setWorkflowStatus("a_traiter");
+        }
+
+        // Enregistrement
         $em = $this->getDoctrine()->getManager();
         $em->persist($lead);
         $em->flush();
 
         // Adding an entry to history
-        $this->get("history.utils")->push("Attribution à : " . ucfirst($user->getFirstName()) . " " . ucfirst($user->getLastName()), $this->getUser(), $lead);
+        $this->get("history.utils")->push(
+            "Attribution à : ".ucfirst($user->getFirstName())." ".ucfirst($user->getLastName()),
+            $this->getUser(),
+            $lead
+        );
 
-        $prefUtils = $this->get('preferences_utils');
-        $leadsUrl = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_URL', $lead->getForm()->getScope()->getId());
+        $leadsAppUrl = $this->generateUrl('_leads_list', array(), true);
+        $leadsUrl = $this->generateUrl('_leads_suivi', array('id'=>$lead->getId()), true);
 
         /**
          * Send notification to a user
@@ -1053,19 +1205,27 @@ class EntityLeadsController extends CoreController
 
         $action = sprintf(EmailUtils::$_ACTION_AFFECT_LEADS, $leadId);
         $detailedAction = EmailUtils::$_DETAILED_ACTION_AFFECT_LEADS;
-        $message = sprintf(EmailUtils::$_MESSAGE_AFFECT_LEADS, array(date("d/m/Y à h:i"),
+        $message = sprintf(
+            EmailUtils::$_MESSAGE_AFFECT_LEADS,
+            date("d/m/Y à h:i"),
             ucfirst($this->getUser()->getFirstName()),
             ucfirst($this->getUser()->getLastName()),
-            $leadId));
-
-        $emailUtils->sendUserNotification(
-            $user,
-            $action,
-            $detailedAction,
-            $message,
-            $leadsUrl,
-            $leadsUrl
+            $leadId
         );
+
+        try {
+            $emailUtils->sendUserNotification(
+                $user,
+                $action,
+                $detailedAction,
+                $message,
+                $leadsUrl,
+                $leadsAppUrl,
+                $scope
+            );
+        } catch (\Exception $exception) {
+            echo 'Erreur d\'assignation de leads ('.$leadId.') : '.$exception->getMessage();
+        }
 
         // Index leads on search engine
         $leads_array = $this->get('leadsfactory.leads_repository')->getLeadsArrayById($leadId);
@@ -1091,8 +1251,13 @@ class EntityLeadsController extends CoreController
             return null;
         }
 
-        return $this->render('TellawLeadsFactoryBundle:entity/Leads:_fragment_comments_table.html.twig', array('leadId' => $id,
-            'comments' => $elements));
+        return $this->render(
+            'TellawLeadsFactoryBundle:entity/Leads:_fragment_comments_table.html.twig',
+            array(
+                'leadId' => $id,
+                'comments' => $elements,
+            )
+        );
 
     }
 
@@ -1106,13 +1271,20 @@ class EntityLeadsController extends CoreController
         $form = $this->createFormBuilder(array(), array('attr' => ['id' => 'filterform']))
             ->setMethod('GET')
             ->setAction($this->generateUrl($controller))
-            ->add('form', 'choice', array(
+            ->add(
+                'form',
+                'choice',
+                array(
                     'choices' => $this->getUserFormsOptions(),
                     'label' => 'Formulaire',
-                    'required' => false
+                    'required' => false,
                 )
             )
-            ->add('firstname', 'text', array('attr' => array('class' => 'long'), 'label' => 'Prénom', 'required' => false))
+            ->add(
+                'firstname',
+                'text',
+                array('attr' => array('class' => 'long'), 'label' => 'Prénom', 'required' => false)
+            )
             ->add('lastname', 'text', array('label' => 'Nom', 'required' => false))
             ->add('email', 'text', array('label' => 'E-mail', 'required' => false))
             ->add('utmcampaign', 'text', array('label' => 'Code Action', 'required' => false))
@@ -1121,9 +1293,21 @@ class EntityLeadsController extends CoreController
             ->add('keyword', 'text', array('label' => 'Mot-clé', 'required' => false))
             ->add('affectationId', 'hidden', array('label' => '', 'required' => false))
             ->add('affectation', 'text', array('label' => 'Affectation', 'required' => false))
-            ->add('workflowStatus', 'choice', array('choices' => $this->getLeadsWorkflowOptions("status"), 'label' => 'Statut', 'required' => false))
-            ->add('workflowType', 'choice', array('choices' => $this->getLeadsWorkflowOptions("type"), 'label' => 'Type', 'required' => false))
-            ->add('workflowTheme', 'choice', array('choices' => $this->getLeadsWorkflowOptions("theme"), 'label' => 'Thème', 'required' => false))
+            ->add(
+                'workflowStatus',
+                'choice',
+                array('choices' => $this->getLeadsWorkflowOptions("status"), 'label' => 'Statut', 'required' => false)
+            )
+            ->add(
+                'workflowType',
+                'choice',
+                array('choices' => $this->getLeadsWorkflowOptions("type"), 'label' => 'Type', 'required' => false)
+            )
+            ->add(
+                'workflowTheme',
+                'choice',
+                array('choices' => $this->getLeadsWorkflowOptions("theme"), 'label' => 'Thème', 'required' => false)
+            )
             ->add('valider', 'submit', array('label' => 'Valider'))
             ->getForm();
 
@@ -1142,18 +1326,22 @@ class EntityLeadsController extends CoreController
             return null;
         }
 
-        $listCode = "leads-" . $target;
+        $listCode = "leads-".$target;
         if ($this->getUser()->getScope() == null) {
             return null;
         }
         $scopeId = $this->getUser()->getScope()->getId();
         $dataDictionnary = $this->get("leadsfactory.datadictionnary_repository");
-        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope($listCode, $scopeId);
+        $dataDictionnaryId = $this->get("leadsfactory.datadictionnary_repository")->findByCodeAndScope(
+            $listCode,
+            $scopeId
+        );
         $elements = $dataDictionnary->getElementsByOrder($dataDictionnaryId, "rank", "ASC");
-        if (count($elements) > 2)
+        if (count($elements) > 2) {
             $options = array('' => 'Sélectionnez');
-        else
+        } else {
             $options = array('' => 'Pas de données');
+        }
         foreach ($elements as $element) {
             $options[$element->getValue()] = $element->getName();
         }
@@ -1172,7 +1360,9 @@ class EntityLeadsController extends CoreController
         $options = array('' => 'Sélectionnez un formulaire');
         $user_scope = $this->get('security.context')->getToken()->getUser()->getScope();
         foreach ($forms as $form) {
-            if ($user_scope && $form->getscope() != $user_scope) continue;
+            if ($user_scope && $form->getscope() != $user_scope) {
+                continue;
+            }
             $options[$form->getId()] = $form->getName();
         }
 
@@ -1188,17 +1378,18 @@ class EntityLeadsController extends CoreController
      */
     protected function getReportForm($filterParams)
     {
-        $export_formats = array('raw_csv' => 'CSV brut');
-
-        //Le format "CSV amélioré" est dispo uniquement si un formulaire est sélectionné
-        if (!empty($filterParams['form'])) {
-            $export_formats['nice_csv'] = 'CSV amélioré';
-        }
+        $export_formats = array(
+            'raw_csv' => 'CSV brut',
+            'nice_csv' => 'CSV amélioré'
+        );
 
         $form = $this->createFormBuilder(array())
             ->setMethod('GET')
             ->setAction($this->generateUrl('_leads_report'))
-            ->add('format', 'choice', array(
+            ->add(
+                'format',
+                'choice',
+                array(
                     'choices' => $export_formats,
                     'label' => 'Format',
                 )
@@ -1222,7 +1413,7 @@ class EntityLeadsController extends CoreController
         $filterParams = json_decode($params['filterparams'], true);
         $format = $params['format'];
 
-        $reportMethod = 'generate' . ucfirst($format);
+        $reportMethod = 'generate'.ucfirst($format);
 
         return $this->$reportMethod($filterParams);
     }
@@ -1236,34 +1427,36 @@ class EntityLeadsController extends CoreController
      */
     protected function generateRaw_csv($filterParams)
     {
-        $em = $this->getDoctrine()->getEntityManager();
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
-        $handle = fopen('php://memory', 'w');
+        $response = new StreamedResponse();
+        $response->setCallback(function() use($leads){
 
-        fputcsv($handle, array('id', 'Form', 'Date', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
+            $handle = fopen('php://output', 'w');
 
-        while (false !== ($row = $leads->next())) {
-            fputcsv($handle, array(
-                $row[0]->getId(),
-                $row[0]->getForm()->getName(),
-                $row[0]->getCreatedAt()->format('Y-m-d H:i:s'),
-                $row[0]->getFirstname(),
-                $row[0]->getLastname(),
-                $row[0]->getEmail(),
-                $row[0]->getTelephone(),
-                $row[0]->getData()
-            ),
-                ';');
+            fputcsv($handle, array('id', 'Form', 'Date', 'Firstname', 'LastName', 'Email', 'Phone', 'Content'), ';');
 
-            $em->detach($row[0]);
-        }
+            while (false !== ($row = $leads->next())) {
+                fputcsv(
+                    $handle,
+                    array(
+                        $row[0]->getId(),
+                        $row[0]->getForm()->getName(),
+                        $row[0]->getCreatedAt()->format('Y-m-d H:i:s'),
+                        $row[0]->getFirstname(),
+                        $row[0]->getLastname(),
+                        $row[0]->getEmail(),
+                        $row[0]->getTelephone(),
+                        $row[0]->getData(),
+                    ),
+                    ';'
+                );
+            }
 
-        rewind($handle);
-        $content = stream_get_contents($handle);
-        fclose($handle);
+            fclose($handle);
+        });
 
-        $response = new Response($content);
+        $response->setStatusCode(200);
         $response->headers->set('content-type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
 
@@ -1279,56 +1472,79 @@ class EntityLeadsController extends CoreController
      */
     protected function generateNice_csv($filterParams)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $formUtils = $this->get('form_utils');
+        $logger = $this->get('logger');
+        $fields = array();
+        $columns = array('id', 'Form', 'Date');
 
-        $fields = $formUtils->getFieldsAsArrayByFormId($filterParams['form']);
-        $columns = array_merge(array('id', 'Form', 'Date'), array_keys($fields));
+        $filterParams["scope"] = $this->getUser()->getScope()->getId();
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
+
+        while (false !== ($record = $leads->next())) {
+            $data = json_decode($record[0]->getData(), true);
+            $keys = array_keys ($data);
+            $fields = array_merge( $fields, $keys);
+        }
+
+        $columns = array_merge( $columns, $fields);
 
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
-        $handle = fopen('php://memory', 'w');
-        fputcsv($handle, $columns, ';');
-        while (false !== ($record = $leads->next())) {
-            $row = array(
-                $record[0]->getId(),
-                $record[0]->getForm()->getName(),
-                $record[0]->getCreatedAt()->format('Y-m-d H:i:s')
-            );
+        $response = new StreamedResponse();
+        $response->setCallback(function() use($leads, $columns, $fields, $logger){
 
-            $data = json_decode($record[0]->getData(), true);
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, $columns, ';');
 
-            foreach (array_keys($fields) as $field) {
-                $row[] = $formUtils->getFieldFrontendValue($fields[$field], $data[$field]);
+            while (false !== ($record = $leads->next())) {
+                $row = array(
+                    $record[0]->getId(),
+                    $record[0]->getForm()->getName(),
+                    $record[0]->getCreatedAt()->format('Y-m-d H:i:s'),
+                );
+
+                $data = json_decode($record[0]->getData(), true);
+
+                if ( $data != null ) {
+                    foreach ( $fields as $field) {
+                        if ( array_key_exists( $field, $data )) {
+                            $row[] = $data[$field];
+                        } else {
+                            $row[] = "";
+                        }
+                    }
+                    fputcsv($handle, $row, ';');
+                }
             }
 
-            fputcsv($handle, $row, ';');
-            $em->detach($record[0]);
-        }
+            fclose($handle);
+        });
 
-        rewind($handle);
-        $content = stream_get_contents($handle);
-        fclose($handle);
-
-        $response = new Response($content);
+        $response->setStatusCode(200);
         $response->headers->set('content-type', 'text/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
 
         return $response;
     }
 
-    private function sendNotificationEmail($action, $detailAction, Users $user, $message, $urlLead, $urlApplication, $scopeId)
-    {
+    private function sendNotificationEmail(
+        $action,
+        $detailAction,
+        Users $user,
+        $message,
+        $urlLead,
+        $urlApplication,
+        $scopeId
+    ) {
 
         $toEmail = $user->getEmail();
-        $toName = ucfirst($user->getFirstname()) . ' ' . ucfirst($user->getLastname());
+        $toName = ucfirst($user->getFirstname()).' '.ucfirst($user->getLastname());
 
         $to = array($toEmail => $toName);
 
         $prefUtils = $this->get('preferences_utils');
         $from = $email = $prefUtils->getUserPreferenceByKey('CORE_LEADSFACTORY_EMAIL_SENDER', $scopeId);
 
-        $subject = "Lead's Factory : " . $action;
+        $subject = "Lead's Factory : ".$action;
 
         $template = $this->renderView(
             'TellawLeadsFactoryBundle::emails/lead_notification.html.twig',

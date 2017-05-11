@@ -357,6 +357,8 @@ class ApiController extends CoreController
      * Update une DI
      * @Route("/lead-sandbox/update")
      * @Method("POST")
+     * @param Request $request
+     * @return Response
      */
     public function updateInSandbox(Request $request)
     {

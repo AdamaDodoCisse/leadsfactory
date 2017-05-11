@@ -1,0 +1,69 @@
+{
+  "Saisie" : {
+
+    "role" : "ROLE_USER",
+    "icon" : "fa-paperclip",
+
+    "submenu" : {
+
+      "Saisir une intéraction" : {
+        "role" : "ROLE_USER",
+        "alias" : "_project_formForceUser_display",
+        "params" : {"code" : "co-demandes-entrantes-tel"}
+      },
+      "Demandes entrantes Tél" : {
+        "role" : "ROLE_USER",
+        "alias" : "_project_form_display",
+        "params" : {"code" : "co-demandes-entrantes-tel"}
+      }
+
+
+    }
+  },
+
+  "Reporting" : {
+
+    "role" : "ROLE_USER",
+    "icon" : "fa-paperclip",
+
+    "submenu" : {
+      "Dashboard Global" : {
+        "role" : "ROLE_DISPATCH",
+        "alias" : "_project_dashboard_manager",
+        "params" : {"pageId" : "1"}
+      },
+      "Mon dashboard" : {
+        "role" : "ROLE_USER",
+        "alias" : "_project_my_dashboard",
+        "params" : {}
+      },
+      "Dashboard SST" : {
+        "role" : "ROLE_DISPATCH",
+        "alias" : "_project_dashboard_manager",
+        "params" : {"pageId" : "sst"}
+      },
+      "Dashboard HS" : {
+        "role" : "ROLE_DISPATCH",
+        "alias" : "_project_dashboard_manager",
+        "params" : {"pageId" : "hs"}
+      },
+      "Dashboard DEC" : {
+        "role" : "ROLE_DISPATCH",
+        "alias" : "_project_dashboard_manager",
+        "params" : {"pageId" : "dec"}
+      },
+      "Dashboard RH" : {
+        "role" : "ROLE_DISPATCH",
+        "alias" : "_project_dashboard_manager",
+        "params" : {"pageId" : "rh"}
+      },
+      "Dashboard LN" : {
+        "role" : "ROLE_DISPATCH",
+        "alias" : "_project_dashboard_manager",
+        "params" : {"pageId" : "ln"}
+      }
+
+    }
+  }
+
+}

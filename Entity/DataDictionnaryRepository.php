@@ -110,9 +110,11 @@ class DataDictionnaryRepository extends EntityRepository
      *
      * Method used to extract list elements by a defined order
      *
-     * @param $listCode integer id of the list
-     * @param $sortKey must be name or value or rank
-     * @param $sortOrder must be ASC of DESC
+     * @param $listId
+     * @param string $sortKey must be name or value or rank
+     * @param string $sortOrder must be ASC of DESC
+     * @param bool $ignoreStatus
+     * @return array|string
      */
     public function getElementsByOrder($listId, $sortKey, $sortOrder, $ignoreStatus = false)
     {

@@ -57,7 +57,7 @@ class ExportCommand extends ContainerAwareCommand
 
         } else {
             $output->writeln('Un export est déjà en traitement. Si c\'est anormal, merci de détruire le fichier LOCK :' . ExportCommand::$_PID_FILE);
-            $logger->error('Un export est déjà en traitement. Si c\'est anormal, merci dyouplase détruire le fichier LOCK :' . ExportCommand::$_PID_FILE);
+            $logger->error('Un export est déjà en traitement. Si c\'est anormal, merci de détruire le fichier LOCK :' . ExportCommand::$_PID_FILE);
         }
     }
 

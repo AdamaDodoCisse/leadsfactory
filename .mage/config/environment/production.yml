@@ -1,0 +1,34 @@
+#production
+deployment:
+  user: jenkins
+  from: ./
+  to: /data/apps/leads-factory
+  excludes:
+    - app/cache
+    - app/config/parameters.yml
+    - app/Export
+    - app/logs
+    - app/sessions
+    - licence
+    - datas
+  strategy: targz
+releases:
+  enabled: true
+  max: 5
+  symlink: current
+  directory: releases
+hosts:
+  - 10.25.109.61
+tasks:
+  pre-deploy:
+    - composer-install: {dev: false}
+  on-deploy:
+    - chmod
+    - filesystem/link-shared-files: {linked_files : [app/config/parameters.yml], linked_folders: [app/Export, app/logs, app/sessions, datas, licence]}
+    - symfony2/cache-clear: {env: dev}
+    - symfony2/cache-clear: {env: prod}
+    - symfony-doctrine-update
+    - chmod
+  post-release:
+  post-deploy:
+    

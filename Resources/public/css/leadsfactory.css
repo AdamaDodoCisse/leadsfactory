@@ -1,0 +1,29 @@
+
+code {
+    background-color: #f5f5f5;
+}
+
+#jsoneditor-referenceList_json, .ace_content, #jsoneditor, #ruleseditor-form_alertRules,
+#jsoneditor-form_exportConfig, #jsoneditor-leads_data, #jsoneditor-mkgSegmentation_config,
+#jsoneditor-field_testvalue {
+    height: 250px;
+}
+.jsoneditor .menu {
+    display:none;
+}
+
+#mkgSegment_date_end .form-control,
+#mkgSegment_date_start .form-control {
+    width: 30%;
+    display: inline-block;
+    margin-right: 3%;
+}
+
+.heading-sec h1 {
+    margin: 10px 0;
+}
+
+/*Override aimask*/
+.aimask {
+    background: #f4f4f4 !important;
+}

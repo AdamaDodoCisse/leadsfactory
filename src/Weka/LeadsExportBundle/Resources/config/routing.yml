@@ -1,0 +1,3 @@
+weka_leads_export_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: WekaLeadsExportBundle:Default:index }

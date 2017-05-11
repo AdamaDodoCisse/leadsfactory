@@ -1,0 +1,60 @@
+<table class="table table-striped table-bordered">
+
+    <thead>
+        <td>Email</td>
+        <td>A Attribuer</td>
+        <td>En Attente</td>
+        <td>Gagné</td>
+        <td>Perdu</td>
+        <td>Inexploitable</td>
+        <td>Taux de transformation</td>
+    </thead>
+
+    {% for key, user in data %}
+
+        <tr>
+
+            <td>{{ key }}</td>
+
+            {% if user.a_attribuer is defined%}
+                <td>{{ user.a_attribuer }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+            {% if user.en_attente is defined %}
+                <td>{{ user.en_attente }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+            {% if user.gagne is defined %}
+                <td>{{ user.gagne }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+            {% if user.perdu is defined %}
+                <td>{{ user.perdu }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+            {% if user.inexploitable is defined %}
+                <td>{{ user.inexploitable }}</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+            {% if user.tx is defined %}
+                <td>{{ user.tx }} %</td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+
+        </tr>
+
+    {% endfor %}
+
+</table>
+<div>Ce tableau presente les leads par commercial et statuts.</div>

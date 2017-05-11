@@ -1,0 +1,74 @@
+{
+
+  "ehervet@comundi.fr" : [
+    {
+      "name" : "Equipe SST",
+      "id"   : "sst",
+      "members" :[
+        "ehervet@comundi.fr",
+        "jganon@comundi.fr"
+      ]
+    }
+  ],
+
+  "gbernard@comundi.fr" : [
+    {
+      "name" : "Equipe HS",
+      "id"   : "hs",
+      "members" :[
+        "gbernard@comundi.fr",
+        "jchassagne@comundi.fr"
+      ]
+    },
+    {
+      "name" : "Equipe DEC",
+      "id"   : "dec",
+      "members" :[
+        "gbernard@comundi.fr",
+        "gazard@comundi.fr",
+        "agaucher@comundi.fr",
+        "llhermite@comundi.fr",
+        "msteinebach@comundi.fr"
+      ]
+    }
+  ],
+
+  "mrodier@comundi.fr" : [
+    {
+      "name" : "Equipe Public",
+      "id"   : "public",
+      "members" :[
+        "mrodier@comundi.fr",
+        "ncomiant@comundi.fr",
+        "cgorsse@comundi.fr"
+      ]
+    }
+  ],
+
+  "criccobene@comundi.fr" : [
+    {
+      "name" : "Equipe Soft RH",
+      "id"   : "softrh",
+      "members" :[
+        "criccobene@comundi.fr",
+        "cdidier@comundi.fr",
+        "gruflin@comundi.fr",
+        "abmartinvalet@comundi.fr"
+      ]
+    }
+  ],
+
+  "slebrun@comundi.fr" : [
+    {
+      "name" : "Equipe LN",
+      "id"   : "ln",
+      "members" :[
+        "slebrun@comundi.fr",
+        "aqueti@comundi.fr",
+        "csteimle@comundi.fr",
+        "adelom@comundi.fr"
+      ]
+    }
+  ]
+
+}

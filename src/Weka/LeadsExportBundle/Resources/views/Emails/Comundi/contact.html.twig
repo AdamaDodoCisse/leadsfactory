@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- So that mobile will display zoomed in -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- enable media queries for windows phone 8 -->
+<meta name="format-detection" content="telephone=no">
+<!-- disable auto telephone linking in iOS -->
+<title>Comundi : Contactez-nous</title>
+<style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            -ms-text-size-adjust: 100%;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        table {
+            border-spacing: 0;
+        }
+
+        table td {
+            border-collapse: collapse;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+            line-height: 100%;
+        }
+
+        .ReadMsgBody {
+            width: 100%;
+            background-color: #ebebeb;
+        }
+
+        table {
+            mso-table-lspace: 0pt;
+            mso-table-rspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+        }
+
+        .yshortcuts a {
+            border-bottom: none !important;
+        }
+
+        @media screen and (max-width: 599px) {
+            table[class="force-row"],
+            table[class="container"] {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+            td[class*="container-padding"] {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+        }
+
+        .ios-footer a {
+            color: #aaaaaa !important;
+            text-decoration: underline;
+        }
+
+        img[class="img-max”] {
+        width: 100% !important;
+        height:auto !important;
+        }
+    </style>
+</head>
+<body style="margin:0; padding:0;" bgcolor="#F0F0F0" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!-- 100% background wrapper (grey background) -->
+<table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0" bgcolor="#F0F0F0">
+  <tr>
+    <td align="center" valign="top" bgcolor="#F0F0F0" style="background-color: #F0F0F0;"><br>
+      <!-- 600px container (white background) -->
+      <table border="0" width="600" cellpadding="0" cellspacing="0" class="container"
+                   style="width:600px;max-width:600px">
+        <tr>
+          <td class="" align="left"
+                        style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:16px;color:#aaaaaa;padding-bottom:15px;padding-left:12px; padding-right: 24px;"> Comundi : Contactez-nous </td>
+        </tr>
+        <tr>
+          <td class="container-padding content" align="left"
+                        style="padding-left:24px;padding-right:24px;padding-top:30px;padding-bottom:50px;background-color:#ffffff;"><div class="logo" style="text-align:center;"> <img src="http://www.comundi.fr/images/template-mail_comundi/comundi-logo.png" width="150" height="150"
+                                style="display: inline-block; color: #666666; font-family: Helvetica, arial, sans-serif; font-size: 13px; width: 150px; height: 150px;"
+                                alt="Comundi" border="0" class="img-max"></div>
+            <hr style="color:#cdcdcd; background-color:#cdcdcd; width:200px;height:1px; border:none;margin-bottom:5px;margin-top:10px;">
+            <br>
+            <div class="body-text"
+                             style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;text-align:left;color:#333333"> Bonjour {{ user_data.firstName|capitalize  }} {{ user_data.lastName|upper  }}<br/>
+              <br/>
+              {{ content }}<br/>
+              <br/>
+              N'h&eacute;sitez pas &agrave; nous contacter pour tout renseignement compl&eacute;mentaire,<br>
+              <br>
+              Tr&egrave;s cordialement,<br/>
+              Le service client Comundi Comp&eacute;tences
+              <div class="service-block" style="border-color: #cdcdcd; border-width: 1px 0 0 0; border-style: solid;margin-top:35px;padding-top:20px;text-align: center;">
+                <div style="font-weight:700;">Service clients&nbsp;: {{ tel }} - <a href="mailto:{{ mail_contact }}">{{ mail_contact }}</a></div>
+                <div> <a href="http://www.comundi.fr/contact.html" style="color: #666666;">Formulaire de contact</a> </div>
+              </div>
+            </div></td>
+        </tr>
+        <tr>
+          <td class="container-padding footer-text" align="left"
+                        style="font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:16px;color:#aaaaaa;padding: 30px 24px; text-align:center;"> &copy; Comundi 2016</td>
+        </tr>
+      </table>
+      <!--/600px container -->
+    </td>
+  </tr>
+</table>
+<!--/100% background wrapper-->
+</body>
+</html>

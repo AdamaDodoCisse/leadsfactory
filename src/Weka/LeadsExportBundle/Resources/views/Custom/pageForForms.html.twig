@@ -1,0 +1,64 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Saisie
+                <i>
+                    de leads
+                </i></h1>
+            <div style="clear:both"></div>
+            <div class="titleDescription">
+                <em>
+                    Cette page permet de saisir des leads
+                </em>
+            </div>
+        </div>
+    </div>
+
+<div class="col-md-12">
+
+    <div id="contact">
+        <!-- Formulaire LeadsFactory Contactez-nous -->
+        <div id="form-content" class="loading-leads">
+            <center>
+                <p class="loading-leads-txt">Merci de patienter ...</p>
+            </center>
+
+        </div>
+        <script type="text/javascript">// <![CDATA[
+            jQuery.when(
+                    jQuery.getScript('{{ asset('/bundles/tellawleadsfactory/js/lf.js')}}'),
+                    jQuery.getScript('{{ asset('/bundles/tellawleadsfactory/js/libs/formValidator/jquery.validationEngine.js')}}'),
+                    jQuery.getScript('{{ asset('/bundles/tellawleadsfactory/js/libs/formValidator/languages/jquery.validationEngine-fr.js')}}'),
+                    jQuery.getScript('{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}/client/form/twig/{{ code }}'),
+                    jQuery.getScript('{{ asset('/bundles/wekaleadsexport/js/libs/phoneformat.js')}}'),
+                    jQuery(document).data("readyDeferred")
+            ).done(function() {
+                jQuery('#form-content').html(leadsfactory.html);
+                jQuery('#form-content').removeClass('loading-leads');
+
+                {% if userEmail %}
+                var params = {"lf-assign" : "{{ userEmail }}"};
+                {% else %}
+                var params = {};
+                {% endif %}
+
+                var options = {};
+                leadsfactory.init('{{ code }}', params, options);
+
+            });
+            // ]]></script>
+        <!-- /Formulaire LeadsFactory -->
+        <div style="clear: both;"></div>
+    </div>
+
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}

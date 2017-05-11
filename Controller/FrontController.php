@@ -21,6 +21,7 @@ use Tellaw\LeadsFactoryBundle\Entity\Leads;
 use Tellaw\LeadsFactoryBundle\Entity\Tracking;
 use Tellaw\LeadsFactoryBundle\Response\TransparentPixelResponse;
 use Tellaw\LeadsFactoryBundle\Shared\CoreController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  *
@@ -192,6 +193,8 @@ class FrontController extends CoreController
         $fields = $request->get("lffield");
         $exportUtils = $this->get('export_utils');
         $searchUtils = $this->get('search.utils');
+        $referer = $this->getRequest()->headers->get('referer');
+
 
 //         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
 //            throw new \Exception ("Form Key is not allowed");
@@ -316,7 +319,7 @@ class FrontController extends CoreController
                 if ($user != null) {
                     $leads->setUser($user);
                 } else {
-                    $logger->info("Frontcontroller : Assign tu a User that does not exists! " . $assign);
+                    $logger->info("Frontcontroller : Assign to a User that does not exists! " . $assign);
                 }
 
             }
@@ -392,13 +395,13 @@ class FrontController extends CoreController
                     }
                     $redirectUrlSuccess = $redirectUrlSuccess . $paramsSep . 'lead_id=' . $leads->getId() . '&key=' . $formUtils->getApiKey($formObject);
                 }
-
+                $logger->info("REDIRECT TO : ".$redirectUrlSuccess);
                 return $this->redirect($redirectUrlSuccess);
             }
 
-        } catch (Exception $e) {
-            $logger->error('postLeadsAction Error ');
-
+        } catch (\Exception $e) {
+            $redirectUrlError = $referer;
+            $logger->error('postLeadsAction Error '.$e->getMessage());
             return $this->redirect($redirectUrlError);
         }
 
@@ -433,6 +436,35 @@ class FrontController extends CoreController
         }
 
         return new Response($optionsHtml);
+    }
+
+    /**
+     * @Route("/form/ajax/json_list_options", name="_ajax_child_json_list_options")
+     */
+    public function getChildListOptionsAsJsonAction(Request $request)
+    {
+        $parentCode = $request->query->get('parent_code');
+        $parentValue = $request->query->get('parent_value');
+        $default = $request->query->get('default');
+
+        $response = new JsonResponse();
+
+        if (!empty($parentValue))  {
+            $parentList = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceList')->findByCode($parentCode);
+            $parentItem = $this->getdoctrine()->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')->findOneBy(array(
+                'value' => $parentValue,
+                'referenceList' => $parentList
+            ));
+
+            $children = (!empty($parentItem)) ? $parentItem->getChildren()->getValues() : array();
+            $results = array();
+            foreach ($children as $child) {
+                $results[] = array("value"=>$child->getValue(), "name"=>$child->getName());
+            }
+            $response->setData($results);
+        }
+
+        return $response;
     }
 
     /**

@@ -4,27 +4,30 @@
 {% block body %}
     <style>
         .ui-autocomplete {
-            background-color:#FFF;
+            background-color: #FFF;
             max-height: 100px;
             overflow-y: auto;
             /* prevent horizontal scrollbar */
             overflow-x: hidden;
-            width:308px;
-            border:1px solid #e0e0e0;
+            width: 308px;
+            border: 1px solid #e0e0e0;
             cursor: pointer;
             padding: 0px;
         }
+
         .ui-autocomplete li {
-            display:block;
+            display: block;
             padding: 5px 0px 5px 12px;
         }
+
         .ui-autocomplete li:hover {
-            background-color:#e0e0e0;
+            background-color: #e0e0e0;
 
         }
-            /* IE 6 doesn't support max-height
-             * we use height instead, but this forces the menu to always be this tall
-             */
+
+        /* IE 6 doesn't support max-height
+         * we use height instead, but this forces the menu to always be this tall
+         */
         * html .ui-autocomplete {
             height: 100px;
         }
@@ -39,487 +42,544 @@
     </div>
 
     <div class="col-md-4" style="text-align:right">
-            <a href="?printMode=true" target="_blank" style="margin-right:15px;">Imprimer la page</a>
+        <a href="?printMode=true" target="_blank" style="margin-right:15px;">Imprimer la page</a>
     </div>
 
 
     <div class="col-md-6">
 
-    <div class="col-md-6">
+        <div class="col-md-6">
 
-        <div id="accordion1" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
-                            Informations
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse in" id="collapseOne" style="height: auto;">
+            <div id="accordion1" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Informations
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse in" id="collapseOne" style="height: auto;">
 
-                    <div class="panel-body">
-                        <div class="widget-body custom-form">
-                            <form class="sec" role="form">
-                                <div class="form-group">
-                                    <label for="leadLastName">Nom</label>
-                                    <input readonly="readonly" type="text" class="form-control" id="leadLastName" placeholder="Enter email" value="{{ lead.lastName }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="leadFirstName">Prénom</label>
-                                    <input readonly="readonly" type="text" class="form-control" id="leadFirstName" placeholder="Prenom" value="{{ lead.firstName }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="leadEmail">Email</label>
-                                    <input readonly="readonly" type="email" class="form-control" id="leadEmail" placeholder="Email" value="{{ lead.email }}">
-                                </div>
-                                {% if leadDetail.user_file is defined %}
+                        <div class="panel-body">
+                            <div class="widget-body custom-form">
+                                <div class="sec">
                                     <div class="form-group">
-                                        <label>Piece jointe : </label>
-                                        <a href="/leads-factory/datas/{{ file }}" target="_blank">{{ leadDetail.user_file }}</a>
+                                        <label for="leadLastName">Nom</label><br>
+                                        <div id="td-lastname" class="panel"
+                                             style="padding: 5px">{{ lead.lastName }}</div>
+                                        <a href="#" alt="Editer" class="pull-right"
+                                           onClick="replaceFieldByInput('lastname', '{{ lead.id }}');return false;">Modifier</a>
                                     </div>
-                                {% endif %}
-                            </form>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-
-        <div id="accordion3" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#collapseOne3" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
-                            Qualification de la demande
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse in" id="collapseOne3" style="height: auto;">
-                    <div class="panel-body">
-
-                        <div class="widget-body custom-form">
-                            <form class="sec" role="form">
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Affectation</label>
-                                    <input type="hidden" id="affectationId"/>
-                                    <input type="text" class="form-control" id="affectation" placeholder="Affectation de la demande" value="{{ assignUser }}"/>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Statut</label>
-                                    <div id="statusListDiv">
-                                        Chargement des données
+                                    <div class="form-group">
+                                        <label for="leadFirstName">Prénom</label><br>
+                                        <div id="td-firstname" class="panel"
+                                             style="padding: 5px">{{ lead.firstname }}</div>
+                                        <a href="#" alt="Editer" class="pull-right"
+                                           onClick="replaceFieldByInput('firstname', '{{ lead.id }}');return false;">Modifier</a>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Type</label>
-                                    <div id="typeListDiv">
-                                        Chargement des données
+                                    <div class="form-group">
+                                        <label for="leadEmail">Email</label><br>
+                                        <div id="td-email" class="panel" style="padding: 5px">{{ lead.email }}</div>
+                                        <a href="#" alt="Editer" class="pull-right"
+                                           onClick="replaceFieldByInput('email', '{{ lead.id }}');return false;">Modifier</a>
                                     </div>
+                                    {% if leadDetail.user_file is defined %}
+                                        <div class="form-group">
+                                            <label>Piece jointe : </label>
+                                            <a href="/leads-factory/datas/{{ file }}"
+                                               target="_blank">{{ leadDetail.user_file }}</a>
+                                        </div>
+                                    {% endif %}
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputPassword1">Thème</label>
-                                    <div id="themeListDiv">
-                                        Chargement des données
-                                    </div>
-                                </div>
-                            </form>
+                            </div>
                         </div>
 
                     </div>
                 </div>
             </div>
         </div>
+        <div class="col-md-6">
 
-
-
-    </div>
-    <div class="col-md-12">
-
-
-        <div id="accordion2" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#collapseOne2" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
-                            Détail de la demande
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse in" id="collapseOne2" style="height: auto;">
-                    <div class="panel-body">
-
-                        <table id="country-list" class="sortable-table">
-                            <thead>
-                            <tr class="country-table-head">
-                                <th class="sort-down">Information </th>
-                                <th>Détail</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for key, detail in leadDetail %}
-                            <tr>
-                                <td>{{ key }}</td>
-                                <td id="td-{{ key }}">{{ detail }}</td>
-                                <td><a href="#" alt="Editer" onClick="replaceFieldByInput('{{ key }}', '{{ lead.id }}');return false;"><img title="Editer" style="height:25px;" src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a></td>
-                            </tr>
-                            {% endfor %}
-                            </tbody></table>
-
+            <div id="accordion3" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#collapseOne3" data-parent="#accordion" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Qualification de la demande
+                            </a>
+                        </h4>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <div class="panel-collapse in" id="collapseOne3" style="height: auto;">
+                        <div class="panel-body">
 
+                            <div class="widget-body custom-form">
+                                <form class="sec" role="form">
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Affectation</label>
+                                        <input type="hidden" id="affectationId"/>
+                                        <input type="text" class="form-control" id="affectation"
+                                               placeholder="Affectation de la demande" value="{{ assignUser }}"/>
+                                    </div>
 
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Statut</label>
+                                        <div id="statusListDiv">
+                                            Chargement des données
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Type</label>
+                                        <div id="typeListDiv">
+                                            Chargement des données
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="exampleInputPassword1">Thème</label>
+                                        <div id="themeListDiv">
+                                            Chargement des données
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
 
-    </div>
-
-</div>
-
-
-    <div class="col-md-6">
-
-    <div class="col-md-6">
-
-
-        <div id="accordion4" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#collapseOnemeta" data-parent="#accordion4" data-toggle="collapse" class="accordion-toggle">
-                            Métas Informations
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse in" id="collapseOnemeta" style="height: auto;">
-                    <div class="panel-body">
-
-                        <div class="widget-body custom-form">
-                            <form class="sec" role="form">
-                                <div class="form-group">
-                                    <label>Date de création</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.createdAt|date("d/m/Y : H:m:s") }}" >
-                                </div>
-                                <div class="form-group">
-                                    <label>Formulaire source</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.form.name }}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Scope</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.form.scope.name }}">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Date d'export</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.exportdate|date("d/m/Y : H:m:s") }}" >
-                                </div>
-                            </form>
                         </div>
-
                     </div>
                 </div>
             </div>
+
         </div>
+        <div class="col-md-12">
+
+
+            <div id="accordion2" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#collapseOne2" data-parent="#accordion" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Détail de la demande
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse in" id="collapseOne2" style="height: auto;">
+                        <div class="panel-body">
+
+                            <table id="country-list" class="sortable-table">
+                                <thead>
+                                <tr class="country-table-head">
+                                    <th class="sort-down">Information</th>
+                                    <th>Détail</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for key, detail in leadDetail %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td id="td-{{ key }}">{{ detail }}</td>
+                                        <td><a href="#" alt="Editer" class=""
+                                               onClick="replaceFieldByInput('{{ key }}', '{{ lead.id }}');return false;"><img
+                                                        title="Editer" style="height:25px;"
+                                                        src="{{ asset('bundles/tellawleadsfactory/img/icons2/editer.png') }}"/></a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="col-md-6">
+
+        <div class="col-md-6">
+
+
+            <div id="accordion4" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#collapseOnemeta" data-parent="#accordion4" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Métas Informations
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse in" id="collapseOnemeta" style="height: auto;">
+                        <div class="panel-body">
+
+                            <div class="widget-body custom-form">
+                                <form class="sec" role="form">
+                                    <div class="form-group">
+                                        <label>Date de création</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.createdAt|date("d/m/Y : H:m:s") }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Formulaire source</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.form.name }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Scope</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.form.scope.name }}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Date d'export</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.exportdate|date("d/m/Y : H:m:s") }}">
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div id="accordion4" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#collapseTwometa" data-parent="#accordion4" data-toggle="collapse" class="accordion-toggle">
-                            Méta Informations techniques
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse" id="collapseTwometa" style="height: 0px;">
-                    <div class="panel-body">
-
-                        <div class="widget-body custom-form">
-                            <form class="sec" role="form">
-                                <div class="form-group">
-                                    <label>Adresse IP</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.ipadress }}">
-                                </div>
-                                <div class="form-group">
-                                    <label>User Agent</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.userAgent }}">
-                                </div>
-                                <div class="form-group">
-                                    <label >Log</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.log }}" >
-                                </div>
-
-
-                            </form>
-                        </div>
-
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#collapseTwometa" data-parent="#accordion4" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Méta Informations techniques
+                            </a>
+                        </h4>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <div class="panel-collapse" id="collapseTwometa" style="height: 0px;">
+                        <div class="panel-body">
 
-        <p></p>
+                            <div class="widget-body custom-form">
+                                <form class="sec" role="form">
+                                    <div class="form-group">
+                                        <label>Adresse IP</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.ipadress }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>User Agent</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.userAgent }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Log</label>
+                                        <input readonly="readonly" type="text" class="form-control"
+                                               value="{{ lead.log }}">
+                                    </div>
 
-
-    </div>
-
-    <div class="col-md-12">
-
-        <div id="accordion5" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#collapseOne5" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
-                            Commentaires
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse in" id="collapseOne5" style="height: auto;">
-                    <div class="panel-body">
-
-                        <div class="widget-body custom-form">
-                            <form class="sec" role="form">
-                                <div class="form-group">
-                                    <label>Ajouter un commentaire</label>
-                                    <textarea class="form-control" id="comment" name="comment" placeholder="Entrez votre commentaire dans cette zone"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <input type="button" onClick="postComment();" class="btn green pull-right" value="enregistrer le commentaire"/>
-                                </div>
                                 </form>
+                            </div>
+
                         </div>
-                        <div id="ajaxCommentContainer">
--
+                    </div>
+                </div>
+            </div>
+
+            <p></p>
+
+        </div>
+
+        <div class="col-md-12">
+
+            <div id="accordion5" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#collapseOne5" data-parent="#accordion" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Commentaires
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse in" id="collapseOne5" style="height: auto;">
+                        <div class="panel-body">
+
+                            <div class="widget-body custom-form">
+                                <form class="sec" role="form">
+                                    <div class="form-group">
+                                        <label>Ajouter un commentaire</label>
+                                        <textarea class="form-control" id="comment" name="comment"
+                                                  placeholder="Entrez votre commentaire dans cette zone"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="button" onClick="postComment();" class="btn green pull-right"
+                                               value="enregistrer le commentaire"/>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="ajaxCommentContainer">
+                                -
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
-        <div id="accordion6" class="panel-group">
-            <div class="panel panel-default">
-                <div class="panel-heading black">
-                    <h4 class="panel-title">
-                        <a href="#leadsHistoryList" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
-                            Historique de la demande
-                        </a>
-                    </h4>
-                </div>
-                <div class="panel-collapse" style="height: 0px;" id="leadsHistoryList">
-                    Chargement
+        <div class="col-md-12">
+            <div id="accordion6" class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading black">
+                        <h4 class="panel-title">
+                            <a href="#leadsHistoryList" data-parent="#accordion" data-toggle="collapse"
+                               class="accordion-toggle">
+                                Historique de la demande
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="panel-collapse" style="height: 0px;" id="leadsHistoryList">
+                        Chargement
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-md-12">
-        <div id="accordion7" class="panel-group">
-            <div class="panel panel-default" id="exportList">
-                Chargement des données...
+        <div class="col-md-12">
+            <div id="accordion7" class="panel-group">
+                <div class="panel panel-default" id="exportList">
+                    Chargement des données...
+                </div>
             </div>
+
         </div>
 
     </div>
-
-        </div>
 
 {% endblock %}
 {% block javascript %}
-<script type="text/javascript" language="javascript">
-$( document ).ready(function() {
-    loadElements();
-});
+    <script type="text/javascript" language="javascript">
+        $(document).ready(function () {
+            loadElements();
+        });
 
-function loadElements () {
-    refreshComments();
-    setAutoComplete();
-    loadStatusList();
-    loadTypeList();
-    loadThemeList();
-    loadHistoryList();
-    loadExportList();
-}
+        function loadElements() {
+            refreshComments();
+            setAutoComplete();
+            loadStatusList();
+            loadTypeList();
+            loadThemeList();
+            loadHistoryList();
+            loadExportList();
+        }
 
-function postComment () {
+        function postComment() {
 
-    var comment = $("#comment").val();
+            var comment = $("#comment").val();
 
-    if (comment != "") {
-        var id = $("#leadid").val();
-        var url = "{{ path('_leads_add_comment_fragment') }}";
-        var data = { id: id, comment:comment }
-        ajaxCall ( url, data, function ( result ) { refreshComments();$("#comment").val("");loadHistoryList();});
+            if (comment != "") {
+                var id = $("#leadid").val();
+                var url = "{{ path('_leads_add_comment_fragment') }}";
+                var data = {id: id, comment: comment}
+                ajaxCall(url, data, function (result) {
+                    refreshComments();
+                    $("#comment").val("");
+                    loadHistoryList();
+                });
 
-    }
-
-}
-
-function refreshComments () {
-
-    var id = $("#leadid").val();
-    var data= "leadId="+id;
-
-    fragmentAjaxCall (
-
-            '{{ path('_leads_load_comments_fragment') }}',
-            data,
-            $("#ajaxCommentContainer"),
-            function ( result ) {
             }
 
-    );
-
-}
-
-function setAutoComplete () {
-    $( "#affectation" ).autocomplete({
-        source: "{{ path('_leads_users_search_ajax') }}",
-        minLength: 3,
-        select: function( event, ui ) {
-
-            event.preventDefault();
-            $( "#affectation").val(ui.item.label)
-            $( "#affectationId" ).val( ui.item.value );
-
-            setAffectationLead();
-            return false;
         }
-    });
-};
 
-    function setAffectationLead () {
-        var id = $( "#affectationId" ).val();
-        var leadId = $( "#leadid" ).val();
+        function refreshComments() {
 
-        if (id != "") {
-            var url = "{{ path('_leads_users_assign_ajax') }}";
-            var data = { id: id, leadId : leadId }
-            ajaxCall ( url, data, function ( result ) { refreshComments();$("#comment").val("");loadHistoryList();});
+            var id = $("#leadid").val();
+            var data = "leadId=" + id;
+
+            fragmentAjaxCall(
+                    '{{ path('_leads_load_comments_fragment') }}',
+                    data,
+                    $("#ajaxCommentContainer"),
+                    function (result) {
+                    }
+            );
 
         }
 
-    }
+        function setAutoComplete() {
+            $("#affectation").autocomplete({
+                source: "{{ path('_leads_users_search_ajax') }}",
+                minLength: 3,
+                select: function (event, ui) {
 
-    function loadStatusList () {
+                    event.preventDefault();
+                    $("#affectation").val(ui.item.label);
+                    $("#affectationId").val(ui.item.value);
 
-        var url = "{{ path ('_leads_list_status_ajax') }}";
-        var data = {scopeId : $('#scopeId').val() };
-        var container = $("#statusListDiv")
-        fragmentAjaxCall ( url, data, container,
-                function (result){
-                    $("#statusLeadsSelect").val("{{ lead.workflowStatus }}")
-                } );
-    }
-
-    function setStatusLead () {
-        var id = $( "#statusLeadsSelect" ).val();
-        var leadId = $( "#leadid" ).val();
-        var listValue = $( "#statusLeadsSelect option:selected" ).text();
-
-        if (id != "") {
-            var url = "{{ path('_leads_status_assign_ajax') }}";
-            var data = { id: id, leadId : leadId, listValue : listValue }
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de status enregistré");loadHistoryList(); });
+                    setAffectationLead();
+                    return false;
+                }
+            });
         }
-    }
 
-    function loadTypeList () {
+        function setAffectationLead() {
+            var id = $("#affectationId").val();
+            var leadId = $("#leadid").val();
 
-        var url = "{{ path ('_leads_list_type_ajax') }}";
-        var data = {scopeId : $('#scopeId').val() };
-        var container = $("#typeListDiv")
-        fragmentAjaxCall ( url, data, container,
-                function (result){
-                    $("#typeLeadsSelect").val("{{ lead.workflowType }}")
-                } );
-    }
+            if (id != "") {
+                var url = "{{ path('_leads_users_assign_ajax') }}";
+                var data = {id: id, leadId: leadId};
+                console.log(url);
+                ajaxCall(url, data, function (result) {
+                    refreshComments();
+                    loadStatusList();
+                    loadHistoryList();
+                    notificationMessage("Affectation mise à jour", "success");
+                    $("#comment").val("");
+                });
 
-    function setTypeLead () {
-        var id = $( "#typeLeadsSelect" ).val();
-        var leadId = $( "#leadid" ).val();
-        var listValue = $( "#typeLeadsSelect option:selected" ).text();
+            }
 
-        if (id != "") {
-            var url = "{{ path('_leads_type_assign_ajax') }}";
-            var data = { id: id, leadId : leadId, scopeId : $('#scopeId').val(), listValue : listValue }
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de type enregistré");loadHistoryList(); });
         }
-    }
 
-    function loadThemeList () {
-
-        var url = "{{ path ('_leads_list_theme_ajax') }}";
-        var data = {scopeId : $('#scopeId').val() };
-        var container = $("#themeListDiv")
-        fragmentAjaxCall ( url, data, container,
-                function (result){
-                    $("#themeLeadsSelect").val("{{ lead.workflowTheme }}")
-                } );
-    }
-
-    function setThemeLead () {
-        var id = $( "#themeLeadsSelect" ).val();
-        var leadId = $( "#leadid" ).val();
-        var listValue = $( "#themeLeadsSelect option:selected" ).text();
-
-        if (id != "") {
-            var url = "{{ path('_leads_theme_assign_ajax') }}";
-            var data = { id: id, leadId : leadId, listValue : listValue }
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de theme enregistré");loadHistoryList(); });
+        function loadStatusList(status) {
+            if (typeof (status) == "undefined") {
+                status = "{{ lead.workflowStatus }}";
+            }
+            var url = "{{ path ('_leads_list_status_ajax') }}";
+            var data = {scopeId: $('#scopeId').val()};
+            var container = $("#statusListDiv");
+            fragmentAjaxCall(url, data, container, function (result) {
+                $("#statusLeadsSelect").val(status);
+            });
         }
-    }
 
-    function loadHistoryList () {
-        var leadId = $( "#leadid" ).val();
+        function setStatusLead() {
+            var id = $("#statusLeadsSelect").val();
+            var leadId = $("#leadid").val();
+            var listValue = $("#statusLeadsSelect option:selected").text();
 
-        var url = "{{ path ('_leads_list_history_ajax') }}";
-        var data = { leadId : leadId} ;
-        var container = $("#leadsHistoryList")
-        fragmentAjaxCall ( url, data, container,
-                function (result){} );
-    }
-
-    function loadExportList () {
-        var leadId = $( "#leadid" ).val();
-
-        var url = "{{ path ('_leads_list_exports_ajax') }}";
-        var data = { leadId : leadId} ;
-        var container = $("#exportList")
-        fragmentAjaxCall ( url, data, container,
-                function (result){} );
-    }
-
-    // Script used to edit values
-    function replaceFieldByInput ( id, leadId) {
-        var obj = $("#td-"+id);
-        if (obj.html().indexOf("<input") == -1) {
-            var content = "<input type='hidden' id='cancel-"+id+"' value=''/><input value='' type='text' id='field-" + id + "' style='width:60%'/><input type='button' value='ok' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/><input type='button' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>";
-            var textContent = obj.text()+"";
-            obj.html(content);
-
-            $("#cancel-"+id).val (textContent);
-            $("#field-"+id).val (textContent);
+            if (id != "") {
+                var url = "{{ path('_leads_status_assign_ajax') }}";
+                var data = {id: id, leadId: leadId, listValue: listValue}
+                ajaxCall(url, data, function (result) {
+                    notificationMessage("Statut mis à jour", "success");
+                    loadStatusList(result);
+                    loadHistoryList();
+                });
+            }
         }
-    }
 
-    function cancelFieldValue ( fieldId, leadId ) {
-        var fieldValue = $("#cancel-"+fieldId).val();
-        $("#td-"+fieldId).text(fieldValue);
-    }
+        function loadTypeList() {
 
-    function saveFieldValue ( fieldId, leadId ) {
-        var fieldValue = $("#field-"+fieldId).val();
-        var url = "{{ path ('_leads_json_update_field') }}";
-        var data = { leadId : leadId, leadField : fieldId, leadFieldValue : fieldValue} ;
-        ajaxCall ( url, data, function ( result ) { $("#td-"+fieldId).text(result); });
-    }
+            var url = "{{ path ('_leads_list_type_ajax') }}";
+            var data = {scopeId: $('#scopeId').val()};
+            var container = $("#typeListDiv")
+            fragmentAjaxCall(url, data, container, function (result) {
+                $("#typeLeadsSelect").val("{{ lead.workflowType }}")
+            });
+        }
 
-</script>
+        function setTypeLead() {
+            var id = $("#typeLeadsSelect").val();
+            var leadId = $("#leadid").val();
+            var listValue = $("#typeLeadsSelect option:selected").text();
+
+            if (id != "") {
+                var url = "{{ path('_leads_type_assign_ajax') }}";
+                var data = {id: id, leadId: leadId, scopeId: $('#scopeId').val(), listValue: listValue}
+                ajaxCall(url, data, function (result) {
+                    notificationMessage("Changement de type enregistré", "success");
+                    loadHistoryList();
+                });
+            }
+        }
+
+        function loadThemeList() {
+
+            var url = "{{ path ('_leads_list_theme_ajax') }}";
+            var data = {scopeId: $('#scopeId').val()};
+            var container = $("#themeListDiv")
+            fragmentAjaxCall(url, data, container,
+                    function (result) {
+                        $("#themeLeadsSelect").val("{{ lead.workflowTheme }}")
+                    });
+        }
+
+        function setThemeLead() {
+            var id = $("#themeLeadsSelect").val();
+            var leadId = $("#leadid").val();
+            var listValue = $("#themeLeadsSelect option:selected").text();
+
+            if (id != "") {
+                var url = "{{ path('_leads_theme_assign_ajax') }}";
+                var data = {id: id, leadId: leadId, listValue: listValue}
+                ajaxCall(url, data, function (result) {
+                    notificationMessage("Changement de theme enregistré", "success");
+                    loadHistoryList();
+                });
+            }
+        }
+
+        function loadHistoryList() {
+            var leadId = $("#leadid").val();
+
+            var url = "{{ path ('_leads_list_history_ajax') }}";
+            var data = {leadId: leadId};
+            var container = $("#leadsHistoryList")
+            fragmentAjaxCall(url, data, container,
+                    function (result) {
+                    });
+        }
+
+        function loadExportList() {
+            var leadId = $("#leadid").val();
+
+            var url = "{{ path ('_leads_list_exports_ajax') }}";
+            var data = {leadId: leadId};
+            var container = $("#exportList")
+            fragmentAjaxCall(url, data, container,
+                    function (result) {
+                    });
+        }
+
+        // Script used to edit values
+        function replaceFieldByInput(id, leadId) {
+            var obj = $("#td-" + id);
+            if (obj.html().indexOf("<input") == -1) {
+                var content = "" +
+                        "<input type='hidden' id='cancel-" + id + "' value=''/>" +
+                        "<input value='' type='text' id='field-" + id + "' style='width:60%'/>" +
+                        "<span class='btn-group pull-right'>" +
+                        "<input type='button' value='ok' class='btn btn-info btn-xs' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/>" +
+                        "<input type='button' class='btn btn-default btn-xs' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>" +
+                        "</span>";
+                var textContent = obj.text() + "";
+                obj.html(content);
+
+                $("#cancel-" + id).val(textContent);
+                $("#field-" + id).val(textContent);
+            }
+        }
+
+        function cancelFieldValue(fieldId, leadId) {
+            var fieldValue = $("#cancel-" + fieldId).val();
+            $("#td-" + fieldId).text(fieldValue);
+        }
+
+        function saveFieldValue(fieldId, leadId) {
+            var fieldValue = $("#field-" + fieldId).val();
+            var url = "{{ path ('_leads_json_update_field') }}";
+            var data = {leadId: leadId, leadField: fieldId, leadFieldValue: fieldValue};
+            ajaxCall(url, data, function (result) {
+
+                $("#td-" + fieldId).text(result);
+                notificationMessage("Champ : <b>" + fieldId + "</b> mis à jour.")
+            });
+        }
+
+    </script>
 {% endblock %}

@@ -59,7 +59,7 @@ class FormType extends AbstractType
 
         $builder->add('confirmationEmailSource', new Source2Type(), array('label' => 'Confirmation email Source HTML', 'required' => false));
 
-        $builder->add('save', 'submit');
+        $builder->add('save', 'submit', array('label' => 'Enregister'));
 
     }
 

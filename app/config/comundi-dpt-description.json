@@ -1,0 +1,31 @@
+{
+
+  "intra" : {
+    "name" : "Département INTRA",
+    "id" : "intra1",
+    "members" :[
+      "ehervet@comundi.fr",
+      "gbernard@comundi.fr",
+      "jchassagne@comundi.fr",
+      "gazard@comundi.fr",
+      "agaucher@comundi.fr",
+      "llhermite@comundi.fr",
+      "msteinebach@comundi.fr",
+      "criccobene@comundi.fr",
+      "cdidier@comundi.fr",
+      "gruflin@comundi.fr",
+      "jganon@comundi.fr",
+      "mrodier@comundi.fr",
+      "ncomiant@comundi.fr",
+      "cgorsse@comundi.fr",
+      "slebrun@comundi.fr",
+      "ewallet@weka.fr",
+      "aqueti@comundi.fr",
+      "csteimle@comundi.fr",
+      "adelom@comundi.fr",
+      "cpascal@comundi.fr",
+      "abmartinvalet@comundi.fr"
+    ]
+  }
+
+}
