@@ -1,0 +1,127 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Détail du formulaire :  &laquo; {{ entity.name }} &raquo;</h1>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+
+        <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
+
+            <div class="col-md-12">
+
+                <div id="demo-chart" class="widget-body blue"  style="height:500px;">
+                    <!-- This div will hold the chart generated in the footer -->
+                </div>
+
+            </div>
+
+{#            liste des utm #}
+            <div class="col-md-12">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getUtmLinkedToForm', {"form_id" : entity.id})) }}
+            </div>
+
+{#            statistiques nb views, nb leads, etc      #}
+            <div class="col-md-12">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormViewStatistics', {"form_id" : entity.id})) }}
+            </div>
+
+        </div>
+
+        <div class="col-md-4" style="margin-top:20px;">
+
+            <div class="col-md-12">
+{#                Configuration périodique      #}
+                <div class="widget-body custom-form">
+                    {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
+                </div>
+{#
+                <div class="widget-body custom-form" style="padding-top:10px;">
+                    <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser un autre formulaire :</b></div>
+
+                    <select onChange="window.location.href=this.value" class="form-control">
+                        <option>Séléctionnez un formulaire</option>
+                        {% for form in forms %}
+                            <option {% if form.id == entity.id %}selected="selected" {% endif %}value="{{ path('_monitoring_dashboard_form_page', {'form_id': form.id}) }}">{{ form.name }}</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+#}
+            </div>
+            
+            <div class="col-md-12">
+                {#a mettre ici les graphes #}
+                <div class="col-md-12">
+                    {#THIS ONE HAS BECOME USELESS !!#}
+                {#{{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getStatsForFomPage', {"form_id" : entity.id})) }}#}
+                </div>  
+            </div>
+
+
+            <script>
+                var skycons = new Skycons({"color": "white"});
+            </script>
+            {#
+            <div class="col-md-12">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForForm', {"form_id" : entity.id})) }}
+            </div>
+            #}
+            <script>
+                skycons.play();
+            </script>
+
+        </div>
+
+    </div>
+
+    <!-- Chart -->
+    {% set objects = [entity] %}
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "period"    : app.request.get('form')['period'],
+            "mode"      : "Form",
+            "objects"   : [entity]
+        }
+        )) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "mode"      : "Form",
+            "objects"   : [entity]
+        }
+        )) }}
+    {% endif %}
+
+    <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
+
+    <!-- ==== DASHBOARD === -->
+<!--
+    <div class="with-padding">
+            render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measureDashboard')) }}
+    </div>
+-->
+
+
+
+
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+    $("a[href^=#]").click(function(e) {
+        e.preventDefault();
+        var dest = $(this).attr('href');
+        $('html,body').animate({
+            scrollTop: $(dest).offset().top - 60
+        }, 'slow');
+    });
+    
+</script>
+{#{% include 'pieChartInFormPage.html.twig' %}#}
+{% endblock %}

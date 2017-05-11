@@ -1,0 +1,32 @@
+
+
+{% if app.user.role == "ROLE_ADMIN" or app.user.role == "ROLE_DEV_SCOPE" %}
+    <div class="admin-scope pull-right"  >
+        <div class="form-control form-inline" style="background: none; border: none">
+            <label>
+                <b style="font-size: 1.2em; color: #fff">Scope : </b>
+                <select id="changeScopeBar" class="form-control">
+                    <option value="">Aucun scope</option>
+                    {% for scope in scopes %}
+                        <option value="{{ scope.code }}" {% if app.user.scope == scope.name %} selected="selected" {% endif %}>
+                            {{ scope.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    $("#changeScopeBar").on("change", function() {
+        var new_scope = $(this).val();
+        var p = $.post("{{ path('_user_scope_edit') }}", { scope: new_scope});
+        p.success(function() {
+            location.reload();
+        });
+        p.fail(function(xhr, textStatus, errorThrown) {
+            console.log(xhr.responseText);
+        });
+    })
+</script>

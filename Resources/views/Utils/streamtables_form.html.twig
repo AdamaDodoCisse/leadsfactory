@@ -1,0 +1,11 @@
+[
+{% for item in items %}
+    {
+        "identifiant": "{{ item.id }}",
+        "name": "{{ item.name }}",
+        "description": "{{ item.description }}",
+
+        "action": "<center><button type=\"button\" class=\"btns  blue  m-sml-btn flat-btn\" style=\"margin:0px 0px 0px 5px\" onClick=\"window.location.href='{{ path('_form_edit', {'id': item.id}) }}'\">Editer</button><button type=\"button\" class=\"btns  green  m-sml-btn flat-btn\" style=\"margin:0px 0px 0px 5px\" onClick=\"window.location.href='{{ path('_form_duplicate', {'id': item.id}) }}'\">Dupliquer</button><button type=\"button\" class=\"btns  pink  m-sml-btn flat-btn\" style=\"margin:0px 0px 0px 5px\" onClick=\"window.location.href='{{ path('_form_delete', {'id': item.id}) }}'\">Supprimer</button><button type=\"button\" class=\"btns  gray  m-sml-btn flat-btn\" style=\"margin:0px 0px 0px 5px\" onClick=\"window.open('{{ path('_client_get_form', {'id': item.id}) }}');\">Pré-visualiser</button><button type=\"button\" class=\"btns  yellow  m-sml-btn flat-btn\" style=\"margin:0px 0px 0px 5px\" onClick=\"window.location.href='{{ path('_entity_leads_export', {'id': item.id}) }}'\">Exporter</button></center>"
+    }{% if loop.last==false %},{% endif %}
+{% endfor %}
+]

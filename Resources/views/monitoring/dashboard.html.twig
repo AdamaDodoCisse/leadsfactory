@@ -1,0 +1,115 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Dashboard des groupements de formulaires : <i>  de &laquo; {{ app.user.firstname }} {{ app.user.lastname }} &raquo;</i></h1>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+
+        <div class="col-md-8" style="margin-top:20px;margin-bottom:25px;">
+            <div id="demo-chart" class="widget-body blue" style="height:500px;">
+                <!-- This div will hold the chart generated in the footer -->
+            </div>
+        </div>
+
+        <div class="col-md-4" style="margin-top:20px;">
+            <div class="widget-body custom-form">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
+            </div>
+
+            <div class="widget-body custom-form" style="padding-top:10px;">
+                <div style="margin-left:10px;margin-bottom:5px;">Vos type favoris :</div>
+                <ul>
+                    {% for bookmark in bookmarks %}
+                        <li><a href="#type-{{ bookmark.formType.id }}">{{ bookmark.formType.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="widget-body custom-form" style="padding-top:10px;">
+                <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser une autre groupe de formulaires :</b></div>
+
+                <select onChange="window.location.href=this.value" class="form-control">
+                    <option>Séléctionnez un groupe</option>
+                    {% for type in types %}
+                        <option value="{{ path('_monitoring_dashboard_type_page', {'type_id': type.id}) }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+        </div>
+
+    </div>
+
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "mode" : "FormType"
+        }
+        )) }}
+
+
+    <!-- ==== Monitoring Tous type = Dashboard avec les types affichés ===>
+
+    <!-- ==== DASHBOARD === -->
+<!--
+    <div class="with-padding">
+            render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measureDashboard')) }}
+    </div>
+-->
+    <script>
+        var skycons = new Skycons({"color": "white"});
+    </script>
+
+    {% for bookmark in bookmarks %}
+
+        <div class="col-md-12" style="padding:20px 0px 20px 0px;margin-bottom:20px;border:1px dashed #a0a0a0">
+            <a id="type-{{ bookmark.formType.id }}"/>
+            <div class="col-md-8">
+
+                <div class="col-md-12" >
+                    <div class="heading-sec" id="intro6">
+                        <h1>{{ bookmark.formType.name }} : <i> &laquo; type de formulaire &raquo;</i></h1>
+                    </div>
+                </div>
+
+                <div class="col-md-12" >
+                    {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getTypeViewStatistics', {"type_id" : bookmark.formType.id})) }}
+                </div>
+
+
+                <div class="col-md-12" style="margin-top:10px;" >
+                    <div class="col-md-8" >
+                    </div>
+                    <div class="col-md-4" style="text-align:right">
+                            <a class="btn blue" href="{{ path('_monitoring_dashboard_type_page', {'type_id': bookmark.formType.id}) }}">Voir le détail du type</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+            <!-- Render the Alert Widget -->
+            {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForType', {"type_id" : bookmark.formType.id})) }}
+            </div>
+        </div>
+
+    {% endfor %}
+
+    <script>
+        skycons.play();
+    </script>
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+    $("a[href^=#]").click(function(e) {
+        e.preventDefault();
+        var dest = $(this).attr('href');
+        $('html,body').animate({
+            scrollTop: $(dest).offset().top - 60
+        }, 'slow');
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,11 @@
+
+<table>
+    <tr><td style="padding:10px 0;">{{ intro }}</td></tr>
+    {% for key, data in fields %}
+        {% if key != 'redirect_url' %}
+            <tr>
+                <td>{{ key }} : {{ data }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>

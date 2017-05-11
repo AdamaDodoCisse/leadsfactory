@@ -1,0 +1,38 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <style>
+        #tellaw_leadsfactorybundle_crontask_log{
+            height:350px;
+        }
+    </style>
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>{{ title }}</h1>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <b>Informations :</b><br/><br/>
+        <ul>
+            <li>Dernière execution le <b>{{ item.lastrun|date("d/m/Y à h:i:s") }}</b></li>
+            <li>Prochaine éxécution le <b>{{ item.nextrun|date("d/m/Y à h:i:s") }}</b></li>
+            </ul>
+        <ul>
+            <li>Crée le <b>{{ item.createdAt|date("d/m/Y h:i:s") }}</b></li>
+            <li>Mise a jour 'auto' le <b>{{ item.modifiedAt|date("d/m/Y h:i:s") }}</b></li>
+        </ul>
+
+    </div>
+
+{% endblock %}

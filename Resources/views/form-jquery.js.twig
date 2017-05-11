@@ -1,0 +1,33 @@
+{#<script>#}
+var leadsfactory = {
+    html: '{{ include(template_from_string(form.source))|e('js') }}',
+    init: function(form_id, data, options) {
+        var $ = jQuery;
+        var form = $('#'+form_id);
+        $.each(data, function(key, value) {
+            var field = $('[id=lffield\\['+key+'\\]]', form);
+            if (field.attr('type') == 'checkbox' || field.attr('type') == 'radio') {
+                field.prop('checked', value);
+            } else {
+                field.val(value);
+            }
+        });
+
+        var imageSrc = "{{ trackingAction }}/{{ formId }}/"+this.codeAction;
+
+        var trackingImage = $('<img/>', {
+            id : 'trackingImage',
+            src : imageSrc,
+            height:1,
+            width:1
+        });
+        form.after ( trackingImage );
+        //form.insertAfter ("<img src='{{ trackingAction }}/"+form_id+"/"+this.codeAction+"'/> height='1' width='1'");
+        {{ form.script|raw }}
+    },
+    codeAction:"{{ utm_campaign }}",
+    setCodeAction : function (codeAction) {
+        this.codeAction = codeAction;
+    }
+};
+{#</script>#}

@@ -1,0 +1,93 @@
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <div class="heading-sec" id="intro6">
+                <h1>Etat <i>de la licence</i></h1>
+                <div style="clear:both"></div>
+                <div class="titleDescription"><em>Espace vous permettant de visualiser la licence actuellement installée</em></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h3 class="custom-heading">Détail de votre licence:</h3>
+
+
+
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>Information</th>
+                        <th>Valeur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Nom du proprietaire </td>
+                            <td><b>{{ information.nom }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Société proprietaire de la licence </td>
+                            <td><b>{{ information.societe }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Date de fin de validité de la licence </td>
+                            <td><b>{{ information.dtf|date("m/d/Y") }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nombre de scopes de la licence </td>
+                            <td><b>{{ information.nbs }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nombre de formulaires de la licence</td>
+                            <td><b>{{ information.nbf }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Espace statistiques disponible</td>
+                            <td><b>
+                                    {% if information.stats == 1 %}
+                                        oui
+                                    {% else %}
+                                        non
+                                    {% endif %}
+
+                                </b></td>
+                        </tr>
+                        <tr>
+                            <td>Platefome déclarée pour cette licence</td>
+                            <td><b>
+                                    {% if information.plateform == 1 %}
+                                        Devellopement
+                                    {% endif %}
+                                    {% if information.plateform == 2 %}
+                                        Preproduction / Test / Recette
+                                    {% endif %}
+                                    {% if information.plateform == 3 %}
+                                        Production
+                                    {% endif %}
+                                    </b></td>
+                        </tr>
+                        <tr>
+                            <td>Domaines autorisés par la licence</td>
+                            <td><b>{% for domain in information.domains %}
+                                    &raquo; {{ domain }}<br/>
+                                    {% endfor %}
+                            </b></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+{% block javascript %}
+
+{% endblock %}

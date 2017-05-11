@@ -1,0 +1,53 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Statistiques : <i>Monitoring des leads</i></h1>
+        </div>
+    </div>
+
+    <div class="col-md-8" style="margin-bottom:25px;">
+        <div id="demo-chart" class="widget-body blue">
+            <!-- This div will hold the chart generated in the footer -->
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="widget-body custom-form">
+            {{ form(form) }}
+        </div>
+    </div>
+
+    <!-- Chart -->
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chart', {
+        "period" : app.request.get('form')['period'],
+        "formType":  app.request.get('form')['form_type'],
+        "form":  app.request.get('form')['form']
+        }
+        )) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chart')) }}
+    {% endif %}
+
+    <!-- ==== Monitoring Tous type = Dashboard avec les types affichés === -->
+
+    {% if(app.request.get('form')) %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measure', {
+            "formType":  app.request.get('form')['form_type'],
+            "form":  app.request.get('form')['form']
+        })) }}
+    {% else %}
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:measure')) }}
+    {% endif %}
+
+
+{% endblock %}
+{% block javascript %}
+
+{% endblock %}

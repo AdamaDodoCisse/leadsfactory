@@ -1,0 +1,51 @@
+Formulaire de test :
+
+***************************************
+export csv :
+
+source :
+<form>
+    <field type="text" id="nom"/>
+    <field type="text" id="prenom"/>
+    <input type="submit" value="OK" />
+</form>
+
+config :
+{
+  "export": {
+    "csv": {
+      "gap": "60",
+      "cron": "0 * * * *"
+    }
+  },
+  "configuration": {
+    "firstname": "prenom",
+    "lastname": "nom"
+  }
+}
+
+
+***************************************
+Demande d'info athena :
+
+name : TI formation demande d'info
+
+source :
+<form>
+    <field type="text" id="firstname"/>
+    <field type="text" id="lastname"/>
+    <field type="text" id="email"/>
+    <field type="text" id="phone"/>
+    <field type="text" id="company"/>
+    <textarea id="lffield[comment]" name="lffield[comment]"></textarea>
+    <input type="submit" value="OK" />
+</form>
+
+Form type : EtiFormationDemandeInfo
+
+config :
+{
+  "export": {
+    "athena":{"gap":"10", "cron":"0 * * * *"}
+  }
+}

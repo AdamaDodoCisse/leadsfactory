@@ -1,0 +1,28 @@
+.DS_Store
+.idea/*
+.settings/*
+.project
+.buildpath
+app/config/parameters.yml
+app/cache
+app/logs
+app/sessions
+/bin/
+vendor/
+/Search/logs/
+/Search/data/*
+
+# Cache and logs
+/vendor/*
+/app/cache/*
+/app/logs/*
+/app/sessions/*
+!app/cache/.gitkeep
+!app/logs/.gitkeep
+
+# Parameters
+/app/config/parameters.yml
+/app/config/parameters.ini
+
+# Composer PHAR
+/composer.phar

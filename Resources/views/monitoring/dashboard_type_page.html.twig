@@ -1,0 +1,95 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% form_theme form 'TellawLeadsFactoryBundle:Form:fields.html.twig' %}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="heading-sec" id="intro6">
+            <h1>Type de formulaire :  &laquo; {{ entity.name }} &raquo;</h1>
+        </div>
+    </div>
+
+    <div class="col-md-12">
+
+
+        <div class="col-md-8">
+
+            <div class="col-md-12" style="margin-top:20px;">
+                <div id="demo-chart" class="widget-body blue" style="height:500px;" >
+                    <!-- This div will hold the chart generated in the footer -->
+                </div>
+            </div>
+
+            <div class="col-md-12" style="margin-bottom:10px;">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getFormsInTypeWidget', {"type_id" : entity.id})) }}
+            </div>
+
+            <div class="col-md-12">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getTypeViewStatistics', {"type_id" : entity.id})) }}
+            </div>
+
+        </div>
+
+        <div class="col-md-4" style="margin-top:20px;">
+            <div class="widget-body custom-form">
+                {{ render(controller('TellawLeadsFactoryBundle:Admin/Utils:setTimeperiodPreference', {"request" : app.request})) }}
+            </div>
+
+            <div class="widget-body custom-form" style="padding-top:10px;">
+                <div style="margin-left:10px;margin-bottom:5px;"><b>Visualiser une autre groupe de formulaires :</b></div>
+
+                <select onChange="window.location.href=this.value" class="form-control">
+                    <option>Séléctionnez un groupe</option>
+                    {% for type in types %}
+                        <option {% if type.id == entity.id %}selected="selected" {% endif %}value="{{ path('_monitoring_dashboard_type_page', {'type_id': type.id}) }}">{{ type.name }}</option>
+                    {% endfor %}
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <script>
+            var skycons = new Skycons({"color": "white"});
+        </script>
+        <div class="col-md-4" style="margin-top:20px;">
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:getAlertWidgetForType', {"type_id" : entity.id})) }}
+            </div>
+        <script>
+            skycons.play();
+        </script>
+
+
+    </div>
+
+
+        {{ render(controller('TellawLeadsFactoryBundle:Admin/Monitoring:chartDashboard', {
+            "mode"      : "Form",
+            "objects"   : entity.forms
+        }
+        )) }}
+
+
+    <!-- Chart -->
+
+    <div class="col-md-12">
+
+
+
+    </div>
+
+
+{% endblock %}
+{% block javascript %}
+<script>
+    $("a[href^=#]").click(function(e) {
+        e.preventDefault();
+        var dest = $(this).attr('href');
+        $('html,body').animate({
+            scrollTop: $(dest).offset().top - 60
+        }, 'slow');
+    });
+</script>
+{% endblock %}

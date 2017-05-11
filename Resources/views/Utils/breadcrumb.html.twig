@@ -1,0 +1,13 @@
+{% if displayBreadCrumb %}
+<div class="col-md-12">
+    <ol class="breadcrumb">
+        {% for section in sections %}
+            {% if section.url %}
+                <li><a href="{{ section.url }}">{{ section.name }}</a></li>
+            {% else %}
+                <li class="active">{{ section.name }}</li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</div>
+{% endif %}

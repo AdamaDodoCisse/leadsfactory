@@ -1,0 +1,16 @@
+{# src/Acme/BlogBundle/Resources/views/Blog/index.html.twig #}
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+    <style>
+        .wrapper{
+            padding-top:0px;
+        }
+        body {
+            overflow: hidden;
+        }
+    </style>
+<iframe src="{{ kibana_url }}/#/?_g=(time:(from:now-6h,mode:quick,to:now))" style="top:55px;left:101px;position: absolute; height: 100%; border: none;margin:0px;padding-right:100px;margin-bottom:10px;padding-bottom:55px; width:100%;box-sizing:border-box"></iframe>
+{% endblock %}
+{% block javascript %}
+
+{% endblock %}

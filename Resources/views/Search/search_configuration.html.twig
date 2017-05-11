@@ -1,0 +1,109 @@
+{% extends 'TellawLeadsFactoryBundle::base.html.twig' %}
+{% block body %}
+
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <div class="heading-sec" id="intro6">
+                <h1>Administration <i>du moteur de recherche</i></h1>
+                <div style="clear:both"></div>
+                <div class="titleDescription"><em>Espace de configuration du service de recherche elastic Search</em></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h3 class="custom-heading">Administration de la recherche:</h3>
+
+        Etat du service :
+
+        {% if (status) %}
+            <span style="color:#00AA00"><b>OK : Le service de recherche est disponible</b></span>
+        {% else %}
+            <span style="color:#AA0000"><b>KO : Service Indisponible</b></span>
+        {% endif %}
+
+        {% if (status) %}
+        <div class="">
+            <div class="streaming-tables">
+                <span id="found" class="label label-info"></span>
+                <table id="stream_table" class='table table-striped table-bordered'>
+                    <thead>
+                    <tr>
+                        <th>Information</th>
+                        <th>Valeur</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>Nom du moteur </td>
+                            <td><b>{{ elasticResponse.name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Nom du cluster </td>
+                            <td><b>{{ elasticResponse.cluster_name }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Version de elastic search </td>
+                            <td><b>{{ elasticResponse.version.number }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Statut du moteur </td>
+                            <td><b>{{ status }}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Adresse du moteur </td>
+                            <td><b><a href="{{ searchEngineUrl }}" target="_blank">{{ searchEngineUrl }}</a></b></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+
+            {% else %}
+
+                <div class="">
+                    <div class="streaming-tables">
+                        <span id="found" class="label label-info"></span>
+                        <table id="stream_table" class='table table-striped table-bordered'>
+                            <thead>
+                            <tr>
+                                <th>Information</th>
+                                <th>Valeur</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td colspan="2">Le service de recherche n'est pas disponible </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            {% endif %}
+
+            <div style="margin-top:20px;">
+                <h3 class="custom-heading">Outils & Plugins</h3>
+                <b>Plugins :</b><br/>
+                <ul>
+                    <li>Interface Head : <a href="{{ searchEngineUrl }}/_plugin/head/" target="_blank">{{ searchEngineUrl }}/_plugin/head/</a></li>
+                    <li>Interface GUI : <a href="{{ searchEngineUrl }}/_plugin/gui/index.html" target="_blank">{{ searchEngineUrl }}/_plugin/gui/index.html</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_create_index') }}'">Créer les indexs</button>
+        </div>
+        <div class="btn-group btn-group-justified">
+            <button type="button" class="btns  pink  m-sml-btn " style="margin:0px 0px 0px 5px" onclick="window.location.href='{{ path('_search_delete_index') }}'">Supprimer l'indexs</button>
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+
+{% endblock %}
