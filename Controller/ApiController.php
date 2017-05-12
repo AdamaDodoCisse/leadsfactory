@@ -266,7 +266,7 @@ class ApiController extends CoreController
     }
 
     /**
-     * Update une DI
+     * Création une DI
      * @Route("/lead-sandbox/add")
      * @Method("POST")
      * @ParamConverter ("uniqId")
@@ -287,7 +287,9 @@ class ApiController extends CoreController
             return new Response("UniqId is not set");
         }
         // Ajout du UniqId
-        $data['uniqId'] = $uniqId;
+        $dataArray = json_decode($data, true);
+        $dataArray['uniqId'] = $uniqId;
+        $data = json_encode($dataArray);
 
         $leadsSandbox = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:LeadsSandbox')->findByUniqId(
             $uniqId
