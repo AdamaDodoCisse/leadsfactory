@@ -606,6 +606,51 @@ class ApiController extends CoreController
     }
 
     /**
+     * Send email notification
+     *
+     * @param array $params
+     * @param \Tellaw\LeadsFactoryBundle\Entity\Leads $leads
+     */
+    protected function sendNotification($params, $leads)
+    {
+        $logger = $this->get('logger');
+        $exportUtils = $this->get('export_utils');
+
+        $data = json_decode($leads->getData(), true);
+
+        if (!isset($params['to'])) {
+            $logger->error('No recipient available, check JSON form config');
+            return;
+        }
+
+        $to = $params['to'];
+        $from = isset($params['from']) ? $params['from'] : $exportUtils::NOTIFICATION_DEFAULT_FROM;
+        $subject = isset($params['subject']) ? $params['subject'] : 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName();
+        $template = isset($params['template']) ? $params['template'] : $exportUtils::NOTIFICATION_DEFAULT_TEMPLATE;
+
+        $message = Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody(
+                $this->renderView(
+                    'TellawLeadsFactoryBundle:' . $template,
+                    array(
+                        'fields' => $data,
+                        'intro' => 'Nouvelle DI issue du formulaire ' . $leads->getForm()->getName()
+                    )
+                ),
+                'text/html'
+            );
+
+        try {
+            $result = $this->get('mailer')->send($message);
+        } catch (Exception $e) {
+            $logger->error($e->getMessage());
+        }
+    }
+
+    /**
      * Render template variables {{ var }}
      *
      * @param string $template
