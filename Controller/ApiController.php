@@ -423,14 +423,26 @@ class ApiController extends CoreController
             // Get the Json configuration of the form
             $config = $form->getConfig();
 
+            if (array_key_exists('configuration', $config)) {
+                if (array_key_exists('lastname', $config["configuration"])) {
+                    $data["lastname"] = ucfirst($data[$config["configuration"]["lastname"]]);
+                }
+                if (array_key_exists('firstname', $config["configuration"])) {
+                    $data["firstname"] = ucfirst($data[$config["configuration"]["firstname"]]);
+                }
+                if (array_key_exists('email', $config["configuration"])) {
+                    $data["email"] = ucfirst($data[$config["configuration"]["email"]]);
+                }
+            }
+
             $data = $this->get('form_utils')->preProcessData($form->getId(), $data);
             $jsonContent = json_encode($data);
 
             $leads = new Leads();
             $leads->setIpadress($this->get('request')->getClientIp());
             $leads->setUserAgent($this->get('request')->server->get("HTTP_USER_AGENT"));
-            $leads->setFirstname(@$data['firstName']);
-            $leads->setLastname(@$data['lastName']);
+            $leads->setFirstname(@$data['firstname']);
+            $leads->setLastname(@$data['lastname']);
             $leads->setData($jsonContent);
             $leads->setLog("leads importée le : ".date('Y-m-d h:s'));
             $leads->setUtmcampaign(@$data["utmcampaign"]);
