@@ -1,8 +1,4 @@
 
-jQuery(document).ready(function($){
-    $('select.child-list').lfList();
-});
-
 (function ($) {
     /**
      * Listes hiérarchiques
