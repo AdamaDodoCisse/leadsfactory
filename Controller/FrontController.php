@@ -118,7 +118,7 @@ class FrontController extends CoreController
                     'formId' => $form->getCode(),
                     'formAction' => $url,
                     'trackingAction' => $this->container->get('router')->generate("_client_form_tracking"),
-                    'utm_campaign' => $utm_campaign, // Used for compatibility of old forms. Do not REMOVE
+                        'utm_campaign' => $utm_campaign, // Used for compatibility of old forms. Do not REMOVE
                     'form' => $form,
                     'post_url' => $post_url,
                     'hidden_tags' => $hidden_tags,
