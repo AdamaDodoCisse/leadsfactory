@@ -75,6 +75,9 @@ class FrontController extends CoreController
      *
      * @Route("/form/twig/{code}/{utm_campaign}", name="_client_twig")
      * @ParamConverter("form")
+     * @param Form $form
+     * @param string $utm_campaign
+     * @return Response
      */
     public function twigAction(Form $form, $utm_campaign = '')
     {
@@ -123,8 +126,9 @@ class FrontController extends CoreController
             $fp = fopen($cacheFileName, 'w');
             fwrite($fp, $view);
             fclose($fp);
-
         }
+
+        $view = str_replace("FORM__KEY", $this->get('form_utils')->getFormKey($form->getId()), $view);
 
         $response = new Response($view);
         $response->headers->set('Content-Type', 'application/javascript');
@@ -196,8 +200,9 @@ class FrontController extends CoreController
         $referer = $this->getRequest()->headers->get('referer');
 
 
-//         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) )
-//            throw new \Exception ("Form Key is not allowed");
+         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) ) {
+             throw new \Exception ("Form Key is not allowed");
+         }
 
         try {
 

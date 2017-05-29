@@ -217,7 +217,7 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
         $tags = "
             <input type='hidden' name=\"lffield[utmcampaign]\" id=\"lffield[utmcampaign]\" value='" . $form->getUtmcampaign() . "'/>
             <input type='hidden' name='lfFormId' id='lfFormId' value='" . $form->getId() . "'/>
-            <input type='hidden' name='lfFormKey' id='lfFormKey' value='" . $this->getFormKey($form->getId()) . "'/>
+            <input type='hidden' name='lfFormKey' id='lfFormKey' value='FORM__KEY'/>
         ";
 
         if (!is_null($form->getFormType())) {
