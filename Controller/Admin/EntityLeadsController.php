@@ -1275,7 +1275,7 @@ class EntityLeadsController extends CoreController
                 'form',
                 'choice',
                 array(
-                    'choices' => $this->getUserFormsOptions(),
+                    'choices' => $this->get('form_utils')->getUserFormsOptions(),
                     'label' => 'Formulaire',
                     'required' => false,
                 )
@@ -1354,7 +1354,7 @@ class EntityLeadsController extends CoreController
      *
      * @return array
      */
-    protected function getUserFormsOptions()
+    /*protected function getUserFormsOptions()
     {
         $forms = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Form')->getForms();
         $options = array('' => 'Sélectionnez un formulaire');
@@ -1367,7 +1367,7 @@ class EntityLeadsController extends CoreController
         }
 
         return $options;
-    }
+    }*/
 
     /**
      * Builds the report form

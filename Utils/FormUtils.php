@@ -498,4 +498,23 @@ class FormUtils implements TimeConfiguratorAwareInterface, ContainerAwareInterfa
         return $data;
     }
 
+    /**
+     * Returns the user's scope forms list options
+     *
+     * @return array
+     */
+    public function getUserFormsOptions()
+    {
+        $forms = $this->container->get('doctrine')->getRepository('TellawLeadsFactoryBundle:Form')->getForms();
+        $options = array('' => 'Sélectionnez un formulaire');
+        $user_scope = $this->container->get('security.context')->getToken()->getUser()->getScope();
+        foreach ($forms as $form) {
+            if ($user_scope && $form->getscope() != $user_scope) {
+                continue;
+            }
+            $options[$form->getId()] = $form->getName();
+        }
+
+        return $options;
+    }
 }
