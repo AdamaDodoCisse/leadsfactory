@@ -51,15 +51,23 @@ class EmailToLeadsCommand extends ContainerAwareCommand
             $scope->getId()
         );
 
+        $output->writeln("Extraction des emails : ".$email->getValue());
+        $output->writeln("Scope : ".$scopeName);
         $inbox = \imap_open('{imap.gmail.com:993/imap/ssl}INBOX', $email->getValue(), $password->getValue());
 
         if (!$inbox) {
+            $output->writeln("Erreur lors de la connexion");
             echo imap_last_error();
+
             return false;
         }
+        $output->writeln("Identification réussie");
 
+        $output->writeln("Récupération des mails non lus ...");
         $emails = imap_search($inbox, 'UNSEEN', SE_FREE, "UTF-8");
         if (!$emails) {
+            $output->writeln("Impossible de recupérer les emails ...");
+
             return false;
         }
         $output->writeln(count($emails)." email(s) a traiter ...");
@@ -86,7 +94,7 @@ class EmailToLeadsCommand extends ContainerAwareCommand
             $data['comment'] = $messageClean;
 
             // Créer la lead
-            $this->createLead($data, "comundi_email_extract_form");
+            $this->createLead($data, $scopeName."_email_extract_form");
             // Mettre a jour la lecture
             imap_setflag_full($inbox, $email_number, "\\Seen", ST_UID);
             $output->writeln("MAIL Traité : ".$data['email']." >> ".$header->subject);
@@ -96,6 +104,7 @@ class EmailToLeadsCommand extends ContainerAwareCommand
         imap_expunge($inbox);
         imap_close($inbox);
 
+        $output->writeln("Fin du traitement.");
         return true;
 
     }

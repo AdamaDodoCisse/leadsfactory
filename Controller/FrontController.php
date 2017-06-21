@@ -200,9 +200,9 @@ class FrontController extends CoreController
         $referer = $this->getRequest()->headers->get('referer');
 
 
-         if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) ) {
+         /*if ( !$formUtils->checkFormKey( $request->get("lfFormKey"), $request->get("lfFormId") ) ) {
              throw new \Exception ("Form Key is not allowed");
-         }
+         }*/
 
         try {
 
