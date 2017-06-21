@@ -235,12 +235,14 @@ class ApiController extends CoreController
                     $fieldIdName = $id."_label";
 
                     // Put value in the field [formid] = value
-                    $data->$fieldIdName = $this->getDoctrine()
-                        ->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')
-                        ->getNameUsingListCode(
-                            $field["attributes"]["data-list"],
-                            $data->$id
-                        );
+                    if (!empty($data->$id)) {
+                        $data->$fieldIdName = $this->getDoctrine()
+                            ->getRepository('TellawLeadsFactoryBundle:ReferenceListElement')
+                            ->getNameUsingListCode(
+                                $field["attributes"]["data-list"],
+                                $data->$id
+                            );
+                    }
                 }
 
                 $result['leads'][] = array(

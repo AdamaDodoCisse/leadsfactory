@@ -407,7 +407,9 @@ class FrontController extends CoreController
         } catch (\Exception $e) {
             $redirectUrlError = $referer;
             $logger->error('postLeadsAction Error '.$e->getMessage());
-            return $this->redirect($redirectUrlError);
+            if (!empty($redirectUrlError)) {
+                return $this->redirect($redirectUrlError);
+            }
         }
 
         return new Response('Done');
