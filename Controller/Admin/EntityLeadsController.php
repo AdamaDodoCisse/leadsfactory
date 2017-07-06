@@ -1481,11 +1481,11 @@ class EntityLeadsController extends CoreController
 
         while (false !== ($record = $leads->next())) {
             $data = json_decode($record[0]->getData(), true);
-            $keys = array_keys ($data);
-            $fields = array_merge( $fields, $keys);
+            $keys = array_keys($data);
+            $fields = $this->mergeArraysValues($fields, $keys);
         }
 
-        $columns = array_merge( $columns, $fields);
+        $columns = $this->mergeArraysValues($columns, $fields);
 
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
@@ -1524,6 +1524,24 @@ class EntityLeadsController extends CoreController
         $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
 
         return $response;
+    }
+
+    /**
+     * Fusionne les valeurs de array2 avec les valeurs de array1
+     * Les clés doivent être numériques
+     *
+     * @param $array1
+     * @param $array2
+     * @return array
+     */
+    protected function mergeArraysValues($array1, $array2)
+    {
+        foreach($array2 as $key => $value) {
+            if (!in_array($value, $array1)) {
+                $array1[] = $value;
+            }
+        }
+        return $array1;
     }
 
     private function sendNotificationEmail(
