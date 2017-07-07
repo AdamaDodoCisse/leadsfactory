@@ -1474,7 +1474,7 @@ class EntityLeadsController extends CoreController
     {
         $logger = $this->get('logger');
         $fields = array();
-        $columns = array('id', 'Form', 'Date');
+        $columns = array('lead_id', 'Form', 'Date');
 
         $filterParams["scope"] = $this->getUser()->getScope()->getId();
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
@@ -1512,6 +1512,7 @@ class EntityLeadsController extends CoreController
                             $row[] = "";
                         }
                     }
+
                     fputcsv($handle, $row, ';');
                 }
             }
