@@ -41,6 +41,13 @@
                 /** Mise à jour de l'enfant **/
                 child.html(data);
 
+                // Si la liste d'options est vide on cache l'élément de formulaire possédant la classe lf-form-row
+                if (child.children('option').length <= 1) {
+                    child.parent('.lf-form-row').hide();
+                } else {
+                    child.parent('.lf-form-row').show();
+                }
+
                 /** Mise à jour de l'enfant de l'enfant, si besoin **/
                 var child_id = child.attr('id');
                 var child_code = child_id.replace(/lffield\[(\w+)\]/, "$1");
