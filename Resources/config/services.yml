@@ -213,6 +213,12 @@ services:
     factory_method: getRepository
     arguments: ['TellawLeadsFactoryBundle:LeadsHistory']
 
+  leadsfactory.users_repository:
+    class: Tellaw\LeadsFactoryBundle\Entity\UsersRepository
+    factory_service: doctrine.orm.default_entity_manager
+    factory_method: getRepository
+    arguments: ['TellawLeadsFactoryBundle:Users']
+
   leadsfactory.reference_list_repository:
     class: Tellaw\LeadsFactoryBundle\Entity\ReferenceListRepository
     factory_service: doctrine.orm.default_entity_manager

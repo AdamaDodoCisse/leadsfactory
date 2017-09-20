@@ -348,6 +348,7 @@ class FrontController extends CoreController
             $leads->setStatus($status);
 
             $leads->setCreatedAt(new \DateTime());
+            $leads->setModifyAt(new \DateTime());
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($leads);

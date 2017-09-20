@@ -132,6 +132,12 @@ class Leads
     private $workflowTheme;
 
     /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $modifyAt;
+
+
+    /**
      * @return mixed
      */
     public function getUser()
@@ -525,6 +531,25 @@ class Leads
     {
         $this->userAgent = $userAgent;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getModifyAt()
+    {
+        return $this->modifyAt;
+    }
+
+    /**
+     * @param mixed $modifyAt
+     */
+    public function setModifyAt($modifyAt)
+    {
+        $this->modifyAt = $modifyAt;
+
+    }
+
+
 
     /**
      * @param $source   source object from the search

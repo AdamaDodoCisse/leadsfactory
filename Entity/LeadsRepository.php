@@ -250,5 +250,33 @@ class LeadsRepository extends EntityRepository
 
         return $dql;
     }
+
+    /**
+     *
+     * Get the 6 months not modify leads
+     *
+     * @param Users user
+     * @param int month
+     * @return Paginator
+     */
+    public function findLastNotModify(Users $user, $month = 6)
+    {
+
+        $dql = 'SELECT l FROM TellawLeadsFactoryBundle:Leads l';
+        $dql .= " WHERE l.user=:user";
+        $dql .= " AND l.modifyAt < :dateModify";
+
+        $rangeMonths = new \DateTime('-'.$month.' months');
+
+        $query = $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter('user', $user)
+            ->setParameter('dateModify', $rangeMonths->format('Y-m-d'));
+
+
+        return $query->getResult();
+    }
+
+
 }
 

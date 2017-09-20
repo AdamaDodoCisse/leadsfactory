@@ -201,7 +201,11 @@
                             <form class="sec" role="form">
                                 <div class="form-group">
                                     <label>Date de création</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.createdAt|date("d/m/Y : H:m:s") }}" >
+                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.createdAt|date("d/m/Y : H:i") }}" >
+                                </div>
+                                <div class="form-group">
+                                    <label>Date de modification</label>
+                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.modifyAt|date("d/m/Y : H:i") }}" >
                                 </div>
                                 <div class="form-group">
                                     <label>Formulaire source</label>
@@ -210,11 +214,6 @@
                                 <div class="form-group">
                                     <label>Scope</label>
                                     <input readonly="readonly" type="text" class="form-control" value="{{ lead.form.scope.name }}">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Date d'export</label>
-                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.exportdate|date("d/m/Y : H:m:s") }}" >
                                 </div>
                             </form>
                         </div>
@@ -251,8 +250,10 @@
                                     <label >Log</label>
                                     <input readonly="readonly" type="text" class="form-control" value="{{ lead.log }}" >
                                 </div>
-
-
+                                <div class="form-group">
+                                    <label>Date d'export</label>
+                                    <input readonly="readonly" type="text" class="form-control" value="{{ lead.exportdate|date("d/m/Y : H:i") }}" >
+                                </div>
                             </form>
                         </div>
 

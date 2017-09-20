@@ -4,7 +4,7 @@
 
     <div class="widget-body  yellow" style="color:#FFF">
         <h3>{{ comment.comment }}</h3>
-        <p class="pull-left"><i class="fa fa-clock-o"></i>&nbsp;{{ comment.createdAt|date("d/m/Y : H:m:s") }}</p><p class="pull-right"><i class="fa fa-globe"></i>&nbsp;{{ comment.user.firstname }} {{ comment.user.lastname }}</p>
+        <p class="pull-left"><i class="fa fa-clock-o"></i>&nbsp;{{ comment.createdAt|date("d/m/Y : H:i") }}</p><p class="pull-right"><i class="fa fa-globe"></i>&nbsp;{{ comment.user.firstname }} {{ comment.user.lastname }}</p>
     </div>
 
 {% else %}

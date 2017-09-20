@@ -731,7 +731,9 @@ class EntityLeadsController extends CoreController
 
         if (trim($id) != "" && $id != 0) {
 
+            /** @var Leads $lead */
             $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($id);
+            $lead->setModifyAt(new \DateTime());
 
             $user = $this->getUser();
 
@@ -743,6 +745,7 @@ class EntityLeadsController extends CoreController
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($comment);
+            $em->persist($lead);
             $em->flush();
 
             // Adding an entry to history
@@ -804,6 +807,7 @@ class EntityLeadsController extends CoreController
         /** @var Leads $lead */
         $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
         $lead->setWorkflowStatus($id);
+        $lead->setModifyAt(new \Datetime());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($lead);
@@ -977,6 +981,7 @@ class EntityLeadsController extends CoreController
         /** @var Leads $lead */
         $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
         $lead->setWorkflowType($id);
+        $lead->setModifyAt(new \DateTime());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($lead);
@@ -1068,6 +1073,7 @@ class EntityLeadsController extends CoreController
         /** @var Leads $lead */
         $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($leadId);
         $lead->setWorkflowTheme($id);
+        $lead->setModifyAt(new \DateTime());
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($lead);
@@ -1170,6 +1176,7 @@ class EntityLeadsController extends CoreController
         $oldUser = $lead->getUser();
         $oldStatus = $lead->getWorkflowStatus();
         $lead->setUser($user);
+        $lead->setModifyAt(new \DateTime());
 
         // Mise à jour du statut auto pour comundi
         // SI l'utilisateur est Dispatch et que l'ancien statut est A attribuer

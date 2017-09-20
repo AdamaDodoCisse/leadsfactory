@@ -132,19 +132,9 @@ class CoreManager implements ContainerAwareInterface
     public function isNewScopeAccepted()
     {
 
-        $infos = CoreManager::getLicenceInfos();
-        $repo = $this->container->get('leadsfactory.scope_repository');
 
-        $nbScopes = $repo->createQueryBuilder('name')
-            ->select('COUNT(name)')
-            ->getQuery()
-            ->getSingleScalarResult();
-
-        if ($nbScopes < $infos["nbs"]) {
-            return false;
-        } else {
             return true;
-        }
+
 
     }
 
@@ -164,16 +154,7 @@ class CoreManager implements ContainerAwareInterface
     public function isDomainAccepted()
     {
 
-        $host = $this->container->get("request")->server->get('HTTP_HOST');
-        $infos = CoreManager::getLicenceInfos();
-        $domains = $infos["domains"];
-        foreach ($domains as $domain) {
-            if (strstr($host, $domain)) {
-                return 0;
-            }
-        }
-
-        return 1;
+        return 0;
 
     }
 
