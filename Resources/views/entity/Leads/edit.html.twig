@@ -124,6 +124,11 @@
                                         Chargement des données
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label>Ingénieur grand compte</label>
+                                    <input id="bigAccount" type="checkbox" class="form-control" value="1" onChange="setBigAccount();" {% if(lead.bigAccount == 1) %}checked{% endif %}>
+                                </div>
                             </form>
                         </div>
 
@@ -345,6 +350,20 @@ function loadElements () {
     loadExportList();
 }
 
+function setBigAccount () {
+    var bigAccount = $("#bigAccount").val();
+    var id = $("#leadid").val();
+    var sendBigAccount = 0;
+
+    if(bigAccount == 1){
+        sendBigAccount = 1;
+    }
+
+    var url = "{{ path('_leads_big_account_ajax') }}";
+    var data = { id: id, bigAccount:sendBigAccount };
+    ajaxCall ( url, data, function ( result ) { alert ("Changement de status enregistré");loadHistoryList(); });
+}
+
 function postComment () {
 
     var comment = $("#comment").val();
@@ -356,7 +375,6 @@ function postComment () {
         ajaxCall ( url, data, function ( result ) { refreshComments();$("#comment").val("");loadHistoryList();});
 
     }
-
 }
 
 function refreshComments () {
@@ -390,130 +408,128 @@ function setAutoComplete () {
             return false;
         }
     });
-};
+}
 
-    function setAffectationLead () {
-        var id = $( "#affectationId" ).val();
-        var leadId = $( "#leadid" ).val();
+function setAffectationLead () {
+    var id = $( "#affectationId" ).val();
+    var leadId = $( "#leadid" ).val();
 
-        if (id != "") {
-            var url = "{{ path('_leads_users_assign_ajax') }}";
-            var data = { id: id, leadId : leadId }
-            ajaxCall ( url, data, function ( result ) { refreshComments();$("#comment").val("");loadHistoryList();});
-
-        }
+    if (id != "") {
+        var url = "{{ path('_leads_users_assign_ajax') }}";
+        var data = { id: id, leadId : leadId }
+        ajaxCall ( url, data, function ( result ) { refreshComments();$("#comment").val("");loadHistoryList();});
 
     }
 
-    function loadStatusList () {
+}
 
-        var url = "{{ path ('_leads_list_status_ajax') }}";
-        var data = {scopeId : $('#scopeId').val() };
-        var container = $("#statusListDiv")
-        fragmentAjaxCall ( url, data, container,
-                function (result){
-                    $("#statusLeadsSelect").val("{{ lead.workflowStatus }}")
-                } );
+function loadStatusList () {
+    var url = "{{ path ('_leads_list_status_ajax') }}";
+    var data = {scopeId : $('#scopeId').val() };
+    var container = $("#statusListDiv")
+    fragmentAjaxCall ( url, data, container,
+        function (result){
+            $("#statusLeadsSelect").val("{{ lead.workflowStatus }}")
+        } );
+}
+
+function setStatusLead () {
+    var id = $( "#statusLeadsSelect" ).val();
+    var leadId = $( "#leadid" ).val();
+    var listValue = $( "#statusLeadsSelect option:selected" ).text();
+
+    if (id != "") {
+        var url = "{{ path('_leads_status_assign_ajax') }}";
+        var data = { id: id, leadId : leadId, listValue : listValue }
+        ajaxCall ( url, data, function ( result ) { alert ("Changement de status enregistré");loadHistoryList(); });
     }
+}
 
-    function setStatusLead () {
-        var id = $( "#statusLeadsSelect" ).val();
-        var leadId = $( "#leadid" ).val();
-        var listValue = $( "#statusLeadsSelect option:selected" ).text();
+function loadTypeList () {
 
-        if (id != "") {
-            var url = "{{ path('_leads_status_assign_ajax') }}";
-            var data = { id: id, leadId : leadId, listValue : listValue }
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de status enregistré");loadHistoryList(); });
-        }
+    var url = "{{ path ('_leads_list_type_ajax') }}";
+    var data = {scopeId : $('#scopeId').val() };
+    var container = $("#typeListDiv")
+    fragmentAjaxCall ( url, data, container,
+        function (result){
+            $("#typeLeadsSelect").val("{{ lead.workflowType }}")
+        } );
+}
+
+function setTypeLead () {
+    var id = $( "#typeLeadsSelect" ).val();
+    var leadId = $( "#leadid" ).val();
+    var listValue = $( "#typeLeadsSelect option:selected" ).text();
+
+    if (id != "") {
+        var url = "{{ path('_leads_type_assign_ajax') }}";
+        var data = { id: id, leadId : leadId, scopeId : $('#scopeId').val(), listValue : listValue }
+        ajaxCall ( url, data, function ( result ) { alert ("Changement de type enregistré");loadHistoryList(); });
     }
+}
 
-    function loadTypeList () {
+function loadThemeList () {
+    var url = "{{ path ('_leads_list_theme_ajax') }}";
+    var data = {scopeId : $('#scopeId').val() };
+    var container = $("#themeListDiv")
+    fragmentAjaxCall ( url, data, container,
+        function (result){
+            $("#themeLeadsSelect").val("{{ lead.workflowTheme }}")
+        } );
+}
 
-        var url = "{{ path ('_leads_list_type_ajax') }}";
-        var data = {scopeId : $('#scopeId').val() };
-        var container = $("#typeListDiv")
-        fragmentAjaxCall ( url, data, container,
-                function (result){
-                    $("#typeLeadsSelect").val("{{ lead.workflowType }}")
-                } );
+function setThemeLead () {
+    var id = $( "#themeLeadsSelect" ).val();
+    var leadId = $( "#leadid" ).val();
+    var listValue = $( "#themeLeadsSelect option:selected" ).text();
+
+    if (id != "") {
+        var url = "{{ path('_leads_theme_assign_ajax') }}";
+        var data = { id: id, leadId : leadId, listValue : listValue }
+        ajaxCall ( url, data, function ( result ) { alert ("Changement de theme enregistré");loadHistoryList(); });
     }
+}
 
-    function setTypeLead () {
-        var id = $( "#typeLeadsSelect" ).val();
-        var leadId = $( "#leadid" ).val();
-        var listValue = $( "#typeLeadsSelect option:selected" ).text();
+function loadHistoryList () {
+    var leadId = $( "#leadid" ).val();
 
-        if (id != "") {
-            var url = "{{ path('_leads_type_assign_ajax') }}";
-            var data = { id: id, leadId : leadId, scopeId : $('#scopeId').val(), listValue : listValue }
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de type enregistré");loadHistoryList(); });
-        }
+    var url = "{{ path ('_leads_list_history_ajax') }}";
+    var data = { leadId : leadId} ;
+    var container = $("#leadsHistoryList")
+    fragmentAjaxCall ( url, data, container,
+            function (result){} );
+}
+
+function loadExportList () {
+    var leadId = $( "#leadid" ).val();
+
+    var url = "{{ path ('_leads_list_exports_ajax') }}";
+    var data = { leadId : leadId} ;
+    var container = $("#exportList")
+    fragmentAjaxCall ( url, data, container,
+            function (result){} );
+}
+
+// Script used to edit values
+function replaceFieldByInput ( id, leadId) {
+    var obj = $("#td-"+id);
+    if (obj.html().indexOf("<input") == -1) {
+        var content = "<input type='hidden' id='cancel-"+id+"' value='"+obj.text()+"'/><input type='text' id='field-" + id + "' value='" + obj.text() + "' style='width:60%'/><input type='button' value='ok' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/><input type='button' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>";
+        obj.html(content);
     }
+}
 
-    function loadThemeList () {
+function cancelFieldValue ( fieldId, leadId ) {
+    var fieldValue = $("#cancel-"+fieldId).val();
+    $("#td-"+fieldId).text(fieldValue);
+}
 
-        var url = "{{ path ('_leads_list_theme_ajax') }}";
-        var data = {scopeId : $('#scopeId').val() };
-        var container = $("#themeListDiv")
-        fragmentAjaxCall ( url, data, container,
-                function (result){
-                    $("#themeLeadsSelect").val("{{ lead.workflowTheme }}")
-                } );
-    }
-
-    function setThemeLead () {
-        var id = $( "#themeLeadsSelect" ).val();
-        var leadId = $( "#leadid" ).val();
-        var listValue = $( "#themeLeadsSelect option:selected" ).text();
-
-        if (id != "") {
-            var url = "{{ path('_leads_theme_assign_ajax') }}";
-            var data = { id: id, leadId : leadId, listValue : listValue }
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de theme enregistré");loadHistoryList(); });
-        }
-    }
-
-    function loadHistoryList () {
-        var leadId = $( "#leadid" ).val();
-
-        var url = "{{ path ('_leads_list_history_ajax') }}";
-        var data = { leadId : leadId} ;
-        var container = $("#leadsHistoryList")
-        fragmentAjaxCall ( url, data, container,
-                function (result){} );
-    }
-
-    function loadExportList () {
-        var leadId = $( "#leadid" ).val();
-
-        var url = "{{ path ('_leads_list_exports_ajax') }}";
-        var data = { leadId : leadId} ;
-        var container = $("#exportList")
-        fragmentAjaxCall ( url, data, container,
-                function (result){} );
-    }
-
-    // Script used to edit values
-    function replaceFieldByInput ( id, leadId) {
-        var obj = $("#td-"+id);
-        if (obj.html().indexOf("<input") == -1) {
-            var content = "<input type='hidden' id='cancel-"+id+"' value='"+obj.text()+"'/><input type='text' id='field-" + id + "' value='" + obj.text() + "' style='width:60%'/><input type='button' value='ok' onClick=\"saveFieldValue( '" + id + "', '" + leadId + "');\"/><input type='button' value='Annuler' onClick=\"cancelFieldValue( '" + id + "', '" + leadId + "');\"/>";
-            obj.html(content);
-        }
-    }
-
-    function cancelFieldValue ( fieldId, leadId ) {
-        var fieldValue = $("#cancel-"+fieldId).val();
-        $("#td-"+fieldId).text(fieldValue);
-    }
-
-    function saveFieldValue ( fieldId, leadId ) {
-        var fieldValue = $("#field-"+fieldId).val();
-        var url = "{{ path ('_leads_json_update_field') }}";
-        var data = { leadId : leadId, leadField : fieldId, leadFieldValue : fieldValue} ;
-        ajaxCall ( url, data, function ( result ) { $("#td-"+fieldId).text(result); });
-    }
+function saveFieldValue ( fieldId, leadId ) {
+    var fieldValue = $("#field-"+fieldId).val();
+    var url = "{{ path ('_leads_json_update_field') }}";
+    var data = { leadId : leadId, leadField : fieldId, leadFieldValue : fieldValue} ;
+    ajaxCall ( url, data, function ( result ) { $("#td-"+fieldId).text(result); });
+}
 
 </script>
 {% endblock %}

@@ -136,6 +136,11 @@ class Leads
      */
     private $modifyAt;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true, name="bigAccount", options={"default" = 0})
+     */
+    private $bigAccount;
+
 
     /**
      * @return mixed
@@ -549,7 +554,21 @@ class Leads
 
     }
 
+    /**
+     * @return mixed
+     */
+    public function getBigAccount()
+    {
+        return $this->bigAccount;
+    }
 
+    /**
+     * @param mixed $bigAccount
+     */
+    public function setBigAccount($bigAccount)
+    {
+        $this->bigAccount = $bigAccount;
+    }
 
     /**
      * @param $source   source object from the search

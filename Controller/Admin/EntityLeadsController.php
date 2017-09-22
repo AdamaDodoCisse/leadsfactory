@@ -760,6 +760,36 @@ class EntityLeadsController extends CoreController
     }
 
     /**
+     * @Route("/leads/bigAccount/", name="_leads_big_account_ajax")
+     * @Secure(roles="ROLE_USER")
+     */
+    public function setBigAccount(Request $request)
+    {
+
+        $id = $request->request->get("id");
+        $bigAccount = $request->request->get("bigAccount");
+
+        if (trim($id) != "" && $id != 0) {
+
+            /** @var Leads $lead */
+            $lead = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->find($id);
+            $lead->setBigAccount($bigAccount);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($lead);
+            $em->flush();
+
+            // Adding an entry to history
+            $this->get("history.utils")->push("Changement ingénieur grand compte ", $this->getUser(), $lead);
+
+        } else {
+            throw new \Exception ("Id is not defined");
+        }
+
+        return new Response('Enregistré');
+    }
+
+    /**
      * @Route("/leads/status/list/ajax", name="_leads_list_status_ajax")
      * @Secure(roles="ROLE_USER")
      */
@@ -1387,7 +1417,8 @@ class EntityLeadsController extends CoreController
     {
         $export_formats = array(
             'raw_csv' => 'CSV brut',
-            'nice_csv' => 'CSV amélioré'
+            'nice_csv' => 'CSV amélioré',
+            'intra_csv' => 'CSV intra'
         );
 
         $form = $this->createFormBuilder(array())
@@ -1471,6 +1502,76 @@ class EntityLeadsController extends CoreController
     }
 
     /**
+     * Generates intra CSV report
+     *
+     * @param array $filterParams
+     *
+     * @return Response
+     */
+    protected function generateIntra_csv($filterParams)
+    {
+        $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
+
+        $response = new StreamedResponse();
+        $columnFinal = array('Nom','Prenom','E-mail','Affectation','Statut');
+        $column = array('etablissement' => 'Raison sociale', 'fonction' => 'Fonction du contact', 'phone' => 'Telephone', 'localisation' => 'Lieu de realisation', 'formation_cible' => 'Titre ou code de la formation envisagee', 'programme_sur_mesure' => 'Adaptation du programme sur mesure / commentaire');
+        foreach($column as $key=>$val){
+            $columnFinal[] = $val;
+        }
+
+        $response->setCallback(function() use($leads, $columnFinal, $column){
+
+            $handle = fopen('php://output', 'w');
+
+            fputcsv($handle, $columnFinal, ';');
+
+            while (false !== ($row = $leads->next())) {
+
+                // assign User
+                if ($row[0]->getUser() != null) {
+                    $assignUser = ucfirst($row[0]->getUser()->getFirstName())." ".ucfirst($row[0]->getUser()->getLastName());
+                } else {
+                    $assignUser = "";
+                }
+
+                $arrayCsv = array($row[0]->getLastname(), $row[0]->getFirstname(), $row[0]->getEmail(),$assignUser,$row[0]->getWorkflowStatus());
+                $data = json_decode($row[0]->getData(), true);
+                foreach($column as $key=>$val){
+                    $laValue = "-";
+                    if(!is_null($data)) {
+                        if (array_key_exists($key, $data)) {
+                            if(is_array($data[$key])){
+                                $laValue = "";
+                                foreach($data[$key] as $keyD=> $valD){
+                                    $laValue .= $valD.', ';
+                                }
+                                $laValue = substr($laValue,0,-2);
+                            }else{
+                                $laValue = $data[$key];
+                            }
+                        }
+                    }
+                    $arrayCsv[] = $laValue;
+                }
+
+                fputcsv(
+                    $handle,
+                    $arrayCsv,
+                    ';'
+                );
+            }
+
+            fclose($handle);
+        });
+
+        $response->setStatusCode(200);
+        $response->headers->set('content-type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename=leads_report.csv');
+
+        return $response;
+    }
+
+    /**
      * Generates nice CSV report
      *
      * @param array $filterParams
@@ -1514,7 +1615,15 @@ class EntityLeadsController extends CoreController
                 if ( $data != null ) {
                     foreach ( $fields as $field) {
                         if ( array_key_exists( $field, $data )) {
-                            $row[] = $data[$field];
+                            if(is_array($data[$field])){
+                                $laValue = "";
+                                foreach($data[$field] as $keyD=> $valD){
+                                    $laValue .= $valD.', ';
+                                }
+                                $row[] = substr($laValue,0,-2);
+                            }else{
+                                $row[] = $data[$field];
+                            }
                         } else {
                             $row[] = "";
                         }
