@@ -1514,7 +1514,7 @@ class EntityLeadsController extends CoreController
 
         $response = new StreamedResponse();
         $columnFinal = array('Nom','Prenom','E-mail','Affectation','Statut');
-        $column = array('etablissement' => 'Raison sociale', 'fonction' => 'Fonction du contact', 'phone' => 'Telephone', 'localisation' => 'Lieu de realisation', 'formation_cible' => 'Titre ou code de la formation envisagee', 'programme_sur_mesure' => 'Adaptation du programme sur mesure / commentaire');
+        $column = array('etablissement' => 'Raison sociale', 'fonction' => 'Fonction du contact', 'phone' => 'Telephone', 'localisation' => 'Lieu de realisation', 'budget' => 'Periode de realisation', 'formation_cible' => 'Titre ou code de la formation envisagee', 'programme_sur_mesure' => 'Adaptation du programme sur mesure / commentaire');
         foreach($column as $key=>$val){
             $columnFinal[] = $val;
         }
