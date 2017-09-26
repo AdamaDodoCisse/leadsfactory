@@ -1513,7 +1513,7 @@ class EntityLeadsController extends CoreController
         $leads = $this->getDoctrine()->getRepository('TellawLeadsFactoryBundle:Leads')->getIterableList($filterParams);
 
         $response = new StreamedResponse();
-        $columnFinal = array('Nom','Prenom','E-mail','Affectation','Statut');
+        $columnFinal = array('Nom','Prenom','E-mail','Affectation','Statut','Grand compte potentiel');
         $column = array('etablissement' => 'Raison sociale', 'fonction' => 'Fonction du contact', 'phone' => 'Telephone', 'localisation' => 'Lieu de realisation', 'budget' => 'Periode de realisation', 'formation_cible' => 'Titre ou code de la formation envisagee', 'programme_sur_mesure' => 'Adaptation du programme sur mesure / commentaire');
         foreach($column as $key=>$val){
             $columnFinal[] = $val;
@@ -1534,7 +1534,12 @@ class EntityLeadsController extends CoreController
                     $assignUser = "";
                 }
 
-                $arrayCsv = array($row[0]->getLastname(), $row[0]->getFirstname(), $row[0]->getEmail(),$assignUser,$row[0]->getWorkflowStatus());
+                $grandCompte = 'NON';
+                if($row[0]->getBigAccount() == 1){
+                    $grandCompte = 'OUI';
+                }
+
+                $arrayCsv = array($row[0]->getLastname(), $row[0]->getFirstname(), $row[0]->getEmail(),$assignUser,$row[0]->getWorkflowStatus(),$grandCompte);
                 $data = json_decode($row[0]->getData(), true);
                 foreach($column as $key=>$val){
                     $laValue = "-";
