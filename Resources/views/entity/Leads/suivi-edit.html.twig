@@ -376,17 +376,16 @@
         }
 
         function setBigAccount () {
-            var bigAccount = $("#bigAccount").val();
             var id = $("#leadid").val();
-            var sendBigAccount = 0;
 
-            if(bigAccount == 1){
+            var sendBigAccount = 0;
+            if($("#bigAccount").attr('checked') == true){
                 sendBigAccount = 1;
             }
 
             var url = "{{ path('_leads_big_account_ajax') }}";
             var data = { id: id, bigAccount:sendBigAccount };
-            ajaxCall ( url, data, function ( result ) { alert ("Changement de status enregistré");loadHistoryList(); });
+            ajaxCall ( url, data, function ( result ) { alert ("Changement ingénieur grand compte enregistré");loadHistoryList(); });
         }
 
         function postComment() {
