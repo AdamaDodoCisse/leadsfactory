@@ -120,8 +120,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Affectation</label>
                                         <input type="hidden" id="affectationId"/>
-                                        <input type="text" class="form-control" id="affectation"
-                                               placeholder="Affectation de la demande" value="{{ assignUser }}"/>
+                                        <input type="text" class="form-control" id="affectation" placeholder="Affectation de la demande" value="{{ assignUser }}"/>
                                     </div>
 
                                     <div class="form-group">
@@ -141,6 +140,11 @@
                                         <div id="themeListDiv">
                                             Chargement des données
                                         </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Ingénieur grand compte</label>
+                                        <input id="bigAccount" type="checkbox" class="form-control" value="1" onChange="setBigAccount();" {% if(lead.bigAccount == 1) %}checked{% endif %}>
                                     </div>
                                 </form>
                             </div>
@@ -223,24 +227,19 @@
                                 <form class="sec" role="form">
                                     <div class="form-group">
                                         <label>Date de création</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.createdAt|date("d/m/Y : H:m:s") }}">
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.createdAt|date("d/m/Y : H:i") }}" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Date de modification</label>
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.modifyAt|date("d/m/Y : H:i") }}" >
                                     </div>
                                     <div class="form-group">
                                         <label>Formulaire source</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.form.name }}">
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.form.name }}">
                                     </div>
                                     <div class="form-group">
                                         <label>Scope</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.form.scope.name }}">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Date d'export</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.exportdate|date("d/m/Y : H:m:s") }}">
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.form.scope.name }}">
                                     </div>
                                 </form>
                             </div>
@@ -268,20 +267,20 @@
                                 <form class="sec" role="form">
                                     <div class="form-group">
                                         <label>Adresse IP</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.ipadress }}">
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.ipadress }}">
                                     </div>
                                     <div class="form-group">
                                         <label>User Agent</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.userAgent }}">
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.userAgent }}">
                                     </div>
                                     <div class="form-group">
-                                        <label>Log</label>
-                                        <input readonly="readonly" type="text" class="form-control"
-                                               value="{{ lead.log }}">
+                                        <label >Log</label>
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.log }}" >
                                     </div>
-
+                                    <div class="form-group">
+                                        <label>Date d'export</label>
+                                        <input readonly="readonly" type="text" class="form-control" value="{{ lead.exportdate|date("d/m/Y : H:i") }}" >
+                                    </div>
                                 </form>
                             </div>
 
@@ -374,6 +373,20 @@
             loadThemeList();
             loadHistoryList();
             loadExportList();
+        }
+
+        function setBigAccount () {
+            var bigAccount = $("#bigAccount").val();
+            var id = $("#leadid").val();
+            var sendBigAccount = 0;
+
+            if(bigAccount == 1){
+                sendBigAccount = 1;
+            }
+
+            var url = "{{ path('_leads_big_account_ajax') }}";
+            var data = { id: id, bigAccount:sendBigAccount };
+            ajaxCall ( url, data, function ( result ) { alert ("Changement de status enregistré");loadHistoryList(); });
         }
 
         function postComment() {
