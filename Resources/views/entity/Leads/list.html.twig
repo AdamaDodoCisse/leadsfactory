@@ -197,8 +197,7 @@
             {% if type == 'mylist' %}
             console.log("looo");
             $("#row-form_affectation input")
-                    .val('{{ firstName }} {{ lastName }}')
-                    .attr('disabled', 'disabled');
+                    .val('{{ firstName }} {{ lastName }}');
             $(".filter_form form").attr('action', "{{ path(app.request.attributes.get('_route')) }}");
             {% endif %}
         }

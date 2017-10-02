@@ -101,7 +101,7 @@
         </div>
         {% if not ( is_granted('ROLE_DISPATCH') or is_granted('ROLE_ADMIN') or isManagerOfATeam ) %}
             <script>
-                $("#row-form_affectation").find("input").attr("disabled", true);
+                $("#row-form_affectation").find("input").attr("disabled", false);
             </script>
         {% endif %}
     </div>
@@ -175,6 +175,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+
             initViewFilter();
             setAutoComplete();
 
@@ -184,7 +185,8 @@
                 $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').click();
             }
 
-            $('#filterform').on('submit', function (e) {
+            // fonction permettant la gestion du filtrage avancé dans la page.
+            /*$('#filterform').on('submit', function (e) {
                 e.preventDefault(); // J'empêche le comportement par défaut du navigateur, c-à-d de soumettre le formulaire
                 var $this = $(this);
                 $.ajax({
@@ -196,35 +198,29 @@
                     }
                 });
 
-            });
+            });*/
 
             updateTabs();
 
         });
         function initViewFilter() {
             $(".filter_form form").prepend('<div class="form-group toggle-filters-btn ' +
-                    'col-md-12"><strong>[<i class="toggle-filters-i">-</i>] Filtrage avancé</strong></div>');
+                'col-md-12"><strong>[<i class="toggle-filters-i">-</i>] Filtrage avancé</strong></div>');
 
             var url = window.location.href;
             var matches = url.match(/[a-z\d]+=[a-z\d]+/gi);
-            var queryCount = matches ? matches.length : 0;
+            var queryCount = matches? matches.length : 0;
 
             // Scroll to results Or hide filters
             if (queryCount > 0) $('#results-list').scrollView();
             else toggleFilters();
 
             // init filter button action
-            $(".toggle-filters-btn").on('click', function () {
-                toggleFilters()
-            });
+            $(".toggle-filters-btn").on('click', function(){toggleFilters()})
 
             // If Page is MyList then change affectation
-            {% if type == 'mylist' %}
-            $("#row-form_affectation input")
-                    .val('{{ firstName }} {{ lastName }}')
-                    .attr('disabled', 'disabled');
-            $(".filter_form form").attr('action', "{{ path(app.request.attributes.get('_route')) }}");
-            {% endif %}
+            $(".filter_form form").attr('action', "{{ path ('_leads_list') }}");
+
         }
 
         function updateTabs() {
