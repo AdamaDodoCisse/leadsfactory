@@ -5532,6 +5532,7 @@ color: #FFFFFF;
     letter-spacing: 0.3px;
     padding: 10px 0;
     text-align: center;
+    word-break: break-all;
 }
 tr {
     border-bottom: 1px solid #EBEBEB;
