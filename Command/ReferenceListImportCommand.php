@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Tellaw\LeadsFactoryBundle\Entity\ReferenceListElement;
+use Symfony\Component\Console\Input\InputOption;
 
 class ReferenceListImportCommand extends ContainerAwareCommand
 {
@@ -17,6 +18,7 @@ class ReferenceListImportCommand extends ContainerAwareCommand
 
     protected function configure()
     {
+
         $this
             ->setName('leadsfactory:referenceList:import')
             ->setDescription('Reference list import')
@@ -24,7 +26,10 @@ class ReferenceListImportCommand extends ContainerAwareCommand
                 'csvFile',
                 InputArgument::OPTIONAL,
                 'nom du fichier CSV à importer'
-            );
+            )
+        ->addOption('delimiter', 'd', InputOption::VALUE_OPTIONAL, 'delimiter', ';')
+        ->addOption('truncate', 'tr', InputOption::VALUE_OPTIONAL, 'delete if exist ?', true);
+
     }
 
     /**
@@ -60,15 +65,19 @@ class ReferenceListImportCommand extends ContainerAwareCommand
             }
         }
 
-        // First Delete lists
-        $itemsToDelete = array_reverse($this->lists);
-        foreach ($itemsToDelete as $key => $list) {
-            $this->deleteElementsForListId($list->getId());
+
+        if ($input->getOption('truncate')) {
+            // First Delete lists
+            $itemsToDelete = array_reverse($this->lists);
+            foreach ($itemsToDelete as $key => $list) {
+                $this->deleteElementsForListId($list->getId());
+            }
         }
 
         // Reload elements
         $csvFile = $input->getArgument('csvFile');
-        $csvContent = $this->readCsv($csvFile);
+        $delimiter = $input->getOption('delimiter');
+        $csvContent = $this->readCsv($csvFile, $delimiter);
 
         // Import two level list
         $result = $this->loadTwoLevelList($csvContent);
@@ -77,7 +86,7 @@ class ReferenceListImportCommand extends ContainerAwareCommand
 
     }
 
-    private function readCsv($csvFile)
+    private function readCsv($csvFile, $delimiter)
     {
 
         if (!file_exists($csvFile)) {
@@ -86,7 +95,7 @@ class ReferenceListImportCommand extends ContainerAwareCommand
 
         $csvContent = array();
         if (($handle = fopen($csvFile, "r")) !== false) {
-            while (($data = fgetcsv($handle, 1000, ";")) !== false) {
+            while (($data = fgetcsv($handle, 1000, "$delimiter")) !== false) {
                 $csvContent[] = $data;
             }
             fclose($handle);
