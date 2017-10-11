@@ -86,6 +86,13 @@ class ReferenceListImportCommand extends ContainerAwareCommand
 
     }
 
+    /**
+     * @param $csvFile
+     * @param $delimiter
+     *
+     * @return array
+     * @throws \Exception
+     */
     private function readCsv($csvFile, $delimiter)
     {
 
@@ -95,7 +102,7 @@ class ReferenceListImportCommand extends ContainerAwareCommand
 
         $csvContent = array();
         if (($handle = fopen($csvFile, "r")) !== false) {
-            while (($data = fgetcsv($handle, 1000, "$delimiter")) !== false) {
+            while (($data = fgetcsv($handle, 1000, $delimiter, "'" , "'")) !== false) {
                 $csvContent[] = $data;
             }
             fclose($handle);
@@ -104,6 +111,11 @@ class ReferenceListImportCommand extends ContainerAwareCommand
         return $csvContent;
     }
 
+    /**
+     * @param $content
+     *
+     * @return array
+     */
     private function loadTwoLevelList($content)
     {
 
@@ -112,7 +124,6 @@ class ReferenceListImportCommand extends ContainerAwareCommand
         foreach ($content as $item) {
 
             if (!array_key_exists($item[0], $elements)) {
-
                 $elements[$item[0]] = array("name" => $item[1], "childrens" => array());
 
             }
@@ -122,9 +133,13 @@ class ReferenceListImportCommand extends ContainerAwareCommand
             }
 
         }
+
         return $elements;
     }
 
+    /**
+     * @param $content
+     */
     private function processTwoLevelElements($content)
     {
 
